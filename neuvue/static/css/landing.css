@@ -1,0 +1,140 @@
+.topBarContainer {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #142850;
+    width: 100%;
+    height: 5%;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    gap: 1%;
+}
+
+.topTitle {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 160%;
+    order: 1;
+    flex-grow: 5;
+    margin-left: 1%;
+}
+
+.topHelp {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 160%;
+    order: 2;
+}
+
+.topName {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 160%;
+    order: 2;
+    margin-right: 1%;
+    margin-left: 1%;
+}
+
+.midMainContainer {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #27496D;
+    width: 100%;
+    height: 90%;
+    margin-top: 1%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1%;
+}
+
+.left {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #0C7B93;
+    flex-grow: 6;
+    order: 1;
+    height: 95%;
+    margin-left: 1%;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.right {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #00A8CC;
+    flex-grow: 1;
+    order: 2;
+    height: 95%;
+    margin-right: 1%;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.taskQueue {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #142850;
+    height: 30%;
+    width: 95%;
+    margin-top: 3%;
+
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.taskTitle {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 100%;
+    order: 1;
+    flex-grow: 2;
+    margin-top: 2%;
+}
+
+.title {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.neuroGlancer {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    flex-grow: 10;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.bottomBar {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    flex-grow: 1;
+    order: 2;
+    background-color: #00A8CC;
+    height: 5%;
+    width: 95%;
+    margin-bottom: 1%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.bottomTaskID {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 150%;
+    order: 1;
+    flex-grow: 40;
+    margin-left: 1%;
+}
+
+.shareNGView {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 150%;
+    order: 2;
+    flex-grow: 1;
+}

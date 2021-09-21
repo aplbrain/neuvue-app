@@ -1,0 +1,60 @@
+{% load static %}
+
+
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="topBarContainer">
+            <div class="topTitle">
+                NeuVue-Queue
+            </div>
+
+            <div class="topHelp">
+                Help
+            </div>
+
+            <div class="topName">
+                Devin Ramsden
+            </div>
+
+        </div>
+
+        <div class="midMainContainer">
+            <div class="left">
+                <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
+                        width="95%" 
+                        height="85%"
+                        class="neuroGlancer">
+                </iframe>
+                
+                <div class="bottomBar">
+                    <div class="bottomTaskID">
+                        Task #3242123
+                    </div>
+
+                    <div class="shareNGView">
+                        Share NG View
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="right">
+                <div class="taskQueue">
+                    <div class="taskTitle">
+                        Task Queue (3/10 Tasks Completed) ....
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+</html>
