@@ -1,43 +1,34 @@
-.topBarContainer {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #142850;
-    width: 100%;
-    height: 5%;
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    align-items: center;
-    gap: 1%;
-}
+/* FONTS & COLORS */
 
-.topTitle {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 160%;
-    order: 1;
-    flex-grow: 5;
-    margin-left: 1%;
-}
+:root {
+    /* PRIMARY COLORS */
+    --background: #0a192f;
+    --header-background: #000e22;
+    --primary-accent: #e6f1ff;
+    --primary-accent-activated: #8892b0;
+    --secondary-accent: #64ffda;
+    --secondary-accent-activated: #57eecb;
+    --complete-color:#b2eebf;
+    --complete-color-actived:#8fe2a1;
+    --incomplete-color:#96a5d4;
+    --incomplete-color-actived:#738fe6;
 
-.topHelp {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 160%;
-    order: 2;
-}
+    /* TRANSPARENT COLORS */
+    --transparent-background: #FFFFFF26;
+    --transparent-task: #0a192fce;
+    --transparent-shadow:#00000033;
 
-.topName {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 160%;
-    order: 2;
-    margin-right: 1%;
-    margin-left: 1%;
-}
+    /* FONTS */
+    --header-font: 'Kulim Park', sans-serif;
+    --body-font: 'Open Sans', sans-serif;
+    --monospace-font: 'Fira Code', monospace;
+  }
+
+/* Formatting -- some of this is no longer required with the navbar*/
 
 .midMainContainer {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #27496D;
+    border-radius: 12px;
+    background-color: transparent;
     width: 100%;
     height: 90%;
     margin-top: 1%;
@@ -49,92 +40,407 @@
 }
 
 .left {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #0C7B93;
+    border-radius: 12px;
+    background-color: transparent;
     flex-grow: 6;
     order: 1;
     height: 95%;
     margin-left: 1%;
-
     display: flex;
     align-items: center;
     flex-direction: column;
 }
 
 .right {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #00A8CC;
+    border-radius: 12px;
+    background-color: transparent;
     flex-grow: 1;
     order: 2;
     height: 95%;
+    width: 15%;
     margin-right: 1%;
+}
 
+/* CONTAINERS */
+.taskQueue {
+    border-radius: 8px;
+    background-color: var(--transparent-background);
+    position: relative;
+    max-height: 40%;
+    overflow: auto;
+    width: 95%;
+    margin-top: 0%;
     display: flex;
     align-items: center;
+    flex-direction: column;
+    display:inline-block;
+    padding: 10px 10px 10px 10px;
+}
+
+.buttonBox {
+    border-radius: 12px;
+    background-color: transparent;
+    max-height: 40%;
+    width: 95%;
+    margin-top: 3%;
+    display: flex;
+    align-items: left;
+    text-align: left;
     flex-direction: column;
 }
 
-
-.taskQueue {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #142850;
-    height: 30%;
-    width: 95%;
-    margin-top: 3%;
-
-
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.buttonBox.end {
+    max-height: 30%;
+    width: 23%;
+    position: absolute;
+    margin-bottom: 2%;
+    margin-right: 2%;
+    right: 0;
+    bottom: 0;
 }
 
 .taskTitle {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 100%;
+    font-family: var(--header-font);
+    color: var(--primary-accent);
+    font-weight: 400;
+    font-size: 10px;
+    font-size: 1.2vw;
     order: 1;
     flex-grow: 2;
-    margin-top: 2%;
+    padding: 0px 20px;
+    text-align: left;
+    align-items: left;
+    text-decoration: none;
 }
 
 .title {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
 }
 
 .neuroGlancer {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
+    border-radius: 8px;
+    border: 1px solid var(--background);
     flex-grow: 10;
     margin-top: 1%;
     margin-bottom: 1%;
 }
 
 .bottomBar {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     flex-grow: 1;
     order: 2;
-    background-color: #00A8CC;
+    border-radius: 12px;
+    background-color: transparent;
+    border: 1px solid #e6f1ff;
     height: 5%;
     width: 95%;
     margin-bottom: 1%;
-
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
 .bottomTaskID {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 150%;
+    font-family: var(--body-font);
+    color: var(--primary-accent-activated);
+    font-size: 100%;
     order: 1;
     flex-grow: 40;
     margin-left: 1%;
 }
 
 .shareNGView {
-    font-family: 'Playfair Display', serif;
-    color: white;
-    font-size: 150%;
+    font-family: var(--body-font);
+    color: var(--primary-accent-activated);
+    font-size: 100%;
     order: 2;
     flex-grow: 1;
 }
+.button {
+    font-family: var(--monospace-font);
+    background-color: transparent;
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    color: var(--secondary-accent);
+    margin: 0 0 10 10px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+.button:hover{
+    background: var(--secondary-accent-activated);
+    color: var(--background);
+}
+.instructions {
+    font-family: var(--monospace-font);
+    background-color: var(--transparent-background);
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    color: var(--primary-accent);
+    margin: 0 0 10 10px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 5px 5px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    width: 90%;
+    font-size: 14px;
+  }
+
+/* PROGRESS BAR */
+.progressText{
+    font-family: var(--monospace-font);
+    color: var(--primary-accent);
+    font-size: 12px;
+    margin-bottom: -3%;
+    margin-left: 78%;
+    text-decoration: none;
+    display: inline-block;
+}
+.progress {
+    margin: 20 30 10 10px;
+    margin-left: 2.5%;
+    background-color: transparent !important;
+    border: 2px solid var(--primary-accent-activated);
+    width: 90%;
+    border-radius: 20px !important;
+    height: 30px;
+    text-align: right;
+    color: white;
+    position: relative;  
+    display: flex;
+    
+    align-items: flex-end;
+} 
+
+.progress-bar { float: left; }
+
+.progress-bar.color {
+    margin: 0 0px;
+    border-radius: 20px;
+    background-color: var(--secondary-accent);
+    text-align: left;
+    height: 100%;
+    position: relative; 
+}
+
+.the-icons {
+  font-size: 25px;
+}
+
+/* NAVIGATION BAR */
+
+*{
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+  }
+  body{
+    font-family: var(--body-font)
+  }
+  nav{
+    background: var(--header-background);
+    height: 80px;
+    width: 100%;
+  }
+  label.logo{
+    font-family: var(--header-font);
+    color: var(--primary-accent);
+    font-size: 50px;
+    line-height: 80px;
+    padding: 0 100px;
+    font-weight: bold;
+  }
+  nav ul{
+    float: right;
+    margin-right: 20px;
+  }
+  nav ul li{
+    display: inline-block;
+    line-height: 80px;
+    margin: 0 5px;
+  }
+  nav ul li a{
+    font-family: var(--monospace-font);
+    color: var(--primary-accent);
+    font-size: 17px;
+    padding: 7px 13px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  a.active,a:hover{
+    background-color: transparent;
+    border-radius: 8px;
+    color: var(--primary-accent) !important;
+    border: 1.5px solid var(--secondary-accent);
+  }
+  .checkbtn{
+    font-size: 30px;
+    color: var(--primary-accent);
+    float: right;
+    line-height: 80px;
+    margin-right: 40px;
+    cursor: pointer;
+    display: none;
+  }
+  #check{
+    display: none;
+  }
+  @media (max-width: 952px){
+    label.logo{
+      font-size: 30px;
+      padding-left: 50px;
+    }
+    nav ul li a{
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 858px){
+    .checkbtn{
+      display: block;
+    }
+    ul{
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      background: #2c3e50;
+      top: 80px;
+      left: -100%;
+      text-align: center;
+      transition: all .5s;
+    }
+    nav ul li{
+      display: block;
+      margin: 50px 0;
+      line-height: 30px;
+    }
+    nav ul li a{
+      font-size: 20px;
+    }
+    a:hover,a.active{
+        background-color: transparent;
+        border-radius: 8px;
+        border: 1.5px solid var(--secondary-accent);
+    }
+    #check:checked ~ ul{
+      left: 0;
+    }
+  }
+
+  /* NOW FOR TASK BUTTONS*/
+
+.taskButton {
+    font-family: var(--body-font);
+    border-radius: 4px;
+    border-color: transparent !important;
+    position: relative;
+    background-color: var(--incomplete-color);
+    color: var(--background);
+    width: 95%;
+    margin-top: 3%;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 0 10 10px;
+    float: center;
+    text-align: left;
+    align-items: left;
+    flex-direction: column;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: 0.4s;
+  }
+  
+  .active, .taskButton:hover {
+    background-color: var(--incomplete-color-actived);
+    color:rgba(0, 0, 0, 1);
+  }
+  .taskButton.complete{
+    background-color: var(--complete-color);
+  }
+
+  .complete.active, .taskButton.complete:hover {
+    background-color: var(--complete-color-actived);
+    color:#0a192f;
+  }
+
+  .taskButton.current{
+    background-color: var(--secondary-accent);
+  }
+
+  .current.active, .taskButton.current:hover {
+    background-color: var(--secondary-accent-activated);
+    color:#0a192f;
+  }
+
+  /* Style the accordion panel. Note: hidden by default */
+  .informationContainer{
+    width: 95%;
+    overflow:auto;
+    display: none;
+  }
+
+  .taskNumber {
+    font-family: var(--monospace-font);
+    margin: 0 0 10 10px;
+    padding: 5px 10px;
+    color: var(--primary-accent);
+    width: 95%;
+    border-radius: 4px;
+    background-color: var(--transparent-task);
+  }
+
+  .taskInfo {
+    font-family: var(--monospace-font);
+    margin: 0 0 10 10px;
+    padding: 5px 10px;
+    color: var(--primary-accent);
+    width: 95%;
+    border-radius: 4px;
+    border: 1.5px solid var(--secondary-accent) !important;
+    background-color: transparent !important;
+  }
+
+  /* INSTRUCTIONS */
+  .instructionBox {
+    font-family: var(--header-font);
+    margin: 0 0 10 10px;
+    padding: 5px 10px;
+    color: var(--primary-accent);
+    border-radius: 4px;
+    background-color: var(--transparent-background);
+    font-weight: 400;
+    font-size: 10px;
+    font-size: 1.2vw;
+    order: 1;
+    flex-grow: 2;
+    width: 95%;
+    padding: 0px 20px;
+    text-align: left;
+    align-items: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+
+  .active, .instructionBox:hover {
+    background-color: var(--incomplete-color-actived);
+    color:rgba(0, 0, 0, 1);
+  }
+
+  .instructionInfo {
+    font-family: var(--monospace-font);
+    margin: 0 0 10 10px;
+    padding: 5px 10px;
+    color: var(--primary-accent);
+    width: 95%;
+    border-radius: 4px;
+    border: 1.5px solid var(--secondary-accent) !important;
+    background-color: transparent !important;
+  }

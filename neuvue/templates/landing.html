@@ -4,26 +4,36 @@
 <html>
     <head>
         <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Kulim+Park:wght@400;600&family=Open+Sans&family=Inter:wght@300;700&display=swap" rel="stylesheet">
     </head>
 
-    <body>
-        <div class="topBarContainer">
-            <div class="topTitle">
-                NeuVue-Queue
-            </div>
-
-            <div class="topHelp">
-                Help
-            </div>
-
-            <div class="topName">
-                Devin Ramsden
-            </div>
-
-        </div>
+    <body style="background-image: url('static/images/background-large-01.png'); background-size: 100%;">
+        <head>
+            <meta charset="utf-8">
+            <title>Responsive Navbar | CodingNepal</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="style.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        </head>
+            <nav>
+              <input type="checkbox" id="check">
+              <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+              </label>
+              <label class="logo">NeuVue</label>
+              <ul>
+                <li><a class="active" href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Log Out</a></li>
+              </ul>
+            </nav>
+            
 
         <div class="midMainContainer">
             <div class="left">
@@ -45,12 +55,106 @@
                 </div>
 
             </div>
-
-            <div class="right">
-                <div class="taskQueue">
+         
+            <div class="right" style="text-align: left;">
+                <div class="row"> 
                     <div class="taskTitle">
-                        Task Queue (3/10 Tasks Completed) ....
+                        Instructions
                     </div>
+                    </div>
+                    <div class="instructions">
+                    <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
+                    <p><b>1.</b> Look at the Nueron.</p>
+                    <p><b>2.</b> Have fun.</p>
+                </div>
+                <div class="row"> 
+                    <div class="taskTitle">
+                        Task Queue
+                    </div>
+                </div>
+                <div class ="row">
+                    <div class="progressText">
+                        8/9 complete
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar color" style="width:80%;"></div>
+                    </div>
+                </div>
+                <div class="taskQueue">
+                
+                    <div class="row"> 
+
+                        <button class="taskButton complete"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
+                        <div class="informationContainer">
+                            <div class="taskNumber">
+                                Task #3242121
+                            </div> 
+                            <div class="taskInfo">
+                                <p>Here is information about a task you have completed. Good Job!</p>
+                            </div>
+                        </div>
+
+                        <button class="taskButton complete"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
+                        <div class="informationContainer">
+                            <div class="taskNumber">
+                                Task #3242122
+                            </div> 
+                            <div class="taskInfo">
+                            <p>Here is information about another task you have completed. You are doing great!</p>
+                            </div>
+                        </div>
+                        <button class="taskButton current"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
+                        <div class="informationContainer" style="display: inline-block;">
+                            <div class="taskNumber">
+                                Task #3242123
+                            </div> 
+                            <div class="taskInfo">
+                            <p>Here is some task info. This Proofreading task is very important.</p>
+                            <p>Here is more information about this important task.</p>
+                            <ul>
+                                <li><b>Skeleton:</b> Info about the skeleton.</li>
+                                <li><b>Render:</b> Info about the render.</li>
+                                <li><b>Neuron Type:</b> Info about the neuron type.</li>
+                                <li><b>Total Volume:</b> Info about the volume of the neuron.</li>
+                            </ul>
+                            </div>
+                        </div>
+                        <button class="taskButton"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
+                        <div class="informationContainer">
+                            <div class="taskNumber">
+                                Task #3242124
+                            </div> 
+                            <div class="taskInfo">
+                            <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
+                            </div>   
+                        </div>
+                        <button class="taskButton"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
+                        <div class="informationContainer">
+                            <div class="taskNumber">
+                                Task #3242125
+                            </div> 
+                            <div class="taskInfo">
+                            <p>You have not completed this task either. These are very important, please do them.</p>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="buttonBox">
+                    <div class ="button">
+                        Restart Task
+                    </div>
+                </div>
+
+
+                <div class="buttonBox end">
+                    <div class ="button">
+                        Flag Task
+                    </div> 
+                    <div class ="button">
+                        Next Task
+                    </div> 
                 </div>
             </div>
         </div>
@@ -58,3 +162,45 @@
 
     </body>
 </html>
+
+<script>
+    var acc = document.getElementsByClassName("instructionBox");
+    var j;
+    
+    for (j = 0; j < acc.length; j++) {
+      acc[j].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+    
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+    }
+</script>
+
+<script>
+var acc = document.getElementsByClassName("taskButton");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+    this.classList.toggle("active");
+
+    /* Toggle between hiding and showing the active panel */
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
