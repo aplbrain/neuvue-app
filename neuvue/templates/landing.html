@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <html>
     <head>
         <link rel="stylesheet" href="{% static 'css/landing.css' %}">
@@ -8,82 +7,34 @@
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Kulim+Park:wght@400;600&family=Open+Sans&family=Inter:wght@300;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     </head>
 
-    <body style="background-image: url('static/images/background-large-01.png'); background-size: 100%;">
-        <head>
-            <meta charset="utf-8">
-            <title>Responsive Navbar | CodingNepal</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="style.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-        </head>
-            <nav>
-              <input type="checkbox" id="check">
-              <label for="check" class="checkbtn">
-                <i class="fas fa-bars"></i>
-              </label>
-              <label class="logo">NeuVue</label>
-              <ul>
-                <li><a class="active" href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Help</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Log Out</a></li>
-              </ul>
-            </nav>
-            
-
-        <div class="midMainContainer">
-            <div class="left">
-                <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
-                        width="95%" 
-                        height="85%"
-                        class="neuroGlancer">
-                </iframe>
-                
-                <div class="bottomBar">
-                    <div class="bottomTaskID">
-                        Task #3242123
-                    </div>
-
-                    <div class="shareNGView">
-                        Share NG View
-                    </div>
-
-                </div>
-
+    <! Information Hidden Menu >
+    <div id="myNav" class="overlay">
+        <! Progress Bar >
+        <div class ="row">
+            <div class="progress">
+                <div class="progress-bar color" style="width:80%;"> 8/9 </div>
             </div>
-         
-            <div class="right" style="text-align: left;">
-                <div class="row"> 
-                    <div class="taskTitle">
-                        Instructions
-                    </div>
-                    </div>
-                    <div class="instructions">
-                    <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
-                    <p><b>1.</b> Look at the Nueron.</p>
-                    <p><b>2.</b> Have fun.</p>
-                </div>
-                <div class="row"> 
-                    <div class="taskTitle">
-                        Task Queue
-                    </div>
-                </div>
-                <div class ="row">
-                    <div class="progressText">
-                        8/9 complete
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar color" style="width:80%;"></div>
-                    </div>
-                </div>
-                <div class="taskQueue">
-                
-                    <div class="row"> 
-
+        </div>
+        <! Instructions >
+        <div class = "instructionBox">
+            <div class="instructionTitle">
+                Instructions
+            </div>
+            <div class="instructionInfo">
+                <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
+                <p><b>1.</b> Look at the Nueron.</p>
+                <p><b>2.</b> Have fun.</p>
+            </div>
+        </div>
+        <! Task Queue >
+        <div class = "instructionBox">
+            <div class="instructionTitle">
+                Task Queue
+            </div>
+            <div class="instructionInfo">
                         <button class="taskButton complete"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
                         <div class="informationContainer">
                             <div class="taskNumber">
@@ -137,52 +88,80 @@
                             <p>You have not completed this task either. These are very important, please do them.</p>
                             </div> 
                         </div>
-                    </div>
-                </div>
-
-
-                <div class="buttonBox">
-                    <div class ="button">
-                        Restart Task
-                    </div>
-                </div>
-
-
-                <div class="buttonBox end">
-                    <div class ="button">
-                        Flag Task
-                    </div> 
-                    <div class ="button">
-                        Next Task
-                    </div> 
-                </div>
             </div>
+        </div> 
+        <! Buttons >
+        <div class="buttonBox">
+            <div class ="button">
+                Restart Task
+            </div>
+        </div>
+
+
+        <div class="buttonBox end">
+            <div class ="button next">
+                Next Task
+            </div> 
+            <div class ="button flag">
+                Flag Task
+            </div> 
+        </div>
+  
+    </div>
+
+    <! Navigation Bar >
+    <body style="background-image: url('/static/images/neuron_background_sketch-01.png'); background-size: 50%;">
+        <head>
+            <meta charset="utf-8">
+            <title>Responsive Navbar | CodingNepal</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="style.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        </head>
+            <nav>
+              <input type="checkbox" id="check">
+              <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+              </label>
+              <label class="logo">NeuVue</label>
+              <ul>
+                <li><a class="active" href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Log Out</a></li>
+                <! Menu Button >
+                <li><a style="cursor:pointer" onclick="toggleNav()">&#9776; info</a></li>
+              </ul>
+            </nav>
+
+        <div id="neuroglancer" class="midMainContainer">
+            <div class="left">
+                <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
+                        width="95%" 
+                        height="85%"
+                        class="neuroGlancer">
+                </iframe>
+                
+                <div class="bottomBar">
+                    <div class="bottomTaskID">
+                        Task #3242123
+                    </div>
+
+                    <div class="shareNGView">
+                        Share NG View
+                    </div>
+
+                </div>
+
+            </div>
+            
+
         </div>
 
 
     </body>
 </html>
-
-<script>
-    var acc = document.getElementsByClassName("instructionBox");
-    var j;
-    
-    for (j = 0; j < acc.length; j++) {
-      acc[j].addEventListener("click", function() {
-        /* Toggle between adding and removing the "active" class,
-        to highlight the button that controls the panel */
-        this.classList.toggle("active");
-    
-        /* Toggle between hiding and showing the active panel */
-        var panel = this.nextElementSibling;
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-        } else {
-          panel.style.display = "block";
-        }
-      });
-    }
-</script>
 
 <script>
 var acc = document.getElementsByClassName("taskButton");
@@ -203,4 +182,21 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 }
+</script>
+
+<script>
+    function toggleNav() {
+        var acc = document.getElementById("myNav");
+        var bin = document.getElementById("neuroglancer")
+        if (acc.style.width == "25%") {
+            acc.style.width = "0%";
+            bin.style.width = "100%";
+        } else if (acc.style.width == "0%"){
+            acc.style.width = "25%";
+            bin.style.width = "75%";
+        } else {
+            acc.style.width = "0%";
+            bin.style.width = "100%";
+        }
+    }
 </script>
