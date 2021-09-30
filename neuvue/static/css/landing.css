@@ -522,3 +522,10 @@
     font-size: 60px;
   }
   
+  .code{
+    font-family: var(--monospace-font);
+    color: rgb(255, 111, 0); 
+    background-color: var(--transparent-background);
+    padding: 2px;
+    font-size: 105%;
+  }
