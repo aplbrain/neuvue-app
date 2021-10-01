@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+            <div class="row">
+                <div class="jobQueue" >
+                  <div class="jobHeader">Soma Splitting Task</div>
+                  <table>
+                    <tr>
+                      <th>Sprint #</th>
+                      <th># of Tasks</th>
+                      <th>Other Info</th>
+                      <th>Start Time</th>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>10</td>
+                      <td>important things</td>
+                      <td>today</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>12</td>
+                        <td>other important things</td>
+                        <td>n/a</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="analytics">
+                    <div class="instructionTitle">
+                        Analytics
+                    </div>
+                    <div class="instructionInfo">
+                        <p>There are many important things we can put here.</p>
+                        <p><b>1.</b> Like numbers.</p>
+                        <p><b>2.</b> And graphs.</p>
+                    </div>
+                </div>
+              </div>
+
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+{% endblock %}
+
+

@@ -19,12 +19,18 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
 from landing.views import LandingView
+from landing.views import TaskView
 from oauth.views import IndexView
+
 
 urlpatterns = [
     path('', IndexView.as_view()),
-    path('landing/', LandingView.as_view()),
+    path('landing/', LandingView.as_view(), name = "landing"),
+    path('tasks/', TaskView.as_view(), name = "tasks"),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout', LogoutView.as_view()),
 ]
+
+
+

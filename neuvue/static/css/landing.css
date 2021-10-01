@@ -23,13 +23,13 @@
     --transparent-background: #120e1479;
     --transparent-task: #0a192fce;
     --transparent-shadow:#00000033;
+    --transparent-hover:#e6f1ff50;
 
     /* FONTS */
     --header-font: "Lato", sans-serif;
     --body-font: "Lato", sans-serif;
     --monospace-font: "Lato", sans-serif;
   }
-
 
 /* Formatting -- some of this is no longer required with the navbar*/
 
@@ -521,4 +521,91 @@
     left: 45px;
     font-size: 60px;
   }
-  
+
+  /* TASKING STRUCTURES */
+  .jobQueue {
+    margin-top: 1%;
+    margin-left: 2%;
+    float: left;
+    width: 65%;
+ 
+}
+
+.analytics {
+    background-color: transparent !important;
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    padding: 10px 10px 10px 10px;
+    float: right;
+    margin-top: 1%;
+    margin-right: 5%;
+    height: 80%;
+    width: 25%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.jobHeader{
+  background-color: var(--complete-color);
+  border-radius: 8px;
+  padding: 10px 10px 10px 10px;
+  float: right;
+  margin-top: 1%;
+  margin-right: 2%;
+  width: 100%;
+  font-family: var(--header-font);
+  margin: 15 0 10 10px;
+  color: var(--background);
+  font-size: 10px;
+  font-size: 1.2vw;
+  text-align: left;
+  font-weight: normal;
+}
+.jobHeader:after {
+  content: '8/9 Tasks';
+  font-family: var(--header-font);
+  color: var(--background);
+  font-weight: normal;
+  float: right;
+  font-size: 8px;
+  font-size: 1vw;
+  margin-right: 2%;
+
+}
+
+table {
+  background-color: transparent !important;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  padding: 10px 10px 10px 10px;
+  margin-top: 1%;
+  margin-right: 2%;
+  font-size: 14pt;
+  width: 100%;
+  font-family: var(--header-font);
+  color: var(--primary-accent);
+  font-weight: normal;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+
+th, td {
+  padding: 8px;
+  background-color: transparent !important;
+  text-align: left;
+  border-bottom: 1px solid var(--secondary-accent);
+}
+
+tr:hover {
+  background-color: var(--transparent-hover);
+  border-radius: 0px;
+}
+
