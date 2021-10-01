@@ -227,12 +227,12 @@
     border-radius: 20px !important;
     width: 85%;
     height: 30px;
-    position: relative;  
+    position: relative;
     display: flex;
     align-items: flex-end;
-} 
+}
 
-.progress-bar { 
+.progress-bar {
   float: left;
   }
 
@@ -244,7 +244,7 @@
     padding-right: 10px;
     padding-bottom: 18px;
     height: 100%;
-    position: relative; 
+    position: relative;
     color: black;
 }
 
@@ -376,7 +376,7 @@
     cursor: pointer;
     transition: 0.4s;
   }
-  
+
   .active, .taskButton:hover {
     background-color: var(--incomplete-color-actived);
     color:rgba(0, 0, 0, 1);
@@ -441,7 +441,7 @@
     display:inline-block;
     padding: 5px 5px 0px 0px;
     margin-bottom: 2%;
-    
+
   }
   .instructionTitle {
     font-family: var(--header-font);
@@ -459,8 +459,8 @@
     background-color: transparent;
 
   }
- 
-  
+
+
   .instructionTitle.active:after {
     content: "\2212";
   }
@@ -493,7 +493,7 @@
     overflow-x: hidden;
     transition: 0.5s;
   }
-  
+
   .overlay-content {
     position: relative;
     top: 25%;
@@ -501,7 +501,7 @@
     text-align: center;
     margin-top: 30px;
   }
-  
+
   .overlay a {
     padding: 8px;
     text-decoration: none;
@@ -510,11 +510,11 @@
     display: block;
     transition: 0.3s;
   }
-  
+
   .overlay a:hover, .overlay a:focus {
     color: var(--navbar-text);
   }
-  
+
   .overlay .closebtn {
     position: absolute;
     top: 20px;
@@ -522,13 +522,14 @@
     font-size: 60px;
   }
 
+
   /* TASKING STRUCTURES */
   .jobQueue {
     margin-top: 1%;
     margin-left: 2%;
     float: left;
     width: 65%;
- 
+
 }
 
 .analytics {
@@ -609,3 +610,11 @@ tr:hover {
   border-radius: 0px;
 }
 
+
+.code{
+font-family: var(--monospace-font);
+color: rgb(255, 111, 0);
+background-color: var(--transparent-background);
+padding: 2px;
+font-size: 105%;
+}
