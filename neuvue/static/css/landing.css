@@ -36,8 +36,8 @@
 .midMainContainer {
     border-radius: 12px;
     background-color: transparent;
-    width: 75%;
-    height: 90%;
+    width: 96%;
+    height: 90% !important;
     margin-top: 1%;
     position: relative;
     display: flex;
@@ -91,7 +91,7 @@
 
 .buttonBox {
     background-color: transparent;
-    width: 95%;
+    width: 30%;
     display: flex;
     flex-direction: column;
 }
@@ -137,24 +137,16 @@
     box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     flex-grow: 1;
     order: 2;
+    padding:1%;
     border-radius: 12px;
     background-color: transparent;
-    border: 1px solid #e6f1ff;
-    height: 5%;
+    border: 1px solid var(--primary-accent-activated);
+    height: 5% !important;
     width: 95%;
     margin-bottom: 1%;
     display: flex;
     flex-direction: row;
     align-items: center;
-}
-
-.bottomTaskID {
-    font-family: var(--body-font);
-    color: var(--primary-accent-activated);
-    font-size: 100%;
-    order: 1;
-    flex-grow: 40;
-    margin-left: 1%;
 }
 
 .shareNGView {
@@ -171,6 +163,7 @@
     border: 1.5px solid var(--secondary-accent);
     color: var(--secondary-accent);
     margin: 0 0 10 10px;
+    width: 50%;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
@@ -374,7 +367,6 @@
     text-decoration: none;
 
     cursor: pointer;
-    transition: 0.4s;
   }
 
   .active, .taskButton:hover {
@@ -432,15 +424,16 @@
     border-radius: 8px;
     border: 1.5px solid var(--secondary-accent) !important;
     /*background-color: var(--transparent-background);*/
-    position: relative;
     max-height: 45%;
     width: 95%;
     margin-top: 0%;
     display: flex;
+    visibility: hidden;
     flex-direction: column;
     display:inline-block;
     padding: 5px 5px 0px 0px;
     margin-bottom: 2%;
+    transition: 0s;
 
   }
   .instructionTitle {
@@ -455,7 +448,7 @@
     text-align: left;
     align-items: left;
     text-decoration: none;
-    transition: 0.4s;
+    transition: 0s;
     background-color: transparent;
 
   }
@@ -479,137 +472,76 @@
   }
 
   /* EXPANDABLE */
-  .overlay {
+  
+  .sidebar {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    padding-top: 20px !important;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    float: left;
+    text-align: center;
+    align-items: center;
+    background-color: var(--transparent-shadow);
+  }
+  .sidebutton {
+    background-color: transparent;
+    color: var(--primary-accent-activated);
+    text-align: center;
+    margin: 25% 2%;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .active, .sidebutton:hover{
+    color: var(--primary-accent);
+}
+
+  .sidemenu {
     height: 99%;
-    display: column;
-    width: 25%;
+
+    width: 2%;
     position: fixed;
-    padding: 15 5 0 15px;
+    
     z-index: 1;
     top: 80px;
     right: 0;
     background-color: var(--transparent-background);
-    overflow: auto;
-    overflow-x: hidden;
-    transition: 0.5s;
+    overflow: hidden;
   }
 
-  .overlay-content {
-    position: relative;
-    top: 25%;
-    width: 100%;
-    text-align: center;
-    margin-top: 30px;
+  .sidecontent {
+    top: 0;
+    right: 0;
+    margin-top: 4%;
+    margin-right: 2%;
+    float: right;
+    width: 0%;
+    text-align: left;
   }
 
-  .overlay a {
+  .sidemenu a {
     padding: 8px;
     text-decoration: none;
     font-size: 36px;
     color: var(--primary-accent-activated);
     display: block;
-    transition: 0.3s;
   }
 
-  .overlay a:hover, .overlay a:focus {
+  .sidemenu a:hover, .sidemenu a:focus {
     color: var(--navbar-text);
   }
 
-  .overlay .closebtn {
+  .sidemenu .closebtn {
     position: absolute;
     top: 20px;
     left: 45px;
     font-size: 60px;
   }
-
-
-  /* TASKING STRUCTURES */
-  .jobQueue {
-    margin-top: 1%;
-    margin-left: 2%;
-    float: left;
-    width: 65%;
-
-}
-
-.analytics {
-    background-color: transparent !important;
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    padding: 10px 10px 10px 10px;
-    float: right;
-    margin-top: 1%;
-    margin-right: 5%;
-    height: 80%;
-    width: 25%;
-    overflow: auto;
-    overflow-x: hidden;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.jobHeader{
-  background-color: var(--complete-color);
-  border-radius: 8px;
-  padding: 10px 10px 10px 10px;
-  float: right;
-  margin-top: 1%;
-  margin-right: 2%;
-  width: 100%;
-  font-family: var(--header-font);
-  margin: 15 0 10 10px;
-  color: var(--background);
-  font-size: 10px;
-  font-size: 1.2vw;
-  text-align: left;
-  font-weight: normal;
-}
-.jobHeader:after {
-  content: '8/9 Tasks';
-  font-family: var(--header-font);
-  color: var(--background);
-  font-weight: normal;
-  float: right;
-  font-size: 8px;
-  font-size: 1vw;
-  margin-right: 2%;
-
-}
-
-table {
-  background-color: transparent !important;
-  border-radius: 8px;
-  border: 1.5px solid var(--secondary-accent);
-  padding: 10px 10px 10px 10px;
-  margin-top: 1%;
-  margin-right: 2%;
-  font-size: 14pt;
-  width: 100%;
-  font-family: var(--header-font);
-  color: var(--primary-accent);
-  font-weight: normal;
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-}
-
-
-th, td {
-  padding: 8px;
-  background-color: transparent !important;
-  text-align: left;
-  border-bottom: 1px solid var(--secondary-accent);
-}
-
-tr:hover {
-  background-color: var(--transparent-hover);
-  border-radius: 0px;
-}
-
 
 .code{
 font-family: var(--monospace-font);
@@ -618,3 +550,5 @@ background-color: var(--transparent-background);
 padding: 2px;
 font-size: 105%;
 }
+
+

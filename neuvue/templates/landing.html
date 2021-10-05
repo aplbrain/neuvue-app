@@ -3,120 +3,120 @@
 
 {% block content %}
 <! Information Hidden Menu >
-<div id="myNav" class="overlay">
-    <! Progress Bar >
-    <div class ="row">
-        <div class="progress">
-            <div class="progress-bar color" style="width:80%;"> 8/9 </div>
-        </div>
-    </div>
-    <! Instructions >
-    <div class = "instructionBox">
-        <div class="instructionTitle">
-            Instructions
-        </div>
-        <div class="instructionInfo">
-            <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
-            <p><b>1.</b> Look at the Nueron.</p>
-            <p><b>2.</b> Have fun.</p>
-        </div>
-    </div>
-    <! Task Queue >
-    <div class = "instructionBox">
-        <div class="instructionTitle">
-            Task Queue
-        </div>
-        <div class="instructionInfo">
-            <button class="taskButton complete"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
-            <div class="informationContainer">
-                <div class="taskNumber">
-                    Task #3242121
-                </div>
-                <div class="taskInfo">
-                    <p>Here is information about a task you have completed. Good Job!</p>
-                </div>
-            </div>
 
-            <button class="taskButton complete"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
-            <div class="informationContainer">
-                <div class="taskNumber">
-                    Task #3242122
-                </div>
-                <div class="taskInfo">
-                <p>Here is information about another task you have completed. You are doing great!</p>
-                </div>
-            </div>
-            <button class="taskButton current"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
-            <div class="informationContainer" style="display: inline-block;">
-                <div class="taskNumber">
-                    Task #3242123
-                </div>
-                <div class="taskInfo">
-                <p>Here is some task info. This Proofreading task is very important.</p>
-                <p>Here is more information about this important task.</p>
-                <ul>
-                    <li><b>Skeleton:</b> Info about the skeleton.</li>
-                    <li><b>Render:</b> Info about the render.</li>
-                    <li><b>Neuron Type:</b> Info about the neuron type.</li>
-                    <li><b>Total Volume:</b> Info about the volume of the neuron.</li>
-                </ul>
-                </div>
-            </div>
-            <button class="taskButton"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
-            <div class="informationContainer">
-                <div class="taskNumber">
-                    Task #3242124
-                </div>
-                <div class="taskInfo">
-                <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
-                </div>
-            </div>
-            <button class="taskButton"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
-            <div class="informationContainer">
-                <div class="taskNumber">
-                    Task #3242125
-                </div>
-                <div class="taskInfo">
-                <p>You have not completed this task either. These are very important, please do them.</p>
-                </div>
-            </div>
-    </div>
-    </div>
-    <! Buttons >
-    <div class="buttonBox">
-        <div class ="button">
-            Restart Task
+
+<div id="neuVue-sidemenu" class="sidemenu">
+    <div id="neuVue-sidebar" class="sidebar" >
+        <div id="instruction-button" class="sidebutton" onclick="sidemenu_content()">
+            <i class="glyphicon glyphicon-info-sign"></i>
         </div>
+        <div id="queue-button" class="sidebutton" onclick="sidemenu_content()">
+            <i class="glyphicon glyphicon-list"></i>
+        </div>   
+        
     </div>
-    <div class="buttonBox end">
-        <div class ="button next">
-            Next Task
+    <div id="neuVue-sidecontent" class="sidecontent">
+        
+        <! Instructions >
+        <div id = "instruction-container" class = "instructionBox">
+            <div class="instructionTitle">
+                Instructions
+            </div>
+            <div class="instructionInfo">
+                <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
+                <p><b>1.</b> Look at the Nueron.</p>
+                <p><b>2.</b> Have fun.</p>
+            </div>
         </div>
-        <div class ="button flag">
-            Flag Task
+        <! Task Queue >
+        <div id = "queue-container" class = "instructionBox">
+            <div class="instructionTitle">
+                Task Queue
+            </div>
+            <div class="instructionInfo">
+                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
+                <div class="informationContainer">
+                    <div class="taskNumber">
+                        Task #3242121
+                    </div> 
+                    <div class="taskInfo">
+                        <p>Here is information about a task you have completed. Good Job!</p>
+                    </div>
+                </div>
+
+                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
+                <div class="informationContainer">
+                    <div class="taskNumber">
+                        Task #3242122
+                    </div> 
+                    <div class="taskInfo">
+                    <p>Here is information about another task you have completed. You are doing great!</p>
+                    </div>
+                </div>
+                <button class="taskButton current" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
+                <div class="informationContainer" style="display: inline-block;">
+                    <div class="taskNumber">
+                        Task #3242123
+                    </div> 
+                    <div class="taskInfo">
+                    <p>Here is some task info. This Proofreading task is very important.</p>
+                    <p>Here is more information about this important task.</p>
+                    <ul>
+                        <li><b>Skeleton:</b> Info about the skeleton.</li>
+                        <li><b>Render:</b> Info about the render.</li>
+                        <li><b>Neuron Type:</b> Info about the neuron type.</li>
+                        <li><b>Total Volume:</b> Info about the volume of the neuron.</li>
+                    </ul>
+                    </div>
+                </div>
+                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
+                <div class="informationContainer">
+                    <div class="taskNumber">
+                        Task #3242124
+                    </div> 
+                    <div class="taskInfo">
+                    <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
+                    </div>   
+                </div>
+                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
+                <div class="informationContainer">
+                    <div class="taskNumber">
+                        Task #3242125
+                    </div> 
+                    <div class="taskInfo">
+                    <p>You have not completed this task either. These are very important, please do them.</p>
+                    </div> 
+                </div>
         </div>
+        
     </div>
+</div> 
+
 </div>
 
 <div id="neuroglancer" class="midMainContainer">
     <div class="left">
         <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
-                width="95%"
+                width="95%" 
                 height="85%"
                 class="neuroGlancer">
         </iframe>
         <div class="bottomBar">
-            <div class="bottomTaskID">
-                Task #3242123
+            <div class ="button">
+                Restart Task
             </div>
-            <div class="shareNGView">
-                Share NG View
-            </div>
+            <div class ="button next">
+                Next Task
+            </div> 
+            <div class ="button flag">
+                Flag Task
+            </div> 
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script>
+    closeSideMenu();
+</script>
 {% endblock %}
 
 
