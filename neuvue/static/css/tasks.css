@@ -1,0 +1,172 @@
+  /* TASKING STRUCTURES */
+  .jobQueue {
+    margin-top: 1%;
+    margin-left: 2%;
+    float: left;
+    width: 65%;
+
+}
+
+.analytics {
+    background-color: transparent !important;
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    padding: 10px 10px 10px 10px;
+    float: right;
+    margin-top: 1%;
+    margin-right: 5%;
+    height: 80%;
+    width: 25%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.jobHeader{
+  background-color: var(--complete-color);
+  border-radius: 8px 0 0 8px;
+  padding: 10px;
+  float: left;
+  margin-top: 1%;
+  left:0;
+  width: 85%;
+  height:5%;
+  margin: 1% 0 1% 1%;
+  float: left;
+  font-family: var(--header-font);
+  color: var(--background);
+  font-size: 10px;
+  font-size: 1.2vw;
+  text-align: left;
+  font-weight: normal;
+  cursor: pointer;
+
+}
+
+.jobHeader.active, .jobHeader:hover {
+  background-color: var(--complete-color-actived);
+  color:var(--background);
+}
+
+.launch_NG {
+  margin: 1% 1% 1% 0px;
+  font-family: var(--monospace-font);
+  background-color: transparent;
+  border-radius: 0 8px 8px 0;
+  right:0;
+  width: 12.5%;
+  height: 5%;
+  border: 1.5px solid var(--complete-color);
+  color: var(--complete-color);
+  padding: 10px;
+  float: right;
+  text-align: center;
+  font-family: var(--header-font);
+  font-size: 6px;
+  font-size: 0.7vw;
+}
+.launch_NG:hover{
+  background: var(--primary-accent);
+  border-color: transparent;
+  color: var(--background);
+}
+
+table {
+  background-color: transparent !important;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  padding: 2%;
+  margin-top: 1%;
+  margin-right: 2%;
+  font-size: 14pt;
+  position: relative;
+  width: 100%;
+  font-family: var(--header-font);
+  color: var(--primary-accent);
+  font-weight: normal;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+
+th {
+  padding: 8px;
+  background-color: var(--background);
+  text-align: left;
+  border-bottom: 1px solid var(--secondary-accent);
+  position: sticky;
+  top: 0;
+}
+
+
+td {
+  padding: 8px;
+  background-color: transparent !important;
+  text-align: left;
+  border-bottom: 1px solid var(--secondary-accent);
+}
+
+tr:hover {
+  background-color: var(--transparent-hover);
+  border-radius: 0px;
+}
+
+
+
+/* Style the tab */
+
+.tab {
+  float: left;
+  background-color: transparent;
+  width: 10%;
+  
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  display: block;
+  background-color: var(--transparent-background) !important;
+  color: var(--secondary-accent);
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 15px;
+  
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: var(--transparent-background);
+  color: var(--primary-accent);
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: var(--transparent-background) ;
+  color: var(--primary-accent);
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px 12px 12px;
+  border-radius: 0px 8px 8px 8px;
+  background-color: var(--transparent-background) !important;
+  height: 30%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 90%;
+  
+}
+
+
