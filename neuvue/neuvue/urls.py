@@ -18,15 +18,13 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
-from landing.views import LandingView
-from landing.views import TaskView
-from oauth.views import IndexView
+from workspace.views import WorkspaceView
+from workspace.views import TaskView
 
 
 urlpatterns = [
-    path('', IndexView.as_view()),
-    path('landing/', LandingView.as_view(), name = "landing"),
-    path('tasks/', TaskView.as_view(), name = "tasks"),
+    path('', TaskView.as_view(), name="tasks"),
+    path('workspace/', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout', LogoutView.as_view()),
