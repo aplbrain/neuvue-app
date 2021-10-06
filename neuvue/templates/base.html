@@ -1,0 +1,38 @@
+{% load static %}
+
+<html>
+    <head>
+        {% block header_includes %}{% endblock %}
+        <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>   
+    </head>
+       
+    <! Navigation Bar >
+    <body style="background-image: url('/static/images/neuron_background_sketch-01.png'); background-size: 50%;">
+        <nav>
+            <input type="checkbox" id="check">
+            <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+            </label>
+            <label class="logo">NeuVue</label>
+            <ul>
+                <li><a class="active" href="{% url "landing" %}">Neuroglancer</a></li>
+                <li><a href="{% url "tasks" %}">Queue</a></li>
+
+                <li><a href="#">Log Out</a></li>
+            </ul>
+        </nav> 
+        {% block content %}{% endblock %}
+        
+    </body>
+    <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+</html>
+
+
