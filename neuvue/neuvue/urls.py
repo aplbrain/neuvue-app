@@ -20,6 +20,8 @@ from django.contrib.auth.views import LogoutView
 
 from workspace.views import WorkspaceView
 from workspace.views import TaskView
+from workspace.views import LogoutView
+
 
 
 urlpatterns = [
@@ -27,7 +29,7 @@ urlpatterns = [
     path('workspace/', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('logout', LogoutView.as_view()),
+    path('logout/', LogoutView.as_view(), name="logout"),
 ]
 
 
