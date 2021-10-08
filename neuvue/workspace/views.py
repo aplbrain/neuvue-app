@@ -9,3 +9,7 @@ class WorkspaceView(View):
 class TaskView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "tasks.html")
+
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "logout.html")
