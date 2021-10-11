@@ -21,9 +21,9 @@
         <div class="jobHeader" onclick="table_toggle()">Soma Splitting Tasks</div>
 
         <div class="tab">
-            <button class="tablinks" onclick="tabToggle(event, 'InProgress_Split',0,3)">In Progress</button>
-            <button class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,3)">Pending</button>
-            <button class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,3)">Closed</button>
+            <button id = "inProgressSplitTab" class="tablinks" onclick="tabToggle(event, 'InProgress_Split',0,3, 'inProgressSplitTab')">In Progress</button>
+            <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,3,'pendingSplitTab')">Pending</button>
+            <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,3,'closedSplitTab')">Closed</button>
         </div>
         <div id="InProgress_Split" class="tabcontent">
             <div>
@@ -186,9 +186,9 @@
         <div class="jobHeader" onclick="table_toggle()">Soma Merging Tasks</div>
 
         <div class="tab">
-            <button class="tablinks" onclick="tabToggle(event, 'InProgress_Merge',3,6)">In Progress</button>
-            <button class="tablinks" onclick="tabToggle(event, 'Pending_Merge',3,6)">Pending</button>
-            <button class="tablinks" onclick="tabToggle(event, 'Closed_Merge',3,6)">Closed</button>
+            <button id = "inProgressMergeTab" class="tablinks" onclick="tabToggle(event, 'InProgress_Merge',3,6,'inProgressMergeTab')">In Progress</button>
+            <button id = "pendingMergeTab" class="tablinks" onclick="tabToggle(event, 'Pending_Merge',3,6,'pendingMergeTab')">Pending</button>
+            <button id = "closedMergeTab" class="tablinks" onclick="tabToggle(event, 'Closed_Merge',3,6,'closedMergeTab')">Closed</button>
         </div>
         <div id="InProgress_Merge" class="tabcontent">
             <div>
@@ -306,22 +306,30 @@
 <script>
     start();
     function start() {
-        tabToggle(event, 'InProgress_Split',0,3);
-        tabToggle(event, 'InProgress_Merge',3,6);
+        tabToggle(event, 'InProgress_Split',0,3, 'inProgressSplitTab');
+        tabToggle(event, 'InProgress_Merge',3,6,'inProgressMergeTab');
     };
     
     
-    function tabToggle(evt, timeframe,start,end) {
+    function tabToggle(evt, timeframe,start,end,buttonid) {
+        
+
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = start; i < end; i++) {
             tabcontent[i].style.display = "none";
         }
+
         tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
+        for (i = start; i < end; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
         document.getElementById(timeframe).style.display = "block";
+
+        var tab_button = document.getElementById(buttonid);
+        tab_button.classList.toggle("active");
+
+        
       
     };
 </script>

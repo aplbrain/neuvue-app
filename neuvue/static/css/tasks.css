@@ -3,7 +3,7 @@
     margin-top: 1%;
     margin-left: 2%;
     float: left;
-    width: 65%;
+    width: 75%;
 
 }
 
@@ -16,7 +16,7 @@
     margin-top: 1%;
     margin-right: 5%;
     height: 80%;
-    width: 25%;
+    width: 15%;
     overflow: auto;
     overflow-x: hidden;
 }
@@ -80,24 +80,20 @@
 table {
   background-color: transparent !important;
   border-radius: 8px;
-  border: 1.5px solid var(--secondary-accent);
   padding: 2%;
-  margin-top: 1%;
-  margin-right: 2%;
   font-size: 14pt;
   position: relative;
   width: 100%;
   font-family: var(--header-font);
   color: var(--primary-accent);
   font-weight: normal;
-  font-family: arial, sans-serif;
   border-collapse: collapse;
 }
 
 
 th {
-  padding: 8px;
   background-color: var(--background);
+  padding: 8px !important;
   text-align: left;
   border-bottom: 1px solid var(--secondary-accent);
   position: sticky;
@@ -106,10 +102,9 @@ th {
 
 
 td {
-  padding: 8px;
+  padding: 1% !important;
   background-color: transparent !important;
   text-align: left;
-  border-bottom: 1px solid var(--secondary-accent);
 }
 
 tr:hover {
@@ -131,42 +126,57 @@ tr:hover {
 /* Style the buttons inside the tab */
 .tab button {
   display: block;
-  background-color: var(--transparent-background) !important;
-  color: var(--secondary-accent);
+  background-color: transparent !important;
+  color: var(--primary-accent);
   padding: 22px 16px;
   width: 100%;
-  border: none;
+  border: 1.5px solid var(--transparent-hover);
+  border-right: none;
   outline: none;
   text-align: left;
   cursor: pointer;
   transition: 0.3s;
   font-size: 15px;
+  border-radius: 16px 0px 0px 16px;
   
 }
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: var(--transparent-background);
+  background-color: var(--transparent-hover) !important;
   color: var(--primary-accent);
 }
 
 /* Create an active/current "tab button" class */
 .tab button.active {
-  background-color: var(--transparent-background) ;
+  background-color: var(--secondary-accent) !important;
   color: var(--primary-accent);
 }
 
 /* Style the tab content */
 .tabcontent {
   float: left;
-  padding: 0px 12px 12px 12px;
+  
   border-radius: 0px 8px 8px 8px;
-  background-color: var(--transparent-background) !important;
+  border: 1.5px solid var(--secondary-accent);
+  background-color: var(--table-background) !important;
   height: 30%;
-  overflow-y: auto;
+  overflow: -moz-scrollbars-vertical; 
+  overflow-y: scroll;
   overflow-x: hidden;
   width: 90%;
   
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  border-radius: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  margin: 5% 5%;
+  background-color: var(--transparent-hover);
 }
 
 
