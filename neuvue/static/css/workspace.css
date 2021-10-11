@@ -266,8 +266,8 @@
     font-family: var(--header-font);
     color: var(--navbar-text);
     font-size: 50px;
+    padding: 0 2%;
     line-height: 80px;
-    padding: 0 100px;
     font-weight: lighter;
   }
   nav ul{
