@@ -21,63 +21,27 @@ function block_toggle() {
 }
 
 /* This controls information from appearing in the sidebar*/
-function sidemenu_content() {
+var side_button = document.getElementById("sidebarActivate");
+  side_button.onclick=function sidemenu_content() {
+    
+    var i_container = document.getElementById("instruction-container");
+    var q_container = document.getElementById("queue-container");
+    var neuroglancer_window = document.getElementById("neuroglancer");
 
-  var i_button = document.getElementById("instruction-button");
-  var i_container = document.getElementById("instruction-container");
-  var q_button = document.getElementById("queue-button");
-  var q_container = document.getElementById("queue-container");
-  var neuroglancer_window = document.getElementById("neuroglancer");
-  
-  
-  i_button.onclick=function() {
+    /* Toggle between adding and removing the "active" class,
+    to highlight the button that controls the panel */
+    this.classList.toggle("active");
 
     
-
-    /* Toggle between adding and removing the "active" class,
-    to highlight the button that controls the panel */
-    this.classList.toggle("active");
-
-    if (i_container.style.visibility != "visible") {
       if (neuroglancer_window.style.width != "75%" ) {
         openSideMenu()
-      }
-      i_container.style.visibility = "visible";
-      q_container.style.visibility = "hidden";
-      
-    } else {
-      if (neuroglancer_window.style.width === "75%" ) {
+      } else {
         closeSideMenu()
       }
-      i_container.style.visibility = "hidden";
+
     } 
 
-  };
 
-  q_button.onclick=function() {
-
-
-    /* Toggle between adding and removing the "active" class,
-    to highlight the button that controls the panel */
-    this.classList.toggle("active");
-
-    if (q_container.style.visibility != "visible") {
-      if (neuroglancer_window.style.width != "75%" ) {
-        openSideMenu()
-      }
-      q_container.style.visibility = "visible";
-      i_container.style.visibility = "hidden";
-      
-    } else {
-      if (neuroglancer_window.style.width === "75%" ) {
-        closeSideMenu()
-      }
-      q_container.style.visibility = "hidden";
-
-    }
-  };
-
-}
 function openSideMenu(){
   var sidemenu = document.getElementById("neuVue-sidemenu");
   var sidebar = document.getElementById("neuVue-sidebar");
@@ -85,7 +49,7 @@ function openSideMenu(){
   var neuroglancer_window = document.getElementById("neuroglancer");
 
   sidemenu.style.width = "25%";
-  sidebar.style.width = "12%";
+  sidebar.style.width = "8%";
   sidecontent.style.width = "80%";
   sidecontent.style.visibility = "visible";
 
@@ -114,7 +78,7 @@ function closeSideMenu() {
   sidecontent.style.transition = "0.3s";
 
   
-  neuroglancer_window.style.width = "96%";
+  neuroglancer_window.style.width = "97%";
 }
 
 /* FOR TAKS PAGE */
