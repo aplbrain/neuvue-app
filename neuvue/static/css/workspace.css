@@ -21,7 +21,8 @@
 
     /* TRANSPARENT COLORS */
     --transparent-background: #120e1479;
-    --transparent-task: #172a46ce;
+    --table-background:#120e149a;
+    --transparent-task: #0a192fce;
     --transparent-shadow:#00000033;
     --transparent-hover:#e6f1ff50;
 
