@@ -6,7 +6,39 @@
 {% if user.is_authenticated %}
   <p>Welcome, You are logged in as {{ user.username }}</p>
 {% else %}
-  <a href="{% provider_login_url 'google' %}">Login With Google </a>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+h1 {
+  color: rgb(255, 255, 255);
+  font-family: var(--header-font);
+  transform: translateY(600%);
+  font-size: 500%;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<h1>Welcome to NeuVue</h1>
+
+</body>
+</html>
+
+  <a class= "login"  href="{% provider_login_url 'google' %}">Login With Google </a>
+  <style>
+    .login {
+      margin: auto;
+      position: relative;
+      width: 20%;
+      display: block;
+      top: 40%;
+      transform: translateY(50%);
+      font-size: xx-large;
+      text-align: center;
+    }
+  </style>
 {% endif %}
 
 
