@@ -37,7 +37,7 @@
 .midMainContainer {
     border-radius: 12px;
     background-color: transparent;
-    width: 96%;
+    width: 75%;
     height: 90% !important;
     margin-top: 1%;
     position: relative;
@@ -111,7 +111,6 @@
     font-family: var(--header-font);
     color: var(--primary-accent);
     /*font-weight: bold;*/
-    font-size: 10px;
     font-size: 1.2vw;
     order: 1;
     flex-grow: 2;
@@ -125,6 +124,7 @@
     box-shadow: 0 4px 8px 0 var(--transparent-shadow);
 }
 
+
 .neuroGlancer {
     box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     border-radius: 8px;
@@ -132,22 +132,50 @@
     flex-grow: 10;
     margin-top: 1%;
     margin-bottom: 1%;
+    height: 100%;
+    order: 1;
+}
+.topBar {
+  font-family: var(--body-font);
+  color: var(--primary-accent-activated);
+  flex-grow: 1;
+  background-color: transparent;
+  height: 1% !important;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  order: 0;
 }
 
+.leftBin {
+  float: left;
+  width:50%;
+  left:0%;
+  padding-left: 1%;
+  text-align: left;
+  order:0;
+}
+.rightBin {
+  float: right;
+  width:50%;
+  padding-right: 1%;
+  right:0%;
+  text-align: right;
+  order:1;
+}
 .bottomBar {
-    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     flex-grow: 1;
     order: 2;
     padding:1%;
-    border-radius: 12px;
     background-color: transparent;
-    border: 1px solid var(--primary-accent-activated);
     height: 5% !important;
     width: 95%;
     margin-bottom: 1%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    order: 2;
 }
 
 .shareNGView {
@@ -159,42 +187,46 @@
 }
 .button {
     font-family: var(--monospace-font);
-    background-color: transparent;
+    background-color: var(--secondary-accent);
     border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    color: var(--secondary-accent);
+    color: var(--background);
     margin: 0 0 10 10px;
     width: 50%;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    cursor: pointer;
     font-size: 16px;
   }
 .button:hover{
-    background: var(--secondary-accent-activated);
-    color: var(--background);
+  border: 3px solid var(--secondary-accent);
+  background: var(--secondary-accent);
+  color: var(--primary-accent);
 }
 
 .button.flag{
-    border: 1.5px solid var(--flag-accent);
-    color: var(--flag-accent);
+    background-color: var(--flag-accent);
+    color: var(--background);
   }
 
 .button.flag:hover{
-    background: var(--flag-accent-activated);
-    color: var(--background);
+  border: 3px solid var(--flag-accent);
+  background: var(--flag-accent);
+  color: var(--primary-accent);
 }
 
 .button.next{
-    border: 1.5px solid var(--next-accent);
-    color: var(--next-accent);
+  background-color: var(--next-accent);
+  color: var(--background);
 }
 
 .button.next:hover{
-  background: var(--next-accent-activated);
-  color: var(--background);
+  border: 3px solid var(--next-accent);
+  background-color: var(--next-accent);
+  color: var(--primary-accent);
 }
+
 .instructions {
     font-family: var(--monospace-font);
     background-color: var(--transparent-background);
@@ -267,8 +299,8 @@
     font-family: var(--header-font);
     color: var(--navbar-text);
     font-size: 50px;
+    padding: 0 2%;
     line-height: 80px;
-    padding: 0 100px;
     font-weight: lighter;
   }
   nav ul{
@@ -366,13 +398,12 @@
     align-items: left;
     flex-direction: column;
     text-decoration: none;
-
     cursor: pointer;
   }
 
-  .active, .taskButton:hover {
+  .taskButton.active, .taskButton:hover {
     background-color: var(--incomplete-color-actived);
-    color:rgba(0, 0, 0, 1);
+    color:var(--background)!important;
   }
   .taskButton.complete{
     background-color: var(--complete-color);
@@ -380,23 +411,28 @@
 
   .complete.active, .taskButton.complete:hover {
     background-color: var(--complete-color-actived);
-    color:#0a192f;
+    color:var(--background);
   }
 
   .taskButton.current{
     background-color: var(--secondary-accent);
   }
 
-  .current.active, .taskButton.current:hover {
+  .taskButton.current.active, .taskButton.current:hover {
     background-color: var(--secondary-accent-activated);
-    color:#0a192f;
+    color:var(--background);
   }
 
   /* Style the accordion panel. Note: hidden by default */
   .informationContainer{
     width: 95%;
-    overflow:auto;
+    overflow: hidden;
+    padding: 5% 2%;
+    margin: 2% 2%;
     display: none;
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    background-color: transparent !important;
   }
 
   .taskNumber {
@@ -416,44 +452,41 @@
     color: var(--primary-accent);
     width: 95%;
     border-radius: 4px;
-    border: 1.5px solid var(--secondary-accent) !important;
-    background-color: transparent !important;
   }
 
   /* INSTRUCTIONS */
   .instructionBox {
     border-radius: 8px;
     border: 1.5px solid var(--secondary-accent) !important;
-    /*background-color: var(--transparent-background);*/
-    max-height: 45%;
+    background-color: transparent;
     width: 95%;
     margin-top: 0%;
     display: flex;
-    visibility: hidden;
     flex-direction: column;
     display:inline-block;
-    padding: 5px 5px 0px 0px;
     margin-bottom: 2%;
+    overflow: auto;
     transition: 0s;
 
   }
   .instructionTitle {
     font-family: var(--header-font);
-    margin: 0 0 10 10px;
     color: var(--primary-accent);
     border-radius: 2px;
     font-size: 10px;
     font-size: 1.2vw;
-    order: 1;
+    z-index: 10;
+    padding: 5%;
     flex-grow: 2;
-    text-align: left;
+    text-align: center;
     align-items: left;
     text-decoration: none;
     transition: 0s;
-    background-color: transparent;
+    background-color: var(--background);
+    position: sticky;
+    top: 0;
 
   }
-
 
   .instructionTitle.active:after {
     content: "\2212";
@@ -468,17 +501,16 @@
     width: 95%;
     border-radius: 4px;
     background-color: var(--transparent-background);
-    max-height: 30%;
-    overflow: auto;
+    height: 85%;
+    overflow: scroll;
   }
 
   /* EXPANDABLE */
   
   .sidebar {
     height: 100%;
-    width: 100%;
+    width: 8%;
     position: relative;
-    padding-top: 20px !important;
     z-index: 1;
     top: 0;
     left: 0;
@@ -486,7 +518,20 @@
     text-align: center;
     align-items: center;
     background-color: var(--transparent-shadow);
+    cursor: pointer;
   }
+
+  .sidebar.active, .sidebar:hover{
+    background-color: var(--transparent-hover);
+  }
+  a.fill-div {
+    display: block;
+    border: none;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+}
+
   .sidebutton {
     background-color: transparent;
     color: var(--primary-accent-activated);
@@ -494,7 +539,7 @@
     margin: 25% 2%;
     text-decoration: none;
     display: inline-block;
-    font-size: 24px;
+    font-size: 1vw !important;
     cursor: pointer;
   }
 
@@ -505,7 +550,7 @@
   .sidemenu {
     height: 99%;
 
-    width: 2%;
+    width: 25%;
     position: fixed;
     
     z-index: 1;
@@ -521,14 +566,14 @@
     margin-top: 4%;
     margin-right: 2%;
     float: right;
-    width: 0%;
+    width: 80%;
     text-align: left;
+    background-color: var(--transparent-background) !important;
   }
 
   .sidemenu a {
     padding: 8px;
     text-decoration: none;
-    font-size: 36px;
     color: var(--primary-accent-activated);
     display: block;
   }
@@ -541,7 +586,6 @@
     position: absolute;
     top: 20px;
     left: 45px;
-    font-size: 60px;
   }
 
 .code{
@@ -551,5 +595,20 @@ background-color: var(--transparent-background);
 padding: 2px;
 font-size: 105%;
 }
+
+::-webkit-scrollbar {
+  -webkit-appearance: inherit;
+  border-radius: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  margin: 5% 5%;
+  background-color: var(--transparent-hover);
+}
+ 
+::-webkit-scrollbar-corner {
+  background: transparent;
+ }
 
 
