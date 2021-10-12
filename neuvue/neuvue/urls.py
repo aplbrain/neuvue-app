@@ -25,10 +25,11 @@ from workspace.views import LogoutView
 
 
 urlpatterns = [
-    path('', TaskView.as_view(), name="tasks"),
+    path('tasks/', TaskView.as_view(), name="tasks"),
     path('workspace/', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('', LogoutView.as_view(), name="logout"),
     path('logout/', LogoutView.as_view(), name="logout"),
 ]
 
