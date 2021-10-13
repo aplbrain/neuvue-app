@@ -6,17 +6,19 @@
 
 
 <div id="neuVue-sidemenu" class="sidemenu">
-    <div id="neuVue-sidebar" class="sidebar">
-        <div id="queue-button" class="sidebutton" >
-            <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-                <i class="glyphicon glyphicon-list"></i>
-            </a>
+    <div id="neuVue-sidebar" class="sidebar" >
+        <div id="instruction-button" class="sidebutton" onclick="sidemenu_content()">
+            <i class="glyphicon glyphicon-info-sign"></i>
+        </div>
+        <div id="queue-button" class="sidebutton" onclick="sidemenu_content()">
+            <i class="glyphicon glyphicon-list"></i>
         </div>   
+        
     </div>
     <div id="neuVue-sidecontent" class="sidecontent">
         
         <! Instructions >
-        <div id = "instruction-container" class = "instructionBox" style="max-height:22%; overflow:hidden;">
+        <div id = "instruction-container" class = "instructionBox">
             <div class="instructionTitle">
                 Instructions
             </div>
@@ -27,13 +29,13 @@
             </div>
         </div>
         <! Task Queue >
-        <div id = "queue-container" class = "instructionBox" style="max-height:65%;">
+        <div id = "queue-container" class = "instructionBox">
             <div class="instructionTitle">
                 Task Queue
             </div>
-            <div class="instructionInfo" >
+            <div class="instructionInfo">
                 <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
+                <div class="informationContainer">
                     <div class="taskNumber">
                         Task #3242121
                     </div> 
@@ -43,7 +45,7 @@
                 </div>
 
                 <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
+                <div class="informationContainer">
                     <div class="taskNumber">
                         Task #3242122
                     </div> 
@@ -68,7 +70,7 @@
                     </div>
                 </div>
                 <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
+                <div class="informationContainer">
                     <div class="taskNumber">
                         Task #3242124
                     </div> 
@@ -77,7 +79,7 @@
                     </div>   
                 </div>
                 <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
+                <div class="informationContainer">
                     <div class="taskNumber">
                         Task #3242125
                     </div> 
@@ -94,31 +96,26 @@
 
 <div id="neuroglancer" class="midMainContainer">
     <div class="left">
-        <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#" 
+        <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
         </iframe>
-            <form action="" method="post" class="bottomBar">
-                {% csrf_token %}
-                <button type="submit" class="button" name="restart">
-                    Restart Task
-                </button>
-
-                <button type="submit" class="button next" name="next">
-                    Next Task
-                </button>
-
-                <button type="submit" class="button flag" name="flag">
-                    Flag Task
-                </button>
-            </form>
+        <div class="bottomBar">
+            <div class ="button">
+                Restart Task
+            </div>
+            <div class ="button next">
+                Next Task
+            </div> 
+            <div class ="button flag">
+                Flag Task
+            </div> 
+        </div>
     </div>
 </div>
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    closeSideMenu()
-    openSideMenu()
+    closeSideMenu();
 </script>
 {% endblock %}
 
