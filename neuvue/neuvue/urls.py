@@ -16,20 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-#from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView
 
 from workspace.views import WorkspaceView
 from workspace.views import TaskView
-from workspace.views import LogoutView
+from workspace.views import IndexView
 
 
 
 urlpatterns = [
+    path('', IndexView.as_view(), name="index"),
     path('tasks/', TaskView.as_view(), name="tasks"),
     path('workspace/', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', LogoutView.as_view(), name="logout"),
     path('logout/', LogoutView.as_view(), name="logout"),
 ]
 
