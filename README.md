@@ -8,5 +8,5 @@ MICrONS Proofreading App
 - check for django updates:
 	- run `python3 manage.py makemigrations` 
 	- run `python3 manage.py migrate`
-- run `python3 manage.py runserver` 
+- run `python3 manage.py runserver localhost:8000` 
 - navigate to [http://127.0.0.1:8000/]( http://127.0.0.1:8000/) in your browser
