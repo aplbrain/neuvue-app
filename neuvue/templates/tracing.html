@@ -96,25 +96,22 @@
 
 <div id="neuroglancer" class="midMainContainer">
     <div class="left">
-        <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#" 
+        <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
         </iframe>
-            <form action="" method="post" class="bottomBar">
-                {% csrf_token %}
-                <button type="submit" class="button" name="restart">
-                    Restart Task
-                </button>
-
-                <button type="submit" class="button next" name="next">
-                    Next Task
-                </button>
-
-                <button type="submit" class="button flag" name="flag">
-                    Flag Task
-                </button>
-            </form>
+        <div class="bottomBar">
+            <div class ="button">
+                Restart Task
+            </div>
+            <div class ="button next">
+                Next Task
+            </div> 
+            <div class ="button flag">
+                Flag Task
+            </div> 
+        </div>
     </div>
 </div>
 <script>
