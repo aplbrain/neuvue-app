@@ -16,7 +16,7 @@
     <div id="neuVue-sidecontent" class="sidecontent">
         
         <! Instructions >
-        <div id = "instruction-container" class = "instructionBox" style="max-height:22%; overflow:hidden;">
+        <div id = "instruction-container" class ="instructionBox" style="max-height:22%;">
             <div class="instructionTitle">
                 Instructions
             </div>
@@ -96,10 +96,13 @@
     <div class="left">
         <div class="topBar" >
                 <div class="leftBin">
-                    Task #211244
+                    Task ID #211244
+                </div>
+                <div class="midBin">
+                    Segmentation ID #425
                 </div>
                 <div class="rightBin">
-                    PyChunk Region #425
+                    Pychunkedgraph Server #4
                 </div>
 
         </div>
@@ -110,13 +113,13 @@
         </iframe>
         <div class="bottomBar">
             <div class ="button flag">
-                Stop Tracing
+                Stop Proofreading
             </div> 
             <div class ="button">
                 Restart Task
             </div>
             <div class ="button next">
-                Next Task
+                Submit Task
             </div> 
             <div class ="button flag">
                 Flag Task
@@ -127,8 +130,7 @@
 </div>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    closeSideMenu()
-    openSideMenu()
+    openSideMenu();
 </script>
 {% endblock %}
 

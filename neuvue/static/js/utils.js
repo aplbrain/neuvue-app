@@ -53,11 +53,15 @@ function openSideMenu(){
   sidecontent.style.width = "80%";
   sidecontent.style.visibility = "visible";
 
+  sideBoxes = document.getElementsByClassName("instructionBox");
+  for (i = 0; i < sideBoxes.length; i++) {
+      sideBoxes[i].style.visibility = "visible";
+  }
+
   sidemenu.style.transition = "0.3s";
   sidebar.style.transition = "0.15s";
   sidecontent.style.animationDelay = "0.29s";
 
-  
   neuroglancer_window.style.width = "75%";
 
 }
@@ -72,6 +76,11 @@ function closeSideMenu() {
   sidebar.style.width = "100%";
   sidecontent.style.width = "0%";
   sidecontent.style.visibility = "hidden";
+
+  sideBoxes = document.getElementsByClassName("instructionBox");
+  for (i = 0; i < sideBoxes.length; i++) {
+      sideBoxes[i].style.visibility = "hidden";
+  }
 
   sidemenu.style.transition = "0.3s";
   sidebar.style.transitionDelay = "0.15s";
