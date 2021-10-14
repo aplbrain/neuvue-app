@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 
 <html>
     <head>
@@ -25,13 +26,14 @@
             <ul>
                 <li><a href="{% url "workspace" %}">Neuroglancer</a></li>
                 <li><a href="{% url "tasks" %}">Queue</a></li>
-
-                <li><a href="">Log Out</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url "logout" %}">Log Out</a></li>
+                {% endif %}
             </ul>
         </nav> 
         
         {% block content %}{% endblock %}
-        
+
     </body>
     <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 </html>
