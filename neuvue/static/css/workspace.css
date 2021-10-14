@@ -262,6 +262,14 @@
   text-align: center;
   order: 1;
 }
+
+.index-title-sub-text {
+  color: rgb(255, 255, 255);
+  font-family: var(--body-font);
+  font-size: 200%;
+  text-align: center;
+  order: 1;
+}
 /* PROGRESS BAR */
 
 .progress {

@@ -3,9 +3,6 @@
 {% load socialaccount %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  <p>Welcome, You are logged in as {{ user.username }}</p>
-{% else %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +15,13 @@
     </div>
     
     <div class="index-title-container">
+    {% if user.is_authenticated %}
+      <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
+    {% else %}
       <a href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
+    {% endif %}
     </div>
   </body>
 </html>
 
-{% endif %}
 {% endblock %}
