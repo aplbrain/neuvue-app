@@ -244,6 +244,24 @@
     font-size: 14px;
   }
 
+.index-title-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  width: 100%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-70%);
+}
+
+.index-title-text {
+  color: rgb(255, 255, 255);
+  font-family: var(--header-font);
+  font-size: 500%;
+  text-align: center;
+  order: 1;
+}
 /* PROGRESS BAR */
 
 .progress {

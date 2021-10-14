@@ -12,42 +12,15 @@
 
 
 </head>
-<body>
-
-<div class=titles>
-
-  <h1>Welcome to NeuVue</h1>
-
-  <h2>
-  <a href="{% provider_login_url 'google' %}" ><img src="static/images/google.png" ></a>
-  <h2>
-</div>
-
-
-</body>
-<style>
-h1 {
-  color: rgb(255, 255, 255);
-  font-family: var(--header-font);
-  font-size: 500%;
-  text-align: center;
-  order: 1;
-}
-
-h2 {
-  order: 2;
-}
-.titles {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: auto;
-  width: 100%;
-  position: relative;
-  top: 50%;
-  transform: translateY(-70%);
-}
-</style>
+  <body>
+    <div class="index-title-container">
+      <span class="index-title-text">Welcome to NeuVue</span>
+    </div>
+    
+    <div class="index-title-container">
+      <a href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
+    </div>
+  </body>
 </html>
 
 {% endif %}
