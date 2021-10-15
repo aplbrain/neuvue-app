@@ -4,7 +4,7 @@ function block_toggle() {
   var i;
 
   for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
+    acc[i].onclick=function() {
       /* Toggle between adding and removing the "active" class,
       to highlight the button that controls the panel */
       this.classList.toggle("active");
@@ -16,7 +16,7 @@ function block_toggle() {
       } else {
         panel.style.display = "block";
       }
-    });
+    };
   }
 }
 
@@ -98,7 +98,7 @@ function table_toggle() {
   var i;
 
   for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
+    acc[i].onclick=function() {
       /* Toggle between adding and removing the "active" class,
       to highlight the button that controls the panel */
       this.classList.toggle("active");
@@ -110,7 +110,7 @@ function table_toggle() {
       } else {
         panel.style.display = "block";
       }
-    });
+    };
   }
 }
 
