@@ -28,6 +28,8 @@
   clear: both;
 }
 
+/* Left half of the the task category header: ex. Soma Splitting Tasks */
+
 .jobHeader{
   background-color: var(--complete-color);
   border-radius: 8px 0 0 8px;
@@ -54,6 +56,7 @@
   color:var(--background);
 }
 
+/* Right half of the task category header: 'start proofreading' button */
 .launch_NG {
   margin: 1% 1% 1% 0px;
   font-family: var(--monospace-font);
@@ -77,6 +80,7 @@
   color: var(--background);
 }
 
+/* Tables for the content */
 table {
   background-color: transparent !important;
   border-radius: 8px;
@@ -90,7 +94,6 @@ table {
   border-collapse: collapse;
 }
 
-
 th {
   background-color: var(--background);
   padding: 8px !important;
@@ -99,7 +102,6 @@ th {
   position: sticky;
   top: 0;
 }
-
 
 td {
   padding: 1% !important;
@@ -114,7 +116,7 @@ tr:hover {
 
 
 
-/* Style the tab */
+/* Tab Container */
 
 .tab {
   overflow: hidden;
@@ -123,7 +125,7 @@ tr:hover {
   width:100%;
 }
 
-/* Style the buttons inside the tab */
+/* Tabs ex: 'In Progress', 'Pending', 'Closed' */
 .tab button {
 
   background-color: transparent !important;
@@ -171,6 +173,8 @@ tr:hover {
   width: 95%;
   
 }
+
+/* Controls the style of the scrollbars */
 
 ::-webkit-scrollbar {
   -webkit-appearance: none;
