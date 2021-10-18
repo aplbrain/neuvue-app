@@ -32,9 +32,34 @@
     --monospace-font: "Lato", sans-serif;
   }
 
-/* Formatting -- some of this is no longer required with the navbar*/
 
-.midMainContainer {
+/* Separates left column with NG window, text, and buttons from right column: sidebar */
+
+.left {
+  border-radius: 12px;
+  background-color: transparent;
+  flex-grow: 6;
+  order: 1;
+  height: 95%;
+  margin-left: 1%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.right {
+  background-color: transparent;
+  flex-grow: 1;
+  order: 2;
+  height: 95%;
+  width: 15%;
+  margin-right: 1%;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+/* Additional container for NG window, text, and buttons to arrange column */
+.leftFormatting {
     border-radius: 12px;
     background-color: transparent;
     width: 75%;
@@ -49,47 +74,7 @@
 }
 
 
-.left {
-    border-radius: 12px;
-    background-color: transparent;
-    flex-grow: 6;
-    order: 1;
-    height: 95%;
-    margin-left: 1%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.right {
-    background-color: transparent;
-    flex-grow: 1;
-    order: 2;
-    height: 95%;
-    width: 15%;
-    margin-right: 1%;
-    overflow: auto;
-    overflow-x: hidden;
-}
-
-/* CONTAINERS */
-.taskQueue {
-    border-radius: 8px;
-    background-color: var(--transparent-background);
-    position: relative;
-    max-height: 70%;
-    overflow: auto;
-    width: 95%;
-    margin-top: 0%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    display:inline-block;
-    padding: 10px 10px 10px 10px;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
+/* Button class -- no longer used in html regions */
 .buttonBox {
     background-color: transparent;
     width: 30%;
@@ -107,24 +92,8 @@
     padding-top:20px;
 }
 
-.taskTitle {
-    font-family: var(--header-font);
-    color: var(--primary-accent);
-    /*font-weight: bold;*/
-    font-size: 1.2vw;
-    order: 1;
-    flex-grow: 2;
-    padding: 0px 20px 0px 25px;
-    text-align: left;
-    align-items: left;
-    text-decoration: none;
-}
 
-.title {
-    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
-}
-
-
+/* NG container */
 .neuroGlancer {
     box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     border-radius: 8px;
@@ -135,35 +104,45 @@
     height: 100%;
     order: 1;
 }
+
+/* formats the Task ID, Segmentation ID, and Pychunked graph container */
 .topBar {
   font-family: var(--body-font);
   color: var(--primary-accent-activated);
   flex-grow: 1;
   background-color: transparent;
-  height: 1% !important;
+  height: 2.5% !important;
   width: 95%;
   display: flex;
   flex-direction: row;
   align-items: center;
   order: 0;
+  left:0;
 }
 
-.leftBin {
-  float: left;
-  width:50%;
-  left:0%;
-  padding-left: 1%;
-  text-align: left;
-  order:0;
+.textBin {
+  width: 33%;
+  overflow: hidden;
+  display: block;
 }
-.rightBin {
-  float: right;
-  width:50%;
-  padding-right: 1%;
-  right:0%;
-  text-align: right;
+
+.textBin.left {
+  float: left;
+  order:0;
+  text-align: left !important;
+}
+.textBin.mid {
+  float: left;
+  text-align: center;
   order:1;
 }
+.textBin.right {
+  float: right;
+  text-align: right;
+
+}
+
+/* button container below NG */
 .bottomBar {
     flex-grow: 1;
     order: 2;
@@ -178,13 +157,7 @@
     order: 2;
 }
 
-.shareNGView {
-    font-family: var(--body-font);
-    color: var(--primary-accent-activated);
-    font-size: 100%;
-    order: 2;
-    flex-grow: 1;
-}
+/* buttons used in bottom container */
 .button {
     font-family: var(--monospace-font);
     background-color: var(--secondary-accent);
@@ -227,49 +200,6 @@
   color: var(--primary-accent);
 }
 
-.instructions {
-    font-family: var(--monospace-font);
-    background-color: var(--transparent-background);
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    color: var(--primary-accent);
-    margin: 0 0 10 10px;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    padding: 5px 5px;
-    text-align: left;
-    text-decoration: none;
-    display: inline-block;
-    width: 90%;
-    font-size: 14px;
-  }
-
-.index-title-container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: auto;
-  width: 100%;
-  position: relative;
-  top: 50%;
-  transform: translateY(-70%);
-}
-
-.index-title-text {
-  color: rgb(255, 255, 255);
-  font-family: var(--header-font);
-  font-size: 500%;
-  text-align: center;
-  order: 1;
-}
-
-.index-title-sub-text {
-  color: rgb(255, 255, 255);
-  font-family: var(--body-font);
-  font-size: 200%;
-  text-align: center;
-  order: 1;
-}
 /* PROGRESS BAR */
 
 .progress {
@@ -405,7 +335,7 @@
     }
   }
 
-  /* NOW FOR TASK BUTTONS*/
+/* Task buttons in the TaskQueue sidebar container*/
 
 .taskButton {
     font-family: var(--body-font);
@@ -480,8 +410,8 @@
     border-radius: 4px;
   }
 
-  /* INSTRUCTIONS */
-  .instructionBox {
+  /* Container for sidecontent item */
+  .sideContentBox {
     border-radius: 8px;
     border: 1.5px solid var(--secondary-accent) !important;
     background-color: transparent;
@@ -492,10 +422,12 @@
     display:inline-block;
     margin-bottom: 2%;
     overflow: auto;
+    overflow-x: hidden;
     transition: 0s;
 
   }
-  .instructionTitle {
+  /* Title for sidecontent item */
+  .sideContentTitle {
     font-family: var(--header-font);
     color: var(--primary-accent);
     border-radius: 2px;
@@ -514,11 +446,12 @@
 
   }
 
-  .instructionTitle.active:after {
+  .sideContentTitle.active:after {
     content: "\2212";
   }
 
-  .instructionInfo {
+   /* Container for sidecontent info */
+  .sideContentInfo {
     font-family: var(--monospace-font);
     margin: 0 0 10 10px;
     padding: 5px 10px;
@@ -527,12 +460,14 @@
     width: 95%;
     border-radius: 4px;
     background-color: var(--transparent-background);
-    height: 85%;
+    display: flex;
+    flex-direction: column;
     overflow: scroll;
   }
 
-  /* EXPANDABLE */
+  /* Sidebar Expandable */
   
+  /* Sidemenu access bar */
   .sidebar {
     height: 100%;
     width: 8%;
@@ -569,10 +504,7 @@
     cursor: pointer;
   }
 
-  .active, .sidebutton:hover{
-    color: var(--primary-accent);
-}
-
+  /* the entire sidebar (content  + access bar) */
   .sidemenu {
     height: 99%;
 
@@ -584,17 +516,6 @@
     right: 0;
     background-color: var(--transparent-background);
     overflow: hidden;
-  }
-
-  .sidecontent {
-    top: 0;
-    right: 0;
-    margin-top: 4%;
-    margin-right: 2%;
-    float: right;
-    width: 80%;
-    text-align: left;
-    background-color: var(--transparent-background) !important;
   }
 
   .sidemenu a {
@@ -614,6 +535,18 @@
     left: 45px;
   }
 
+  /* Container for all information in the sidebar */
+  .sidecontent {
+    top: 0;
+    right: 0;
+    margin-top: 4%;
+    margin-right: 2%;
+    float: right;
+    width: 80%;
+    text-align: left;
+    background-color: var(--transparent-background) !important;
+  }
+
 .code{
 font-family: var(--monospace-font);
 color: rgb(255, 111, 0);
@@ -622,6 +555,7 @@ padding: 2px;
 font-size: 105%;
 }
 
+/* Scrollbar formatting */
 ::-webkit-scrollbar {
   -webkit-appearance: inherit;
   border-radius: 8px;

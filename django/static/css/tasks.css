@@ -28,6 +28,8 @@
   clear: both;
 }
 
+/* Left half of the the task category header: ex. Soma Splitting Tasks */
+
 .jobHeader{
   background-color: var(--complete-color);
   border-radius: 8px 0 0 8px;
@@ -54,6 +56,7 @@
   color:var(--background);
 }
 
+/* Right half of the task category header: 'start proofreading' button */
 .launch_NG {
   margin: 1% 1% 1% 0px;
   font-family: var(--monospace-font);
@@ -77,6 +80,7 @@
   color: var(--background);
 }
 
+/* Tables for the content */
 table {
   background-color: transparent !important;
   border-radius: 8px;
@@ -90,7 +94,6 @@ table {
   border-collapse: collapse;
 }
 
-
 th {
   background-color: var(--background);
   padding: 8px !important;
@@ -99,7 +102,6 @@ th {
   position: sticky;
   top: 0;
 }
-
 
 td {
   padding: 1% !important;
@@ -114,49 +116,53 @@ tr:hover {
 
 
 
-/* Style the tab */
+/* Tab Container */
 
 .tab {
-  float: left;
+  overflow: hidden;
+  margin-left: 2%;
   background-color: transparent;
-  width: 10%;
-  
+  width:100%;
 }
 
-/* Style the buttons inside the tab */
+/* Tabs ex: 'In Progress', 'Pending', 'Closed' */
 .tab button {
-  display: block;
+
   background-color: transparent !important;
   color: var(--primary-accent);
-  padding: 22px 16px;
-  width: 100%;
+  padding: 1% 1%;
   border: 1.5px solid var(--transparent-hover);
-  border-right: none;
+  border-bottom: none;
   outline: none;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transition: 0.3s;
   font-size: 15px;
-  border-radius: 16px 0px 0px 16px;
+  border-radius: 8px 8px 0px 0px;
+  width: 10%;
   
 }
 
 /* Change background color of buttons on hover */
 .tab button:hover {
   background-color: var(--transparent-hover) !important;
+  border:transparent;
   color: var(--primary-accent);
 }
 
 /* Create an active/current "tab button" class */
 .tab button.active {
   background-color: var(--secondary-accent) !important;
+  border:transparent;
   color: var(--primary-accent);
 }
 
 /* Style the tab content */
 .tabcontent {
-  float: left;
-  
+  align-items: center;
+  float: center;
+  margin-left: 2%;
+  display: block;
   border-radius: 0px 8px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   background-color: var(--table-background) !important;
@@ -164,9 +170,11 @@ tr:hover {
   overflow: -moz-scrollbars-vertical; 
   overflow-y: scroll;
   overflow-x: hidden;
-  width: 90%;
+  width: 95%;
   
 }
+
+/* Controls the style of the scrollbars */
 
 ::-webkit-scrollbar {
   -webkit-appearance: none;
