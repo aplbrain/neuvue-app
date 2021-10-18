@@ -6,7 +6,7 @@ import colocarpy
 import pandas as pd
 import numpy as np
 
-from nglui import ImageLayerConfig, SegmentationLayerConfig, AnnotationLayerConfig, StateBuilder
+from nglui.statebuilder import ImageLayerConfig, SegmentationLayerConfig, AnnotationLayerConfig, StateBuilder
 
 def get_NG_link(coordinates):
     img_source = "precomputed://" + settings.IMAGE_SOURCE
@@ -22,7 +22,7 @@ def get_NG_link(coordinates):
 class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.COLOCARPY_ADDR)
+        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -30,9 +30,9 @@ class WorkspaceView(View):
         #if open display task
         #this part not done
         args = {
-            'ng_base_url': settings.NG_CLIENT,
+            'ng_url': settings.NG_CLIENT,
             'task_num': "N/A",
-            'pcg_addr': settings.PROD_PCG_SOURCE
+            'pcg_url': settings.PROD_PCG_SOURCE
         }
         return render(request, "workspace.html", args)
 
