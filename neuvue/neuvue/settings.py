@@ -135,8 +135,7 @@ if not DEBUG:
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'workspace', 'static'),
+    os.path.join(BASE_DIR, 'static')
 ]
 
 
@@ -163,9 +162,5 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# SITE_ID = 2
-
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
-
-COLOCARPY_ADDR = "http://127.0.0.1:9005/"
