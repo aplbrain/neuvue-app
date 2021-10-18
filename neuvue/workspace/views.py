@@ -4,13 +4,6 @@ import colocarpy
 from django.conf import settings
 import pandas as pd
 import os
-
-import pickle
-import colocarpy
-import random
-from tqdm.notebook import tqdm
-from caveclient import CAVEclient
-from nglui.statebuilder import *
 import numpy as np
 
 def get_NG_link(coordinates):
@@ -53,13 +46,15 @@ class WorkspaceView(View):
             coordinates = np.array(point['coordinate'])
             link = get_NG_link(coordinates)
 
-        if 'next' in request.POST:
-            print("next")
+        
+        if 'submit' in request.POST:
+            print("submit")
             task = self.client.get_next_task("andy", "neuvue")
             self.client.patch_task(task["_id"], status = "complete")
             point = self.client.get_point(task['points'][0])
             coordinates = np.array(point['coordinate'])
             link = get_NG_link(coordinates)
+        
         if 'flag' in request.POST:
             print("flag")
             task = self.client.get_next_task("andy", "neuvue")
