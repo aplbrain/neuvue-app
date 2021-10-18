@@ -51,7 +51,7 @@
                     <p>Here is information about another task you have completed. You are doing great!</p>
                     </div>
                 </div>
-                <button class="taskButton current" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
+                <button id="currentTask" class="taskButton current active" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
                 <div class="informationContainer" style="display: inline-block;">
                     <div class="taskNumber">
                         Task #3242123
@@ -104,7 +104,6 @@
                 <div class="textBin right">
                     Pychunkedgraph Server #4
                 </div>
-
         </div>
         <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
                 width="95%" 
@@ -131,6 +130,20 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
     openSideMenu();
+    block_toggle();
+    activeTaskStartUp();
+
+    /* Patch to allow current active task button not need double click for first interaction */
+    function activeTaskStartUp() {
+        var currentTaskButton = document.getElementById("currentTask");
+        currentTaskButton.classList.toggle("active");
+        var panel = currentTaskButton.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    }
 </script>
 {% endblock %}
 
