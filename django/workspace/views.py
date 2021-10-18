@@ -6,19 +6,17 @@ import colocarpy
 import pandas as pd
 import numpy as np
 
+from nglui import ImageLayerConfig, SegmentationLayerConfig, AnnotationLayerConfig, StateBuilder
+
 def get_NG_link(coordinates):
-    img_source = 'precomputed://https://storage.googleapis.com/iarpa_microns/minnie/minnie65/em'
-    seg_source = 'graphene://https://minnie.microns-daf.com/segmentation/table/minnie3_v1'
-    img_layer = ImageLayerConfig(name='em',
-                                 source=img_source,
-                                 )
-    seg_layer = SegmentationLayerConfig(name = 'seg',
-                                        source = seg_source,
-                                       selected_ids_column='pt_root_id')
+    img_source = "precomputed://" + settings.IMAGE_SOURCE
+    seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    img_layer = ImageLayerConfig(name='em',source=img_source)
+    seg_layer = SegmentationLayerConfig(name='seg', source=seg_source, selected_ids_column='pt_root_id')
     anno_layer = AnnotationLayerConfig(name='annos')
     view_options = {'position': coordinates, 'zoom_image': 20}
     sb = StateBuilder(layers=[img_layer, seg_layer, anno_layer], view_kws=view_options)
-    link = sb.render_state(url_prefix='http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com')
+    link = sb.render_state(url_prefix=settings.NG_CLIENT)
     return link
 
 class WorkspaceView(View):
@@ -31,9 +29,10 @@ class WorkspaceView(View):
         #restart begins as start
         #if open display task
         #this part not done
-        link = "http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
         args = {
-            'new_link': link
+            'ng_base_url': settings.NG_CLIENT,
+            'task_num': "N/A",
+            'pcg_addr': settings.PROD_PCG_SOURCE
         }
         return render(request, "workspace.html", args)
 

@@ -45,7 +45,7 @@
                 <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
                 <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
                     <div class="taskNumber">
-                        Task #3242122
+                        Task #{{task_num}}
                     </div> 
                     <div class="taskInfo">
                     <p>Here is information about another task you have completed. You are doing great!</p>
@@ -94,7 +94,7 @@
 
 <div id="neuroglancer" class="midMainContainer">
     <div class="left">
-        <iframe src="{{new_link}}" 
+        <iframe src="{{ng_base_url}}" 
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
