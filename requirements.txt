@@ -1,2 +1,4 @@
-django 
-django-allauth
+django==3.2.7
+django-allauth==0.45.0
+nglui==2.7.2
+git+https://github.com/aplbrain/neuvue-client.git
