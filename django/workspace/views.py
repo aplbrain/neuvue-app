@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic.base import View
-import colocarpy
 from django.conf import settings
+
+import colocarpy
 import pandas as pd
-import os
 import numpy as np
 
 def get_NG_link(coordinates):
