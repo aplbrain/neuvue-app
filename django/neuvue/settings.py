@@ -175,3 +175,8 @@ DEV_PCG_SOURCE = None
 
 # Neuroglancer Settings
 NG_CLIENT = "http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com"
+CONTRAST = {
+    "black": 0.35, 
+    "white": 0.7
+}
+VOXEL_RESOLUTION = (4, 4, 40)
