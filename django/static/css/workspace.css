@@ -35,6 +35,8 @@
 
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
 
+/* Separates left column with NG window, text, and buttons from right column: sidebar */
+
 .left {
   border-radius: 12px;
   background-color: transparent;
@@ -78,20 +80,20 @@
 
 /* Button class -- no longer used in html regions */
 .buttonBox {
-    background-color: transparent;
-    width: 30%;
-    display: flex;
-    flex-direction: column;
+  background-color: transparent;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
 }
 
 .buttonBox.end {
-    margin-bottom: 2%;
-    margin-right: 2%;
-    position: relative;
-    bottom: 0px;
-    right: 0px;
-    clear: both;
-    padding-top:20px;
+  margin-bottom: 2%;
+  margin-right: 2%;
+  position: relative;
+  bottom: 0px;
+  right: 0px;
+  clear: both;
+  padding-top:20px;
 }
 
 
@@ -113,6 +115,7 @@
   background-color: transparent;
   height: 2% !important;
   width: 95%;
+  margin-bottom: 1%;
   display: flex;
   flex-direction: row;
   order: 0;
@@ -176,121 +179,174 @@
   }
 
 .button:hover{
-  border: 3px solid var(--secondary-accent);
-  background: var(--secondary-accent);
-  color: var(--primary-accent);
+border: 3px solid var(--secondary-accent);
+background: var(--secondary-accent);
+color: var(--primary-accent);
 }
 
 .button.flag{
-    background-color: var(--flag-accent);
-    color: var(--background);
-  }
-
-.button.flag:hover{
-  border: 3px solid var(--flag-accent);
-  background: var(--flag-accent);
-  color: var(--primary-accent);
-}
-
-.button.next{
-  background-color: var(--next-accent);
+  background-color: var(--flag-accent);
   color: var(--background);
 }
 
-.button.next:hover{
-  border: 3px solid var(--next-accent);
-  background-color: var(--next-accent);
-  color: var(--primary-accent);
+.button.flag:hover{
+border: 3px solid var(--flag-accent);
+background: var(--flag-accent);
+color: var(--primary-accent);
+}
+
+.button.submit{
+background-color: var(--next-accent);
+color: var(--background);
+}
+
+.button.submit:hover{
+border: 3px solid var(--next-accent);
+background-color: var(--next-accent);
+color: var(--primary-accent);
 }
 
 .instructions {
-    font-family: var(--monospace-font);
-    background-color: var(--transparent-background);
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    color: var(--primary-accent);
-    margin: 0 0 10 10px;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    padding: 5px 5px;
-    text-align: left;
-    text-decoration: none;
-    display: inline-block;
-    width: 90%;
-    font-size: 14px;
-  }
+  font-family: var(--monospace-font);
+  background-color: var(--transparent-background);
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  color: var(--primary-accent);
+  margin: 0 0 10 10px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  padding: 5px 5px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  width: 90%;
+  font-size: 14px;
+}
 
 .index-title-container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: auto;
-  width: 100%;
-  position: relative;
-  top: 50%;
-  transform: translateY(-70%);
+display: flex;
+align-items: center;
+flex-direction: column;
+margin: auto;
+width: 100%;
+position: relative;
+top: 50%;
+transform: translateY(-70%);
 }
 
 .index-title-text {
-  color: rgb(255, 255, 255);
-  font-family: var(--header-font);
-  font-size: 500%;
-  text-align: center;
-  order: 1;
+color: rgb(255, 255, 255);
+font-family: var(--header-font);
+font-size: 500%;
+text-align: center;
+order: 1;
 }
 
 .index-title-sub-text {
-  color: rgb(255, 255, 255);
-  font-family: var(--body-font);
-  font-size: 200%;
-  text-align: center;
-  order: 1;
+color: rgb(255, 255, 255);
+font-family: var(--body-font);
+font-size: 200%;
+text-align: center;
+order: 1;
 }
 /* PROGRESS BAR */
 
 .progress {
-    margin-left: 5%;
-    background-color: transparent !important;
-    border: 2px solid var(--primary-accent-activated);
-    border-radius: 20px !important;
-    width: 85%;
-    height: 30px;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
+  margin-left: 5%;
+  background-color: transparent !important;
+  border: 2px solid var(--primary-accent-activated);
+  border-radius: 20px !important;
+  width: 85%;
+  height: 30px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
 }
 
 .progress-bar {
-  float: left;
-  }
+float: left;
+}
 
 .progress-bar.color {
-    margin: 0 0px;
-    border-radius: 20px;
-    background-color: var(--progress);
-    text-align: right;
-    padding-right: 10px;
-    padding-bottom: 18px;
-    height: 100%;
-    position: relative;
-    color: black;
+  margin: 0 0px;
+  border-radius: 20px;
+  background-color: var(--progress);
+  text-align: right;
+  padding-right: 10px;
+  padding-bottom: 18px;
+  height: 100%;
+  position: relative;
+  color: black;
 }
 
 .the-icons {
-  font-size: 25px;
+font-size: 25px;
 }
 
 /* NAVIGATION BAR */
 
 *{
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-  }
-  body{
-    font-family: var(--body-font)
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+body{
+  font-family: var(--body-font)
+}
+nav{
+  background: var(--header-background);
+  height: 70px;
+  width: 100%;
+}
+label.logo{
+  font-family: var(--header-font);
+  color: var(--navbar-text);
+  font-size: 50px;
+  padding: 0 2%;
+  line-height: 70px;
+  font-weight: lighter;
+}
+nav ul{
+  float: right;
+  margin-right: 20px;
+}
+nav ul li{
+  display: inline-block;
+  line-height: 70px;
+  margin: 0 5px;
+}
+nav ul li a{
+  font-family: var(--monospace-font);
+  color: var(--navbar-text);
+  font-size: 17px;
+  padding: 7px 13px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+a.active,a:hover{
+  background-color: transparent;
+  border-radius: 8px;
+  color: var(--navbar-text) !important;
+  border: 1.5px solid var(--secondary-accent);
+}
+.checkbtn{
+  font-size: 30px;
+  color: var(--navbar-text);
+  float: right;
+  line-height: 70px;
+  margin-right: 40px;
+  cursor: pointer;
+  display: none;
+}
+#check{
+  display: none;
+}
+@media (max-width: 952px){
+  label.logo{
+    font-size: 30px;
+    padding-left: 50px;
   }
   nav{
     background: var(--header-background);
@@ -305,9 +361,15 @@
     line-height: 70px;
     font-weight: lighter;
   }
-  nav ul{
-    float: right;
-    margin-right: 20px;
+  ul{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #2c3e50;
+    top: 70px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
   }
   nav ul li{
     display: inline-block;
@@ -315,18 +377,7 @@
     margin: 0 5px;
   }
   nav ul li a{
-    font-family: var(--monospace-font);
-    color: var(--navbar-text);
-    font-size: 17px;
-    padding: 7px 13px;
-    border-radius: 3px;
-    text-transform: uppercase;
-  }
-  a.active,a:hover{
-    background-color: transparent;
-    border-radius: 8px;
-    color: var(--navbar-text) !important;
-    border: 1.5px solid var(--secondary-accent);
+    font-size: 20px;
   }
   .checkbtn{
     font-size: 30px;
@@ -380,81 +431,82 @@
       left: 0;
     }
   }
+}
 
 /* Task buttons in the TaskQueue sidebar container*/
 
 .taskButton {
-    font-family: var(--body-font);
-    border-radius: 4px;
-    border-color: transparent !important;
-    position: relative;
-    background-color: var(--incomplete-color);
-    color: var(--background);
-    width: 93%;
-    margin-top: 3%;
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 0 0 10 10px;
-    float: center;
-    text-align: left;
-    align-items: left;
-    flex-direction: column;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  font-family: var(--body-font);
+  border-radius: 4px;
+  border-color: transparent !important;
+  position: relative;
+  background-color: var(--incomplete-color);
+  color: var(--background);
+  width: 93%;
+  margin-top: 3%;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 0 10 10px;
+  float: center;
+  text-align: left;
+  align-items: left;
+  flex-direction: column;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-  .taskButton.active, .taskButton:hover {
-    background-color: var(--incomplete-color-actived);
-    color:var(--background)!important;
-  }
-  .taskButton.complete{
-    background-color: var(--complete-color);
-  }
+.taskButton.active, .taskButton:hover {
+  background-color: var(--incomplete-color-actived);
+  color:var(--background)!important;
+}
+.taskButton.complete{
+  background-color: var(--complete-color);
+}
 
-  .complete.active, .taskButton.complete:hover {
-    background-color: var(--complete-color-actived);
-    color:var(--background);
-  }
+.complete.active, .taskButton.complete:hover {
+  background-color: var(--complete-color-actived);
+  color:var(--background);
+}
 
-  .taskButton.current{
-    background-color: var(--secondary-accent);
-  }
+.taskButton.current{
+  background-color: var(--secondary-accent);
+}
 
-  .taskButton.current.active, .taskButton.current:hover {
-    background-color: var(--secondary-accent-activated);
-    color:var(--background);
-  }
+.taskButton.current.active, .taskButton.current:hover {
+  background-color: var(--secondary-accent-activated);
+  color:var(--background);
+}
 
-  /* Style the accordion panel. Note: hidden by default */
-  .informationContainer{
-    width: 95%;
-    overflow: hidden;
-    padding: 5% 2%;
-    margin: 2% 2%;
-    display: none;
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    background-color: transparent !important;
-  }
+/* Style the accordion panel. Note: hidden by default */
+.informationContainer{
+  width: 95%;
+  overflow: hidden;
+  padding: 5% 2%;
+  margin: 2% 2%;
+  display: none;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  background-color: transparent !important;
+}
 
-  .taskNumber {
-    font-family: var(--monospace-font);
-    margin: 0 0 10 10px;
-    padding: 5px 10px;
-    color: var(--primary-accent);
-    width: 95%;
-    border-radius: 4px;
-    background-color: var(--transparent-task);
-  }
+.taskNumber {
+  font-family: var(--monospace-font);
+  margin: 0 0 10 10px;
+  padding: 5px 10px;
+  color: var(--primary-accent);
+  width: 95%;
+  border-radius: 4px;
+  background-color: var(--transparent-task);
+}
 
-  .taskInfo {
-    font-family: var(--monospace-font);
-    margin: 0 0 10 10px;
-    padding: 5px 10px;
-    color: var(--primary-accent);
-    width: 95%;
-    border-radius: 4px;
-  }
+.taskInfo {
+  font-family: var(--monospace-font);
+  margin: 0 0 10 10px;
+  padding: 5px 10px;
+  color: var(--primary-accent);
+  width: 95%;
+  border-radius: 4px;
+}
 
   /* Container for sidecontent item */
   .sideContentBox {
@@ -490,7 +542,7 @@
     position: sticky;
     top: 0;
 
-  }
+}
 
   .sideContentTitle.active:after {
     content: "\2212";
@@ -528,27 +580,31 @@
     cursor: pointer;
   }
 
-  .sidebar.active, .sidebar:hover{
-    background-color: var(--transparent-hover);
-  }
-  a.fill-div {
-    display: block;
-    border: none;
-    height: 100%;
-    width: 100%;
-    text-decoration: none;
+/* Sidemenu access bar */
+.sidebar {
+  height: 100%;
+  width: 8%;
+  position: relative;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  float: left;
+  text-align: center;
+  align-items: center;
+  background-color: var(--transparent-shadow);
+  cursor: pointer;
 }
 
-  .sidebutton {
-    background-color: transparent;
-    color: var(--primary-accent-activated);
-    text-align: center;
-    margin: 25% 2%;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1vw !important;
-    cursor: pointer;
-  }
+.sidebar.active, .sidebar:hover{
+  background-color: var(--transparent-hover);
+}
+a.fill-div {
+  display: block;
+  border: none;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+}
 
   /* the entire sidebar (content  + access bar) */
   .sidemenu {
@@ -571,15 +627,23 @@
     display: block;
   }
 
-  .sidemenu a:hover, .sidemenu a:focus {
-    color: var(--navbar-text);
-  }
+.sidemenu .closebtn {
+  position: absolute;
+  top: 20px;
+  left: 45px;
+}
 
-  .sidemenu .closebtn {
-    position: absolute;
-    top: 20px;
-    left: 45px;
-  }
+/* Container for all information in the sidebar */
+.sidecontent {
+  top: 0;
+  right: 0;
+  margin-top: 4%;
+  margin-right: 2%;
+  float: right;
+  width: 80%;
+  text-align: left;
+  background-color: var(--transparent-background) !important;
+}
 
   /* Container for all information in the sidebar */
   .sidecontent {
@@ -603,18 +667,16 @@ font-size: 105%;
 
 /* Scrollbar formatting */
 ::-webkit-scrollbar {
-  -webkit-appearance: inherit;
-  border-radius: 8px;
-  width: 8px;
+-webkit-appearance: inherit;
+border-radius: 8px;
+width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  margin: 5% 5%;
-  background-color: var(--transparent-hover);
+border-radius: 4px;
+margin: 5% 5%;
+background-color: var(--transparent-hover);
 }
- 
+
 ::-webkit-scrollbar-corner {
-  background: transparent;
- }
-
-
+background: transparent;
+}

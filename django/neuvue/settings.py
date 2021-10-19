@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
-import data_settings
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -166,3 +164,19 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
+
+# Neuvue Specific Settings
+NEUVUE_QUEUE_ADDR = "http://127.0.0.1:9005/"
+
+# Data Sources
+IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
+PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
+DEV_PCG_SOURCE = None
+
+# Neuroglancer Settings
+NG_CLIENT = "http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com"
+CONTRAST = {
+    "black": 0.35, 
+    "white": 0.7
+}
+VOXEL_RESOLUTION = (4, 4, 40)

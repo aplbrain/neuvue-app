@@ -96,16 +96,17 @@
     <div class="left">
         <div class="topBar" >
                 <div class="textBin left">
-                    Task ID #211244
+                    Task ID #{{task_id}}
                 </div>
                 <div class="textBin mid">
                     Segmentation ID #425
                 </div>
                 <div class="textBin right">
-                    Pychunkedgraph Server #4
+                    Connected to {{pcg_url}}
                 </div>
+
         </div>
-        <iframe src="{{ng_base_url}}" 
+        <iframe src={{ng_url}}
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
@@ -125,7 +126,7 @@
                 </button>
 
                 <button type="submit" class="button flag" name="stop">
-                    Exit
+                    Pause and Exit
                 </button>
 
             </form>

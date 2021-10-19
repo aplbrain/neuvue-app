@@ -1,40 +1,45 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.conf import settings
-
 import colocarpy
-import pandas as pd
 import numpy as np
 
-from nglui import ImageLayerConfig, SegmentationLayerConfig, AnnotationLayerConfig, StateBuilder
+from .neuroglancer import construct_proofreading_url
 
-def get_NG_link(coordinates):
-    img_source = "precomputed://" + settings.IMAGE_SOURCE
-    seg_source = "graphene://" + settings.PROD_PCG_SOURCE
-    img_layer = ImageLayerConfig(name='em',source=img_source)
-    seg_layer = SegmentationLayerConfig(name='seg', source=seg_source, selected_ids_column='pt_root_id')
-    anno_layer = AnnotationLayerConfig(name='annos')
-    view_options = {'position': coordinates, 'zoom_image': 20}
-    sb = StateBuilder(layers=[img_layer, seg_layer, anno_layer], view_kws=view_options)
-    link = sb.render_state(url_prefix=settings.NG_CLIENT)
-    return link
+# import the logging library
+import logging
+logging.basicConfig(level=logging.DEBUG)
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.COLOCARPY_ADDR)
+        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        #restart begins as start
-        #if open display task
-        #this part not done
-        args = {
-            'ng_base_url': settings.NG_CLIENT,
-            'task_num': "N/A",
-            'pcg_addr': settings.PROD_PCG_SOURCE
+        context = {
+            'ng_url': settings.NG_CLIENT,
+            'pcg_url': settings.PROD_PCG_SOURCE,
+            'task_id': '',
+            'n_tasks_complete': 0
         }
-        return render(request, "workspace.html", args)
+        
+        if not request.user.is_authenticated:
+            #TODO: Create Modal that lets the user know to log in first. 
+            return render(request, "workspace.html", context)
+        
+        # Check if the user has an open task
+        try:
+            open_tasks = self.client.get_tasks(sieve={
+                "assignee": request.user,
+                "status": "open"
+                "namespace"
+                })
+        except:
+            pass
+        return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
 
@@ -55,22 +60,29 @@ class WorkspaceView(View):
             link = get_NG_link(coordinates)
         
         if 'flag' in request.POST:
+            # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
+            # Input box in the modal that will user input for flag reason
+            # Cancel/Flag 
+
             print("flag")
             task = self.client.get_next_task("andy", "neuvue")
-            self.client.patch_task(task["_id"], status = "errored")
+            self.client.patch_task(task["_id"], status = "errored", metadata = {"flag_reason": "flag reason"})
             point = self.client.get_point(task['points'][0])
             coordinates = np.array(point['coordinate'])
-            link = get_NG_link(coordinates)
 
-        args = {
-            'new_link': link
-        }
+            args = {
+                'ng_url': settings.NG_CLIENT
+            }
 
         return render(request, "workspace.html", args)
 
 
 class TaskView(View):
     def get(self, request, *args, **kwargs):
+        # logic/API calls go here 
+        # Make a call to neuvue-queue using neuvue-client to get_tasks()
+        # tasks = get_tasks(sieve={"assignee": username, "status": "pending|closed|open|erorred")
+
         return render(request, "tasks.html")
 
 class IndexView(View):
