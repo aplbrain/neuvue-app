@@ -16,22 +16,22 @@
     <div id="neuVue-sidecontent" class="sidecontent">
         
         <! Instructions >
-        <div id = "instruction-container" class = "instructionBox" style="max-height:22%; overflow:hidden;">
-            <div class="instructionTitle">
+        <div id = "instruction-container" class ="sideContentBox" style="max-height:22%;">
+            <div class="sideContentTitle">
                 Instructions
             </div>
-            <div class="instructionInfo">
+            <div class="sideContentInfo">
                 <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
                 <p><b>1.</b> Look at the Nueron.</p>
                 <p><b>2.</b> Have fun.</p>
             </div>
         </div>
         <! Task Queue >
-        <div id = "queue-container" class = "instructionBox" style="max-height:65%;">
-            <div class="instructionTitle">
+        <div id = "queue-container" class = "sideContentBox" style="max-height:65%;">
+            <div class="sideContentTitle">
                 Task Queue
             </div>
-            <div class="instructionInfo" >
+            <div class="sideContentInfo" >
                 <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
                 <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
                     <div class="taskNumber">
@@ -51,7 +51,7 @@
                     <p>Here is information about another task you have completed. You are doing great!</p>
                     </div>
                 </div>
-                <button class="taskButton current" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
+                <button id="currentTask" class="taskButton current active" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
                 <div class="informationContainer" style="display: inline-block;">
                     <div class="taskNumber">
                         Task #3242123
@@ -92,8 +92,19 @@
 
 </div>
 
-<div id="neuroglancer" class="midMainContainer">
+<div id="neuroglancer" class="leftFormatting">
     <div class="left">
+        <div class="topBar" >
+                <div class="textBin left">
+                    Task ID #211244
+                </div>
+                <div class="textBin mid">
+                    Segmentation ID #425
+                </div>
+                <div class="textBin right">
+                    Pychunkedgraph Server #4
+                </div>
+        </div>
         <iframe src="{{ng_base_url}}" 
                 width="95%" 
                 height="85%"
@@ -122,8 +133,21 @@
 </div>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    closeSideMenu()
-    openSideMenu()
+    openSideMenu();
+    block_toggle();
+    activeTaskStartUp();
+
+    /* Patch to allow current active task button not need double click for first interaction */
+    function activeTaskStartUp() {
+        var currentTaskButton = document.getElementById("currentTask");
+        currentTaskButton.classList.toggle("active");
+        var panel = currentTaskButton.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    }
 </script>
 {% endblock %}
 
