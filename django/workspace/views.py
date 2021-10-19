@@ -26,18 +26,20 @@ class WorkspaceView(View):
             'n_tasks_complete': 0
         }
         
-        if not request.is_authenticated:
+        if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)
         
-        # Check if the user has an open task 
-        open_tasks = self.client.get_tasks(sieve={
-            "assignee": request.user,
-            "status": "open"
-            "namespace"
-            })
-        
-        return render(request, "workspace.html", args)
+        # Check if the user has an open task
+        try:
+            open_tasks = self.client.get_tasks(sieve={
+                "assignee": request.user,
+                "status": "open"
+                "namespace"
+                })
+        except:
+            pass
+        return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
 
