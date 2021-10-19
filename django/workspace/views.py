@@ -1,10 +1,16 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.conf import settings
-
 import colocarpy
-import pandas as pd
 import numpy as np
+
+from .neuroglancer import construct_proofreading_url
+
+# import the logging library
+import logging
+logging.basicConfig(level=logging.DEBUG)
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class WorkspaceView(View):
 
@@ -13,14 +19,24 @@ class WorkspaceView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        #restart begins as start
-        #if open display task
-        #this part not done
-        args = {
+        context = {
             'ng_url': settings.NG_CLIENT,
             'pcg_url': settings.PROD_PCG_SOURCE,
-            'task_id': "N/A"
+            'task_id': '',
+            'n_tasks_complete': 0
         }
+        
+        if not request.is_authenticated:
+            #TODO: Create Modal that lets the user know to log in first. 
+            return render(request, "workspace.html", context)
+        
+        # Check if the user has an open task 
+        open_tasks = self.client.get_tasks(sieve={
+            "assignee": request.user,
+            "status": "open"
+            "namespace"
+            })
+        
         return render(request, "workspace.html", args)
 
     def post(self, request, *args, **kwargs):
@@ -61,6 +77,10 @@ class WorkspaceView(View):
 
 class TaskView(View):
     def get(self, request, *args, **kwargs):
+        # logic/API calls go here 
+        # Make a call to neuvue-queue using neuvue-client to get_tasks()
+        # tasks = get_tasks(sieve={"assignee": username, "status": "pending|closed|open|erorred")
+
         return render(request, "tasks.html")
 
 class IndexView(View):
