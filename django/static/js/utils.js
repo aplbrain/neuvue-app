@@ -91,3 +91,12 @@ function closeSideMenu() {
   neuroglancer_window.style.left = "-2%";
 }
 
+
+
+
+
+
+
+
+
+
