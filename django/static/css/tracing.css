@@ -21,7 +21,6 @@
 
     /* TRANSPARENT COLORS */
     --transparent-background: #120e1479;
-    --table-background:#120e149a;
     --transparent-task: #0a192fce;
     --transparent-shadow:#00000033;
     --transparent-hover:#e6f1ff50;
@@ -32,41 +31,14 @@
     --monospace-font: "Lato", sans-serif;
   }
 
+/* Formatting -- some of this is no longer required with the navbar*/
 
-/* Separates left column with NG window, text, and buttons from right column: sidebar */
-
-.left {
-  border-radius: 12px;
-  background-color: transparent;
-  flex-grow: 6;
-  order: 1;
-  height: 95%;
-  margin-top: 0%;
-  margin-left: 1%;
-  display: flex;
-  top:0;
-  align-items: center;
-  flex-direction: column;
-}
-
-.right {
-  background-color: transparent;
-  flex-grow: 1;
-  order: 2;
-  height: 95%;
-  width: 15%;
-  margin-right: 1%;
-  overflow: auto;
-  overflow-x: hidden;
-}
-
-/* Additional container for NG window, text, and buttons to arrange column */
-.leftFormatting {
+.midMainContainer {
     border-radius: 12px;
     background-color: transparent;
-    width: 75%;
-    top:-1%;
-    height: 95% !important;
+    width: 96%;
+    height: 90% !important;
+    margin-top: 1%;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -76,7 +48,47 @@
 }
 
 
-/* Button class -- no longer used in html regions */
+.left {
+    border-radius: 12px;
+    background-color: transparent;
+    flex-grow: 6;
+    order: 1;
+    height: 95%;
+    margin-left: 1%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.right {
+    background-color: transparent;
+    flex-grow: 1;
+    order: 2;
+    height: 95%;
+    width: 15%;
+    margin-right: 1%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+/* CONTAINERS */
+.taskQueue {
+    border-radius: 8px;
+    background-color: var(--transparent-background);
+    position: relative;
+    max-height: 70%;
+    overflow: auto;
+    width: 95%;
+    margin-top: 0%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    display:inline-block;
+    padding: 10px 10px 10px 10px;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .buttonBox {
     background-color: transparent;
     width: 30%;
@@ -94,114 +106,110 @@
     padding-top:20px;
 }
 
+.taskTitle {
+    font-family: var(--header-font);
+    color: var(--primary-accent);
+    /*font-weight: bold;*/
+    font-size: 10px;
+    font-size: 1.2vw;
+    order: 1;
+    flex-grow: 2;
+    padding: 0px 20px 0px 25px;
+    text-align: left;
+    align-items: left;
+    text-decoration: none;
+}
 
-/* NG container */
+.title {
+    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
+}
+
 .neuroGlancer {
     box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     border-radius: 8px;
     border: 1px solid var(--background);
+    flex-grow: 10;
     margin-top: 1%;
     margin-bottom: 1%;
-    height: 120%;
-    order: 1;
 }
 
-/* formats the Task ID, Segmentation ID, and Pychunked graph container */
-.topBar {
-  font-family: var(--body-font);
-  color: var(--primary-accent-activated);
-  background-color: transparent;
-  height: 2% !important;
-  width: 95%;
-  display: flex;
-  flex-direction: row;
-  order: 0;
-  top:0;
-  vertical-align: top;
-  left:0;
-}
-
-.textBin {
-  width: 33%;
-  height:100%;
-  overflow: hidden;
-  display: block;
-}
-
-.textBin.left {
-  float: left;
-  order:0;
-  text-align: left !important;
-}
-.textBin.mid {
-  float: left;
-  text-align: center;
-  order:1;
-}
-.textBin.right {
-  float: right;
-  text-align: right;
-
-}
-
-/* button container below NG */
 .bottomBar {
+    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
     flex-grow: 1;
     order: 2;
     padding:1%;
+    border-radius: 12px;
     background-color: transparent;
+    border: 1px solid var(--primary-accent-activated);
     height: 5% !important;
     width: 95%;
     margin-bottom: 1%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    order: 2;
 }
 
-/* buttons used in bottom container */
+.shareNGView {
+    font-family: var(--body-font);
+    color: var(--primary-accent-activated);
+    font-size: 100%;
+    order: 2;
+    flex-grow: 1;
+}
 .button {
     font-family: var(--monospace-font);
-    background-color: var(--secondary-accent);
+    background-color: transparent;
     border-radius: 8px;
-    color: var(--background);
+    border: 1.5px solid var(--secondary-accent);
+    color: var(--secondary-accent);
     margin: 0 0 10 10px;
     width: 50%;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    cursor: pointer;
     font-size: 16px;
   }
-
 .button:hover{
-  border: 3px solid var(--secondary-accent);
-  background: var(--secondary-accent);
-  color: var(--primary-accent);
+    background: var(--secondary-accent-activated);
+    color: var(--background);
 }
 
 .button.flag{
-    background-color: var(--flag-accent);
-    color: var(--background);
+    border: 1.5px solid var(--flag-accent);
+    color: var(--flag-accent);
   }
 
 .button.flag:hover{
-  border: 3px solid var(--flag-accent);
-  background: var(--flag-accent);
-  color: var(--primary-accent);
+    background: var(--flag-accent-activated);
+    color: var(--background);
 }
 
 .button.next{
-  background-color: var(--next-accent);
-  color: var(--background);
+    border: 1.5px solid var(--next-accent);
+    color: var(--next-accent);
 }
 
 .button.next:hover{
-  border: 3px solid var(--next-accent);
-  background-color: var(--next-accent);
-  color: var(--primary-accent);
+  background: var(--next-accent-activated);
+  color: var(--background);
 }
+.instructions {
+    font-family: var(--monospace-font);
+    background-color: var(--transparent-background);
+    border-radius: 8px;
+    border: 1.5px solid var(--secondary-accent);
+    color: var(--primary-accent);
+    margin: 0 0 10 10px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 5px 5px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    width: 90%;
+    font-size: 14px;
+  }
 
 /* PROGRESS BAR */
 
@@ -251,15 +259,15 @@
   }
   nav{
     background: var(--header-background);
-    height: 70px;
+    height: 80px;
     width: 100%;
   }
   label.logo{
     font-family: var(--header-font);
     color: var(--navbar-text);
     font-size: 50px;
-    padding: 0 2%;
-    line-height: 70px;
+    line-height: 80px;
+    padding: 0 100px;
     font-weight: lighter;
   }
   nav ul{
@@ -268,7 +276,7 @@
   }
   nav ul li{
     display: inline-block;
-    line-height: 70px;
+    line-height: 80px;
     margin: 0 5px;
   }
   nav ul li a{
@@ -289,7 +297,7 @@
     font-size: 30px;
     color: var(--navbar-text);
     float: right;
-    line-height: 70px;
+    line-height: 80px;
     margin-right: 40px;
     cursor: pointer;
     display: none;
@@ -315,7 +323,7 @@
       width: 100%;
       height: 100vh;
       background: #2c3e50;
-      top: 70px;
+      top: 80px;
       left: -100%;
       text-align: center;
       transition: all .5s;
@@ -338,7 +346,7 @@
     }
   }
 
-/* Task buttons in the TaskQueue sidebar container*/
+  /* NOW FOR TASK BUTTONS*/
 
 .taskButton {
     font-family: var(--body-font);
@@ -357,12 +365,13 @@
     align-items: left;
     flex-direction: column;
     text-decoration: none;
+
     cursor: pointer;
   }
 
-  .taskButton.active, .taskButton:hover {
+  .active, .taskButton:hover {
     background-color: var(--incomplete-color-actived);
-    color:var(--background)!important;
+    color:rgba(0, 0, 0, 1);
   }
   .taskButton.complete{
     background-color: var(--complete-color);
@@ -370,28 +379,23 @@
 
   .complete.active, .taskButton.complete:hover {
     background-color: var(--complete-color-actived);
-    color:var(--background);
+    color:#0a192f;
   }
 
   .taskButton.current{
     background-color: var(--secondary-accent);
   }
 
-  .taskButton.current.active, .taskButton.current:hover {
+  .current.active, .taskButton.current:hover {
     background-color: var(--secondary-accent-activated);
-    color:var(--background);
+    color:#0a192f;
   }
 
   /* Style the accordion panel. Note: hidden by default */
   .informationContainer{
     width: 95%;
-    overflow: hidden;
-    padding: 5% 2%;
-    margin: 2% 2%;
+    overflow:auto;
     display: none;
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent);
-    background-color: transparent !important;
   }
 
   .taskNumber {
@@ -411,50 +415,50 @@
     color: var(--primary-accent);
     width: 95%;
     border-radius: 4px;
+    border: 1.5px solid var(--secondary-accent) !important;
+    background-color: transparent !important;
   }
 
-  /* Container for sidecontent item */
-  .sideContentBox {
+  /* INSTRUCTIONS */
+  .instructionBox {
     border-radius: 8px;
     border: 1.5px solid var(--secondary-accent) !important;
-    background-color: transparent;
+    /*background-color: var(--transparent-background);*/
+    max-height: 45%;
     width: 95%;
     margin-top: 0%;
     display: flex;
+    visibility: hidden;
     flex-direction: column;
     display:inline-block;
+    padding: 5px 5px 0px 0px;
     margin-bottom: 2%;
-    overflow: auto;
-    overflow-x: hidden;
     transition: 0s;
 
   }
-  /* Title for sidecontent item */
-  .sideContentTitle {
+  .instructionTitle {
     font-family: var(--header-font);
+    margin: 0 0 10 10px;
     color: var(--primary-accent);
     border-radius: 2px;
     font-size: 10px;
     font-size: 1.2vw;
-    z-index: 10;
-    padding: 5%;
+    order: 1;
     flex-grow: 2;
-    text-align: center;
+    text-align: left;
     align-items: left;
     text-decoration: none;
     transition: 0s;
-    background-color: var(--background);
-    position: sticky;
-    top: 0;
+    background-color: transparent;
 
   }
 
-  .sideContentTitle.active:after {
+
+  .instructionTitle.active:after {
     content: "\2212";
   }
 
-   /* Container for sidecontent info */
-  .sideContentInfo {
+  .instructionInfo {
     font-family: var(--monospace-font);
     margin: 0 0 10 10px;
     padding: 5px 10px;
@@ -463,18 +467,17 @@
     width: 95%;
     border-radius: 4px;
     background-color: var(--transparent-background);
-    display: flex;
-    flex-direction: column;
-    overflow: scroll;
+    max-height: 30%;
+    overflow: auto;
   }
 
-  /* Sidebar Expandable */
+  /* EXPANDABLE */
   
-  /* Sidemenu access bar */
   .sidebar {
     height: 100%;
-    width: 8%;
+    width: 100%;
     position: relative;
+    padding-top: 20px !important;
     z-index: 1;
     top: 0;
     left: 0;
@@ -482,20 +485,7 @@
     text-align: center;
     align-items: center;
     background-color: var(--transparent-shadow);
-    cursor: pointer;
   }
-
-  .sidebar.active, .sidebar:hover{
-    background-color: var(--transparent-hover);
-  }
-  a.fill-div {
-    display: block;
-    border: none;
-    height: 100%;
-    width: 100%;
-    text-decoration: none;
-}
-
   .sidebutton {
     background-color: transparent;
     color: var(--primary-accent-activated);
@@ -503,27 +493,41 @@
     margin: 25% 2%;
     text-decoration: none;
     display: inline-block;
-    font-size: 1vw !important;
+    font-size: 24px;
     cursor: pointer;
   }
 
-  /* the entire sidebar (content  + access bar) */
+  .active, .sidebutton:hover{
+    color: var(--primary-accent);
+}
+
   .sidemenu {
     height: 99%;
 
-    width: 25%;
+    width: 2%;
     position: fixed;
     
     z-index: 1;
-    top: 70px;
+    top: 80px;
     right: 0;
     background-color: var(--transparent-background);
     overflow: hidden;
   }
 
+  .sidecontent {
+    top: 0;
+    right: 0;
+    margin-top: 4%;
+    margin-right: 2%;
+    float: right;
+    width: 0%;
+    text-align: left;
+  }
+
   .sidemenu a {
     padding: 8px;
     text-decoration: none;
+    font-size: 36px;
     color: var(--primary-accent-activated);
     display: block;
   }
@@ -536,18 +540,7 @@
     position: absolute;
     top: 20px;
     left: 45px;
-  }
-
-  /* Container for all information in the sidebar */
-  .sidecontent {
-    top: 0;
-    right: 0;
-    margin-top: 4%;
-    margin-right: 2%;
-    float: right;
-    width: 80%;
-    text-align: left;
-    background-color: var(--transparent-background) !important;
+    font-size: 60px;
   }
 
 .code{
@@ -557,21 +550,5 @@ background-color: var(--transparent-background);
 padding: 2px;
 font-size: 105%;
 }
-
-/* Scrollbar formatting */
-::-webkit-scrollbar {
-  -webkit-appearance: inherit;
-  border-radius: 8px;
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  margin: 5% 5%;
-  background-color: var(--transparent-hover);
-}
- 
-::-webkit-scrollbar-corner {
-  background: transparent;
- }
 
 

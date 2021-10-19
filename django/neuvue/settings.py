@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+import data_settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -135,7 +137,7 @@ if not DEBUG:
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static')
 ]
 
 
@@ -162,7 +164,5 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# SITE_ID = 2
-
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'

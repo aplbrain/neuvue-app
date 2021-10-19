@@ -45,7 +45,7 @@
                 <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
                 <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
                     <div class="taskNumber">
-                        Task #3242122
+                        Task #{{task_num}}
                     </div> 
                     <div class="taskInfo">
                     <p>Here is information about another task you have completed. You are doing great!</p>
@@ -105,26 +105,30 @@
                     Pychunkedgraph Server #4
                 </div>
         </div>
-        <iframe src="http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com/?local_id=6cbc0542207c4996743f4e12bd20f35d#"
+        <iframe src="{{ng_base_url}}" 
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
         </iframe>
-        <div class="bottomBar">
-            <div class ="button flag">
-                Stop Proofreading
-            </div> 
-            <div class ="button">
-                Restart Task
-            </div>
-            <div class ="button next">
-                Submit Task
-            </div> 
-            <div class ="button flag">
-                Flag Task
-            </div> 
-            
-        </div>
+            <form action="" method="post" class="bottomBar">
+                {% csrf_token %}
+                <button type="submit" class="button" name="restart">
+                    Restart Task
+                </button>
+
+                <button type="submit" class="button submit" name="submit">
+                    Submit Task
+                </button>
+
+                <button type="submit" class="button flag" name="flag">
+                    Flag Task
+                </button>
+
+                <button type="submit" class="button flag" name="stop">
+                    Exit
+                </button>
+
+            </form>
     </div>
 </div>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
