@@ -1,80 +1,78 @@
 /* FONTS & COLORS */
 
 :root {
-    /* PRIMARY COLORS #000e22;*/
-    --background: #120c1a;
-    --header-background: #312244;
-    --navbar-text: #e6f1ff;
-    --primary-accent: #e6f1ff;
-    --primary-accent-activated: #8892b0;
-    --secondary-accent: #077179;
-    --secondary-accent-activated: #028486;
-    --next-accent: #118d4f;
-    --next-accent-activated: #099c52;
-    --flag-accent: #b14646;
-    --flag-accent-activated: #cf4b4b;
-    --incomplete-color:#b2eebf;
-    --incomplete-color-actived:#8fe2a1;
-    --complete-color:#96a5d4;
-    --complete-color-actived:#738fe6;
-    --progress: #96a5d4;
+  /* PRIMARY COLORS #000e22;*/
+  --background: #120c1a;
+  --header-background: #312244;
+  --navbar-text: #e6f1ff;
+  --primary-accent: #e6f1ff;
+  --primary-accent-activated: #8892b0;
+  --secondary-accent: #077179;
+  --secondary-accent-activated: #028486;
+  --next-accent: #118d4f;
+  --next-accent-activated: #099c52;
+  --flag-accent: #b14646;
+  --flag-accent-activated: #cf4b4b;
+  --incomplete-color:#b2eebf;
+  --incomplete-color-actived:#8fe2a1;
+  --complete-color:#96a5d4;
+  --complete-color-actived:#738fe6;
+  --progress: #96a5d4;
 
-    /* TRANSPARENT COLORS */
-    --transparent-background: #120e1479;
-    --table-background:#120e149a;
-    --transparent-task: #0a192fce;
-    --transparent-shadow:#00000033;
-    --transparent-hover:#e6f1ff50;
+  /* TRANSPARENT COLORS */
+  --transparent-background: #120e1479;
+  --table-background:#120e149a;
+  --transparent-task: #0a192fce;
+  --transparent-shadow:#00000033;
+  --transparent-hover:#e6f1ff50;
 
-    /* FONTS */
-    --header-font: "Lato", sans-serif;
-    --body-font: "Lato", sans-serif;
-    --monospace-font: "Lato", sans-serif;
-  }
+  /* FONTS */
+  --header-font: "Lato", sans-serif;
+  --body-font: "Lato", sans-serif;
+  --monospace-font: "Lato", sans-serif;
+}
 
-
-/* Separates left column with NG window, text, and buttons from right column: sidebar */
 
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
 
 .left {
-  border-radius: 12px;
-  background-color: transparent;
-  flex-grow: 6;
-  order: 1;
-  height: 95%;
-  margin-top: 0%;
-  margin-left: 1%;
-  display: flex;
-  top:0;
-  align-items: center;
-  flex-direction: column;
+border-radius: 12px;
+background-color: transparent;
+flex-grow: 6;
+order: 1;
+height: 95%;
+margin-top: 0%;
+margin-left: 1%;
+display: flex;
+top:0;
+align-items: center;
+flex-direction: column;
 }
 
 .right {
-  background-color: transparent;
-  flex-grow: 1;
-  order: 2;
-  height: 95%;
-  width: 15%;
-  margin-right: 1%;
-  overflow: auto;
-  overflow-x: hidden;
+background-color: transparent;
+flex-grow: 1;
+order: 2;
+height: 95%;
+width: 15%;
+margin-right: 1%;
+overflow: auto;
+overflow-x: hidden;
 }
 
 /* Additional container for NG window, text, and buttons to arrange column */
 .leftFormatting {
-    border-radius: 12px;
-    background-color: transparent;
-    width: 75%;
-    top:-1%;
-    height: 95% !important;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1%;
-    transition: 0.3s;
+  border-radius: 12px;
+  background-color: transparent;
+  width: 75%;
+  top:-1%;
+  height: 95% !important;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1%;
+  transition: 0.3s;
 }
 
 
@@ -99,84 +97,83 @@
 
 /* NG container */
 .neuroGlancer {
-    box-shadow: 0 4px 8px 0 var(--transparent-shadow);
-    border-radius: 8px;
-    border: 1px solid var(--background);
-    margin-top: 1%;
-    margin-bottom: 1%;
-    height: 120%;
-    order: 1;
+  box-shadow: 0 4px 8px 0 var(--transparent-shadow);
+  border-radius: 8px;
+  border: 1px solid var(--background);
+  margin-top: 1%;
+  margin-bottom: 1%;
+  height: 120%;
+  order: 1;
 }
 
 /* formats the Task ID, Segmentation ID, and Pychunked graph container */
 .topBar {
-  font-family: var(--body-font);
-  color: var(--primary-accent-activated);
-  background-color: transparent;
-  height: 2% !important;
-  width: 95%;
-  margin-bottom: 1%;
-  display: flex;
-  flex-direction: row;
-  order: 0;
-  top:0;
-  vertical-align: top;
-  left:0;
+font-family: var(--body-font);
+color: var(--primary-accent-activated);
+background-color: transparent;
+height: 2% !important;
+width: 95%;
+display: flex;
+flex-direction: row;
+order: 0;
+top:0;
+vertical-align: top;
+left:0;
 }
 
 .textBin {
-  width: 33%;
-  height:100%;
-  overflow: hidden;
-  display: block;
+width: 33%;
+height:100%;
+overflow: hidden;
+display: block;
 }
 
 .textBin.left {
-  float: left;
-  order:0;
-  text-align: left !important;
+float: left;
+order:0;
+text-align: left !important;
 }
 .textBin.mid {
-  float: left;
-  text-align: center;
-  order:1;
+float: left;
+text-align: center;
+order:1;
 }
 .textBin.right {
-  float: right;
-  text-align: right;
+float: right;
+text-align: right;
 
 }
 
 /* button container below NG */
 .bottomBar {
-    flex-grow: 1;
-    order: 2;
-    padding:1%;
-    background-color: transparent;
-    height: 5% !important;
-    width: 95%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    order: 2;
+  flex-grow: 1;
+  order: 2;
+  padding:1%;
+  background-color: transparent;
+  height: 5% !important;
+  width: 95%;
+  margin-bottom: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  order: 2;
 }
 
 /* buttons used in bottom container */
 .button {
-    font-family: var(--monospace-font);
-    background-color: var(--secondary-accent);
-    border-radius: 8px;
-    color: var(--background);
-    margin: 0 0 10 10px;
-    width: 50%;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    cursor: pointer;
-    font-size: 16px;
-  }
+  font-family: var(--monospace-font);
+  background-color: var(--secondary-accent);
+  border-radius: 8px;
+  color: var(--background);
+  margin: 0 0 10 10px;
+  width: 50%;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 16px;
+}
 
 .button:hover{
 border: 3px solid var(--secondary-accent);
@@ -195,12 +192,12 @@ background: var(--flag-accent);
 color: var(--primary-accent);
 }
 
-.button.submit{
+.button.next{
 background-color: var(--next-accent);
 color: var(--background);
 }
 
-.button.submit:hover{
+.button.next:hover{
 border: 3px solid var(--next-accent);
 background-color: var(--next-accent);
 color: var(--primary-accent);
@@ -348,18 +345,13 @@ a.active,a:hover{
     font-size: 30px;
     padding-left: 50px;
   }
-  nav{
-    background: var(--header-background);
-    height: 70px;
-    width: 100%;
+  nav ul li a{
+    font-size: 16px;
   }
-  label.logo{
-    font-family: var(--header-font);
-    color: var(--navbar-text);
-    font-size: 50px;
-    padding: 0 2%;
-    line-height: 70px;
-    font-weight: lighter;
+}
+@media (max-width: 858px){
+  .checkbtn{
+    display: block;
   }
   ul{
     position: fixed;
@@ -372,64 +364,20 @@ a.active,a:hover{
     transition: all .5s;
   }
   nav ul li{
-    display: inline-block;
-    line-height: 70px;
-    margin: 0 5px;
+    display: block;
+    margin: 50px 0;
+    line-height: 30px;
   }
   nav ul li a{
     font-size: 20px;
   }
-  .checkbtn{
-    font-size: 30px;
-    color: var(--navbar-text);
-    float: right;
-    line-height: 70px;
-    margin-right: 40px;
-    cursor: pointer;
-    display: none;
+  a:hover,a.active{
+      background-color: transparent;
+      border-radius: 8px;
+      border: 1.5px solid var(--secondary-accent);
   }
-  #check{
-    display: none;
-  }
-  @media (max-width: 952px){
-    label.logo{
-      font-size: 30px;
-      padding-left: 50px;
-    }
-    nav ul li a{
-      font-size: 16px;
-    }
-  }
-  @media (max-width: 858px){
-    .checkbtn{
-      display: block;
-    }
-    ul{
-      position: fixed;
-      width: 100%;
-      height: 100vh;
-      background: #2c3e50;
-      top: 70px;
-      left: -100%;
-      text-align: center;
-      transition: all .5s;
-    }
-    nav ul li{
-      display: block;
-      margin: 50px 0;
-      line-height: 30px;
-    }
-    nav ul li a{
-      font-size: 20px;
-    }
-    a:hover,a.active{
-        background-color: transparent;
-        border-radius: 8px;
-        border: 1.5px solid var(--secondary-accent);
-    }
-    #check:checked ~ ul{
-      left: 0;
-    }
+  #check:checked ~ ul{
+    left: 0;
   }
 }
 
@@ -508,77 +456,62 @@ a.active,a:hover{
   border-radius: 4px;
 }
 
-  /* Container for sidecontent item */
-  .sideContentBox {
-    border-radius: 8px;
-    border: 1.5px solid var(--secondary-accent) !important;
-    background-color: transparent;
-    width: 95%;
-    margin-top: 0%;
-    display: flex;
-    flex-direction: column;
-    display:inline-block;
-    margin-bottom: 2%;
-    overflow: auto;
-    overflow-x: hidden;
-    transition: 0s;
+/* Container for sidecontent item */
+.sideContentBox {
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent) !important;
+  background-color: transparent;
+  width: 95%;
+  margin-top: 0%;
+  display: flex;
+  flex-direction: column;
+  display:inline-block;
+  margin-bottom: 2%;
+  overflow: auto;
+  overflow-x: hidden;
+  transition: 0s;
 
-  }
-  /* Title for sidecontent item */
-  .sideContentTitle {
-    font-family: var(--header-font);
-    color: var(--primary-accent);
-    border-radius: 2px;
-    font-size: 10px;
-    font-size: 1.2vw;
-    z-index: 10;
-    padding: 5%;
-    flex-grow: 2;
-    text-align: center;
-    align-items: left;
-    text-decoration: none;
-    transition: 0s;
-    background-color: var(--background);
-    position: sticky;
-    top: 0;
+}
+/* Title for sidecontent item */
+.sideContentTitle {
+  font-family: var(--header-font);
+  color: var(--primary-accent);
+  border-radius: 2px;
+  font-size: 10px;
+  font-size: 1.2vw;
+  z-index: 10;
+  padding: 5%;
+  flex-grow: 2;
+  text-align: center;
+  align-items: left;
+  text-decoration: none;
+  transition: 0s;
+  background-color: var(--background);
+  position: sticky;
+  top: 0;
 
 }
 
-  .sideContentTitle.active:after {
-    content: "\2212";
-  }
+.sideContentTitle.active:after {
+  content: "\2212";
+}
 
-   /* Container for sidecontent info */
-  .sideContentInfo {
-    font-family: var(--monospace-font);
-    margin: 0 0 10 10px;
-    padding: 5px 10px;
-    position:relative;
-    color: var(--primary-accent);
-    width: 95%;
-    border-radius: 4px;
-    background-color: var(--transparent-background);
-    display: flex;
-    flex-direction: column;
-    overflow: scroll;
-  }
+ /* Container for sidecontent info */
+.sideContentInfo {
+  font-family: var(--monospace-font);
+  margin: 0 0 10 10px;
+  padding: 5px 10px;
+  position:relative;
+  color: var(--primary-accent);
+  width: 95%;
+  border-radius: 4px;
+  background-color: var(--transparent-background);
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
 
-  /* Sidebar Expandable */
-  
-  /* Sidemenu access bar */
-  .sidebar {
-    height: 100%;
-    width: 8%;
-    position: relative;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    float: left;
-    text-align: center;
-    align-items: center;
-    background-color: var(--transparent-shadow);
-    cursor: pointer;
-  }
+/* Sidebar Expandable */
 
 /* Sidemenu access bar */
 .sidebar {
@@ -606,26 +539,41 @@ a.fill-div {
   text-decoration: none;
 }
 
-  /* the entire sidebar (content  + access bar) */
-  .sidemenu {
-    height: 99%;
+.sidebutton {
+  background-color: transparent;
+  color: var(--primary-accent-activated);
+  text-align: center;
+  margin: 25% 2%;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1vw !important;
+  cursor: pointer;
+}
 
-    width: 25%;
-    position: fixed;
-    
-    z-index: 1;
-    top: 70px;
-    right: 0;
-    background-color: var(--transparent-background);
-    overflow: hidden;
-  }
+/* the entire sidebar (content  + access bar) */
+.sidemenu {
+  height: 99%;
 
-  .sidemenu a {
-    padding: 8px;
-    text-decoration: none;
-    color: var(--primary-accent-activated);
-    display: block;
-  }
+  width: 25%;
+  position: fixed;
+  
+  z-index: 1;
+  top: 70px;
+  right: 0;
+  background-color: var(--transparent-background);
+  overflow: hidden;
+}
+
+.sidemenu a {
+  padding: 8px;
+  text-decoration: none;
+  color: var(--primary-accent-activated);
+  display: block;
+}
+
+.sidemenu a:hover, .sidemenu a:focus {
+  color: var(--navbar-text);
+}
 
 .sidemenu .closebtn {
   position: absolute;
@@ -644,18 +592,6 @@ a.fill-div {
   text-align: left;
   background-color: var(--transparent-background) !important;
 }
-
-  /* Container for all information in the sidebar */
-  .sidecontent {
-    top: 0;
-    right: 0;
-    margin-top: 4%;
-    margin-right: 2%;
-    float: right;
-    width: 80%;
-    text-align: left;
-    background-color: var(--transparent-background) !important;
-  }
 
 .code{
 font-family: var(--monospace-font);
