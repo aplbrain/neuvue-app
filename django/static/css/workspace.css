@@ -510,7 +510,28 @@ a.active,a:hover{
   flex-direction: column;
   overflow: scroll;
 }
+/* Sidebar text input */
+.sidecontentInput {
+  
+  
+  padding: 10px;
+  
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: 95%;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent) !important;
+}
+textarea {
+  background-color: var(--transparent-background);
+  color: var(--primary-accent);
+  overflow: scroll;
+  border: 0px;
+  width: 100%;
+  resize: none;
 
+}
 /* Sidebar Expandable */
 
 /* Sidemenu access bar */
