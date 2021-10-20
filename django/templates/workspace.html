@@ -106,17 +106,21 @@
                 </div>
 
         </div>
-        <iframe src={{ng_url}}
+        {% if is_open %}
+        <iframe src="{{ng_url}}"
                 width="95%" 
                 height="85%"
                 class="neuroGlancer">
         </iframe>
+        {% endif %}
             <form action="" method="post" class="bottomBar">
                 {% csrf_token %}
+                
+                {% if is_open %}
                 <button type="submit" class="button" name="restart">
                     Restart Task
                 </button>
-
+        
                 <button type="submit" class="button submit" name="submit">
                     Submit Task
                 </button>
@@ -124,10 +128,28 @@
                 <button type="submit" class="button flag" name="flag">
                     Flag Task
                 </button>
-
+                
                 <button type="submit" class="button flag" name="stop">
-                    Pause and Exit
+                    Pause Task and Exit Workspace
                 </button>
+                {% else %}
+
+                {%if tasks_available %}
+                <button type="submit" class="button submit" name="start">
+                    Start New  Task
+                </button>
+
+                {% else %}
+                <button type="submit" class="button submit" name="start" disabled >
+                    No Pending Tasks
+                </button> 
+                
+                {% endif%}
+                
+                <button type="submit" class="button flag" name="stop">
+                    Exit Workspace
+                </button>
+                {% endif %}
 
             </form>
     </div>
