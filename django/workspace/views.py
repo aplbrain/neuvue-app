@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 import colocarpy
@@ -24,63 +24,73 @@ class WorkspaceView(View):
             'pcg_url': settings.PROD_PCG_SOURCE,
             'task_id': '',
             'seg_id': '',
-            'is_open': False
+            'is_open': False,
+            'tasks_available': True
         }
-        
+
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)
-        
+
         # Get the next task. If its open already display immediately.
+        # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), "path-split")
-        
-        if task_df['status'] == 'open':
-            # Manually get the points for now, populate in client later.
-            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-            points = np.array(points)
-            print(points)
+        if not task_df:
+            context['tasks_available'] = False
+            pass
+
+        elif task_df['status'] == 'open':
+            # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
+
+
+            # Manually get the points for now, populate in client later.
+            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
+            path_coordinates = task_df['metadata'].get('path_coordinates', [])
+            points = np.array(points)
+            
+            # Construct NG URL from points
             context['ng_url'] = construct_proofreading_url([task_df['seg_id']], points[0], points)
-           
-        print(task_df)
+
+        logging.debug(context)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
 
         if 'restart' in request.POST:
-            print("restart")
-            task = self.client.get_next_task("andy", "neuvue")
-            point = self.client.get_point(task['points'][0])
-            coordinates = np.array(point['coordinate'])
-            link = get_NG_link(coordinates)
-
+            logger.debug('Restarting task')
         
         if 'submit' in request.POST:
-            print("submit")
-            task = self.client.get_next_task("andy", "neuvue")
-            self.client.patch_task(task["_id"], status = "complete")
-            point = self.client.get_point(task['points'][0])
-            coordinates = np.array(point['coordinate'])
-            link = get_NG_link(coordinates)
+            logger.debug('Submitting task')
+            task_df = self.client.get_next_task(str(request.user), "path-split")
+            self.client.patch_task(task_df["_id"], status="closed")
         
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
             # Input box in the modal that will user input for flag reason
             # Cancel/Flag 
 
-            print("flag")
-            task = self.client.get_next_task("andy", "neuvue")
-            self.client.patch_task(task["_id"], status = "errored", metadata = {"flag_reason": "flag reason"})
-            point = self.client.get_point(task['points'][0])
-            coordinates = np.array(point['coordinate'])
+            logger.debug('Flagging task')
+            task_df = self.client.get_next_task(str(request.user), "path-split")
+            self.client.patch_task(task_df["_id"], status="errored", metadata={"flag_reason": "flag reason"})
+        
+        if 'start' in request.POST:
+            logger.debug('Starting new task')
+            task_df = self.client.get_next_task(str(request.user), "path-split")
+            if not task_df:
+                logging.warning('Cannot start task, no tasks available.')
+            else:
+                self.client.patch_task(task_df["_id"], status="open")
+        
+        if 'stop' in request.POST:
+            logger.debug('Stopping proofreading app')
+            # Check if there is an open task in session
+            # Confirm exit and save time point
+            redirect(reverse('tasks'))
 
-            args = {
-                'ng_url': settings.NG_CLIENT
-            }
-
-        return render(request, "workspace.html", args)
+        return redirect(reverse('workspace'))
 
 
 class TaskView(View):
