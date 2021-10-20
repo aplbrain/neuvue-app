@@ -23,22 +23,28 @@ class WorkspaceView(View):
             'ng_url': settings.NG_CLIENT,
             'pcg_url': settings.PROD_PCG_SOURCE,
             'task_id': '',
-            'n_tasks_complete': 0
+            'seg_id': '',
+            'is_open': False
         }
         
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)
         
-        # Check if the user has an open task
-        try:
-            open_tasks = self.client.get_tasks(sieve={
-                "assignee": request.user,
-                "status": "open"
-                "namespace"
-                })
-        except:
-            pass
+        # Get the next task. If its open already display immediately.
+        task_df = self.client.get_next_task(str(request.user), "path-split")
+        
+        if task_df['status'] == 'open':
+            # Manually get the points for now, populate in client later.
+            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
+            points = np.array(points)
+            print(points)
+            context['is_open'] = True
+            context['task_id'] = task_df['_id']
+            context['seg_id'] = task_df['seg_id']
+            context['ng_url'] = construct_proofreading_url([task_df['seg_id']], points[0], points)
+           
+        print(task_df)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
