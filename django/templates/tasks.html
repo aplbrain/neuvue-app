@@ -17,7 +17,7 @@
 
     <div class="jobQueue" >
         <div class="row">
-            <div class="launch_NG">
+            <div class="launch_NG" onclick= "document.location='{% url 'workspace' %}'"> 
                 <div class ="launch_NG_text">
                     Start Proofreading
                 </div>
@@ -26,126 +26,19 @@
         </div>
         <div id='SomaSplitTable' class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "inProgressSplitTab" class="tablinks" onclick="tabToggle(event, 'InProgress_Split',0,3, 'inProgressSplitTab')">In Progress</button>
-                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,3,'pendingSplitTab')">Pending</button>
-                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,3,'closedSplitTab')">Closed</button>
-            </div>
-            <div id="InProgress_Split" class="tabcontent">
-                <div>
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Flags</th>
-                        </tr>
-                        <tr>
-                            <td>splitcurr</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <tr>
-                                <td>223</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                            </tr>
-                            <tr>
-                                <td>121</td>
-                                <td>today</td>
-                                <td>incomplete</td>
-                                <td>low resolution</td>
-                            </tr>
-                            <tr>
-                                <td>223</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                            </tr>
-                            <tr>
-                                <td>121</td>
-                                <td>today</td>
-                                <td>incomplete</td>
-                                <td>low resolution</td>
-                            </tr>
-                            <tr>
-                                <td>223</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                            </tr>
-                        </tr>
-                    </table>
-                </div>
+                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,2,'pendingSplitTab')">Pending</button>
+                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,2,'closedSplitTab')">Closed</button>
             </div>
             <div id="Pending_Split" class="tabcontent">
                 <div>
                     <table>
                         <tr>
                             <th>Task ID</th>
+                            <th>Seg ID</th>
                             <th>Start Time</th>
                             <th>End Time</th>
-                            <th>Flags</th>
+                            <th>Flag Reason</th>
+                            <th>Notes</th>
                         </tr>
                         <tr>
                             <td>splitcomp</td>
@@ -167,9 +60,9 @@
                     <table>
                         <tr>
                             <th>Task ID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Flags</th>
+                            <th>Seg ID</th>
+                            <th>Priority</th>
+                            <th>Created Time</th>
                         </tr>
                         <tr>
                             <td>splitclosed</td>
@@ -188,7 +81,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="launch_NG">
+            <div class="launch_NG" onclick= "document.location='{% url 'workspace' %}'">
                 <div class ="launch_NG_text">
                     Start Proofreading
                 </div>
@@ -197,67 +90,18 @@
         </div>
         <div id='SomaMergeTable' class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "inProgressMergeTab" class="tablinks" onclick="tabToggle(event, 'InProgress_Merge',3,6,'inProgressMergeTab')">In Progress</button>
-                <button id = "pendingMergeTab" class="tablinks" onclick="tabToggle(event, 'Pending_Merge',3,6,'pendingMergeTab')">Pending</button>
-                <button id = "closedMergeTab" class="tablinks" onclick="tabToggle(event, 'Closed_Merge',3,6,'closedMergeTab')">Closed</button>
+                <button id = "pendingMergeTab" class="tablinks" onclick="tabToggle(event, 'Pending_Merge',2,4,'pendingMergeTab')">Pending</button>
+                <button id = "closedMergeTab" class="tablinks" onclick="tabToggle(event, 'Closed_Merge',2,4,'closedMergeTab')">Closed</button>
             </div>
-        
-            <div id="InProgress_Merge" class="tabcontent">
-                <div>
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Flags</th>
-                        </tr>
-                        <tr>
-                            <td>mergecur</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+    
             <div id="Pending_Merge" class="tabcontent">
                 <div>
                     <table>
                         <tr>
                             <th>Task ID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Flags</th>
+                            <th>Seg ID</th>
+                            <th>Priority</th>
+                            <th>Created Time</th>
                         </tr>
                         <tr>
                             <td>mergecomp</td>
@@ -279,9 +123,11 @@
                     <table>
                         <tr>
                             <th>Task ID</th>
+                            <th>Seg ID</th>
                             <th>Start Time</th>
                             <th>End Time</th>
-                            <th>Flags</th>
+                            <th>Flag Reason</th>
+                            <th>Notes</th>
                         </tr>
                         <tr>
                             <td>closemerge</td>
@@ -300,7 +146,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="launch_NG">
+            <div class="launch_NG" onclick= "document.location='{% url 'workspace' %}'">
                 <div class ="launch_NG_text">
                     Start Proofreading
                 </div>
@@ -309,58 +155,8 @@
         </div>
         <div id='SomaOtherTable' class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "inProgressOtherTab" class="tablinks" onclick="tabToggle(event, 'InProgress_Other',6,9,'inProgressOtherTab')">In Progress</button>
-                <button id = "pendingOtherTab" class="tablinks" onclick="tabToggle(event, 'Pending_Other',6,9,'pendingOtherTab')">Pending</button>
-                <button id = "closedOtherTab" class="tablinks" onclick="tabToggle(event, 'Closed_Other',6,9,'closedOtherTab')">Closed</button>
-            </div>
-        
-            <div id="InProgress_Other" class="tabcontent">
-                <div>
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Flags</th>
-                        </tr>
-                        <tr>
-                            <td>mergecur</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                        <tr>
-                            <td>121</td>
-                            <td>today</td>
-                            <td>incomplete</td>
-                            <td>low resolution</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                            <td>n/a</td>
-                        </tr>
-                    </table>
-                </div>
+                <button id = "pendingOtherTab" class="tablinks" onclick="tabToggle(event, 'Pending_Other',4,6,'pendingOtherTab')">Pending</button>
+                <button id = "closedOtherTab" class="tablinks" onclick="tabToggle(event, 'Closed_Other',4,6,'closedOtherTab')">Closed</button>
             </div>
             <div id="Pending_Other" class="tabcontent">
                 <div>
@@ -431,9 +227,9 @@
 <script>
     start();
     function start() {
-        tabToggle(event, 'InProgress_Split',0,3, 'inProgressSplitTab');
-        tabToggle(event, 'InProgress_Merge',3,6,'inProgressMergeTab');
-        tabToggle(event, 'InProgress_Other',6,9,'inProgressOtherTab');
+        tabToggle(event, 'Pending_Split',0,2, 'pendingSplitTab');
+        tabToggle(event, 'Pending_Merge',2,4,'pendingMergeTab');
+        tabToggle(event, 'Pending_Other',4,6,'pendingOtherTab');
         tableHide('SomaMerge',"SomaMergeTable");
         tableHide('SomaSplit',"SomaSplitTable");
         tableHide('SomaOther',"SomaOtherTable");

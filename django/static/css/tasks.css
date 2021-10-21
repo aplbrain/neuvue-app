@@ -62,7 +62,6 @@
 /* Right half of the task category header: 'start proofreading' button */
 .launch_NG {
   margin: 1% 1% 1% 0px;
-  font-family: var(--monospace-font);
   background-color: transparent;
   border-radius: 0 8px 8px 0;
   right:0;
@@ -73,8 +72,10 @@
   padding: 10px;
   float: right;
   font-family: var(--header-font);
-  font-size: 6px;
   font-size: 0.8vw;
+  cursor: pointer;
+  z-index: 2; 
+  
 }
 .launch_NG:hover{
   background: var(--primary-accent);
@@ -88,6 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;  
 }
 
 /* Tables for the content */
