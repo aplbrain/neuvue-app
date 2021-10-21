@@ -126,6 +126,9 @@ tr:hover {
   border-radius: 0px;
 }
 
+tbody.pending >:nth-child(2) {
+  color: var(--complete-color) !important;
+}
 
 
 /* Tab Container */
