@@ -18,6 +18,7 @@ class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.namespace = settings.NAMESPACES[0]
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -36,7 +37,7 @@ class WorkspaceView(View):
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = self.client.get_next_task(str(request.user), "path-split")
+        task_df = self.client.get_next_task(str(request.user), self.namespace)
         if not task_df:
             context['tasks_available'] = False
             pass
@@ -68,7 +69,7 @@ class WorkspaceView(View):
         
         if 'submit' in request.POST:
             logger.debug('Submitting task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             self.client.patch_task(task_df["_id"], status="closed")
         
         if 'flag' in request.POST:
@@ -77,12 +78,12 @@ class WorkspaceView(View):
             # Cancel/Flag 
 
             logger.debug('Flagging task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             self.client.patch_task(task_df["_id"], status="errored")
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
@@ -163,7 +164,7 @@ class TaskView(View):
                 '__v'
             ], inplace=True)
         
-        tasks.rename(columns={"_id": "task_id"}, inplace=True)
+        tasks['task_id'] = tasks.index
 
         return tasks.to_dict('records')
 
