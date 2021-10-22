@@ -4,8 +4,7 @@ from django.conf import settings
 import colocarpy
 import numpy as np
 import pandas as pd
-
-
+from datetime import datetime
 from .neuroglancer import construct_proofreading_url
 
 # import the logging library
@@ -14,10 +13,23 @@ logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
 class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        timer_reset = datetime.strftime(datetime.min, '%H:%M:%S')
+
+        if "timer" in request.session:
+            self.time = (datetime.now() - datetime.strptime(request.session['timer'], "%Y-%m-%d %H:%M:%S.%f")).__str__()
+            request.session['timer'] = datetime.now()
+
+        else:
+            request.session["timer"] = datetime.now()
+            self.time = timer_reset
+
+        request.session['timer'] = request.session['timer'].__str__()
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -31,7 +43,7 @@ class WorkspaceView(View):
         }
 
         if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
+            #TODO: Create Modal that lets the user know to log in first.
             return render(request, "workspace.html", context)
 
         # Get the next task. If its open already display immediately.
@@ -47,14 +59,15 @@ class WorkspaceView(View):
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
 
-
             # Manually get the points for now, populate in client later.
-            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
+            points = [self.client.get_point(x)['coordinate']
+                      for x in task_df['points']]
             path_coordinates = task_df['metadata'].get('path_coordinates', [])
             points = np.array(points)
-            
+
             # Construct NG URL from points
-            context['ng_url'] = construct_proofreading_url([task_df['seg_id']], points[0], points)
+            context['ng_url'] = construct_proofreading_url(
+                [task_df['seg_id']], points[0], points)
 
         logging.debug(context)
         return render(request, "workspace.html", context)
@@ -63,29 +76,33 @@ class WorkspaceView(View):
 
         if 'restart' in request.POST:
             logger.debug('Restarting task')
-        
+
         if 'submit' in request.POST:
             logger.debug('Submitting task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(
+                str(request.user), "path-split")
+            self.client.patch_task(task_df["_id"], metadata={"duration":self.time})
             self.client.patch_task(task_df["_id"], status="closed")
-        
+
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
             # Input box in the modal that will user input for flag reason
-            # Cancel/Flag 
+            # Cancel/Flag
 
             logger.debug('Flagging task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(
+                str(request.user), "path-split")
             self.client.patch_task(task_df["_id"], status="errored")
-        
+
         if 'start' in request.POST:
             logger.debug('Starting new task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(
+                str(request.user), "path-split")
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
-        
+
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
             # Check if there is an open task in session
@@ -101,69 +118,76 @@ class TaskView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        
+
         namespaces = settings.NAMESPACES
         context = {}
 
         for namespace in namespaces:
             context[namespace] = {
-                    "pending": [],
-                    "closed": [],
-                    "total_pending": 0,
-                    "total_closed": 0
-                }
-        
+                "pending": [],
+                "closed": [],
+                "total_pending": 0,
+                "total_closed": 0
+            }
+
         if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
+            #TODO: Create Modal that lets the user know to log in first.
             return render(request, "workspace.html", context)
 
         for namespace in namespaces:
-            context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
-            context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
-            context[namespace]['total_closed'] = len(context[namespace]['closed'])
-            context[namespace]['total_pending'] = len(context[namespace]['pending'])
-        
+            context[namespace]['pending'] = self._generate_table(
+                'pending', str(request.user), namespace)
+            context[namespace]['closed'] = self._generate_table(
+                'closed', str(request.user), namespace)
+            context[namespace]['total_closed'] = len(
+                context[namespace]['closed'])
+            context[namespace]['total_pending'] = len(
+                context[namespace]['pending'])
+
         return render(request, "tasks.html", context)
 
     def _generate_table(self, table, username, namespace):
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
+                "assignee": username,
                 "namespace": namespace,
                 "status": 'pending'
-                })
+            })
             open_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
+                "assignee": username,
                 "namespace": namespace,
                 "status": 'open'
-                })
-            tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
+            })
+            tasks = pd.concat([pending_tasks, open_tasks]
+                              ).sort_values('created')
         elif table == 'closed':
             closed_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
+                "assignee": username,
                 "namespace": namespace,
                 "status": 'closed'
-                })
+            })
             errored_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
+                "assignee": username,
                 "namespace": namespace,
                 "status": 'errored'
-                })
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+            })
+            tasks = pd.concat([closed_tasks, errored_tasks]
+                              ).sort_values('closed')
         print(tasks)
         tasks.drop(columns=[
-                'active',
-                'metadata',
-                'points',
-                'assignee',
-                'namespace',
-                'instructions',
-                '__v'
-            ], inplace=True)
-        
+            'active',
+            'metadata',
+            'points',
+            'assignee',
+            'namespace',
+            'instructions',
+            '__v'
+        ], inplace=True)
+
         tasks.rename(columns={"_id": "task_id"}, inplace=True)
 
         return tasks.to_dict('records')
+
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
