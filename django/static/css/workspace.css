@@ -196,12 +196,12 @@ background: var(--flag-accent);
 color: var(--primary-accent);
 }
 
-.button.next{
+.button.submit{
 background-color: var(--next-accent);
 color: var(--background);
 }
 
-.button.next:hover{
+.button.submit:hover{
 border: 3px solid var(--next-accent);
 background-color: var(--next-accent);
 color: var(--primary-accent);

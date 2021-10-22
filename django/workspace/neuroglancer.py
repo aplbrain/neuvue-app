@@ -24,7 +24,7 @@ def create_base_state(seg_ids, coordinate):
     """
     
     # Create ImageLayerConfig
-    img_source = "precomputed://" + settings.IMAGE_SOURCE
+    img_source = "precomputed://" + settings.IMG_SOURCE
     black = settings.CONTRAST.get("black", 0)
     white = settings.CONTRAST.get("white", 1)
     img_layer = ImageLayerConfig(
@@ -61,14 +61,14 @@ def generate_path_df(points):
     for i in range(points.shape[0] - 1):
         point_column_a.append(points[i])
         point_column_b.append(points[i+1])
-
-    point_column_a = np.concatenate(point_column_a).tolist()
-    point_column_b = np.concatenate(point_column_b).tolist()
+    point_column_a = [np.concatenate(point_column_a).tolist()]
+    point_column_b = [np.concatenate(point_column_b).tolist()]
+    group = np.ones(len(point_column_a)).tolist()
     return pd.DataFrame(
         {
             "point_column_a": point_column_a,
             "point_column_b": point_column_b,
-            "group": np.ones(len(point_column_a)),
+            "group": group,
         }
     )
 
@@ -83,11 +83,14 @@ def create_path_state():
     )
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
-def construct_proofreading_url(seg_ids, coordinate, points):
-    path_df = generate_path_df(points)
+def construct_proofreading_url(seg_ids, coordinate, points=np.NaN):
     base_state = create_base_state(seg_ids, coordinate)
-    path_state = create_path_state()
-    pf_state = ChainedStateBuilder([base_state, path_state])
+    if points.any():
+        path_df = generate_path_df(points)
+        path_state = create_path_state()
+        pf_state = ChainedStateBuilder([base_state, path_state])
+    else:
+        return base_state.render_state(return_as='url', url_prefix=settings.NG_CLIENT)
 
     return pf_state.render_state(
         [None, path_df], return_as='url', url_prefix=settings.NG_CLIENT
