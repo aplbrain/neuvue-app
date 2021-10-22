@@ -166,7 +166,7 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-NEUVUE_QUEUE_ADDR = "http://127.0.0.1:9005/"
+NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
 
 # Data Sources
 IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
