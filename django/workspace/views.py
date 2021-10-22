@@ -74,7 +74,7 @@ class WorkspaceView(View):
 
             logger.debug('Flagging task')
             task_df = self.client.get_next_task(str(request.user), "path-split")
-            self.client.patch_task(task_df["_id"], status="errored", metadata={"flag_reason": "flag reason"})
+            self.client.patch_task(task_df["_id"], status="errored")
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
@@ -88,7 +88,7 @@ class WorkspaceView(View):
             logger.debug('Stopping proofreading app')
             # Check if there is an open task in session
             # Confirm exit and save time point
-            redirect(reverse('tasks'))
+            return redirect(reverse('tasks'))
 
         return redirect(reverse('workspace'))
 
