@@ -55,14 +55,9 @@ def generate_path_df(points):
     Returns:
         DataFrame: Dataframe of point columns and groups.
     """
-    point_column_a = []
-    point_column_b = []
-
-    for i in range(points.shape[0] - 1):
-        point_column_a.append(points[i])
-        point_column_b.append(points[i+1])
-    point_column_a = [np.concatenate(point_column_a).tolist()]
-    point_column_b = [np.concatenate(point_column_b).tolist()]
+    point_column_a = points[:-1].tolist()
+    point_column_b = points[1:].tolist()
+    
     group = np.ones(len(point_column_a)).tolist()
     return pd.DataFrame(
         {
