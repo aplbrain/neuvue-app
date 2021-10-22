@@ -18,17 +18,6 @@ class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
-        timer_reset = datetime.strftime(datetime.min, '%H:%M:%S')
-
-        if "timer" in request.session:
-            self.time = (datetime.now() - datetime.strptime(request.session['timer'], "%Y-%m-%d %H:%M:%S.%f")).__str__()
-            request.session['timer'] = datetime.now()
-
-        else:
-            request.session["timer"] = datetime.now()
-            self.time = timer_reset
-
-        request.session['timer'] = request.session['timer'].__str__()
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -77,10 +66,20 @@ class WorkspaceView(View):
         if 'restart' in request.POST:
             logger.debug('Restarting task')
 
+            #initialize timer 
+            request.session["timer"] = datetime.now()
+            self.time = datetime.strftime(datetime.min, '%H:%M:%S')
+
         if 'submit' in request.POST:
             logger.debug('Submitting task')
             task_df = self.client.get_next_task(
                 str(request.user), "path-split")
+
+            #get time it took to complete task
+            if "timer" in request.session:
+                self.time = (datetime.now() - datetime.strptime(request.session['timer'], "%Y-%m-%d %H:%M:%S.%f")).__str__()
+                request.session['timer'] = datetime.now()
+
             self.client.patch_task(task_df["_id"], metadata={"duration":self.time})
             self.client.patch_task(task_df["_id"], status="closed")
 
@@ -102,6 +101,14 @@ class WorkspaceView(View):
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
+
+            #initialize timer 
+            request.session["timer"] = datetime.now()
+            self.time = datetime.strftime(datetime.min, '%H:%M:%S')
+
+
+
+        request.session['timer'] = request.session['timer'].__str__()
 
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
