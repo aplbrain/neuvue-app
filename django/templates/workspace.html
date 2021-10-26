@@ -156,7 +156,10 @@
 </div>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    openSideMenu();
+    // openSideMenu();
+    // By default, have side menu closed.
+    // TODO: Have a session token that saves status of side menu 
+    closeSideMenu();
     block_toggle();
     activeTaskStartUp();
 

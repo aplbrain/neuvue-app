@@ -3,6 +3,8 @@ from django.views.generic.base import View
 from django.conf import settings
 import colocarpy
 import numpy as np
+import pandas as pd
+
 
 from .neuroglancer import construct_proofreading_url
 
@@ -16,6 +18,7 @@ class WorkspaceView(View):
 
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.namespace = settings.NAMESPACES[0]
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -34,7 +37,7 @@ class WorkspaceView(View):
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = self.client.get_next_task(str(request.user), "path-split")
+        task_df = self.client.get_next_task(str(request.user), self.namespace)
         if not task_df:
             context['tasks_available'] = False
             pass
@@ -66,7 +69,7 @@ class WorkspaceView(View):
         
         if 'submit' in request.POST:
             logger.debug('Submitting task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             self.client.patch_task(task_df["_id"], status="closed")
         
         if 'flag' in request.POST:
@@ -75,12 +78,12 @@ class WorkspaceView(View):
             # Cancel/Flag 
 
             logger.debug('Flagging task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             self.client.patch_task(task_df["_id"], status="errored")
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
@@ -96,12 +99,73 @@ class WorkspaceView(View):
 
 
 class TaskView(View):
-    def get(self, request, *args, **kwargs):
-        # logic/API calls go here 
-        # Make a call to neuvue-queue using neuvue-client to get_tasks()
-        # tasks = get_tasks(sieve={"assignee": username, "status": "pending|closed|open|erorred")
+    def dispatch(self, request, *args, **kwargs):
+        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        return super().dispatch(request, *args, **kwargs)
 
-        return render(request, "tasks.html")
+    def get(self, request, *args, **kwargs):
+        
+        namespaces = settings.NAMESPACES
+        context = {}
+
+        for namespace in namespaces:
+            context[namespace] = {
+                    "pending": [],
+                    "closed": [],
+                    "total_pending": 0,
+                    "total_closed": 0
+                }
+        
+        if not request.user.is_authenticated:
+            #TODO: Create Modal that lets the user know to log in first. 
+            return render(request, "workspace.html", context)
+
+        for namespace in namespaces:
+            context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
+            context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
+            context[namespace]['total_closed'] = len(context[namespace]['closed'])
+            context[namespace]['total_pending'] = len(context[namespace]['pending'])
+        
+        return render(request, "tasks.html", context)
+
+    def _generate_table(self, table, username, namespace):
+        if table == 'pending':
+            pending_tasks = self.client.get_tasks(sieve={
+                "assignee": username, 
+                "namespace": namespace,
+                "status": 'pending'
+                })
+            open_tasks = self.client.get_tasks(sieve={
+                "assignee": username, 
+                "namespace": namespace,
+                "status": 'open'
+                })
+            tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
+        elif table == 'closed':
+            closed_tasks = self.client.get_tasks(sieve={
+                "assignee": username, 
+                "namespace": namespace,
+                "status": 'closed'
+                })
+            errored_tasks = self.client.get_tasks(sieve={
+                "assignee": username, 
+                "namespace": namespace,
+                "status": 'errored'
+                })
+            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+        tasks.drop(columns=[
+                'active',
+                'metadata',
+                'points',
+                'assignee',
+                'namespace',
+                'instructions',
+                '__v'
+            ], inplace=True)
+        
+        tasks['task_id'] = tasks.index
+
+        return tasks.to_dict('records')
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):

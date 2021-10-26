@@ -22,37 +22,35 @@
                     Start Proofreading
                 </div>
             </div>
-            <div id="SomaSplit" class="jobHeader active" onclick="tableHide('SomaSplit','SomaSplitTable')">Soma Splitting Tasks</div>
+            <div id="SomaSplit" class="jobHeader active" onclick="tableHide('SomaSplit','SomaSplitTable')">Path Split</div>
         </div>
         <div id='SomaSplitTable' class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,2,'pendingSplitTab')">Pending</button>
-                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,2,'closedSplitTab')">Closed</button>
+                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,2,'pendingSplitTab')">Pending ({{split.total_pending}}) </button>
+                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,2,'closedSplitTab')">Closed ({{split.total_closed}}) </button>
             </div>
             <div id="Pending_Split" class="tabcontent">
                 <div>
                     <table>
-                        <tbody class = "pending">
-                            <tr>
-                                <th>Task ID</th>
-                                <th>Seg ID</th>
-                                <th>Priority</th>
-                                <th>Created Time</th>
-                                
-                            </tr>
-                            <tr>
-                                <td>splitcomp</td>
-                                <td>October 1, 2021 12:43:26</td>
-                                <td>October 1, 2021 13:15:46</td>
-                                <td>n/a</td>
-                            </tr>
-                            <tr>
-                                <td>223</td>
-                                <td>October 1, 2021 12:43:26</td>
-                                <td>October 1, 2021 13:15:46</td>
-                                <td>low resolution</td>
-                            </tr>
-                        </tbody>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Seg ID</th>
+                            <th>Created</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            {% comment %} <th>Flag Reason</th>
+                            <th>Notes</th> {% endcomment %}
+                        </tr>
+                        {% for row in  split.pending %}
+                        <tr>
+                            <td> {{ row.task_id }} </td>
+                            <td> {{ row.seg_id }} </td>
+                            <td> {{ row.created }} </td>
+                            <td> {{ row.priority }} </td>
+                            <td> {{ row.status }} </td>
+                        </tr>
+                        {% endfor %}
+
                     </table>
                 </div>
             </div>
@@ -64,26 +62,25 @@
                             <th>Seg ID</th>
                             <th>Start Time</th>
                             <th>End Time</th>
-                            <th>Flag Reason</th>
-                            <th>Notes</th>
+                            <th>Status</th>
+                            {% comment %} <th>Flag Reason</th>
+                            <th>Notes</th> {% endcomment %}
                         </tr>
+                        {% for row in  split.closed %}
                         <tr>
-                            <td>splitclosed</td>
-                            <td>October 1, 2021 12:43:26</td>
-                            <td>October 1, 2021 13:15:46</td>
-                            <td>n/a</td>
+                            <td> {{ row.task_id }} </td>
+                            <td> {{ row.seg_id }} </td>
+                            <td> {{ row.opened }} </td>
+                            <td> {{ row.closed }} </td>
+                            <td> {{ row.status }} </td>
                         </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>October 1, 2021 12:43:26</td>
-                            <td>October 1, 2021 13:15:46</td>
-                            <td>low resolution</td>
-                        </tr>
+                        {% endfor %}
+
                     </table>
                 </div>
             </div>
         </div>
-        <div class="row">
+        {% comment %} <div class="row">
             <div class="launch_NG" onclick= "document.location='{% url 'workspace' %}'">
                 <div class ="launch_NG_text">
                     Start Proofreading
@@ -215,7 +212,7 @@
                     </table>
                 </div>
             </div>
-        </div>  
+        </div>   {% endcomment %}
     </div>
 
 
@@ -224,9 +221,11 @@
             Analytics
         </div>
         <div class="sideContentInfo">
-            <p>There are many important things we can put here.</p>
-            <p><b>1.</b> Like numbers.</p>
-            <p><b>2.</b> And graphs.</p>
+            <p>total num of tasks completed </p> </br>
+            <p>  Total time proofreading </p></br>
+            <p>  Total time this week </p></br>
+            <p>  average time per task </p></br>
+            <p>  histogram, tasks completed per day/week/month</p></br>
         </div>
     </div>
 </div>
