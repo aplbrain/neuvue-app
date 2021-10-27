@@ -329,10 +329,8 @@ nav ul li a{
   text-transform: uppercase;
 }
 a.active,a:hover{
-  background-color: transparent;
-  border-radius: 8px;
-  color: var(--navbar-text) !important;
-  border: 1.5px solid var(--secondary-accent);
+  color: var(--primary-accent);
+ 
 }
 .checkbtn{
   font-size: 30px;
