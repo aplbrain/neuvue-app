@@ -125,10 +125,39 @@
                     Submit Task
                 </button>
 
-                <button type="submit" class="button flag" name="flag">
+                <button type="submit" class="button flag" name="flag" id="flag">
                     Flag Task
                 </button>
                 
+                <!-- The Modal -->
+                <div id="flagModal" class="modal" name="flagging">
+
+                    <!-- Modal content -->
+                    <div class="modal-header">
+                    <h1> Flagging Task #{{task_id}} </h1>
+                    <div class="modal-content">
+                        <p> Please choose the reason for flagging this task: </p>
+                        <div class='options'>
+                            <select id="select-box" name="error" onchange=GetReason(value)>
+                                <option id="choice1" value="Artifact in the data"> Artifact in the data </option>
+                                <option id="choice2" value="Wrong location"> Wrong location for point annotation </option>
+                                <option id="choice3" value="Data unable to load"> Data unable to load </option>
+                                <option id="choice4" value="Other" > Other </option>
+                            </select>
+                        </div>
+                        <div id="other" class= "other">
+                            <label for="other-textbox">Other:*</label>
+                            <br>
+                            <textarea class="flag-box" id="other-textbox" maxlength="100" rows="3" cols="60" placeholder="Input reason"></textarea>
+                            <small> *Limit: 100 characters </small>
+                        </div>
+                        <div class='footer'>
+                            <button id="submit-error" name="submit-error" >Submit error </button>
+                            <button id="close">Close </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>              
                 <button type="submit" class="button flag" name="stop">
                     Pause Task and Exit Workspace
                 </button>

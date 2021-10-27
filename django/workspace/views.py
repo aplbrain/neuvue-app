@@ -24,7 +24,7 @@ class WorkspaceView(View):
             'pcg_url': settings.PROD_PCG_SOURCE,
             'task_id': '',
             'seg_id': '',
-            'is_open': False,
+            'is_open': True,
             'tasks_available': True
         }
 
@@ -58,6 +58,7 @@ class WorkspaceView(View):
 
         logging.debug(context)
         return render(request, "workspace.html", context)
+    
 
     def post(self, request, *args, **kwargs):
 
@@ -72,11 +73,16 @@ class WorkspaceView(View):
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
             # Input box in the modal that will user input for flag reason
-            # Cancel/Flag 
-
+            # Cancel/Flag
+            '''
+            for key, value in request.POST.items():
+                print(f'Key: {key}')
+                print(f'Value: {value}')
+            '''
+            print(request.POST['error'])
             logger.debug('Flagging task')
-            task_df = self.client.get_next_task(str(request.user), "path-split")
-            self.client.patch_task(task_df["_id"], status="errored")
+            #task_df = self.client.get_next_task(str(request.user), "path-split")
+            #self.client.patch_task(task_df["_id"], status="errored")
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
