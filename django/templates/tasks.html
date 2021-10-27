@@ -26,8 +26,8 @@
         </div>
         <div id='SomaSplitTable' class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,2,'pendingSplitTab')">Pending () </button>
-                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,2,'closedSplitTab')">Closed () </button>
+                <button id = "pendingSplitTab" class="tablinks" onclick="tabToggle(event, 'Pending_Split',0,2,'pendingSplitTab')">Pending ({{split.total_pending}}) </button>
+                <button id = "closedSplitTab" class="tablinks" onclick="tabToggle(event, 'Closed_Split',0,2,'closedSplitTab')">Closed ({{split.total_closed}}) </button>
             </div>
             <div id="Pending_Split" class="tabcontent">
                 <div>

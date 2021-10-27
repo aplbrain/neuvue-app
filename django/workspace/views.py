@@ -153,7 +153,6 @@ class TaskView(View):
                 "status": 'errored'
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
-        print(tasks)
         tasks.drop(columns=[
                 'active',
                 'metadata',
