@@ -25,7 +25,9 @@
             </label>
             <label class="logo" onclick= "document.location='{% url 'index' %}'">NeuVue</label>
             <ul>
-                <li><a href="{% url "tasks" %}">Queue</a></li>
+                <li><a href="{% url "tasks" %}">Docs</a></li>
+                <li><a href="{% url "tasks" %}">Bug Report</a></li>
+                <li><a href="{% url "tasks" %}">My Tasks</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url "logout" %}">Log Out</a></li>
                 {% endif %}
