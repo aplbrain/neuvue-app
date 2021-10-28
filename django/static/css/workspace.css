@@ -617,44 +617,6 @@ background-color: var(--transparent-hover);
 background: transparent;
 }
 
-/* Modal */
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: transparent;
-}
-
-
-/* Modal Content */
-
-.modal-header {
-  color: #414242;
-  margin: 15% auto;
-  padding: 30px 60px;
-  width: 500px;
-  font-family: Lato;
-  font-size: 16px;
-  line-height: 28px;
-  letter-spacing: 0.5px;
-  background: #FFFFFF;
-  border: 1px solid #9B9C9D;
-  border-radius: 6px;
-}
-
-
-.modal-header > h1 {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
 button#submit {
   margin: 30px auto;
   display: inline-block;

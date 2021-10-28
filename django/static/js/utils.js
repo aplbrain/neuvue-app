@@ -90,32 +90,3 @@ function closeSideMenu() {
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
 }
-
-var modal = document.getElementById('flagModal');
-
-var flagbtn = document.getElementById("flag");
-
-var submitbtn = document.getElementById("submit-error");
-
-var closebtn = document.getElementById("close");
-
-flagbtn.onclick = function() {
-  modal.style.display = "block";
-}
-
-submitbtn.onclick = function() {
-	// Grab reason for flagging
-  modal.style.display = "none";
-}
-
-closebtn.onclickbtn = function() {
-  modal.style.display = "none";
-}
-
-function GetReason(i) {
-  if (i == 'Other'){
-  	var other = document.getElementById("other")
-  	other.style.display = "block"
-    
-  }
-}
