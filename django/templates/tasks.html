@@ -7,11 +7,7 @@
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  <p>Welcome, You are logged in as {{ user.username }}</p>
-{% else %}
-  <a href="{% provider_login_url 'google' %}">Login With Google</a>
-{% endif %}
+
 
 <div class="row">
 
@@ -22,7 +18,7 @@
                     Start Proofreading
                 </div>
             </div>
-            <div id="SomaSplit" class="jobHeader active" onclick="tableHide('SomaSplit','SomaSplitTable')">Path Split</div>
+            <div id="SomaSplit" class="jobHeader active" onclick="tableHide('SomaSplit','SomaSplitTable')">Multi-Soma Split</div>
         </div>
         <div id='SomaSplitTable' class ="bin" style="display:block;">
             <div class="tab">
@@ -218,14 +214,22 @@
 
     <div class="analytics">
         <div class="sideContentTitle">
-            Analytics
+            Stats
         </div>
         <div class="sideContentInfo">
-            <p>total num of tasks completed </p> </br>
-            <p>  Total time proofreading </p></br>
-            <p>  Total time this week </p></br>
-            <p>  average time per task </p></br>
-            <p>  histogram, tasks completed per day/week/month</p></br>
+            <p>  You've completed <code>12</code> tasks this week and 
+                <code>37</code> tasks in total. 
+            </p> </br>
+        </div>
+        <div class="sideContentInfo">
+            <p> This week you have recorded <code>4.3</code> hours proofreading. 
+            In total you have recorded <code>17</code> hours proofreading.
+            </p> </br>
+        </div>
+        <div class="sideContentInfo">
+            <p>  On average, you complete tasks at a rate of <code>15.8</code> minutes per task. 
+            This week your average rate is <code>12.2</code> minutes per task.
+            </p> </br>
         </div>
     </div>
 </div>
