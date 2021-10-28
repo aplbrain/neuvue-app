@@ -27,7 +27,15 @@
             <ul>
                 <li><a href="{% url "tasks" %}">Queue</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url "logout" %}">Log Out</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <b> {{user.username}} </b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownLink">
+                      <li><a class="dropdown-item" href="{% url "logout" %}">Log Out</a></li>
+                      <li><a class="dropdown-item disabled">Preferences</a></li>
+                    </ul>
+                </li>
                 {% endif %}
             </ul>
         </nav> 
