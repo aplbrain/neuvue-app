@@ -107,20 +107,3 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
-'''
-[{"active":true,
-"closed":null,
-"metadata":{},
-"opened":null,
-"status":"pending",
-"seg_id":null,
-"points":["61608a4cd6e3a922fa87b23b"],
-"_id":"61608d56d6e3a922fa87b26d",
-"neuron_status":"incomplete",
-"priority":1,
-"author":"diego",
-"assignee":"oscar",
-"namespace":"neuvue",
-"instructions":{"prompt":"Follow the path trace and identify any visible merge errors."},
-"created":1633717590700,"__v":0}
-'''

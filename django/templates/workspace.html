@@ -169,17 +169,19 @@
                 <div class="modal-body">
                     <form action="" method="post" role="form">
                         <div class="form-group">
-                            <label class="custom-control-label" for="flag">Please select a reason for flagging this task:</label>
-                            <select name=flag class=form-control>
+                            <label class="custom-select-label" for="flag">Please select a reason for flagging this task:</label>
+                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox()>
+                                <option value="">Select reason</option>
                                 <option value="artifact in the data">Artifact in the data</option>
                                 <option value="wrong location">Wrong location</option>
                                 <option value="data unable to load">Data unable to load</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div class="invalid-feedback">Example invalid custom select feedback</div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none;" id="text">
                             <label for="flag-other">Other reason*</label>
-                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100"></textarea>
+                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100" placeholder="Enter reason"></textarea>
                             <small class="form-text text-muted">*100 character limit.</small>
                         </div>
                     </form>
@@ -209,6 +211,16 @@
         } else {
             panel.style.display = "block";
         }
+    }
+</script>
+<script>
+    function toggleTextbox(){
+        var reason=document.getElementById("select-flag");
+        var textbox = document.getElementById("text")
+        if(reason.value == "other")
+            textbox.style.display = "block"
+        else
+            textbox.style.display = "none"
     }
 </script>
 {% endblock %}
