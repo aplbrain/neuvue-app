@@ -166,7 +166,7 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
+NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io"
 NAMESPACES = ['split']
 
 # Data Sources
@@ -175,7 +175,7 @@ PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
 DEV_PCG_SOURCE = None
 
 # Neuroglancer Settings
-NG_CLIENT = "http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com"
+NG_CLIENT = "https://neuroglancer.neuvue.io"
 CONTRAST = {
     "black": 0.35, 
     "white": 0.7
