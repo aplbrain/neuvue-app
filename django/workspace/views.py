@@ -46,6 +46,9 @@ class WorkspaceView(View):
             pass
 
         elif task_df['status'] == 'open':
+            # Reset session timer
+            request.session["timer"] = time.time()
+            
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -62,7 +65,6 @@ class WorkspaceView(View):
             # Construct NG URL from points
             context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates)
 
-        logging.debug(context)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -77,8 +79,10 @@ class WorkspaceView(View):
             #get time it took to complete task
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-
-            self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="closed")
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="closed")
+            else:
+                logging.info("No timer keyword available in session.")
+                self.client.patch_task(task_df["_id"], status="closed")
 
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
@@ -90,8 +94,10 @@ class WorkspaceView(View):
             #get time it took to complete task
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-
-            self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="errored")
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="errored")
+            else:
+                logging.info("No timer keyword available in session.")
+                self.client.patch_task(task_df["_id"], status="errored")
 
         if 'start' in request.POST:
             logger.debug('Starting new task')
@@ -106,20 +112,14 @@ class WorkspaceView(View):
         
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
-            # Check if there is an open task in session
-            # Confirm exit and save time point
-            if "timer" in request.session:
-                self.time = (datetime.now() - datetime.strptime(request.session['timer'], "%Y-%m-%d %H:%M:%S.%f")).__str__()
-                request.session['timer'] = datetime.now()
-
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-
-
-            self.client.patch_task(task_df["_id"], duration=request.session["timer"])
-
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"])
+            else:
+                logging.error("Unable to patch duration.")
             return redirect(reverse('tasks'))
-
+        
         return redirect(reverse('workspace'))
 
 
