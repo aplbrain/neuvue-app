@@ -71,18 +71,10 @@ class WorkspaceView(View):
             self.client.patch_task(task_df["_id"], status="closed")
         
         if 'flag' in request.POST:
-            # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
-            # Input box in the modal that will user input for flag reason
-            # Cancel/Flag
-            '''
-            for key, value in request.POST.items():
-                print(f'Key: {key}')
-                print(f'Value: {value}')
-            '''
-            print(request.POST['error'])
             logger.debug('Flagging task')
-            #task_df = self.client.get_next_task(str(request.user), "path-split")
-            #self.client.patch_task(task_df["_id"], status="errored")
+            print(request.POST['flag'])
+            task_df = self.client.get_next_task(str(request.user), "path-split")
+            self.client.patch_task(task_df["_id"], status="errored")
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
