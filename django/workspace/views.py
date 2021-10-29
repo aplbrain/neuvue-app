@@ -4,7 +4,8 @@ from django.conf import settings
 import colocarpy
 import numpy as np
 import pandas as pd
-
+from datetime import datetime
+import time
 
 from .neuroglancer import construct_proofreading_url
 
@@ -19,6 +20,8 @@ class WorkspaceView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         self.namespace = settings.NAMESPACES[0]
+
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -67,11 +70,16 @@ class WorkspaceView(View):
         if 'restart' in request.POST:
             logger.debug('Restarting task')
         
+
         if 'submit' in request.POST:
             logger.debug('Submitting task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="closed")
-        
+            #get time it took to complete task
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+
+            self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="closed")
+
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
             # Input box in the modal that will user input for flag reason
@@ -79,8 +87,12 @@ class WorkspaceView(View):
 
             logger.debug('Flagging task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="errored")
-        
+            #get time it took to complete task
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+
+            self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="errored")
+
         if 'start' in request.POST:
             logger.debug('Starting new task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
@@ -88,11 +100,24 @@ class WorkspaceView(View):
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
+
+            #initialize timer 
+            request.session["timer"] = time.time()
         
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
             # Check if there is an open task in session
             # Confirm exit and save time point
+            if "timer" in request.session:
+                self.time = (datetime.now() - datetime.strptime(request.session['timer'], "%Y-%m-%d %H:%M:%S.%f")).__str__()
+                request.session['timer'] = datetime.now()
+
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+
+
+            self.client.patch_task(task_df["_id"], duration=request.session["timer"])
+
             return redirect(reverse('tasks'))
 
         return redirect(reverse('workspace'))
