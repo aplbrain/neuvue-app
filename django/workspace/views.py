@@ -72,9 +72,12 @@ class WorkspaceView(View):
         
         if 'flag' in request.POST:
             logger.debug('Flagging task')
-            print(request.POST['flag'])
+            if request.POST['flag'] == 'other':
+                flag = request.POST['flag-other']
+            else:
+                flag = request.POST['flag']
             task_df = self.client.get_next_task(str(request.user), "path-split")
-            self.client.patch_task(task_df["_id"], status="errored")
+            self.client.patch_task(task_df["_id"], status="errored", metadata=flag)
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
@@ -104,3 +107,20 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
+'''
+[{"active":true,
+"closed":null,
+"metadata":{},
+"opened":null,
+"status":"pending",
+"seg_id":null,
+"points":["61608a4cd6e3a922fa87b23b"],
+"_id":"61608d56d6e3a922fa87b26d",
+"neuron_status":"incomplete",
+"priority":1,
+"author":"diego",
+"assignee":"oscar",
+"namespace":"neuvue",
+"instructions":{"prompt":"Follow the path trace and identify any visible merge errors."},
+"created":1633717590700,"__v":0}
+'''
