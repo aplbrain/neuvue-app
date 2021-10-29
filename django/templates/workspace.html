@@ -157,10 +157,20 @@
     // openSideMenu();
     // By default, have side menu closed.
     // TODO: Have a session token that saves status of side menu 
-    closeSideMenu();
-    block_toggle();
-    activeTaskStartUp();
-
+    function checkCookie() {
+        let menu = getCookie("menu");
+        if (menu != "open") {
+            closeSideMenu();
+        } else if (menu != "closed") {
+            openSideMenu();
+        } else {
+            setCookie("menu", "open", 365);
+            openSideMenu();
+            closeSideMenu();
+            openSideMenu();
+            block_toggle();
+        }
+    }
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");

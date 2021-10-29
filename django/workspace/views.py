@@ -64,8 +64,8 @@ class WorkspaceView(View):
         logging.debug(context)
         return render(request, "workspace.html", context)
 
-    def post(self, request, *args, **kwargs):
 
+    def post(self, request, *args, **kwargs):
         if 'restart' in request.POST:
             logger.debug('Restarting task')
         
@@ -98,6 +98,8 @@ class WorkspaceView(View):
             return redirect(reverse('tasks'))
 
         return redirect(reverse('workspace'))
+    
+
 
 
 class TaskView(View):
