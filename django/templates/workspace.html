@@ -21,9 +21,7 @@
                 Instructions
             </div>
             <div class="sideContentInfo">
-                <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
-                <p><b>1.</b> Look at the Nueron.</p>
-                <p><b>2.</b> Have fun.</p>
+                {{ instructions.prompt }}
             </div>
         </div>
         <! Task Queue >
@@ -129,7 +127,7 @@
                     Flag Task
                 </button>
                 
-                <button type="submit" class="button flag" name="stop">
+                <button type="submit" class="button pause" name="stop">
                     Pause Task and Exit Workspace
                 </button>
                 {% else %}
