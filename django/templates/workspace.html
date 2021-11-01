@@ -110,7 +110,8 @@
         <iframe src="{{ng_url}}"
                 width="95%" 
                 height="85%"
-                class="neuroGlancer">
+                class="neuroGlancer"
+                id="neuroGlancerFrame">
         </iframe>
         {% endif %}
             <form action="" method="post" class="bottomBar">
@@ -121,15 +122,15 @@
                     Restart Task
                 </button>
         
-                <button type="submit" class="button submit" name="submit">
+                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button submit" name="submit">
                     Submit Task
                 </button>
 
-                <button type="submit" class="button flag" name="flag">
+                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button flag" name="flag">
                     Flag Task
                 </button>
                 
-                <button type="submit" class="button flag" name="stop">
+                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button flag" name="stop">
                     Pause Task and Exit Workspace
                 </button>
                 {% else %}
@@ -174,6 +175,25 @@
             panel.style.display = "block";
         }
     }
+
+    /* Function for getting the current Neuroglancer state */
+
+    const ngURL = new URL('{{ng_url}}');
+
+    window.addEventListener("message", (event) => {
+    // Do we trust the sender of this message?  (might be
+    // different from what we originally opened, for example).
+    if (event.origin !== ngURL.origin)
+        return;
+
+    window.localStorage['ngState'] = event.data;
+    }, false);
+    
+    function getCurrentNeuroglancerState(element) {
+        document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
+        element.value = window.localStorage['ngState'];
+    }
+
 </script>
 {% endblock %}
 
