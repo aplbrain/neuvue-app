@@ -167,7 +167,14 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
-NAMESPACES = ['split']
+NAMESPACES = {
+    "split" : {
+        "display_name": "Multi-Soma Split"
+    },
+    "trace": {
+        "display_name": "Tracing"
+    }
+}
 
 # Data Sources
 IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"

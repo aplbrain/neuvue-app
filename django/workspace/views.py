@@ -139,28 +139,25 @@ class TaskView(View):
 
     def get(self, request, *args, **kwargs):
         
-        namespaces = settings.NAMESPACES
-        context = {}
+        context = settings.NAMESPACES
 
-        for namespace in namespaces:
-            context[namespace] = {
-                    "pending": [],
-                    "closed": [],
-                    "total_pending": 0,
-                    "total_closed": 0
-                }
-        
+        for namespace in context.keys():
+            context[namespace]["pending"] = []
+            context[namespace]["closed"] = []
+            context[namespace]["total_pending"] = 0
+            context[namespace]["total_closed"] = 0
+
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)
 
-        for namespace in namespaces:
+        for namespace in context.keys():
             context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
             context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
         
-        return render(request, "tasks.html", context)
+        return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
         if table == 'pending':
