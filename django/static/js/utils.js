@@ -63,7 +63,7 @@ function openSideMenu(){
 
   neuroglancer_window.style.width = "75%";
   neuroglancer_window.style.left = "0%";
-  document.cookie = "menu=open"
+  document.cookie = "menu=open" /* Cookie handling */
 }
 /* Closes Side Menu */
 function closeSideMenu() {
@@ -89,9 +89,10 @@ function closeSideMenu() {
   
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
-  document.cookie = "menu=closed"
+  document.cookie = "menu=closed" /* Cookie handling */
 }
 
+/* Cookie handling */
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -99,6 +100,7 @@ function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+/* Cookie handling */
 function getCookie(cname) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
