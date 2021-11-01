@@ -4,7 +4,7 @@ from django.conf import settings
 import colocarpy
 import numpy as np
 import pandas as pd
-
+import time
 
 from .neuroglancer import construct_proofreading_url
 
@@ -19,6 +19,8 @@ class WorkspaceView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         self.namespace = settings.NAMESPACES[0]
+
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -43,6 +45,9 @@ class WorkspaceView(View):
             pass
 
         elif task_df['status'] == 'open':
+            # Reset session timer
+            request.session["timer"] = time.time()
+            
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -59,7 +64,6 @@ class WorkspaceView(View):
             # Construct NG URL from points
             context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates)
 
-        logging.debug(context)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -67,11 +71,18 @@ class WorkspaceView(View):
         if 'restart' in request.POST:
             logger.debug('Restarting task')
         
+
         if 'submit' in request.POST:
             logger.debug('Submitting task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="closed")
-        
+            #get time it took to complete task
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="closed")
+            else:
+                logging.info("No timer keyword available in session.")
+                self.client.patch_task(task_df["_id"], status="closed")
+
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
             # Input box in the modal that will user input for flag reason
@@ -79,8 +90,14 @@ class WorkspaceView(View):
 
             logger.debug('Flagging task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="errored")
-        
+            #get time it took to complete task
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="errored")
+            else:
+                logging.info("No timer keyword available in session.")
+                self.client.patch_task(task_df["_id"], status="errored")
+
         if 'start' in request.POST:
             logger.debug('Starting new task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
@@ -88,13 +105,20 @@ class WorkspaceView(View):
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
+
+            #initialize timer 
+            request.session["timer"] = time.time()
         
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
-            # Check if there is an open task in session
-            # Confirm exit and save time point
+            task_df = self.client.get_next_task(str(request.user), self.namespace)
+            if "timer" in request.session:
+                request.session["timer"] = int(time.time() - request.session["timer"])
+                self.client.patch_task(task_df["_id"], duration=request.session["timer"])
+            else:
+                logging.error("Unable to patch duration.")
             return redirect(reverse('tasks'))
-
+        
         return redirect(reverse('workspace'))
 
 
