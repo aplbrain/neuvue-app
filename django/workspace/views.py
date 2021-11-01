@@ -130,7 +130,16 @@ class TaskView(View):
     def get(self, request, *args, **kwargs):
         
         namespaces = settings.NAMESPACES
-        context = {}
+        context = {
+            "user_stats":{
+                "total_time": None,
+                "weekly_time": None,
+                "total_completed": None,
+                "weekly_completed": None,
+                "total_rate": None,
+                "weekly_rate": None
+            }
+        }
 
         for namespace in namespaces:
             context[namespace] = {
