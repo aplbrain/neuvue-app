@@ -4,7 +4,6 @@ from django.conf import settings
 import colocarpy
 import numpy as np
 import pandas as pd
-from datetime import datetime
 import time
 
 from .neuroglancer import construct_proofreading_url
