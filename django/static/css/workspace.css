@@ -108,39 +108,43 @@ overflow-x: hidden;
 
 /* formats the Task ID, Segmentation ID, and Pychunked graph container */
 .topBar {
-font-family: var(--body-font);
-color: var(--primary-accent-activated);
-background-color: transparent;
-height: 2% !important;
-width: 95%;
-display: flex;
-flex-direction: row;
-order: 0;
-top:0;
-vertical-align: top;
-left:0;
+  font-family: var(--body-font);
+  color: var(--primary-accent-activated);
+  background-color: transparent;
+  height: 2% !important;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  order: 0;
+  top:0;
+  vertical-align: top;
+  left:0;
 }
 
 .textBin {
-width: 33%;
-height:100%;
-overflow: hidden;
-display: block;
+  height:100%;
+  overflow: hidden;
+  display: block;
 }
 
 .textBin.left {
-float: left;
-order:0;
-text-align: left !important;
+  min-width: 10%;
+  max-width: 20%;
+  float: left;
+  order:0;
+  text-align: left !important;
 }
 .textBin.mid {
-float: left;
-text-align: center;
-order:1;
+  min-width: 10%;
+  max-width: 20%;
+  float: left;
+  text-align: center;
+  order:1;
 }
 .textBin.right {
-float: right;
-text-align: right;
+  width: 60%;
+  float: right;
+  text-align: right;
 
 }
 
@@ -192,12 +196,12 @@ background: var(--flag-accent);
 color: var(--primary-accent);
 }
 
-.button.next{
+.button.submit{
 background-color: var(--next-accent);
 color: var(--background);
 }
 
-.button.next:hover{
+.button.submit:hover{
 border: 3px solid var(--next-accent);
 background-color: var(--next-accent);
 color: var(--primary-accent);
@@ -304,6 +308,8 @@ label.logo{
   padding: 0 2%;
   line-height: 70px;
   font-weight: lighter;
+  cursor: pointer;
+  z-index: 2;
 }
 nav ul{
   float: right;

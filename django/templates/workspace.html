@@ -106,10 +106,10 @@
     <div class="left">
         <div class="topBar" >
                 <div class="textBin left">
-                    Task ID #{{task_id}}
+                    Task ID # {{task_id}}
                 </div>
                 <div class="textBin mid">
-                    Segmentation ID #425
+                    Segmentation ID # {{seg_id}}
                 </div>
                 <div class="textBin right">
                     Connected to {{pcg_url}}
@@ -126,10 +126,12 @@
         <!-- </iframe> -->
             <form action="" method="post" class="bottomBar" id="taskSubmitForm">
                 {% csrf_token %}
+                
+                {% if is_open %}
                 <button type="submit" class="button" name="restart">
                     Restart Task
                 </button>
-
+        
                 <button type="submit" class="button submit" name="submit">
                     Submit Task
                 </button>
@@ -137,17 +139,38 @@
                 <button type="submit" class="button flag" name="flag">
                     Flag Task
                 </button>
-
+                
                 <button type="submit" class="button flag" name="stop">
-                    Pause and Exit
+                    Pause Task and Exit Workspace
                 </button>
+                {% else %}
+
+                {%if tasks_available %}
+                <button type="submit" class="button submit" name="start">
+                    Start New  Task
+                </button>
+
+                {% else %}
+                <button type="submit" class="button submit" name="start" disabled >
+                    No Pending Tasks
+                </button> 
+                
+                {% endif%}
+                
+                <button type="submit" class="button flag" name="stop">
+                    Exit Workspace
+                </button>
+                {% endif %}
 
             </form>
     </div>
 </div>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    openSideMenu();
+    // openSideMenu();
+    // By default, have side menu closed.
+    // TODO: Have a session token that saves status of side menu 
+    closeSideMenu();
     block_toggle();
     activeTaskStartUp();
 
