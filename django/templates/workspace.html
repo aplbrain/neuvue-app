@@ -99,7 +99,9 @@
 </div> 
 
 </div>
+{% load render_bundle from webpack_loader %}
 
+{% render_bundle 'main' %}
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
         <div class="topBar" >
@@ -114,11 +116,14 @@
                 </div>
 
         </div>
-        <iframe src={{ng_url}}
+        <div id="neuroglancer-container"></div>
+            
+        
+        <!-- <iframe src={{ng_url}}
                 width="95%" 
                 height="85%"
-                class="neuroGlancer">
-        </iframe>
+                class="neuroGlancer"> -->
+        <!-- </iframe> -->
             <form action="" method="post" class="bottomBar" id="taskSubmitForm">
                 {% csrf_token %}
                 <button type="submit" class="button" name="restart">

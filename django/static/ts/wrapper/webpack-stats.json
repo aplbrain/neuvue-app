@@ -1,0 +1,39 @@
+{
+  "status": "done",
+  "assets": {
+    "main.05f606f2e58ba5ae2bff.bundle.js": {
+      "name": "main.05f606f2e58ba5ae2bff.bundle.js",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.05f606f2e58ba5ae2bff.bundle.js"
+    },
+    "tfjs-library.05f606f2e58ba5ae2bff.bundle.js": {
+      "name": "tfjs-library.05f606f2e58ba5ae2bff.bundle.js",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.05f606f2e58ba5ae2bff.bundle.js"
+    },
+    "main.05f606f2e58ba5ae2bff.bundle.js.map": {
+      "name": "main.05f606f2e58ba5ae2bff.bundle.js.map",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.05f606f2e58ba5ae2bff.bundle.js.map"
+    },
+    "tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map": {
+      "name": "tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map"
+    },
+    "index.html": {
+      "name": "index.html",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/index.html"
+    },
+    "bossauth.html": {
+      "name": "bossauth.html",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/bossauth.html"
+    },
+    "auth_redirect.html": {
+      "name": "auth_redirect.html",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/auth_redirect.html"
+    }
+  },
+  "chunks": {
+    "main": [
+      "main.05f606f2e58ba5ae2bff.bundle.js",
+      "main.05f606f2e58ba5ae2bff.bundle.js.map"
+    ]
+  }
+}
