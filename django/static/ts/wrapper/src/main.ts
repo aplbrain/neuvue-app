@@ -16,11 +16,42 @@
 
 import {makeExtraKeyBindings} from 'ngwrapper/extra_key_bindings';
 import {navigateToOrigin} from 'ngwrapper/navigate_to_origin';
-import {setupDefaultViewer} from 'neuroglancer/ui/default_viewer_setup';
 import {registerActionListener} from 'neuroglancer/util/event_action_map';
+import {bindDefaultCopyHandler, bindDefaultPasteHandler} from 'neuroglancer/ui/default_clipboard_handling';
+import {setDefaultInputEventBindings} from 'neuroglancer/ui/default_input_event_bindings';
+
+import 'neuroglancer/sliceview/chunk_format_handlers';
+
+import {StatusMessage} from 'neuroglancer/status';
+import {DisplayContext} from 'neuroglancer/display_context';
+import {Viewer, ViewerOptions} from 'neuroglancer/viewer';
+import {disableContextMenu, disableWheel} from 'neuroglancer/ui/disable_default_actions';
+function makeDefaultViewer(options?: Partial<ViewerOptions>) {
+  disableContextMenu();
+  disableWheel();
+  try {
+    let display = new DisplayContext(document.getElementById('neuroglancer-container')!);
+    return new Viewer(display, options);
+  } catch (error) {
+    StatusMessage.showMessage(`Error: ${error.message}`);
+    throw error;
+  }
+}
+  
 
 window.addEventListener('DOMContentLoaded', () => {
-  const viewer = setupDefaultViewer();
+  
+  const viewer = (<any>window)['viewer'] = makeDefaultViewer({showLayerDialog : false});
+  setDefaultInputEventBindings(viewer.inputEventBindings);
+
+  viewer.loadFromJsonUrl();
+  viewer.initializeSaver();
+
+  bindDefaultCopyHandler(viewer);
+  bindDefaultPasteHandler(viewer);
+
   makeExtraKeyBindings(viewer.inputEventMap);
   registerActionListener(viewer.element, 'navigate-to-origin', () => navigateToOrigin(viewer));
 });
+
+

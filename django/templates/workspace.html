@@ -83,7 +83,7 @@
                     </div> 
                     <div class="taskInfo">
                     <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
-                    </div>   
+                    </div>
                 </div>
                 <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
                 <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
@@ -100,7 +100,6 @@
 
 </div>
 {% load render_bundle from webpack_loader %}
-
 {% render_bundle 'main' %}
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
@@ -116,7 +115,7 @@
                 </div>
 
         </div>
-        <div id="neuroglancer-container"></div>
+        <div id="neuroglancer-container" class="neuroglancer-container"></div>
             
         
         <!-- <iframe src={{ng_url}}

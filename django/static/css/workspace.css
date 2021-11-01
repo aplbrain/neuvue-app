@@ -96,12 +96,14 @@ overflow-x: hidden;
 
 
 /* NG container */
-.neuroGlancer {
+
+.neuroglancer-container {
   box-shadow: 0 4px 8px 0 var(--transparent-shadow);
   border-radius: 8px;
   border: 1px solid var(--background);
   margin-top: 1%;
   margin-bottom: 1%;
+  width: 95%;
   height: 120%;
   order: 1;
 }
@@ -150,7 +152,7 @@ overflow-x: hidden;
 
 /* button container below NG */
 .bottomBar {
-  flex-grow: 1;
+  flex-grow: 0;
   order: 2;
   padding:1%;
   background-color: transparent;

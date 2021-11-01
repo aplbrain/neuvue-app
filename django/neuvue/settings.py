@@ -167,7 +167,9 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
+# NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
+NEUVUE_QUEUE_ADDR = "http://172.31.82.83:9005/"
+
 NAMESPACES = ['split']
 
 # Data Sources
@@ -185,9 +187,11 @@ VOXEL_RESOLUTION = (4, 4, 40)
 
 WEBPACK_LOADER = {
   'DEFAULT': {
+    'BUNDLE_DIR_NAME':  os.path.join('ts','wrapper','dist','dev'),
     'CACHE': not DEBUG,
     'STATS_FILE': os.path.join(BASE_DIR,'static','ts','wrapper', 'webpack-stats.json'),
     'POLL_INTERVAL': 0.1,
     'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
   }
 }
+SITE_ID = 3
