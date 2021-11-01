@@ -13,7 +13,7 @@
 
     <div class="jobQueue" >
         {% for namespace, context in data.items %}
-        <div class="row">
+        <div class="neuvueRow">
             <div class="launch_NG" onclick= "document.location='{% url 'workspace' %}'"> 
                 <div class ="launch_NG_text">
                     Start Proofreading
@@ -23,8 +23,8 @@
         </div>
         <div id="{{namespace}}Table" class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}',{{ forloop.counter0 }},2,'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
-                <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}',0,2,'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
+                <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}', {{context.start}}, {{context.end}},'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
+                <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}', {{context.start}}, {{context.end}},'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
             </div>
             <div id="pending{{namespace}}" class="tabcontent">
                 <div>
@@ -106,13 +106,13 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 
 <script>
-    {% comment %} start();
+    start();
     function start() {
-        {% for namespace in data.items %}
-        tabToggle(event, "pending{{namespace}}",0,2, "pending{{namespace}}Tab");
+        {% for namespace, context in data.items %}
+        tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
         tableHide("{{namespace}}Header","{{namespace}}Table");
         {% endfor %}
-    }; {% endcomment %}
+    };
     
     
     function tabToggle(evt, timeframe,start,end,buttonid) {

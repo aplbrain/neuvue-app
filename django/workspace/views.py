@@ -141,11 +141,13 @@ class TaskView(View):
         
         context = settings.NAMESPACES
 
-        for namespace in context.keys():
+        for i, namespace in enumerate(context.keys()):
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
             context[namespace]["total_closed"] = 0
+            context[namespace]["start"] = i*2
+            context[namespace]["end"] = (i+1)*2
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
