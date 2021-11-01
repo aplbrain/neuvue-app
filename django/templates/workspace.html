@@ -110,7 +110,8 @@
         <iframe src="{{ng_url}}"
                 width="95%" 
                 height="85%"
-                class="neuroGlancer">
+                class="neuroGlancer"
+                id="neuroGlancerFrame">
         </iframe>
         {% endif %}
             <form action="" method="post" class="bottomBar">
@@ -127,6 +128,10 @@
 
                 <button type="submit" class="button flag" name="flag">
                     Flag Task
+                </button>
+
+                <button onclick="getNeuroglancerState()" type="button" class="button restart" name="flag">
+                    Get state
                 </button>
                 
                 <button type="submit" class="button flag" name="stop">
@@ -173,6 +178,10 @@
         } else {
             panel.style.display = "block";
         }
+    }
+
+    function getNeuroglancerState() {
+        console.log(document.getElementById("neuroGlancerFrame").contentWindow.location.href)
     }
 </script>
 {% endblock %}
