@@ -74,30 +74,35 @@ class WorkspaceView(View):
 
         if 'submit' in request.POST:
             logger.debug('Submitting task')
+            current_state = request.POST.get('submit')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
             #get time it took to complete task
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="closed")
+                self.client.patch_task(
+                    task_df["_id"], 
+                    duration=request.session["timer"], 
+                    status="closed",
+                    ng_state=current_state)
             else:
                 logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="closed")
-
+                self.client.patch_task(task_df["_id"], status="closed", ng_state=current_state)
+        
         if 'flag' in request.POST:
-            # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
-            # Input box in the modal that will user input for flag reason
-            # Cancel/Flag 
-
             logger.debug('Flagging task')
+            current_state = request.POST.get('flag')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            #get time it took to complete task
+
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(task_df["_id"], duration=request.session["timer"], status="errored")
+                self.client.patch_task(task_df["_id"], 
+                    duration=request.session["timer"], 
+                    status="errored", 
+                    ng_state=current_state)
             else:
                 logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="errored")
-
+                self.client.patch_task(task_df["_id"], status="errored", ng_state=current_state)
+        
         if 'start' in request.POST:
             logger.debug('Starting new task')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
@@ -111,12 +116,17 @@ class WorkspaceView(View):
         
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
+            current_state = request.POST.get('stop')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(task_df["_id"], duration=request.session["timer"])
+                self.client.patch_task(
+                    task_df["_id"], 
+                    duration=request.session["timer"], 
+                    ng_state=current_state)
             else:
                 logging.error("Unable to patch duration.")
+                self.client.patch_task(task_df["_id"], ng_state=current_state)
             return redirect(reverse('tasks'))
         
         return redirect(reverse('workspace'))
