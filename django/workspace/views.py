@@ -59,7 +59,6 @@ class WorkspaceView(View):
             # Construct NG URL from points
             context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates)
 
-        logging.debug(context)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -69,8 +68,9 @@ class WorkspaceView(View):
         
         if 'submit' in request.POST:
             logger.debug('Submitting task')
+            current_state = request.POST.get('submit')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="closed")
+            self.client.patch_task(task_df["_id"], status="closed", state=current_state)
         
         if 'flag' in request.POST:
             # Create a modal that will say "Flagging Task {task_ID}. Please write reason for flag below"
@@ -78,8 +78,9 @@ class WorkspaceView(View):
             # Cancel/Flag 
 
             logger.debug('Flagging task')
+            current_state = request.POST.get('flag')
             task_df = self.client.get_next_task(str(request.user), self.namespace)
-            self.client.patch_task(task_df["_id"], status="errored")
+            self.client.patch_task(task_df["_id"], status="errored", state=current_state)
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
@@ -91,6 +92,7 @@ class WorkspaceView(View):
         
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
+            current_state = request.POST.get('stop')
             # Check if there is an open task in session
             # Confirm exit and save time point
             return redirect(reverse('tasks'))
