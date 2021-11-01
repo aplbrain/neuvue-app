@@ -23,10 +23,10 @@
         </div>
         <div id="{{namespace}}Table" class ="bin" style="display:block;">
             <div class="tab">
-                <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'Pending_{{namespace}}',0,2,'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
-                <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'Closed_{{namespace}}',0,2,'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
+                <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}',{{ forloop.counter0 }},2,'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
+                <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}',0,2,'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
             </div>
-            <div id="Pending_{{namespace}}" class="tabcontent">
+            <div id="pending{{namespace}}" class="tabcontent">
                 <div>
                     <table>
                         <tr>
@@ -51,7 +51,7 @@
                     </table>
                 </div>
             </div>
-            <div id="Closed_{{namespace}}" class="tabcontent">
+            <div id="closed{{namespace}}" class="tabcontent">
                 <div>
                     <table>
                         <tr>
@@ -106,13 +106,13 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 
 <script>
-    start();
+    {% comment %} start();
     function start() {
         {% for namespace in data.items %}
-        tabToggle(event, "{{namespace}}_Split",0,2, "{{namespace}}SplitTab");
-        tableHide("Soma{{namespace}}","Soma{{namespace}}Table");
+        tabToggle(event, "pending{{namespace}}",0,2, "pending{{namespace}}Tab");
+        tableHide("{{namespace}}Header","{{namespace}}Table");
         {% endfor %}
-    };
+    }; {% endcomment %}
     
     
     function tabToggle(evt, timeframe,start,end,buttonid) {
