@@ -96,6 +96,9 @@ def generate_point_df(points, description=None, group=None):
         group = np.ones(len(point_column_a)).tolist()
     
     if description:
+        if len(description) != len(points):
+            logger.error("Group array shape does not match points array shape.")
+
         return pd.DataFrame(
             {
                 "point_column_a": point_column_a,
@@ -104,13 +107,8 @@ def generate_point_df(points, description=None, group=None):
             }
         )
     else:
-        return pd.DataFrame(
-            {
-                "point_column_a": point_column_a,
-                "group": group,
-                "description": descriptions
-            }
-        )
+        return pd.DataFrame({"point_column_a": point_column_a, "group": group})
+
 
 def create_path_state():
     """Create the annotation state for paths.
@@ -124,16 +122,21 @@ def create_path_state():
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def create_point_state():
+def create_point_state(use_description=False):
     """Create the annotation state for points.
     Dontt tuse linemapper, just creates a neuroglancer link that is just Points
     nglui statebuilder
     Returns:
         StateBuilder: Annotation State
     """
-    anno = AnnotationLayerConfig("selected_points",
-        mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
-    )
+    if use_description:
+        anno = AnnotationLayerConfig("selected_points",
+            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False, description="description"),
+        )
+    else:
+        anno = AnnotationLayerConfig("selected_points",
+            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
+        )
 
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
