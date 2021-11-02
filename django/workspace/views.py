@@ -30,7 +30,8 @@ class WorkspaceView(View):
             'task_id': '',
             'seg_id': '',
             'is_open': False,
-            'tasks_available': True
+            'tasks_available': True,
+            'namespace': 'split'
         }
 
         if not request.user.is_authenticated:
@@ -62,7 +63,7 @@ class WorkspaceView(View):
             path_coordinates = np.array(path_coordinates)
             
             # Construct NG URL from points
-            context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates)
+            context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates, namespace=context['namespace'])
 
         return render(request, "workspace.html", context)
 
