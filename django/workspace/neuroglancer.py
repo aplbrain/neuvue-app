@@ -13,6 +13,9 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class Namespaces(str, Enum):
     split = 'split'
@@ -74,7 +77,7 @@ def generate_path_df(points):
         }
     )
 
-def generate_point_df(points):
+def generate_point_df(points, description=None, group=None):
     """Generates the point A dataframe for all points. Points are 
     assumed to be  all part of the same group.
 
@@ -85,13 +88,29 @@ def generate_point_df(points):
         DataFrame: Dataframe of point columns and groups.
     """
     point_column_a = points.tolist()
-    group = np.ones(len(point_column_a)).tolist()
-    return pd.DataFrame(
-        {
-            "point_column_a": point_column_a,
-            "group": group,
-        }
-    )
+    if group and len(group) != len(points):
+        if len(group) != len(points):
+            logger.error("Group array shape does not match points array shape.")
+            group = np.ones(len(point_column_a)).tolist()
+    else:
+        group = np.ones(len(point_column_a)).tolist()
+    
+    if description:
+        return pd.DataFrame(
+            {
+                "point_column_a": point_column_a,
+                "group": group,
+                "description": description
+            }
+        )
+    else:
+        return pd.DataFrame(
+            {
+                "point_column_a": point_column_a,
+                "group": group,
+                "description": descriptions
+            }
+        )
 
 def create_path_state():
     """Create the annotation state for paths.
