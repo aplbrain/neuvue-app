@@ -2,6 +2,7 @@ from django.conf import settings
 import pandas as pd 
 import numpy as np 
 from typing import List
+from enum import Enum, auto
 from nglui.statebuilder import (
     ImageLayerConfig, 
     SegmentationLayerConfig, 
@@ -11,6 +12,11 @@ from nglui.statebuilder import (
     StateBuilder,
     ChainedStateBuilder
     )
+
+
+class Namespaces(Enum):
+    split = 'split'
+    trace = 'trace'
 
 
 def create_base_state(seg_ids, coordinate):
@@ -68,6 +74,25 @@ def generate_path_df(points):
         }
     )
 
+def generate_point_df(points):
+    """Generates the point A dataframe for all points. Points are 
+    assumed to be  all part of the same group.
+
+    Args:
+        points (Iterable[int[]]): List of points in XYZ order.
+
+    Returns:
+        DataFrame: Dataframe of point columns and groups.
+    """
+    point_column_a = points.tolist()
+    group = np.ones(len(point_column_a)).tolist()
+    return pd.DataFrame(
+        {
+            "point_column_a": point_column_a,
+            "group": group,
+        }
+    )
+
 def create_path_state():
     """Create the annotation state for paths.
 
@@ -79,6 +104,7 @@ def create_path_state():
     )
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
+
 def create_point_state():
     """Create the annotation state for points.
     Dontt tuse linemapper, just creates a neuroglancer link that is just Points
@@ -86,31 +112,48 @@ def create_point_state():
     Returns:
         StateBuilder: Annotation State
     """
-    anno = AnnotationLayerConfig("selected_paths",
-        mapping_rules=PointMapper("point_column_a", group_column="group"),
+    anno = AnnotationLayerConfig("selected_points",
+        mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
     )
-    # If statement that checks using a new arg, namespace, and checks string to see what task type it is
-    # splitt uses creatte_pattth_statte
-    # all currently use create base state
-    # new one, tracing, uses base staet, and new layer with annotation points
-
 
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
-def construct_proofreading_url(seg_ids, coordinate, namespace="split", points=np.NaN):
-    base_state = create_base_state(seg_ids, coordinate)
-    if points.any():
-        path_df = generate_path_df(points)
-        if namespace == "split":
-            state = create_path_state()
-        elif namespace == "trace":
-            state = create_point_state()
-        else:
-            raise ValueError("")
-        pf_state = ChainedStateBuilder([base_state, state])
-    else:
-        return base_state.render_state(return_as='url', url_prefix=settings.NG_CLIENT)
 
-    return pf_state.render_state(
-        [None, path_df], return_as='url', url_prefix=settings.NG_CLIENT
-    )
+def construct_proofreading_url(task_df, points):
+    """Generates a Neuroglancer URL with the path/annotation information preloaded.
+
+    Args:
+        task_df (pandas.DataFrame): Task Dataframe from Neuvue-Client
+        points (List): List of coordinates of the initial set of Point Objects
+
+    Returns:
+        string: Neuroglancer URL
+    """
+    # TODO: Automatically iterate through Namespaces and map them to the 
+    # appropriate Neuroglancer functions. 
+    seg_ids = task_df['seg_id']
+    base_state = create_base_state(seg_ids, points[0])
+
+    # Get any annotation coordinates. Append original points.
+    coordinates = task_df['metadata'].get('coordinates', [])
+    coordinates.insert(0 ,points[0])
+    coordinates.append(points[-1])
+    coordinates = np.array(coordinates)
+
+    # Create a list of dataframes used for state creation. Since First state is 
+    # the base layer, the first element is None. 
+    data_list = [None]
+    
+    if task_df['namespace'] == Namespaces.split:
+        data_list.append( generate_path_df(coordinates))
+        path_state = create_path_state()
+        chained_state = ChainedStateBuilder([base_state, path_state])
+    
+    elif task_df['namespace'] == Namespaces.trace: 
+        data_list.append( generate_point_df(coordinates))
+        point_state = create_point_state()
+        chained_state = ChainedStateBuilder([base_state, point_state])
+
+    return chained_state.render_state(
+            data_list, return_as='url', url_prefix=settings.NG_CLIENT
+        )

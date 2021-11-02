@@ -58,14 +58,9 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-            path_coordinates = task_df['metadata'].get('path_coordinates', [])
-            path_coordinates.insert(0 ,points[0])
-            path_coordinates.append(points[-1])
-            path_coordinates = np.array(path_coordinates)
             
             # Construct NG URL from points
-            context['ng_url'] = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates, namespace=context['namespace'])
-
+            context['ng_url'] = construct_proofreading_url(task_df, points)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
