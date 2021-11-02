@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 import colocarpy
 import numpy as np
 import pandas as pd
@@ -14,16 +16,13 @@ logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class WorkspaceView(View):
+class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
-        self.namespace = settings.NAMESPACES[0]
-
-
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, namespace=None, **kwargs):
         context = {
             'ng_url': settings.NG_CLIENT,
             'pcg_url': settings.PROD_PCG_SOURCE,
@@ -33,13 +32,14 @@ class WorkspaceView(View):
             'tasks_available': True
         }
 
-        if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
-            return render(request, "workspace.html", context)
+        if namespace is None:
+            logging.debug("No namespace query provided.")
+            # TODO: Redirect to task page for now, something went wrong...
+            return redirect(reverse('tasks'))
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = self.client.get_next_task(str(request.user), self.namespace)
+        task_df = self.client.get_next_task(str(request.user), namespace)
         if not task_df:
             context['tasks_available'] = False
             pass
@@ -47,7 +47,6 @@ class WorkspaceView(View):
         elif task_df['status'] == 'open':
             # Reset session timer
             request.session["timer"] = time.time()
-            
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -67,15 +66,19 @@ class WorkspaceView(View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
+        namespace = kwargs.get('namespace')
+        logging.debug("NAMESPACE:" + namespace)
+        if namespace is None:
+            logging.error("Error getting namespace in POST body.")
 
+        task_df = self.client.get_next_task(str(request.user), namespace)
+        
         if 'restart' in request.POST:
             logger.debug('Restarting task')
         
-
         if 'submit' in request.POST:
             logger.debug('Submitting task')
             current_state = request.POST.get('submit')
-            task_df = self.client.get_next_task(str(request.user), self.namespace)
             #get time it took to complete task
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
@@ -91,7 +94,6 @@ class WorkspaceView(View):
         if 'flag' in request.POST:
             logger.debug('Flagging task')
             current_state = request.POST.get('flag')
-            task_df = self.client.get_next_task(str(request.user), self.namespace)
 
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
@@ -105,7 +107,7 @@ class WorkspaceView(View):
         
         if 'start' in request.POST:
             logger.debug('Starting new task')
-            task_df = self.client.get_next_task(str(request.user), self.namespace)
+
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
@@ -117,7 +119,6 @@ class WorkspaceView(View):
         if 'stop' in request.POST:
             logger.debug('Stopping proofreading app')
             current_state = request.POST.get('stop')
-            task_df = self.client.get_next_task(str(request.user), self.namespace)
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
                 self.client.patch_task(
@@ -129,7 +130,7 @@ class WorkspaceView(View):
                 self.client.patch_task(task_df["_id"], ng_state=current_state)
             return redirect(reverse('tasks'))
         
-        return redirect(reverse('workspace'))
+        return redirect(reverse('workspace', args=[namespace]))
 
 
 class TaskView(View):
