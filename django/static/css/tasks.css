@@ -25,7 +25,7 @@
 }
 
 /* Clear floats after the columns */
-.row:after {
+.neuvueRow:after {
   content: "";
   display: table;
   clear: both;
