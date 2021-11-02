@@ -21,9 +21,7 @@
                 Instructions
             </div>
             <div class="sideContentInfo">
-                <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
-                <p><b>1.</b> Look at the Nueron.</p>
-                <p><b>2.</b> Have fun.</p>
+                {{ instructions.prompt }}
             </div>
         </div>
         <! Task Queue >
@@ -134,8 +132,8 @@
                     data-bs-target="#flagModal">
                     Flag Task
                 </button>
-                
-                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button flag" name="stop">
+              
+                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button pause" name="stop">
                     Pause Task and Exit Workspace
                 </button>
                 {% else %}
@@ -205,10 +203,11 @@
     // openSideMenu();
     // By default, have side menu closed.
     // TODO: Have a session token that saves status of side menu 
+    openSideMenu();
     closeSideMenu();
+    openSideMenu();
     block_toggle();
-    activeTaskStartUp();
-
+    
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");

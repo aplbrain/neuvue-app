@@ -29,7 +29,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'task_id': '',
             'seg_id': '',
             'is_open': False,
-            'tasks_available': True
+            'tasks_available': True,
+            'instructions': '',
         }
 
         if namespace is None:
@@ -51,6 +52,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['is_open'] = True
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
+            context['instructions'] = task_df['instructions']
 
 
             # Manually get the points for now, populate in client later.
@@ -72,7 +74,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             logging.error("Error getting namespace in POST body.")
 
         task_df = self.client.get_next_task(str(request.user), namespace)
-        
+     
         if 'restart' in request.POST:
             logger.debug('Restarting task')
         
