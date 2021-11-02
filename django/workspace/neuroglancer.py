@@ -14,7 +14,7 @@ from nglui.statebuilder import (
     )
 
 
-class Namespaces(Enum):
+class Namespaces(str, Enum):
     split = 'split'
     trace = 'trace'
 
@@ -131,7 +131,7 @@ def construct_proofreading_url(task_df, points):
     """
     # TODO: Automatically iterate through Namespaces and map them to the 
     # appropriate Neuroglancer functions. 
-    seg_ids = task_df['seg_id']
+    seg_ids = [task_df['seg_id']]
     base_state = create_base_state(seg_ids, points[0])
 
     # Get any annotation coordinates. Append original points.
@@ -143,7 +143,6 @@ def construct_proofreading_url(task_df, points):
     # Create a list of dataframes used for state creation. Since First state is 
     # the base layer, the first element is None. 
     data_list = [None]
-    
     if task_df['namespace'] == Namespaces.split:
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
