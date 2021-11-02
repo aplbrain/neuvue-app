@@ -31,11 +31,19 @@ function sidemenu_content() {
     to highlight the button that controls the panel */
     side_button.classList.toggle("active");
 
-    
+      //console.log('changing the menu')
+      
+      //document.forms["sampleForm"].submit();
+      //console.log('changed')
       if (neuroglancer_window.style.width != "75%" ) {
         openSideMenu()
+        //console.log('sending form')
+        document.sidebar_form.sidebar_tab.value = 'open';
+        document.forms["sidebar_form"].submit();
       } else {
         closeSideMenu()
+        document.sidebar_form.sidebar_tab.value = 'closed';
+        document.forms["sidebar_form"].submit();
       }
 
 } 
@@ -63,7 +71,7 @@ function openSideMenu(){
 
   neuroglancer_window.style.width = "75%";
   neuroglancer_window.style.left = "0%";
-
+  
 }
 /* Closes Side Menu */
 function closeSideMenu() {

@@ -24,14 +24,22 @@ class WorkspaceView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        num_visits = request.session.get('num_visits', 0)
+        sidebar = request.session.get('sidebar', 'open')
+
+        request.session['num_visits'] = num_visits + 1
+
         context = {
             'ng_url': settings.NG_CLIENT,
             'pcg_url': settings.PROD_PCG_SOURCE,
             'task_id': '',
             'seg_id': '',
             'is_open': False,
-            'tasks_available': True
+            'tasks_available': True,
+            'sidebar': sidebar,
+            'num_visits': num_visits
         }
+        print('this is visit number:', num_visits, 'and the menu is:', sidebar)
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
@@ -67,6 +75,9 @@ class WorkspaceView(View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
+
+        if 'sidebar_tab' in request.POST:
+            request.session['sidebar'] = request.POST.get('sidebar_tab')
 
         if 'restart' in request.POST:
             logger.debug('Restarting task')
