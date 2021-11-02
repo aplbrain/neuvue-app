@@ -7,6 +7,7 @@ from nglui.statebuilder import (
     SegmentationLayerConfig, 
     AnnotationLayerConfig, 
     LineMapper,
+    PointMapper,
     StateBuilder,
     ChainedStateBuilder
     )
@@ -78,12 +79,35 @@ def create_path_state():
     )
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
-def construct_proofreading_url(seg_ids, coordinate, points=np.NaN):
+def create_point_state():
+    """Create the annotation state for points.
+    Dontt tuse linemapper, just creates a neuroglancer link that is just Points
+    nglui statebuilder
+    Returns:
+        StateBuilder: Annotation State
+    """
+    anno = AnnotationLayerConfig("selected_paths",
+        mapping_rules=PointMapper("point_column_a", group_column="group"),
+    )
+    # If statement that checks using a new arg, namespace, and checks string to see what task type it is
+    # splitt uses creatte_pattth_statte
+    # all currently use create base state
+    # new one, tracing, uses base staet, and new layer with annotation points
+
+
+    return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
+
+def construct_proofreading_url(seg_ids, coordinate, namespace="split", points=np.NaN):
     base_state = create_base_state(seg_ids, coordinate)
     if points.any():
         path_df = generate_path_df(points)
-        path_state = create_path_state()
-        pf_state = ChainedStateBuilder([base_state, path_state])
+        if namespace == "split":
+            state = create_path_state()
+        elif namespace == "trace":
+            state = create_point_state()
+        else:
+            raise ValueError("")
+        pf_state = ChainedStateBuilder([base_state, state])
     else:
         return base_state.render_state(return_as='url', url_prefix=settings.NG_CLIENT)
 
