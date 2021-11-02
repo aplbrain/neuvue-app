@@ -30,7 +30,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
-            'namespace': 'split',
             'instructions': ''
         }
 
