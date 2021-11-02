@@ -3,7 +3,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-import colocarpy
+import neuvueclient as Client
 import numpy as np
 import pandas as pd
 import time
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.client = Client.NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -138,7 +138,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.client = Client.NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
