@@ -208,6 +208,7 @@
     function getCurrentNeuroglancerState(element) {
         document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
         element.value = window.localStorage['ngState'];
+        //document.forms["sidebar_form"].submit();
     }
 
 </script>

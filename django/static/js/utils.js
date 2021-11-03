@@ -31,19 +31,17 @@ function sidemenu_content() {
     to highlight the button that controls the panel */
     side_button.classList.toggle("active");
 
-      //console.log('changing the menu')
-      
-      //document.forms["sampleForm"].submit();
-      //console.log('changed')
       if (neuroglancer_window.style.width != "75%" ) {
-        openSideMenu()
-        //console.log('sending form')
+        openSideMenu();
         document.sidebar_form.sidebar_tab.value = 'open';
-        document.forms["sidebar_form"].submit();
+        console.log(document.sidebar_form.sidebar_tab.value);
+        update_sidebar();
+        //document.forms["sidebar_form"].submit();
       } else {
-        closeSideMenu()
+        closeSideMenu();
         document.sidebar_form.sidebar_tab.value = 'closed';
-        document.forms["sidebar_form"].submit();
+        console.log(document.sidebar_form.sidebar_tab.value);
+        //document.forms["sidebar_form"].submit();
       }
 
 } 
@@ -98,6 +96,24 @@ function closeSideMenu() {
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
 }
+
+function update_sidebar(){
+  $.ajax({
+    url : "/workspace/",
+    type : "POST", // http method
+    data : {
+      name:"sidebar",
+      csrfmiddlewaretoken: '{% csrf_token %}' , //This is must for security in Django
+    }, // data sent with the post request
+  
+    // handle a successful response
+    success : function(response){
+      alert(response["sidebar"]);
+    }
+  });
+}
+
+
 
 
 

@@ -20,12 +20,13 @@ class WorkspaceView(View):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         self.namespace = settings.NAMESPACES[0]
 
+        
 
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         num_visits = request.session.get('num_visits', 0)
-        sidebar = request.session.get('sidebar', 'open')
+        sidebar = request.session.get('sidebar', 'closed')
 
         request.session['num_visits'] = num_visits + 1
 
@@ -39,7 +40,7 @@ class WorkspaceView(View):
             'sidebar': sidebar,
             'num_visits': num_visits
         }
-        print('this is visit number:', num_visits, 'and the menu is:', sidebar)
+        #print('this is visit number:', num_visits, 'and the menu is:', sidebar)
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
