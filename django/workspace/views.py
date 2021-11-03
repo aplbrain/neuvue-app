@@ -38,7 +38,8 @@ class WorkspaceView(View):
             'is_open': False,
             'tasks_available': True,
             'sidebar': sidebar,
-            'num_visits': num_visits
+            'num_visits': num_visits,
+            'current_path': request.get_full_path()
         }
         #print('this is visit number:', num_visits, 'and the menu is:', sidebar)
 
