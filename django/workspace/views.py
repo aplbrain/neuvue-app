@@ -57,14 +57,10 @@ class WorkspaceView(View):
             path_coordinates.append(points[-1])
             path_coordinates = np.array(path_coordinates)
             # Construct NG URL from points
-            try:
-                ng_state = request.GET
-                logging.info(ng_state)
-                # State exists, viewer should load properly
-            except KeyError:
-                ng_state = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates, prefix=request.get_full_path())
+            
+            ng_state = construct_proofreading_url([task_df['seg_id']], path_coordinates[0], path_coordinates, prefix=request.get_full_path(), return_as='json')
                 
-                return redirect(ng_state)
+            context['ng_state'] = ng_state
             
             
         logging.debug(context)
@@ -123,7 +119,7 @@ class TaskView(View):
                     "total_pending": 0,
                     "total_closed": 0
                 }
-        context['ng_uri'] = create_base_state(return_as='url', url_prefix=path('workspace'))
+        # context['ng_uri'] = create_base_state(return_as='url', url_prefix=path('workspace'))
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)

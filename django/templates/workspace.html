@@ -184,6 +184,12 @@
             panel.style.display = "block";
         }
     }
+    window.addEventListener('DOMContentLoaded', () => {
+        var received_data = {{ ng_state|safe }}
+        console.log(received_data)
+        viewer.state.restoreState(received_data)
+    });
+    
 </script>
 {% endblock %}
 
