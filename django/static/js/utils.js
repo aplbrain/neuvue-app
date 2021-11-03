@@ -63,7 +63,6 @@ function openSideMenu(){
 
   neuroglancer_window.style.width = "75%";
   neuroglancer_window.style.left = "0%";
-
 }
 /* Closes Side Menu */
 function closeSideMenu() {
@@ -89,7 +88,12 @@ function closeSideMenu() {
   
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
+  
 }
+
+
+
+
 
 
 

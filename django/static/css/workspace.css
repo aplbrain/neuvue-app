@@ -13,6 +13,8 @@
   --next-accent-activated: #099c52;
   --flag-accent: #b14646;
   --flag-accent-activated: #cf4b4b;
+  --pause-accent: #9c9999;
+  --pause-accent-activated: #706d6d;
   --incomplete-color:#b2eebf;
   --incomplete-color-actived:#8fe2a1;
   --complete-color:#96a5d4;
@@ -195,6 +197,17 @@ color: var(--primary-accent);
 .button.flag:hover{
 border: 3px solid var(--flag-accent);
 background: var(--flag-accent);
+color: var(--primary-accent);
+}
+
+.button.pause{
+  background-color: var(--pause-accent);
+  color: var(--background);
+}
+
+.button.pause:hover{
+border: 3px solid var(--pause-accent);
+background: var(--pause-accent);
 color: var(--primary-accent);
 }
 

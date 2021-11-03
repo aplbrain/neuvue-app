@@ -128,4 +128,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# Webpack stats file
 webpack-stats*
+# Database binary
+neuvueDB

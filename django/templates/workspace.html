@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block content %}
+{% load render_bundle from webpack_loader %}
+{% render_bundle 'main' %}
 <! Information Hidden Menu >
 
 
@@ -21,9 +22,7 @@
                 Instructions
             </div>
             <div class="sideContentInfo">
-                <p>Here are some sample instructions for this Proofreading task. There are many things to know while proofreading. But some key ones are.</p>
-                <p><b>1.</b> Look at the Nueron.</p>
-                <p><b>2.</b> Have fun.</p>
+                {{ instructions.prompt }}
             </div>
         </div>
         <! Task Notes >
@@ -99,8 +98,7 @@
 </div> 
 
 </div>
-{% load render_bundle from webpack_loader %}
-{% render_bundle 'main' %}
+
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
         <div class="topBar" >
@@ -117,62 +115,104 @@
         </div>
         <div id="neuroglancer-container" class="neuroglancer-container"></div>
             
+    
         
-        <!-- <iframe src={{ng_url}}
-                width="95%" 
-                height="85%"
-                class="neuroGlancer"> -->
-        <!-- </iframe> -->
-            <form action="" method="post" class="bottomBar" id="taskSubmitForm">
-                {% csrf_token %}
-                
-                {% if is_open %}
-                <button type="submit" class="button" name="restart">
-                    Restart Task
-                </button>
-        
-                <button type="submit" class="button submit" name="submit">
-                    Submit Task
-                </button>
+        <form action="" method="post" class="bottomBar">
+            {% csrf_token %}
+            
+            {% if is_open %}
+            <button type="submit" class="button" name="restart">
+                Restart Task
+            </button>
+    
+            <button name="submit" type="submit" onclick="getCurrentNeuroglancerState(this)" class="button submit" >
+                Submit Task
+            </button>
 
-                <button type="submit" class="button flag" name="flag">
-                    Flag Task
-                </button>
-                
-                <button type="submit" class="button flag" name="stop">
-                    Pause Task and Exit Workspace
-                </button>
-                {% else %}
+            <button 
+                name="flag" 
+                type="button" 
+                class="button flag"
+                data-bs-toggle="modal" 
+                data-bs-target="#flagModal">
+                Flag Task
+            </button>
+            
+            <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button pause" name="stop">
+                Pause Task and Exit Workspace
+            </button>
+            {% else %}
 
-                {%if tasks_available %}
-                <button type="submit" class="button submit" name="start">
-                    Start New  Task
-                </button>
+            {%if tasks_available %}
+            <button type="submit" class="button submit" name="start">
+                Start New  Task
+            </button>
 
-                {% else %}
-                <button type="submit" class="button submit" name="start" disabled >
-                    No Pending Tasks
-                </button> 
-                
-                {% endif%}
-                
-                <button type="submit" class="button flag" name="stop">
-                    Exit Workspace
-                </button>
-                {% endif %}
+            {% else %}
+            <button type="submit" class="button submit" name="start" disabled >
+                No Pending Tasks
+            </button> 
+            
+            {% endif%}
+            
+            <button type="submit" class="button flag" name="stop">
+                Exit Workspace
+            </button>
+            {% endif %}
 
-            </form>
+        </form>
     </div>
 </div>
+
+<form method="post">
+    {% csrf_token %}
+    <!-- Modal -->
+    <div id="flagModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Flagging Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" role="form">
+                        <div class="form-group">
+                            <label class="custom-select-label" for="flag">Please select a reason for flagging this task:</label>
+                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox() required>
+                                <option value="" selected>Select reason</option>
+                                <option value="artifact in the data">Artifact in the data</option>
+                                <option value="wrong location">Wrong location</option>
+                                <option value="data unable to load">Data unable to load</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: none;" id="text">
+                            <label for="flag-other">Other reason*</label>
+                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100" placeholder="Enter reason" validate></textarea>
+                            <small class="form-text text-muted">*100 character limit.</small>
+                            <div class="invalid-feedback">Please enter a reason.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>
+
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
     // openSideMenu();
     // By default, have side menu closed.
     // TODO: Have a session token that saves status of side menu 
+    openSideMenu();
     closeSideMenu();
+    openSideMenu();
     block_toggle();
-    activeTaskStartUp();
-
+    
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");
@@ -190,6 +230,36 @@
         viewer.state.restoreState(received_data)
     });
     
+
+    /* Flag Modal */
+    function toggleTextbox(){
+        var reason=document.getElementById("select-flag");
+        var textbox = document.getElementById("text")
+        if(reason.value == "other")
+            textbox.style.display = "block"
+        else
+            textbox.style.display = "none"
+    }
+
+    /* Function for getting the current Neuroglancer state */
+
+    const ngURL = new URL('{{ng_url}}');
+
+    window.addEventListener("message", (event) => {
+        // Do we trust the sender of this message?  (might be
+        // different from what we originally opened, for example).
+        if (event.origin !== ngURL.origin)
+            return;
+
+        window.localStorage['ngState'] = event.data;
+    }, false);
+    
+    function getCurrentNeuroglancerState(element) {
+        // document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
+        // element.value = window.localStorage['ngState'];
+
+    }
+
 </script>
 {% endblock %}
 

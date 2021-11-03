@@ -167,10 +167,15 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-# NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
 NEUVUE_QUEUE_ADDR = "http://172.31.82.83:9005/"
-
-NAMESPACES = ['split']
+NAMESPACES = {
+    "split" : {
+        "display_name": "Multi-Soma Split"
+    },
+    "trace": {
+        "display_name": "Tracing"
+    }
+}
 
 # Data Sources
 IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
@@ -178,7 +183,7 @@ PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
 DEV_PCG_SOURCE = None
 
 # Neuroglancer Settings
-NG_CLIENT = "http://neuroglancer.neuvue.io.s3-website-us-east-1.amazonaws.com"
+NG_CLIENT = "https://neuroglancer.neuvue.io"
 CONTRAST = {
     "black": 0.35, 
     "white": 0.7
@@ -203,7 +208,7 @@ class MultipleWebpackLoader(WebpackLoader):
 WEBPACK_LOADER = {
   'DEFAULT': {
     'LOADER_CLASS': 'neuvue.settings.MultipleWebpackLoader',
-    'BUNDLE_DIR_NAME':  os.path.join('ts','wrapper','dist','dev'),
+    'BUNDLE_DIR_NAME':  'workspace',
     'CACHE': not DEBUG,
     'STATS_FILES': glob(os.path.join(BASE_DIR,'static','ts','wrapper', 'webpack-stats-*.json')),
     'POLL_INTERVAL': 0.1,
@@ -214,3 +219,5 @@ SITE_ID = 3
 if DEBUG:
     import mimetypes
     mimetypes.add_type("application/javascript", ".js",True)
+
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "static",'workspace'))
