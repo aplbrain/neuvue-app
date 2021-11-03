@@ -299,7 +299,7 @@ font-size: 25px;
 
 /* NAVIGATION BAR */
 
-*{
+/* *{
   padding: 0;
   margin: 0;
   text-decoration: none;
@@ -398,7 +398,7 @@ a.active,a:hover{
   #check:checked ~ ul{
     left: 0;
   }
-}
+} */
 
 /* Task buttons in the TaskQueue sidebar container*/
 
