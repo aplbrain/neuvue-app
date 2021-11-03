@@ -16,7 +16,7 @@
     <div id="neuVue-sidecontent" class="sidecontent">
         
         <! Instructions >
-        <div id = "instruction-container" class ="sideContentBox" style="max-height:22%;">
+        <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
             <div class="sideContentTitle">
                 Instructions
             </div>
@@ -24,67 +24,23 @@
                 {{ instructions.prompt }}
             </div>
         </div>
-        <! Task Queue >
-        <div id = "queue-container" class = "sideContentBox" style="max-height:65%;">
-            <div class="sideContentTitle">
-                Task Queue
-            </div>
-            <div class="sideContentInfo" >
-                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
-                    <div class="taskNumber">
-                        Task #3242121
-                    </div> 
-                    <div class="taskInfo">
-                        <p>Here is information about a task you have completed. Good Job!</p>
-                    </div>
-                </div>
-
-                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
-                    <div class="taskNumber">
-                        Task #{{task_num}}
-                    </div> 
-                    <div class="taskInfo">
-                    <p>Here is information about another task you have completed. You are doing great!</p>
-                    </div>
-                </div>
-                <button id="currentTask" class="taskButton current active" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
-                <div class="informationContainer" style="display: inline-block;">
-                    <div class="taskNumber">
-                        Task #3242123
-                    </div> 
-                    <div class="taskInfo">
-                    <p>Here is some task info. This Proofreading task is very important.</p>
-                    <p>Here is more information about this important task.</p>
-                    <ul>
-                        <li><b>Skeleton:</b> Info about the skeleton.</li>
-                        <li><b>Render:</b> Info about the render.</li>
-                        <li><b>Neuron Type:</b> Info about the neuron type.</li>
-                        <li><b>Total Volume:</b> Info about the volume of the neuron.</li>
-                    </ul>
-                    </div>
-                </div>
-                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
-                    <div class="taskNumber">
-                        Task #3242124
-                    </div> 
-                    <div class="taskInfo">
-                    <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
-                    </div>   
-                </div>
-                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
-                    <div class="taskNumber">
-                        Task #3242125
-                    </div> 
-                    <div class="taskInfo">
-                    <p>You have not completed this task either. These are very important, please do them.</p>
-                    </div> 
-                </div>
-        </div>
         
+        <! Instructions >
+        <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
+            <div class="sideContentTitle">
+                Task Information
+            </div>
+            <div class="sideContentInfo">
+                Namespace <br> 
+                <code> {{namespace}} </code> <br>
+                Task ID <br> 
+                <code> {{task_id}} </code> <br>
+                Segmentation ID  <br>
+                <code> {{seg_id}} </code> <br>
+                PCG Endpoint  <br> 
+                <code> {{pcg_url}} </code> <br>
+            </div>
+        </div>
     </div>
 </div> 
 
@@ -92,18 +48,6 @@
 
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
-        <div class="topBar" >
-                <div class="textBin left">
-                    Task ID # {{task_id}}
-                </div>
-                <div class="textBin mid">
-                    Segmentation ID # {{seg_id}}
-                </div>
-                <div class="textBin right">
-                    Connected to {{pcg_url}}
-                </div>
-
-        </div>
         {% if is_open %}
         <iframe src="{{ng_url}}"
                 width="95%" 
@@ -116,41 +60,41 @@
                 {% csrf_token %}
                 
                 {% if is_open %}
-                <button type="submit" class="button" name="restart">
+                <button type="submit" class="mainButton" name="restart">
                     Restart Task
                 </button>
         
-                <button name="submit" type="submit" onclick="getCurrentNeuroglancerState(this)" class="button submit" >
+                <button name="submit" type="submit" onclick="getCurrentNeuroglancerState(this)" class="mainButton submit" >
                     Submit Task
                 </button>
 
                 <button 
                     name="flag" 
                     type="button" 
-                    class="button flag"
+                    class="mainButton flag"
                     data-bs-toggle="modal" 
                     data-bs-target="#flagModal">
                     Flag Task
                 </button>
               
-                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button pause" name="stop">
+                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="mainButton pause" name="stop">
                     Pause Task and Exit Workspace
                 </button>
                 {% else %}
 
                 {%if tasks_available %}
-                <button type="submit" class="button submit" name="start">
+                <button type="submit" class="mainButton submit" name="start">
                     Start New  Task
                 </button>
 
                 {% else %}
-                <button type="submit" class="button submit" name="start" disabled >
+                <button type="submit" class="mainButton submit" name="start" disabled >
                     No Pending Tasks
                 </button> 
                 
                 {% endif%}
                 
-                <button type="submit" class="button flag" name="stop">
+                <button type="submit" class="mainButton flag" name="stop">
                     Exit Workspace
                 </button>
                 {% endif %}
@@ -203,8 +147,6 @@
     // openSideMenu();
     // By default, have side menu closed.
     // TODO: Have a session token that saves status of side menu 
-    openSideMenu();
-    closeSideMenu();
     openSideMenu();
     block_toggle();
     

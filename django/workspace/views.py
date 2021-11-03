@@ -30,7 +30,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
-            'instructions': ''
+            'instructions': '',
+            'namespace': namespace
         }
 
         if namespace is None:
