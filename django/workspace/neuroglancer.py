@@ -13,6 +13,9 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class Namespaces(str, Enum):
     split = 'split'
@@ -74,7 +77,7 @@ def generate_path_df(points):
         }
     )
 
-def generate_point_df(points):
+def generate_point_df(points, description=None, group=None):
     """Generates the point A dataframe for all points. Points are 
     assumed to be  all part of the same group.
 
@@ -85,13 +88,27 @@ def generate_point_df(points):
         DataFrame: Dataframe of point columns and groups.
     """
     point_column_a = points.tolist()
-    group = np.ones(len(point_column_a)).tolist()
-    return pd.DataFrame(
-        {
-            "point_column_a": point_column_a,
-            "group": group,
-        }
-    )
+    if group:
+        if len(group) != len(points):
+            logger.error("Group array shape does not match points array shape.")
+            group = np.ones(len(point_column_a)).tolist()
+    else:
+        group = np.ones(len(point_column_a)).tolist()
+
+    if description:
+        if len(description) != len(points):
+            logger.error("Group array shape does not match points array shape.")
+
+        return pd.DataFrame(
+            {
+                "point_column_a": point_column_a,
+                "group": group,
+                "description": description
+            }
+        )
+    else:
+        return pd.DataFrame({"point_column_a": point_column_a, "group": group})
+
 
 def create_path_state():
     """Create the annotation state for paths.
@@ -105,16 +122,25 @@ def create_path_state():
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def create_point_state():
+def create_point_state(use_description=False):
     """Create the annotation state for points.
     Dontt tuse linemapper, just creates a neuroglancer link that is just Points
     nglui statebuilder
     Returns:
         StateBuilder: Annotation State
     """
-    anno = AnnotationLayerConfig("selected_points",
-        mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
-    )
+    if use_description:
+        anno = AnnotationLayerConfig("selected_points",
+            mapping_rules=PointMapper(
+                "point_column_a", 
+                group_column="group", 
+                description_column="description",
+                set_position=False),
+        )
+    else:
+        anno = AnnotationLayerConfig("selected_points",
+            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
+        )
 
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
@@ -136,21 +162,28 @@ def construct_proofreading_url(task_df, points):
 
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
-    coordinates.insert(0 ,points[0])
-    coordinates.append(points[-1])
     coordinates = np.array(coordinates)
 
-    # Create a list of dataframes used for state creation. Since First state is 
+    # Create a list of dataframes used for state creation. Since first state is 
     # the base layer, the first element is None. 
     data_list = [None]
     if task_df['namespace'] == Namespaces.split:
+
+        if points:
+            # Append start and end soma coordinates
+            coordinates.insert(0 ,points[0])
+            coordinates.append(points[-1])
+        
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
     
     elif task_df['namespace'] == Namespaces.trace: 
-        data_list.append( generate_point_df(coordinates))
-        point_state = create_point_state()
+        # Get grouping and annotation descriptions, if they exist
+        group = task_df['metadata'].get('group')
+        description = task_df['metadata'].get('description')
+        data_list.append( generate_point_df(coordinates, description=description, group=group))
+        point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
     return chained_state.render_state(
