@@ -19,7 +19,7 @@ MICrONS Proofreading App
 - Build the NG wrapper
 	```
 	cd django/static/ts/wrapper
-	ln -s <path-to-neuroglancer> ./third_party/neuroglancer
+	ln -s <path-to-neuroglancer>/src/neuroglancer ./third_party/neuroglancer
 	npm i
 	npm link neuroglancer
 	``` 
