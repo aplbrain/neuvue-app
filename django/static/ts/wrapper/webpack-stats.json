@@ -1,21 +1,21 @@
 {
   "status": "done",
   "assets": {
-    "main.05f606f2e58ba5ae2bff.bundle.js": {
-      "name": "main.05f606f2e58ba5ae2bff.bundle.js",
-      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.05f606f2e58ba5ae2bff.bundle.js"
+    "main.5861641f5f09e4168a8e.bundle.js": {
+      "name": "main.5861641f5f09e4168a8e.bundle.js",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.5861641f5f09e4168a8e.bundle.js"
     },
-    "tfjs-library.05f606f2e58ba5ae2bff.bundle.js": {
-      "name": "tfjs-library.05f606f2e58ba5ae2bff.bundle.js",
-      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.05f606f2e58ba5ae2bff.bundle.js"
+    "tfjs-library.5861641f5f09e4168a8e.bundle.js": {
+      "name": "tfjs-library.5861641f5f09e4168a8e.bundle.js",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.5861641f5f09e4168a8e.bundle.js"
     },
-    "main.05f606f2e58ba5ae2bff.bundle.js.map": {
-      "name": "main.05f606f2e58ba5ae2bff.bundle.js.map",
-      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.05f606f2e58ba5ae2bff.bundle.js.map"
+    "main.5861641f5f09e4168a8e.bundle.js.map": {
+      "name": "main.5861641f5f09e4168a8e.bundle.js.map",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/main.5861641f5f09e4168a8e.bundle.js.map"
     },
-    "tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map": {
-      "name": "tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map",
-      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.05f606f2e58ba5ae2bff.bundle.js.map"
+    "tfjs-library.5861641f5f09e4168a8e.bundle.js.map": {
+      "name": "tfjs-library.5861641f5f09e4168a8e.bundle.js.map",
+      "path": "/home/ec2-user/neuvue-app/django/static/ts/wrapper/dist/dev/tfjs-library.5861641f5f09e4168a8e.bundle.js.map"
     },
     "index.html": {
       "name": "index.html",
@@ -32,8 +32,8 @@
   },
   "chunks": {
     "main": [
-      "main.05f606f2e58ba5ae2bff.bundle.js",
-      "main.05f606f2e58ba5ae2bff.bundle.js.map"
+      "main.5861641f5f09e4168a8e.bundle.js",
+      "main.5861641f5f09e4168a8e.bundle.js.map"
     ]
   }
 }

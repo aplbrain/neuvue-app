@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
-from workspace.views import WorkspaceView
+from workspace.views import AuthView, WorkspaceView
 from workspace.views import TaskView
 from workspace.views import IndexView
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
+    path('auth_redirect.html', AuthView.as_view())
 ]
 
 

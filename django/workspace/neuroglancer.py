@@ -78,15 +78,15 @@ def create_path_state():
     )
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
-def construct_proofreading_url(seg_ids, coordinate, points=np.NaN):
+def construct_proofreading_url(seg_ids, coordinate, points=np.NaN, prefix=settings.NG_CLIENT):
     base_state = create_base_state(seg_ids, coordinate)
     if points.any():
         path_df = generate_path_df(points)
         path_state = create_path_state()
         pf_state = ChainedStateBuilder([base_state, path_state])
     else:
-        return base_state.render_state(return_as='url', url_prefix=settings.NG_CLIENT)
+        return base_state.render_state(return_as='url', url_prefix=prefix)
 
     return pf_state.render_state(
-        [None, path_df], return_as='url', url_prefix=settings.NG_CLIENT
+        [None, path_df], return_as='url', url_prefix=prefix
     )
