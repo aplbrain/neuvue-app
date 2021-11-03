@@ -162,7 +162,6 @@ def construct_proofreading_url(task_df, points):
 
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
-    coordinates = np.array(coordinates)
 
     # Create a list of dataframes used for state creation. Since first state is 
     # the base layer, the first element is None. 
@@ -173,6 +172,7 @@ def construct_proofreading_url(task_df, points):
             # Append start and end soma coordinates
             coordinates.insert(0 ,points[0])
             coordinates.append(points[-1])
+            coordinates = np.array(coordinates)
         
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
@@ -180,6 +180,7 @@ def construct_proofreading_url(task_df, points):
     
     elif task_df['namespace'] == Namespaces.trace: 
         # Get grouping and annotation descriptions, if they exist
+        coordinates = np.array(coordinates)
         group = task_df['metadata'].get('group')
         description = task_df['metadata'].get('description')
         data_list.append( generate_point_df(coordinates, description=description, group=group))
