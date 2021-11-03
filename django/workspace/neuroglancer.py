@@ -88,13 +88,13 @@ def generate_point_df(points, description=None, group=None):
         DataFrame: Dataframe of point columns and groups.
     """
     point_column_a = points.tolist()
-    if group and len(group) != len(points):
+    if group:
         if len(group) != len(points):
             logger.error("Group array shape does not match points array shape.")
             group = np.ones(len(point_column_a)).tolist()
     else:
         group = np.ones(len(point_column_a)).tolist()
-    
+
     if description:
         if len(description) != len(points):
             logger.error("Group array shape does not match points array shape.")
@@ -131,7 +131,11 @@ def create_point_state(use_description=False):
     """
     if use_description:
         anno = AnnotationLayerConfig("selected_points",
-            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False, description="description"),
+            mapping_rules=PointMapper(
+                "point_column_a", 
+                group_column="group", 
+                description_column="description",
+                set_position=False),
         )
     else:
         anno = AnnotationLayerConfig("selected_points",
@@ -158,21 +162,28 @@ def construct_proofreading_url(task_df, points):
 
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
-    coordinates.insert(0 ,points[0])
-    coordinates.append(points[-1])
     coordinates = np.array(coordinates)
 
-    # Create a list of dataframes used for state creation. Since First state is 
+    # Create a list of dataframes used for state creation. Since first state is 
     # the base layer, the first element is None. 
     data_list = [None]
     if task_df['namespace'] == Namespaces.split:
+
+        if points:
+            # Append start and end soma coordinates
+            coordinates.insert(0 ,points[0])
+            coordinates.append(points[-1])
+        
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
     
     elif task_df['namespace'] == Namespaces.trace: 
-        data_list.append( generate_point_df(coordinates))
-        point_state = create_point_state()
+        # Get grouping and annotation descriptions, if they exist
+        group = task_df['metadata'].get('group')
+        description = task_df['metadata'].get('description')
+        data_list.append( generate_point_df(coordinates, description=description, group=group))
+        point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
     return chained_state.render_state(
