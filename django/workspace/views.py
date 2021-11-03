@@ -91,6 +91,8 @@ class WorkspaceView(LoginRequiredMixin, View):
         if 'flag' in request.POST:
             logger.debug('Flagging task')
             current_state = request.POST.get('flag')
+            if current_state == 'other':
+                current_state = request.POST.get('flag-other')
 
             if "timer" in request.session:
                 request.session["timer"] = int(time.time() - request.session["timer"])
