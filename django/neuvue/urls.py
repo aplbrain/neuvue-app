@@ -15,14 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.conf.urls import url
+from django.views.generic import RedirectView
 from django.contrib.auth.views import LogoutView
 
-from workspace.views import AuthView, WorkspaceView
+from workspace.views import WorkspaceView
 from workspace.views import TaskView
 from workspace.views import IndexView
-
-
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -31,7 +30,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
-    path('auth_redirect.html', AuthView.as_view())
+    # This redirects all files under `/static`` to `/`, which might be bad
+    url(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        RedirectView.as_view(url='/static/%(path)s', permanent=False)),
 ]
 
 

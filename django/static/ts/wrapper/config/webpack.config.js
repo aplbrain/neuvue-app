@@ -24,16 +24,17 @@ module.exports = env => {
   env = env || 'dev';
   let origConfigs = webpack_helpers.getViewerConfigFromEnv({outputPath: path.resolve(__dirname, '../dist/' + env)}, env);
   let configs = []
-  origConfigs.forEach(origConfig => {
+  for (const [index, origConfig] of origConfigs.entries()) {
 
     let origPlugins = origConfig.plugins || []
-    origPlugins.push(new BundleTracker({filename: './webpack-stats.json'}))
+    
+    origPlugins.push(new BundleTracker({filename: `./webpack-stats-${index}.json`}))
     let origOutput = origConfig.output || {}
     let output = Object.assign(
       origOutput,
       {
-        filename: '[name].[hash].bundle.js',
-        chunkFilename: '[name].[hash].bundle.js',
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
       },
     )
     let config = Object.assign(
@@ -43,11 +44,9 @@ module.exports = env => {
         output: output,
       }
     )
-    console.log(origPlugins);
     configs.push(config);
 
-  });
+  };
   
-  // console.log(configs)
   return configs;
 };
