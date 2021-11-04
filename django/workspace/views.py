@@ -65,7 +65,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get('namespace')
-        logging.debug(request.POST)
+        logging.debug("POST REQUEST: " + str(request.POST))
         if namespace is None:
             logging.error("Error getting namespace in POST body.")
 
