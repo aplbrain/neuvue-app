@@ -166,7 +166,8 @@ def construct_proofreading_url(task_df, points):
     # Create a list of dataframes used for state creation. Since first state is 
     # the base layer, the first element is None. 
     data_list = [None]
-    if task_df['namespace'] == Namespaces.split:
+    ng_type = settings.NAMESPACES[task_df['namespace']]['ng_link_type']
+    if ng_type == Namespaces.split:
 
         if points:
             # Append start and end soma coordinates
@@ -178,7 +179,7 @@ def construct_proofreading_url(task_df, points):
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
     
-    elif task_df['namespace'] == Namespaces.trace: 
+    elif ng_type == Namespaces.trace: 
         # Get grouping and annotation descriptions, if they exist
         coordinates = np.array(coordinates)
         group = task_df['metadata'].get('group')
