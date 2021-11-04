@@ -65,16 +65,14 @@ class WorkspaceView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get('namespace')
-        logging.debug("NAMESPACE:" + namespace)
+        logging.debug(request.POST)
         if namespace is None:
             logging.error("Error getting namespace in POST body.")
 
         task_df = self.client.get_next_task(str(request.user), namespace)
-     
-        if 'restart' in request.POST:
-            logger.debug('Restarting task')
+
         
-        if 'submit' in request.POST:
+        if 'btnSubmit' in request.POST:
             logger.debug('Submitting task')
             current_state = request.POST.get('submit')
             #get time it took to complete task
@@ -89,7 +87,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 logging.info("No timer keyword available in session.")
                 self.client.patch_task(task_df["_id"], status="closed", ng_state=current_state)
         
-        if 'flag' in request.POST:
+        if 'btnFlag' in request.POST:
             logger.debug('Flagging task')
             current_state = request.POST.get('flag')
 
@@ -103,7 +101,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 logging.info("No timer keyword available in session.")
                 self.client.patch_task(task_df["_id"], status="errored", ng_state=current_state)
         
-        if 'start' in request.POST:
+        if 'btnStart' in request.POST:
             logger.debug('Starting new task')
 
             if not task_df:
@@ -114,7 +112,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             #initialize timer 
             request.session["timer"] = time.time()
         
-        if 'stop' in request.POST:
+        if 'btnStop' in request.POST:
             logger.debug('Stopping proofreading app')
             current_state = request.POST.get('stop')
             if "timer" in request.session:

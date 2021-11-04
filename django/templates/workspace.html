@@ -25,7 +25,7 @@
             </div>
         </div>
         
-        <! Instructions >
+        <! Task Information >
         <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
             <div class="sideContentTitle">
                 Task Information
@@ -46,6 +46,7 @@
 
 </div>
 
+<! Neuroglancer >
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
         {% if is_open %}
@@ -56,20 +57,37 @@
                 id="neuroGlancerFrame">
         </iframe>
         {% endif %}
-            <form action="" method="post" class="bottomBar">
+        <! Buttons >
+            <form id="mainForm" action="" method="post" class="bottomBar">
                 {% csrf_token %}
                 
                 {% if is_open %}
-                <button type="submit" class="mainButton" name="restart">
+                <button 
+                    type="button" 
+                    class="mainButton" 
+                    onclick="document.getElementById('neuroGlancerFrame').contentWindow.location.reload()"
+                >
                     Restart Task
                 </button>
+                
+                <button 
+                    type="button" 
+                    class="mainButton" 
+                    onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')"
+                >
+                    Save Neuroglancer State
+                </button>
         
-                <button name="submit" type="submit" onclick="getCurrentNeuroglancerState(this)" class="mainButton submit" >
+                <button 
+                    name="btnSubmit" 
+                    type="submit" 
+                    onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')" 
+                    class="mainButton submit" 
+                >
                     Submit Task
                 </button>
 
                 <button 
-                    name="flag" 
                     type="button" 
                     class="mainButton flag"
                     data-bs-toggle="modal" 
@@ -77,24 +95,29 @@
                     Flag Task
                 </button>
               
-                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="mainButton pause" name="stop">
-                    Pause Task and Exit Workspace
+                <button 
+                    name="btnStop"
+                    type="submit" 
+                    onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')" 
+                    class="mainButton pause"
+                >
+                    Exit Task
                 </button>
                 {% else %}
 
                 {%if tasks_available %}
-                <button type="submit" class="mainButton submit" name="start">
+                <button type="submit" class="mainButton submit" name="btnStart">
                     Start New  Task
                 </button>
 
                 {% else %}
-                <button type="submit" class="mainButton submit" name="start" disabled >
+                <button type="button" class="mainButton submit" disabled >
                     No Pending Tasks
                 </button> 
                 
                 {% endif%}
                 
-                <button type="submit" class="mainButton flag" name="stop">
+                <button type="button" class="mainButton flag" onclick= "document.location='{% url 'tasks' %}'">
                     Exit Workspace
                 </button>
                 {% endif %}
@@ -135,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" name="btnFlag">Submit</button>
                 </div>
             </div>
         </div>
@@ -143,6 +166,7 @@
 </form>
 
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script type="text/javascript" src="{% static "js/state.js" %}"></script>
 <script>
     // openSideMenu();
     // By default, have side menu closed.
@@ -173,22 +197,7 @@
     }
 
     /* Function for getting the current Neuroglancer state */
-
-    const ngURL = new URL('{{ng_url}}');
-
-    window.addEventListener("message", (event) => {
-    // Do we trust the sender of this message?  (might be
-    // different from what we originally opened, for example).
-    if (event.origin !== ngURL.origin)
-        return;
-
-    window.localStorage['ngState'] = event.data;
-    }, false);
-    
-    function getCurrentNeuroglancerState(element) {
-        document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
-        element.value = window.localStorage['ngState'];
-    }
+    addStateEventListener('{{ng_url}}');
 
 </script>
 {% endblock %}
