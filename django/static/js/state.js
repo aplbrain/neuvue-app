@@ -9,13 +9,14 @@ function addStateEventListener(url) {
     }, false);
 }
 
-function getCurrentNeuroglancerState(element, url) {
+function getCurrentNeuroglancerState(url, callback) {
     let ngURL = new URL(url);
     window.localStorage['ngState'] = null;
     document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
     
     window.setTimeout(function() {
-        element.value = window.localStorage['ngState'];
-        console.log(element.value);
-    }, 20);
+        if (callback) {
+            callback(window.localStorage['ngState']);
+        }
+    }, 200);
 }

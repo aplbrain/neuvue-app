@@ -48,7 +48,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         elif task_df['status'] == 'open':
             # Reset session timer
-            request.session["timer"] = time.time()
+            request.session["start_time"] = time.time()
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -66,64 +66,48 @@ class WorkspaceView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get('namespace')
         logging.debug("POST REQUEST: " + str(request.POST))
-        if namespace is None:
-            logging.error("Error getting namespace in POST body.")
 
+        # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
 
+        button = request.POST.get('button')
+
+        ng_state = request.POST.get('ngState')
+        start_time = request.session.get('start_time')
+        duration = time.time() - start_time if start_time else 0
         
-        if 'btnSubmit' in request.POST:
+        if button == 'submit':
             logger.debug('Submitting task')
-            current_state = request.POST.get('submit')
-            #get time it took to complete task
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(
-                    task_df["_id"], 
-                    duration=request.session["timer"], 
-                    status="closed",
-                    ng_state=current_state)
-            else:
-                logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="closed", ng_state=current_state)
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state)
         
-        if 'btnFlag' in request.POST:
+        elif button == 'flag':
             logger.debug('Flagging task')
-            current_state = request.POST.get('flag')
-
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(task_df["_id"], 
-                    duration=request.session["timer"], 
-                    status="errored", 
-                    ng_state=current_state)
-            else:
-                logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="errored", ng_state=current_state)
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="errored", 
+                ng_state=ng_state)
         
-        if 'btnStart' in request.POST:
+        elif button == 'start':
             logger.debug('Starting new task')
-
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
-
+            
             #initialize timer 
-            request.session["timer"] = time.time()
+            request.session["start_time"] = time.time()
         
-        if 'btnStop' in request.POST:
+        elif button == 'stop':
             logger.debug('Stopping proofreading app')
-            current_state = request.POST.get('stop')
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(
-                    task_df["_id"], 
-                    duration=request.session["timer"], 
-                    ng_state=current_state)
-            else:
-                logging.error("Unable to patch duration.")
-                self.client.patch_task(task_df["_id"], ng_state=current_state)
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                ng_state=ng_state)
             return redirect(reverse('tasks'))
         
         return redirect(reverse('workspace', args=[namespace]))

@@ -57,6 +57,7 @@
                 id="neuroGlancerFrame">
         </iframe>
         {% endif %}
+        
         <! Buttons >
             <form id="mainForm" action="" method="post" class="bottomBar">
                 {% csrf_token %}
@@ -69,20 +70,11 @@
                 >
                     Restart Task
                 </button>
-                
-                <button 
-                    type="button" 
-                    class="mainButton" 
-                    onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')"
-                >
-                    Save Neuroglancer State
-                </button>
         
                 <button 
                     name="btnSubmit"
                     id="btnSubmit" 
                     type="button" 
-                    {% comment %} onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')"  {% endcomment %}
                     class="mainButton submit" 
                 >
                     Submit Task
@@ -97,9 +89,8 @@
                 </button>
               
                 <button 
-                    name="btnStop"
-                    type="button" 
-                    onclick="getCurrentNeuroglancerState(this, '{{ng_url}}')" 
+                    id="btnStop"
+                    type="button"
                     class="mainButton pause"
                 >
                     Exit Task
@@ -107,7 +98,7 @@
                 {% else %}
 
                 {%if tasks_available %}
-                <button type="submit" class="mainButton submit" name="btnStart">
+                <button type="button" class="mainButton submit" id="btnStart">
                     Start New  Task
                 </button>
 
@@ -127,7 +118,7 @@
     </div>
 </div>
 
-<form method="post">
+<form id="flagForm" method="post">
     {% csrf_token %}
     <!-- Modal -->
     <div id="flagModal" class="modal" name="flag" tabindex="-1">
@@ -159,7 +150,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="btnFlag">Submit</button>
+                    <button type="button" class="btn btn-primary" id="btnFlag">Submit</button>
                 </div>
             </div>
         </div>
@@ -201,12 +192,33 @@
     /* Function for getting the current Neuroglancer state */
     addStateEventListener('{{ng_url}}');
 
-    // Fix submission bug, only post form when neuroglancer state has been updated 
     $(document).ready(function() {
-        $('#submitBtn').click(function() {
-            console.log('submitted');
-            getCurrentNeuroglancerState($('#submitBtn'), '{{ng_url}}');
-            console.log($('#submitBtn').val());
+        $('#btnSubmit').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'submit').appendTo('#mainForm');
+                $('#mainForm').submit()
+            });
+        })
+
+        $('#btnFlag').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
+                $('#flagForm').submit()
+            });
+        })
+
+        $('#btnStop').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
+                $('#mainForm').submit()
+            });
+        })
+
+        $('#btnStart').click(function() {
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
             $('#mainForm').submit();
         })
     })
