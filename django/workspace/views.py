@@ -7,8 +7,9 @@ from neuvueclient import NeuvueQueue
 import numpy as np
 import pandas as pd
 import time
+import json
 
-from .neuroglancer import construct_proofreading_url
+from .neuroglancer import construct_proofreading_url, construct_url_from_existing
 
 # import the logging library
 import logging
@@ -59,8 +60,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
             
-            # Construct NG URL from points
-            context['ng_url'] = construct_proofreading_url(task_df, points)
+            # Construct NG URL from points or existing state
+            if task_df['ng_state']:
+                state = json.loads(task_df['ng_state'])['value']
+                context['ng_url'] = construct_url_from_existing(json.dumps(state))
+            else:
+                context['ng_url'] = construct_proofreading_url(task_df, points)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -83,7 +88,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state)
-        
+
         elif button == 'flag':
             logger.debug('Flagging task')
             self.client.patch_task(

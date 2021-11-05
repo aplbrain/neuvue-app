@@ -190,3 +190,6 @@ def construct_proofreading_url(task_df, points):
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
         )
+    
+def construct_url_from_existing(state: str):
+    return settings.NG_CLIENT + '/#!' + state

@@ -63,12 +63,20 @@
                 {% csrf_token %}
                 
                 {% if is_open %}
-                <button 
+                <button
+                    id="btnSave" 
                     type="button" 
                     class="mainButton" 
-                    onclick="document.getElementById('neuroGlancerFrame').contentWindow.location.reload()"
                 >
-                    Restart Task
+                    Save Checkpoint
+                </button>
+                
+                <button
+                    id="btnReload" 
+                    type="button" 
+                    class="mainButton"
+                >
+                    Reload Checkpoint
                 </button>
         
                 <button 
@@ -190,9 +198,28 @@
     }
 
     /* Function for getting the current Neuroglancer state */
+    
     addStateEventListener('{{ng_url}}');
 
     $(document).ready(function() {
+        // HACK. Reset the window storage so it doesnt reload previous tasks
+        window.localStorage.removeItem('ngState');
+
+        $('#btnSave').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}');
+        })
+
+        $('#btnReload').click(function() {
+            if (window.localStorage.getItem('ngState') !== null){
+                let state = JSON.parse(window.localStorage['ngState'])['value'];
+                let prefix = new URL('{{ng_url}}').origin + '/#!';
+                $('#neuroGlancerFrame').attr('src', prefix + JSON.stringify(state));
+            }
+            else {
+                $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
+            } 
+        })
+
         $('#btnSubmit').click(function() {
             getCurrentNeuroglancerState('{{ng_url}}', function (data){
                 $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
