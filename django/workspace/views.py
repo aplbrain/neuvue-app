@@ -5,6 +5,7 @@ import colocarpy
 import numpy as np
 import pandas as pd
 import time
+import json
 
 from .neuroglancer import construct_proofreading_url
 
@@ -25,7 +26,7 @@ class WorkspaceView(View):
     def get(self, request, *args, **kwargs):
         num_visits = request.session.get('num_visits', 0)
         sidebar = request.session.get('sidebar', 'closed')
-
+        
         request.session['num_visits'] = num_visits + 1
 
         context = {
@@ -75,10 +76,14 @@ class WorkspaceView(View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-        print('this is the post request', request.POST)
-        if 'sidebar_tab' in request.POST:
-            print('sidebar tab:', request.POST)
-            request.session['sidebar'] = request.POST.get('sidebar_tab')
+        
+        if request.body:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            if 'sidebar_tab' in body:
+                request.session['sidebar'] = body['sidebar_tab']
+            
 
         if 'restart' in request.POST:
             logger.debug('Restarting task')

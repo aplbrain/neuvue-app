@@ -114,6 +114,7 @@ function getCookie(name) {
   return cookieValue;
 }
 function updateSideBar(action) {
+  
   const csrftoken = getCookie('csrftoken');
   //let data = new FormData();
   //data.append('sidebar-tab', action);
@@ -121,19 +122,21 @@ function updateSideBar(action) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Accept': 'application/json, text/plain, */*',
           'X-CSRFToken': csrftoken,
       },
       body: JSON.stringify({'sidebar_tab': action}),
       credentials: 'same-origin',
   };
   fetch('', myInit).then(function (response) {
+      /*
       if (response.ok) {
           console.log(response)
       }
       else {
           console.log('failed')
       }
+      */
   });
 }
 
