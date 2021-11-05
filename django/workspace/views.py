@@ -20,8 +20,6 @@ class WorkspaceView(View):
         self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
         self.namespace = settings.NAMESPACES[0]
 
-        
-
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -77,8 +75,9 @@ class WorkspaceView(View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-
+        print('this is the post request', request.POST)
         if 'sidebar_tab' in request.POST:
+            print('sidebar tab:', request.POST)
             request.session['sidebar'] = request.POST.get('sidebar_tab')
 
         if 'restart' in request.POST:

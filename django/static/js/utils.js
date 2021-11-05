@@ -33,14 +33,16 @@ function sidemenu_content() {
 
       if (neuroglancer_window.style.width != "75%" ) {
         openSideMenu();
-        document.sidebar_form.sidebar_tab.value = 'open';
-        console.log(document.sidebar_form.sidebar_tab.value);
-        update_sidebar();
+        updateSideBar('open');
+        //document.sidebar_form.sidebar_tab.value = 'open';
+        //console.log(document.sidebar_form.sidebar_tab.value);
+        //update_sidebar();
         //document.forms["sidebar_form"].submit();
       } else {
         closeSideMenu();
-        document.sidebar_form.sidebar_tab.value = 'closed';
-        console.log(document.sidebar_form.sidebar_tab.value);
+        updateSideBar('closed');
+        //document.sidebar_form.sidebar_tab.value = 'closed';
+        //console.log(document.sidebar_form.sidebar_tab.value);
         //document.forms["sidebar_form"].submit();
       }
 
@@ -96,22 +98,45 @@ function closeSideMenu() {
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
 }
-
-function update_sidebar(){
-  $.ajax({
-    url : "/workspace/",
-    type : "POST", // http method
-    data : {
-      name:"sidebar",
-      csrfmiddlewaretoken: '{% csrf_token %}' , //This is must for security in Django
-    }, // data sent with the post request
-  
-    // handle a successful response
-    success : function(response){
-      alert(response["sidebar"]);
-    }
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+function updateSideBar(action) {
+  const csrftoken = getCookie('csrftoken');
+  //let data = new FormData();
+  //data.append('sidebar-tab', action);
+  const myInit = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({'sidebar_tab': action}),
+      credentials: 'same-origin',
+  };
+  fetch('', myInit).then(function (response) {
+      if (response.ok) {
+          console.log(response)
+      }
+      else {
+          console.log('failed')
+      }
   });
 }
+
 
 
 

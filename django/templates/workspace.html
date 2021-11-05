@@ -140,23 +140,23 @@
     </form>
 
     {% if request.session.num_visits == 0 %}
-    <script>
+    <script type="text/javascript" src="{% static  'js/utils.js' %}">
         closeSideMenu();
         openSideMenu();
     </script>
     {% elif request.session.sidebar == 'closed' %}
-    <script>
+    <script type="text/javascript" src="{% static  'js/utils.js' %}">
         closeSideMenu();
     </script>
     {% else %}
-    <script>
+    <script type="text/javascript" src="{% static  'js/utils.js' %}">
         openSideMenu();
     </script>
     {% endif %}
 
 
 
-    <script type="text/javascript" src="{% static " js/utils.js" %}"></script>
+    <script type="text/javascript" src="{% static  'js/utils.js' %}"></script>
     <script>
         // openSideMenu();
         // By default, have side menu closed.
@@ -164,25 +164,7 @@
         //closeSideMenu();
         // block_toggle();
         //activeTaskStartUp();
-        function updateSideBar(action) {
-            const myInit = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    bar: action
-                })
-            };
-            fetch('{{current_path}}', myInit).then(function (response) {
-                if (response.ok) {
-                    console.log("success")
-                }
-                else {
-                    console.log("fetch fails")
-                }
-            });
-        }
+        
 
         /* Patch to allow current active task button not need double click for first interaction */
         function activeTaskStartUp() {
