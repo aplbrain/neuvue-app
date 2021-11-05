@@ -169,10 +169,16 @@ LOGOUT_REDIRECT_URL = '/'
 NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
 NAMESPACES = {
     "split" : {
-        "display_name": "Multi-Soma Split"
+        "display_name": "Multi-Soma Split",
+        "ng_link_type": "split"
     },
     "trace": {
-        "display_name": "Tracing"
+        "display_name": "Tracing",
+        "ng_link_type": "trace"
+    },
+    "fullyproofreaddendrites": {
+        "display_name": "Trace the incomplete axons",
+        "ng_link_type": "trace"
     }
 }
 
