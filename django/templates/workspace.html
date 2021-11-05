@@ -16,7 +16,7 @@
     <div id="neuVue-sidecontent" class="sidecontent">
         
         <! Instructions >
-        <div id = "instruction-container" class ="sideContentBox" style="max-height:22%;">
+        <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
             <div class="sideContentTitle">
                 Instructions
             </div>
@@ -24,86 +24,31 @@
                 {{ instructions.prompt }}
             </div>
         </div>
-        <! Task Queue >
-        <div id = "queue-container" class = "sideContentBox" style="max-height:65%;">
-            <div class="sideContentTitle">
-                Task Queue
-            </div>
-            <div class="sideContentInfo" >
-                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Another Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
-                    <div class="taskNumber">
-                        Task #3242121
-                    </div> 
-                    <div class="taskInfo">
-                        <p>Here is information about a task you have completed. Good Job!</p>
-                    </div>
-                </div>
-
-                <button class="taskButton complete" onclick="block_toggle()"><i class="glyphicon glyphicon-ok-circle"></i> Completed Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--complete-color);">
-                    <div class="taskNumber">
-                        Task #{{task_num}}
-                    </div> 
-                    <div class="taskInfo">
-                    <p>Here is information about another task you have completed. You are doing great!</p>
-                    </div>
-                </div>
-                <button id="currentTask" class="taskButton current active" onclick="block_toggle()"><i class="glyphicon glyphicon-play-circle"></i> Current Proofreading Task</button>
-                <div class="informationContainer" style="display: inline-block;">
-                    <div class="taskNumber">
-                        Task #3242123
-                    </div> 
-                    <div class="taskInfo">
-                    <p>Here is some task info. This Proofreading task is very important.</p>
-                    <p>Here is more information about this important task.</p>
-                    <ul>
-                        <li><b>Skeleton:</b> Info about the skeleton.</li>
-                        <li><b>Render:</b> Info about the render.</li>
-                        <li><b>Neuron Type:</b> Info about the neuron type.</li>
-                        <li><b>Total Volume:</b> Info about the volume of the neuron.</li>
-                    </ul>
-                    </div>
-                </div>
-                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
-                    <div class="taskNumber">
-                        Task #3242124
-                    </div> 
-                    <div class="taskInfo">
-                    <p>You have not completed this task, but it is very important. It is very important that this is done.</p>
-                    </div>   
-                </div>
-                <button class="taskButton" onclick="block_toggle()"><i class="glyphicon glyphicon-record"></i> Another Undone Proofreading Task</button>
-                <div class="informationContainer" style="border: 1.5px solid var(--incomplete-color);">
-                    <div class="taskNumber">
-                        Task #3242125
-                    </div> 
-                    <div class="taskInfo">
-                    <p>You have not completed this task either. These are very important, please do them.</p>
-                    </div> 
-                </div>
-        </div>
         
+        <! Task Information >
+        <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
+            <div class="sideContentTitle">
+                Task Information
+            </div>
+            <div class="sideContentInfo">
+                Namespace <br> 
+                <code> {{namespace}} </code> <br>
+                Task ID <br> 
+                <code> {{task_id}} </code> <br>
+                Segmentation ID  <br>
+                <code> {{seg_id}} </code> <br>
+                PCG Endpoint  <br> 
+                <code> {{pcg_url}} </code> <br>
+            </div>
+        </div>
     </div>
 </div> 
 
 </div>
 
+<! Neuroglancer >
 <div id="neuroglancer" class="leftFormatting">
     <div class="left">
-        <div class="topBar" >
-                <div class="textBin left">
-                    Task ID # {{task_id}}
-                </div>
-                <div class="textBin mid">
-                    Segmentation ID # {{seg_id}}
-                </div>
-                <div class="textBin right">
-                    Connected to {{pcg_url}}
-                </div>
-
-        </div>
         {% if is_open %}
         <iframe src="{{ng_url}}"
                 width="95%" 
@@ -112,45 +57,67 @@
                 id="neuroGlancerFrame">
         </iframe>
         {% endif %}
-            <form action="" method="post" class="bottomBar">
+        
+        <! Buttons >
+            <form id="mainForm" action="" method="post" class="bottomBar">
                 {% csrf_token %}
                 
                 {% if is_open %}
-                <button type="submit" class="button" name="restart">
-                    Restart Task
+                <button
+                    id="btnSave" 
+                    type="button" 
+                    class="mainButton" 
+                >
+                    Save Checkpoint
+                </button>
+                
+                <button
+                    id="btnReload" 
+                    type="button" 
+                    class="mainButton"
+                >
+                    Reload Checkpoint
                 </button>
         
-                <button name="submit" type="submit" onclick="getCurrentNeuroglancerState(this)" class="button submit" >
+                <button 
+                    name="btnSubmit"
+                    id="btnSubmit" 
+                    type="button" 
+                    class="mainButton submit" 
+                >
                     Submit Task
                 </button>
 
                 <button 
-                    name="flag" 
                     type="button" 
-                    class="button flag"
+                    class="mainButton flag"
                     data-bs-toggle="modal" 
                     data-bs-target="#flagModal">
                     Flag Task
                 </button>
               
-                <button type="submit" onclick="getCurrentNeuroglancerState(this)" class="button pause" name="stop">
-                    Pause Task and Exit Workspace
+                <button 
+                    id="btnStop"
+                    type="button"
+                    class="mainButton pause"
+                >
+                    Exit Task
                 </button>
                 {% else %}
 
                 {%if tasks_available %}
-                <button type="submit" class="button submit" name="start">
+                <button type="button" class="mainButton submit" id="btnStart">
                     Start New  Task
                 </button>
 
                 {% else %}
-                <button type="submit" class="button submit" name="start" disabled >
+                <button type="button" class="mainButton submit" disabled >
                     No Pending Tasks
                 </button> 
                 
                 {% endif%}
                 
-                <button type="submit" class="button flag" name="stop">
+                <button type="button" class="mainButton flag" onclick= "document.location='{% url 'tasks' %}'">
                     Exit Workspace
                 </button>
                 {% endif %}
@@ -159,7 +126,7 @@
     </div>
 </div>
 
-<form method="post">
+<form id="flagForm" method="post">
     {% csrf_token %}
     <!-- Modal -->
     <div id="flagModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
@@ -173,8 +140,8 @@
                     <form action="" method="post" role="form">
                         <div class="form-group">
                             <label class="custom-select-label" for="flag">Please select a reason for flagging this task:</label>
-                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox() required>
-                                <option value="" selected>Select reason</option>
+                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox()>
+                                <option value="unknown">Select reason</option>
                                 <option value="artifact in the data">Artifact in the data</option>
                                 <option value="wrong location">Wrong location</option>
                                 <option value="data unable to load">Data unable to load</option>
@@ -191,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-primary" id="btnFlag">Submit</button>
                 </div>
             </div>
         </div>
@@ -199,12 +166,12 @@
 </form>
 
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script type="text/javascript" src="{% static "js/state.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script>
     // openSideMenu();
     // By default, have side menu closed.
     // TODO: Have a session token that saves status of side menu 
-    openSideMenu();
-    closeSideMenu();
     openSideMenu();
     block_toggle();
     
@@ -231,22 +198,57 @@
     }
 
     /* Function for getting the current Neuroglancer state */
-
-    const ngURL = new URL('{{ng_url}}');
-
-    window.addEventListener("message", (event) => {
-    // Do we trust the sender of this message?  (might be
-    // different from what we originally opened, for example).
-    if (event.origin !== ngURL.origin)
-        return;
-
-    window.localStorage['ngState'] = event.data;
-    }, false);
     
-    function getCurrentNeuroglancerState(element) {
-        document.getElementById('neuroGlancerFrame').contentWindow.postMessage("state", ngURL.origin);
-        element.value = window.localStorage['ngState'];
-    }
+    addStateEventListener('{{ng_url}}');
+
+    $(document).ready(function() {
+        // HACK. Reset the window storage so it doesnt reload previous tasks
+        window.localStorage.removeItem('ngState');
+
+        $('#btnSave').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}');
+        })
+
+        $('#btnReload').click(function() {
+            if (window.localStorage.getItem('ngState') !== null){
+                let state = JSON.parse(window.localStorage['ngState'])['value'];
+                let prefix = new URL('{{ng_url}}').origin + '/#!';
+                $('#neuroGlancerFrame').attr('src', prefix + JSON.stringify(state));
+            }
+            else {
+                $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
+            } 
+        })
+
+        $('#btnSubmit').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'submit').appendTo('#mainForm');
+                $('#mainForm').submit()
+            });
+        })
+
+        $('#btnFlag').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
+                $('#flagForm').submit()
+            });
+        })
+
+        $('#btnStop').click(function() {
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
+                $('#mainForm').submit()
+            });
+        })
+
+        $('#btnStart').click(function() {
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
+            $('#mainForm').submit();
+        })
+    })
 
 </script>
 {% endblock %}
