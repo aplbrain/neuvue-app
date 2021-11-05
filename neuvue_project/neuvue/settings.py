@@ -24,11 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'neuvue-django-env.eba-bpkamw3t.us-east-1.elasticbeanstalk.com', 
-    'localhost']
+    'localhost',
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -132,13 +134,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# if not DEBUG: 
-#     STATIC_ROOT = '/home/django/www-data/site.com/static/' #change later
+if not DEBUG: 
+    STATIC_ROOT = 'static'
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+    os.path.join(BASE_DIR, 'workspace/static')
+]   
 
 
 
