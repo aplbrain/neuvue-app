@@ -70,7 +70,6 @@ class WorkspaceView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get('namespace')
-        logging.debug("POST REQUEST: " + str(request.POST))
 
         # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
@@ -91,11 +90,16 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         elif button == 'flag':
             logger.debug('Flagging task')
+            flag_reason = request.POST.get('flag')
+            other_reason = request.POST.get('flag-other')
+            metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
+
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="errored", 
-                ng_state=ng_state)
+                ng_state=ng_state,
+                metadata=metadata)
         
         elif button == 'start':
             logger.debug('Starting new task')
