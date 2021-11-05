@@ -132,8 +132,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if not DEBUG: 
-    STATIC_ROOT = '/home/django/www-data/site.com/static/' #change later
+# if not DEBUG: 
+#     STATIC_ROOT = '/home/django/www-data/site.com/static/' #change later
 
 
 STATICFILES_DIRS = [
