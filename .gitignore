@@ -130,6 +130,6 @@ dmypy.json
 .pyre/
 
 # Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+neuvue_project/.elasticbeanstalk/*
+!neuvue_project/.elasticbeanstalk/*.cfg.yml
+!neuvue_project/.elasticbeanstalk/*.global.yml
