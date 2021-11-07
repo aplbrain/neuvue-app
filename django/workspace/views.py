@@ -3,12 +3,13 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-import colocarpy
+from neuvueclient import NeuvueQueue
 import numpy as np
 import pandas as pd
 import time
+import json
 
-from .neuroglancer import construct_proofreading_url
+from .neuroglancer import construct_proofreading_url, construct_url_from_existing
 
 # import the logging library
 import logging
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -30,7 +31,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
-            'instructions': ''
+            'instructions': '',
+            'namespace': namespace
         }
 
         if namespace is None:
@@ -47,7 +49,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         elif task_df['status'] == 'open':
             # Reset session timer
-            request.session["timer"] = time.time()
+            request.session["start_time"] = time.time()
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -58,73 +60,63 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
             
-            # Construct NG URL from points
-            context['ng_url'] = construct_proofreading_url(task_df, points)
+            # Construct NG URL from points or existing state
+            if task_df['ng_state']:
+                state = json.loads(task_df['ng_state'])['value']
+                context['ng_url'] = construct_url_from_existing(json.dumps(state))
+            else:
+                context['ng_url'] = construct_proofreading_url(task_df, points)
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get('namespace')
-        logging.debug("NAMESPACE:" + namespace)
-        if namespace is None:
-            logging.error("Error getting namespace in POST body.")
 
+        # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
-     
-        if 'restart' in request.POST:
-            logger.debug('Restarting task')
+
+        button = request.POST.get('button')
+
+        ng_state = request.POST.get('ngState')
+        start_time = request.session.get('start_time')
+        duration = time.time() - start_time if start_time else 0
         
-        if 'submit' in request.POST:
+        if button == 'submit':
             logger.debug('Submitting task')
-            current_state = request.POST.get('submit')
-            #get time it took to complete task
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(
-                    task_df["_id"], 
-                    duration=request.session["timer"], 
-                    status="closed",
-                    ng_state=current_state)
-            else:
-                logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="closed", ng_state=current_state)
-        
-        if 'flag' in request.POST:
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state)
+
+        elif button == 'flag':
             logger.debug('Flagging task')
-            current_state = request.POST.get('flag')
+            flag_reason = request.POST.get('flag')
+            other_reason = request.POST.get('flag-other')
+            metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
 
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(task_df["_id"], 
-                    duration=request.session["timer"], 
-                    status="errored", 
-                    ng_state=current_state)
-            else:
-                logging.info("No timer keyword available in session.")
-                self.client.patch_task(task_df["_id"], status="errored", ng_state=current_state)
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="errored", 
+                ng_state=ng_state,
+                metadata=metadata)
         
-        if 'start' in request.POST:
+        elif button == 'start':
             logger.debug('Starting new task')
-
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
                 self.client.patch_task(task_df["_id"], status="open")
-
+            
             #initialize timer 
-            request.session["timer"] = time.time()
+            request.session["start_time"] = time.time()
         
-        if 'stop' in request.POST:
+        elif button == 'stop':
             logger.debug('Stopping proofreading app')
-            current_state = request.POST.get('stop')
-            if "timer" in request.session:
-                request.session["timer"] = int(time.time() - request.session["timer"])
-                self.client.patch_task(
-                    task_df["_id"], 
-                    duration=request.session["timer"], 
-                    ng_state=current_state)
-            else:
-                logging.error("Unable to patch duration.")
-                self.client.patch_task(task_df["_id"], ng_state=current_state)
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                ng_state=ng_state)
             return redirect(reverse('tasks'))
         
         return redirect(reverse('workspace', args=[namespace]))
@@ -132,7 +124,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = colocarpy.Colocard(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

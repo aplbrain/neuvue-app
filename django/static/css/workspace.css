@@ -175,7 +175,7 @@ overflow-x: hidden;
 }
 
 /* buttons used in bottom container */
-.button {
+.mainButton {
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
@@ -190,44 +190,55 @@ overflow-x: hidden;
   font-size: 16px;
 }
 
-.button:hover{
+.mainButton:hover{
 border: 3px solid var(--secondary-accent);
 background: var(--secondary-accent);
 color: var(--primary-accent);
 }
 
-.button.flag{
+.mainButton.flag{
   background-color: var(--flag-accent);
   color: var(--background);
 }
 
-.button.flag:hover{
+.mainButton.flag:hover{
 border: 3px solid var(--flag-accent);
 background: var(--flag-accent);
 color: var(--primary-accent);
 }
 
-.button.pause{
+.mainButton.pause{
   background-color: var(--pause-accent);
   color: var(--background);
 }
 
-.button.pause:hover{
+.mainButton.pause:hover{
 border: 3px solid var(--pause-accent);
 background: var(--pause-accent);
 color: var(--primary-accent);
 }
 
-.button.submit{
+.mainButton.submit{
 background-color: var(--next-accent);
 color: var(--background);
 }
 
-.button.submit:hover{
+.mainButton.submit:hover{
 border: 3px solid var(--next-accent);
 background-color: var(--next-accent);
 color: var(--primary-accent);
 }
+
+.copyButton{
+  background-color: var(--secondary-accent);
+  display: flex;
+}
+
+.copyButton:hover{
+  border: 2px solid var(--pause-accent);
+  background: var(--pause-accent);
+  color: var(--primary-accent);
+  }
 
 .instructions {
   font-family: var(--monospace-font);
@@ -306,7 +317,7 @@ font-size: 25px;
 
 /* NAVIGATION BAR */
 
-*{
+/* *{
   padding: 0;
   margin: 0;
   text-decoration: none;
@@ -405,7 +416,7 @@ a.active,a:hover{
   #check:checked ~ ul{
     left: 0;
   }
-}
+} */
 
 /* Task buttons in the TaskQueue sidebar container*/
 
@@ -584,7 +595,6 @@ a.fill-div {
   position: fixed;
   
   z-index: 1;
-  top: 70px;
   right: 0;
   background-color: var(--transparent-background);
   overflow: hidden;
