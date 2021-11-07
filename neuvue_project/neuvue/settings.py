@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -33,15 +33,16 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-# Fix Health Check issues 
-import requests
-try:
-    internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4').text
-except requests.exceptions.ConnectionError:
-    pass
-else:
-    ALLOWED_HOSTS.append(internal_ip)
-del requests
+if DEBUG is False:
+    # Fix Health Check issues 
+    import requests
+    try:
+        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4').text
+    except requests.exceptions.ConnectionError:
+        pass
+    else:
+        ALLOWED_HOSTS.append(internal_ip)
+    del requests
 
 # Application definition
 
@@ -99,7 +100,7 @@ WSGI_APPLICATION = 'neuvue.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'RDS_HOSTNAME' in os.environ:
+if 'RDS_HOSTNAME' in os.environ and DEBUG is False:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -220,3 +221,5 @@ CONTRAST = {
     "white": 0.7
 }
 VOXEL_RESOLUTION = (4, 4, 40)
+
+SITE_ID=1
