@@ -34,6 +34,22 @@
   --monospace-font: "Lato", sans-serif;
 }
 
+/* Media */ 
+
+.basic {
+  background-image: url('/static/images/neuron_background_sketch-01-min.png'); background-size: 50%
+}
+
+.intro {
+  background-image: url('/static/images/xrayneuron01-min.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  min-height: 100vh;
+  min-width: 100vw;
+}
 
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
 
@@ -250,19 +266,17 @@ color: var(--primary-accent);
 
 .index-title-container {
 display: flex;
-align-items: center;
 flex-direction: column;
-margin: auto;
-width: 100%;
-position: relative;
-top: 50%;
-transform: translateY(-70%);
+margin-left: 100;
+width: 50%;
+position: absolute;
+top: 42%;
 }
 
 .index-title-text {
 color: rgb(255, 255, 255);
 font-family: var(--header-font);
-font-size: 500%;
+font-size: 5vw;
 text-align: center;
 order: 1;
 }
@@ -270,7 +284,7 @@ order: 1;
 .index-title-sub-text {
 color: rgb(255, 255, 255);
 font-family: var(--body-font);
-font-size: 200%;
+font-size: 2vw;
 text-align: center;
 order: 1;
 }

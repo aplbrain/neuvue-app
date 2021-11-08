@@ -61,9 +61,14 @@ class WorkspaceView(LoginRequiredMixin, View):
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
             
             # Construct NG URL from points or existing state
-            if task_df['ng_state']:
-                state = json.loads(task_df['ng_state'])['value']
-                context['ng_url'] = construct_url_from_existing(json.dumps(state))
+            try:
+                ng_state = json.loads(task_df.get('ng_state'))['value']
+            except Exception as e:
+                logging.warning(f'Unable to pull ng_state for task: {e}')
+                ng_state = None 
+    
+            if ng_state:
+                context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
             else:
                 context['ng_url'] = construct_proofreading_url(task_df, points)
         return render(request, "workspace.html", context)

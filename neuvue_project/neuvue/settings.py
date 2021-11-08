@@ -221,5 +221,3 @@ CONTRAST = {
     "white": 0.7
 }
 VOXEL_RESOLUTION = (4, 4, 40)
-
-SITE_ID=1
