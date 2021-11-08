@@ -33,14 +33,14 @@ function sidemenu_content() {
 
       if (neuroglancer_window.style.width != "75%" ) {
         openSideMenu();
-        updateSideBar('open');
+        updateSideBar('opened');
         //document.sidebar_form.sidebar_tab.value = 'open';
         //console.log(document.sidebar_form.sidebar_tab.value);
         //update_sidebar();
         //document.forms["sidebar_form"].submit();
       } else {
         closeSideMenu();
-        updateSideBar('closed');
+        updateSideBar('not_open');
         //document.sidebar_form.sidebar_tab.value = 'closed';
         //console.log(document.sidebar_form.sidebar_tab.value);
         //document.forms["sidebar_form"].submit();
@@ -131,7 +131,7 @@ function updateSideBar(action) {
   fetch('', myInit).then(function (response) {
       /*
       if (response.ok) {
-          console.log(response)
+          console.log('success')
       }
       else {
           console.log('failed')

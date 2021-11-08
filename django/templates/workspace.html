@@ -7,13 +7,9 @@
 
     <div id="neuVue-sidemenu" class="sidemenu">
         <div id="neuVue-sidebar" class="sidebar">
-            <form id="sidebar_form" name="sidebar_form" method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="sidebar_tab" id="sidebar_tab" value="">
-                <a id="sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-                    <i class="glyphicon glyphicon-list"></i>
-                </a>
-            </form>
+            <a id="sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+                <i class="glyphicon glyphicon-list"></i>
+            </a>
         </div>
         <div id="neuVue-sidecontent" class="sidecontent">
 
@@ -50,10 +46,7 @@
                 </div>
 
             </div>
-            {% if is_open %}
-            <iframe src="{{ng_url}}" width="95%" height="85%" class="neuroGlancer" id="neuroGlancerFrame">
-            </iframe>
-            {% endif %}
+           
             <form action="" method="post" class="bottomBar">
                 {% csrf_token %}
 
@@ -140,20 +133,21 @@
     </form>
 
     {% if request.session.num_visits == 0 %}
-    <script type="text/javascript" src="{% static  'js/utils.js' %}">
-        closeSideMenu();
-        openSideMenu();
-    </script>
-    {% elif request.session.sidebar == 'closed' %}
-    <script type="text/javascript" src="{% static  'js/utils.js' %}">
-        closeSideMenu();
-    </script>
+        <script type="text/javascript" src="{% static  'js/utils.js' %}">
+            closeSideMenu();
+            openSideMenu();
+        </script>
+    {% elif request.session.sidebar == "not_open" %}
+        <script type="text/javascript" src="{% static  'js/utils.js' %}">
+            var testing = {{ request.session.sidebar }};
+            closeSideMenu();
+        </script>
     {% else %}
-    <script type="text/javascript" src="{% static  'js/utils.js' %}">
-        openSideMenu();
-    </script>
+        <script type="text/javascript" src="{% static  'js/utils.js' %}">
+            var testing = {{ request.session.items }};
+            openSideMenu();
+        </script>
     {% endif %}
-
 
 
     <script type="text/javascript" src="{% static  'js/utils.js' %}"></script>

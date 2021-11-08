@@ -25,9 +25,10 @@ class WorkspaceView(View):
 
     def get(self, request, *args, **kwargs):
         num_visits = request.session.get('num_visits', 0)
-        sidebar = request.session.get('sidebar', 'closed')
+        sidebar_status = request.session.get('sidebar', 'open')
         
         request.session['num_visits'] = num_visits + 1
+        request.session['sidebar'] = sidebar_status
 
         context = {
             'ng_url': settings.NG_CLIENT,
@@ -36,7 +37,7 @@ class WorkspaceView(View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
-            'sidebar': sidebar,
+            'sidebar': sidebar_status,
             'num_visits': num_visits,
             'current_path': request.get_full_path()
         }
@@ -83,7 +84,6 @@ class WorkspaceView(View):
 
             if 'sidebar_tab' in body:
                 request.session['sidebar'] = body['sidebar_tab']
-            
 
         if 'restart' in request.POST:
             logger.debug('Restarting task')
