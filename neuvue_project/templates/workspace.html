@@ -168,12 +168,16 @@
 <script type="text/javascript" src="{% static "js/state.js" %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script>
-    // openSideMenu();
-    // By default, have side menu closed.
-    // TODO: Have a session token that saves status of side menu 
-    openSideMenu();
-    block_toggle();
-    
+
+    // Side Bar Interaction
+    if ({{ request.session.num_visits }} === 0) {
+        openSideMenu();
+    } else if ({{ request.session.sidebar }} === 0) {
+        closeSideMenu();
+    } else {
+        openSideMenu();
+    }
+
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");

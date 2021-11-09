@@ -37,7 +37,10 @@
 /* Media */ 
 
 .basic {
-  background-image: url('/static/images/neuron_background_sketch-01-min.png'); background-size: 50%
+  background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
+  background-size: 50%;
+  min-height: 100vh;     
+  min-width: 100vw;
 }
 
 .intro {
@@ -631,7 +634,7 @@ a.fill-div {
   margin-top: 4%;
   margin-right: 2%;
   float: right;
-  width: 80%;
+  width: 85%;
   text-align: left;
   background-color: var(--transparent-background) !important;
 }
