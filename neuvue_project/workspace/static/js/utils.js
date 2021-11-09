@@ -24,7 +24,7 @@ function block_toggle() {
 /* This controls information from appearing in the sidebar*/
 
 function sidemenu_content() {
-  console.log('side menu content clicked')
+  
   var side_button = document.getElementById("sidebarActivate");
   var neuroglancer_window = document.getElementById("neuroglancer");
 

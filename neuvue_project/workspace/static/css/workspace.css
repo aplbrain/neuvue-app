@@ -123,7 +123,7 @@ overflow-x: hidden;
   border: 1px solid var(--background);
   margin-top: 1%;
   margin-bottom: 1%;
-  height: 120%;
+  height: 48vw !important;
   order: 1;
 }
 

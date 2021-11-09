@@ -7,11 +7,9 @@
 <div class="basic">
     <div id="neuVue-sidemenu" class="sidemenu">
         <div id="neuVue-sidebar" class="sidebar">
-            <div id="queue-button" class="sidebutton" >
-                <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-                    <i class="glyphicon glyphicon-list"></i>
-                </a>
-            </div>   
+            <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+                <i class="glyphicon glyphicon-list"></i>
+            </a>  
         </div>
         <div id="neuVue-sidecontent" class="sidecontent">
             
@@ -50,7 +48,7 @@
             {% if is_open %}
             <iframe src="{{ng_url}}"
                     width="95%" 
-                    height="85%"
+                    height="500pt" 
                     class="neuroGlancer"
                     id="neuroGlancerFrame">
             </iframe>
