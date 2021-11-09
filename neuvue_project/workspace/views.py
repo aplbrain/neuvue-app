@@ -24,6 +24,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
+        num_visits = request.session.get('num_visits', 0)
+        sidebar_status = request.session.get('sidebar', 1)
+        
+        request.session['num_visits'] = num_visits + 1
+        request.session['sidebar'] = sidebar_status
+
         context = {
             'ng_url': settings.NG_CLIENT,
             'pcg_url': settings.PROD_PCG_SOURCE,
@@ -32,7 +38,9 @@ class WorkspaceView(LoginRequiredMixin, View):
             'is_open': False,
             'tasks_available': True,
             'instructions': '',
-            'namespace': namespace
+            'namespace': namespace,
+            'sidebar': sidebar_status,
+            'num_visits': num_visits
         }
 
         if namespace is None:
@@ -74,6 +82,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
+
+        if request.body:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+
+            if 'sidebar_tab' in body:
+                request.session['sidebar'] = body['sidebar_tab']
+        
         namespace = kwargs.get('namespace')
 
         # Current task that is opened in this namespace.
@@ -133,9 +149,8 @@ class TaskView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        
         context = settings.NAMESPACES
-
+    
         for i, namespace in enumerate(context.keys()):
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []

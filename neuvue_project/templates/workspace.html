@@ -7,11 +7,9 @@
 <div class="basic">
     <div id="neuVue-sidemenu" class="sidemenu">
         <div id="neuVue-sidebar" class="sidebar">
-            <div id="queue-button" class="sidebutton" >
-                <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-                    <i class="glyphicon glyphicon-list"></i>
-                </a>
-            </div>   
+            <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+                <i class="glyphicon glyphicon-list"></i>
+            </a>  
         </div>
         <div id="neuVue-sidecontent" class="sidecontent">
             
@@ -50,7 +48,7 @@
             {% if is_open %}
             <iframe src="{{ng_url}}"
                     width="95%" 
-                    height="85%"
+                    height="500pt" 
                     class="neuroGlancer"
                     id="neuroGlancerFrame">
             </iframe>
@@ -164,16 +162,17 @@
     </div> 
 </form>
 
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript" src="{% static "js/state.js" %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script>
-    // openSideMenu();
-    // By default, have side menu closed.
-    // TODO: Have a session token that saves status of side menu 
-    openSideMenu();
-    block_toggle();
-    
+
+    // Side Bar Interaction
+    if ({{ request.session.num_visits }} === 0) {
+        openSideMenu();
+    } else if ({{ request.session.sidebar }} === 0) {
+        closeSideMenu();
+    } else {
+        openSideMenu();
+    }
+
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");
