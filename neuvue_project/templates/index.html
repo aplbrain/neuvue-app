@@ -4,22 +4,15 @@
 
 {% block content %}
 <!DOCTYPE html>
-<html>
-<head>
-</head>
-  <body>
-    <div class="index-title-container">
-      <span class="index-title-text">Welcome to NeuVue</span>
-    </div>
-    
-    <div class="index-title-container">
-    {% if user.is_authenticated %}
-      <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
-    {% else %}
-      <a href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
-    {% endif %}
-    </div>
-  </body>
-</html>
+<div class="intro">
+  <div class="index-title-container">
+    <span class="index-title-text">Welcome to NeuVue</span>
+  {% if user.is_authenticated %}
+    <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
+  {% else %}
+    <a class="index-title-sub-text" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
+  {% endif %}
+  </div>
+</div>
 
 {% endblock %}

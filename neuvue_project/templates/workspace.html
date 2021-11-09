@@ -4,125 +4,124 @@
 {% block content %}
 <! Information Hidden Menu >
 
-
-<div id="neuVue-sidemenu" class="sidemenu">
-    <div id="neuVue-sidebar" class="sidebar">
-        <div id="queue-button" class="sidebutton" >
-            <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-                <i class="glyphicon glyphicon-list"></i>
-            </a>
-        </div>   
-    </div>
-    <div id="neuVue-sidecontent" class="sidecontent">
-        
-        <! Instructions >
-        <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
-            <div class="sideContentTitle">
-                Instructions
+<div class="basic">
+    <div id="neuVue-sidemenu" class="sidemenu">
+        <div id="neuVue-sidebar" class="sidebar">
+            <div id="queue-button" class="sidebutton" >
+                <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+                    <i class="glyphicon glyphicon-list"></i>
+                </a>
+            </div>   
+        </div>
+        <div id="neuVue-sidecontent" class="sidecontent">
+            
+            <! Instructions >
+            <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
+                <div class="sideContentTitle">
+                    Instructions
+                </div>
+                <div class="sideContentInfo">
+                    {{ instructions.prompt }}
+                </div>
             </div>
-            <div class="sideContentInfo">
-                {{ instructions.prompt }}
+            
+            <! Task Information >
+            <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
+                <div class="sideContentTitle">
+                    Task Information
+                </div>
+                <div class="sideContentInfo">
+                    Namespace <br> 
+                    <code> {{namespace}} </code> <br>
+                    Task ID <br> 
+                    <code> {{task_id}} </code> <br>
+                    Segmentation ID  <br>
+                    <code> {{seg_id}} </code> <br>
+                    PCG Endpoint  <br> 
+                    <code> {{pcg_url}} </code> <br>
+                </div>
             </div>
         </div>
-        
-        <! Task Information >
-        <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
-            <div class="sideContentTitle">
-                Task Information
-            </div>
-            <div class="sideContentInfo">
-                Namespace <br> 
-                <code> {{namespace}} </code> <br>
-                Task ID <br> 
-                <code> {{task_id}} </code> <br>
-                Segmentation ID  <br>
-                <code> {{seg_id}} </code> <br>
-                PCG Endpoint  <br> 
-                <code> {{pcg_url}} </code> <br>
-            </div>
+    </div> 
+
+    <! Neuroglancer >
+    <div id="neuroglancer" class="leftFormatting">
+        <div class="left">
+            {% if is_open %}
+            <iframe src="{{ng_url}}"
+                    width="95%" 
+                    height="85%"
+                    class="neuroGlancer"
+                    id="neuroGlancerFrame">
+            </iframe>
+            {% endif %}
+            
+            <! Buttons >
+                <form id="mainForm" action="" method="post" class="bottomBar">
+                    {% csrf_token %}
+                    
+                    {% if is_open %}
+                    <button
+                        id="btnSave" 
+                        type="button" 
+                        class="mainButton" 
+                    >
+                        Save Checkpoint
+                    </button>
+                    
+                    <button
+                        id="btnReload" 
+                        type="button" 
+                        class="mainButton"
+                    >
+                        Reload Checkpoint
+                    </button>
+            
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit" 
+                    >
+                        Submit Task
+                    </button>
+
+                    <button 
+                        type="button" 
+                        class="mainButton flag"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
+                    </button>
+                
+                    <button 
+                        id="btnStop"
+                        type="button"
+                        class="mainButton pause"
+                    >
+                        Exit Task
+                    </button>
+                    {% else %}
+
+                    {%if tasks_available %}
+                    <button type="button" class="mainButton submit" id="btnStart">
+                        Start New  Task
+                    </button>
+
+                    {% else %}
+                    <button type="button" class="mainButton submit" disabled >
+                        No Pending Tasks
+                    </button> 
+                    
+                    {% endif%}
+                    
+                    <button type="button" class="mainButton flag" onclick= "document.location='{% url 'tasks' %}'">
+                        Exit Workspace
+                    </button>
+                    {% endif %}
+
+                </form>
         </div>
-    </div>
-</div> 
-
-</div>
-
-<! Neuroglancer >
-<div id="neuroglancer" class="leftFormatting">
-    <div class="left">
-        {% if is_open %}
-        <iframe src="{{ng_url}}"
-                width="95%" 
-                height="85%"
-                class="neuroGlancer"
-                id="neuroGlancerFrame">
-        </iframe>
-        {% endif %}
-        
-        <! Buttons >
-            <form id="mainForm" action="" method="post" class="bottomBar">
-                {% csrf_token %}
-                
-                {% if is_open %}
-                <button
-                    id="btnSave" 
-                    type="button" 
-                    class="mainButton" 
-                >
-                    Save Checkpoint
-                </button>
-                
-                <button
-                    id="btnReload" 
-                    type="button" 
-                    class="mainButton"
-                >
-                    Reload Checkpoint
-                </button>
-        
-                <button 
-                    name="btnSubmit"
-                    id="btnSubmit" 
-                    type="button" 
-                    class="mainButton submit" 
-                >
-                    Submit Task
-                </button>
-
-                <button 
-                    type="button" 
-                    class="mainButton flag"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#flagModal">
-                    Flag Task
-                </button>
-              
-                <button 
-                    id="btnStop"
-                    type="button"
-                    class="mainButton pause"
-                >
-                    Exit Task
-                </button>
-                {% else %}
-
-                {%if tasks_available %}
-                <button type="button" class="mainButton submit" id="btnStart">
-                    Start New  Task
-                </button>
-
-                {% else %}
-                <button type="button" class="mainButton submit" disabled >
-                    No Pending Tasks
-                </button> 
-                
-                {% endif%}
-                
-                <button type="button" class="mainButton flag" onclick= "document.location='{% url 'tasks' %}'">
-                    Exit Workspace
-                </button>
-                {% endif %}
-
-            </form>
     </div>
 </div>
 
@@ -252,5 +251,3 @@
 
 </script>
 {% endblock %}
-
-

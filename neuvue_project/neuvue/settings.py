@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -221,5 +221,3 @@ CONTRAST = {
     "white": 0.7
 }
 VOXEL_RESOLUTION = (4, 4, 40)
-
-SITE_ID=1
