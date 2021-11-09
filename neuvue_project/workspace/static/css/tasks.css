@@ -183,7 +183,8 @@ tbody.pending >:nth-child(2) {
   border-radius: 0px 8px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   background-color: var(--table-background) !important;
-  height: 30%;
+  max-height: 30vw;
+  min-height: 30vw;
   overflow: -moz-scrollbars-vertical; 
   overflow-y: scroll;
   overflow-x: hidden;
