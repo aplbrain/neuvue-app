@@ -32,7 +32,6 @@
 }
 
 /* Left half of the the task category header: ex. Soma Splitting Tasks */
-
 .jobHeader{
   background-color: var(--complete-color);
   border-radius: 8px 0 0 8px;
@@ -40,33 +39,29 @@
   float: left;
   margin-top: 1%;
   left:0;
-  width: 85%;
-  height:5%;
-  margin: 1% 0 1% 1%;
+  width: 87%;
+  height:2vw;
+  margin: 1% 0 1% 0%;
   float: left;
   font-family: var(--header-font);
   color: var(--background);
-  font-size: 10px;
-  font-size: 1.2vw;
+  font-size: 1vw;
   text-align: left;
   font-weight: normal;
   cursor: pointer;
-
 }
-
 .jobHeader.active, .jobHeader:hover {
   background-color: var(--complete-color-actived);
   color:var(--background);
 }
-
 /* Right half of the task category header: 'start proofreading' button */
 .launch_NG {
-  margin: 1% 1% 1% 0px;
+  margin: 1% 0 1% 0%;
   background-color: transparent;
   border-radius: 0 8px 8px 0;
   right:0;
   width: 12.5%;
-  height: 5%;
+  height: 2vw;
   border: 1.5px solid var(--complete-color);
   color: var(--complete-color);
   padding: 10px;
@@ -77,6 +72,7 @@
   z-index: 2; 
   
 }
+
 .launch_NG:hover{
   background: var(--primary-accent);
   border-color: transparent;
@@ -183,8 +179,8 @@ tbody.pending >:nth-child(2) {
   border-radius: 0px 8px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   background-color: var(--table-background) !important;
-  max-height: 30vw;
-  min-height: 30vw;
+  max-height: 15vw;
+  min-height: 15vw;
   overflow: -moz-scrollbars-vertical; 
   overflow-y: scroll;
   overflow-x: hidden;
