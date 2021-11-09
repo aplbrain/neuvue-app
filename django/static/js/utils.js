@@ -33,14 +33,14 @@ function sidemenu_content() {
 
       if (neuroglancer_window.style.width != "75%" ) {
         openSideMenu();
-        updateSideBar('opened');
+        updateSideBar(1);
         //document.sidebar_form.sidebar_tab.value = 'open';
         //console.log(document.sidebar_form.sidebar_tab.value);
         //update_sidebar();
         //document.forms["sidebar_form"].submit();
       } else {
         closeSideMenu();
-        updateSideBar('not_open');
+        updateSideBar(0);
         //document.sidebar_form.sidebar_tab.value = 'closed';
         //console.log(document.sidebar_form.sidebar_tab.value);
         //document.forms["sidebar_form"].submit();

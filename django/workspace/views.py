@@ -25,7 +25,7 @@ class WorkspaceView(View):
 
     def get(self, request, *args, **kwargs):
         num_visits = request.session.get('num_visits', 0)
-        sidebar_status = request.session.get('sidebar', 'open')
+        sidebar_status = request.session.get('sidebar', 1)
         
         request.session['num_visits'] = num_visits + 1
         request.session['sidebar'] = sidebar_status

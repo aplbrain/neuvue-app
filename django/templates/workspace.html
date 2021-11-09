@@ -46,6 +46,14 @@
                 </div>
 
             </div>
+            {% if is_open %}
+            <iframe src="{{ng_url}}"
+                    width="95%" 
+                    height="85%"
+                    class="neuroGlancer"
+                    id="neuroGlancerFrame">
+            </iframe>
+            {% endif %}
            
             <form action="" method="post" class="bottomBar">
                 {% csrf_token %}
@@ -132,23 +140,6 @@
 
     </form>
 
-    {% if request.session.num_visits == 0 %}
-        <script type="text/javascript" src="{% static  'js/utils.js' %}">
-            closeSideMenu();
-            openSideMenu();
-        </script>
-    {% elif request.session.sidebar == "not_open" %}
-        <script type="text/javascript" src="{% static  'js/utils.js' %}">
-            var testing = {{ request.session.sidebar }};
-            closeSideMenu();
-        </script>
-    {% else %}
-        <script type="text/javascript" src="{% static  'js/utils.js' %}">
-            var testing = {{ request.session.items }};
-            openSideMenu();
-        </script>
-    {% endif %}
-
 
     <script type="text/javascript" src="{% static  'js/utils.js' %}"></script>
     <script>
@@ -158,6 +149,18 @@
         //closeSideMenu();
         // block_toggle();
         //activeTaskStartUp();
+        var temp_visit = {{ request.session.num_visits }};
+        var temp_sidebar = {{ request.session.sidebar }};
+        if ({{ request.session.num_visits }} === 0) {
+            openSideMenu();
+            console.log('first condition')
+        } else if ({{ request.session.sidebar }} === 0) {
+            closeSideMenu();
+            console.log('second condition')
+        } else {
+            openSideMenu();
+            console.log('third condition')
+        }
         
 
         /* Patch to allow current active task button not need double click for first interaction */
@@ -202,4 +205,6 @@
         }
 
     </script>
+
+
     {% endblock %}
