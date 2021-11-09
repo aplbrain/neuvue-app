@@ -40,9 +40,9 @@
   float: left;
   margin-top: 1%;
   left:0;
-  width: 85%;
-  height:5%;
-  margin: 1% 0 1% 1%;
+  width: 87%;
+  height:3vw;
+  margin: 1% 0 1% 0%;
   float: left;
   font-family: var(--header-font);
   color: var(--background);
@@ -61,12 +61,12 @@
 
 /* Right half of the task category header: 'start proofreading' button */
 .launch_NG {
-  margin: 1% 1% 1% 0px;
+  margin: 1% 0 1% 0%;
   background-color: transparent;
   border-radius: 0 8px 8px 0;
   right:0;
   width: 12.5%;
-  height: 5%;
+  height: 3vw;
   border: 1.5px solid var(--complete-color);
   color: var(--complete-color);
   padding: 10px;
