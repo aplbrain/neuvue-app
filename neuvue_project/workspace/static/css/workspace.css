@@ -8,7 +8,7 @@
   --primary-accent: #e6f1ff;
   --primary-accent-activated: #8892b0;
   --secondary-accent: #077179;
-  --secondary-accent-activated: #028486;
+  --secondary-accent-activated: #00a2a5;
   --next-accent: #118d4f;
   --next-accent-activated: #099c52;
   --flag-accent: #b14646;
@@ -32,6 +32,7 @@
   --header-font: "Lato", sans-serif;
   --body-font: "Lato", sans-serif;
   --monospace-font: "Lato", sans-serif;
+  --code-font:"Fira Mono", serif;
 }
 
 /* Media */ 
@@ -117,13 +118,15 @@ overflow-x: hidden;
 
 
 /* NG container */
+/* width and height defined in workspace.html*/
 .neuroGlancer {
   box-shadow: 0 4px 8px 0 var(--transparent-shadow);
   border-radius: 8px;
   border: 1px solid var(--background);
-  margin-top: 1%;
+  margin-top: 1.5%;
   margin-bottom: 1%;
-  height: 42vw !important;
+  width: 95%;
+  height: 85vh;
   order: 1;
 }
 
@@ -190,14 +193,13 @@ overflow-x: hidden;
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  margin: 0 0 10 10px;
-  width: 50%;
-  padding: 5px 10px;
+  width: 100%;
+  padding: 0.25vh 0.25vh;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.3vh;
 }
 
 .mainButton:hover{
@@ -264,7 +266,7 @@ color: var(--primary-accent);
   text-decoration: none;
   display: inline-block;
   width: 90%;
-  font-size: 14px;
+  font-size: 1.2vh;
 }
 
 .index-title-container {
@@ -279,7 +281,7 @@ top: 42%;
 .index-title-text {
 color: rgb(255, 255, 255);
 font-family: var(--header-font);
-font-size: 5vw;
+font-size: 5vh;
 text-align: center;
 order: 1;
 }
@@ -287,7 +289,7 @@ order: 1;
 .index-title-sub-text {
 color: rgb(255, 255, 255);
 font-family: var(--body-font);
-font-size: 2vw;
+font-size: 2vh;
 text-align: center;
 order: 1;
 }
@@ -524,8 +526,7 @@ a.active,a:hover{
   font-family: var(--header-font);
   color: var(--primary-accent);
   border-radius: 2px;
-  font-size: 10px;
-  font-size: 1.2vw;
+  font-size: 2.2vh;
   z-index: 10;
   padding: 5%;
   flex-grow: 2;
@@ -549,12 +550,14 @@ a.active,a:hover{
   margin: 0 0 10 10px;
   padding: 5px 10px;
   position:relative;
+  font-size: 1.1vh;
   color: var(--primary-accent);
   width: 95%;
   border-radius: 4px;
   background-color: var(--transparent-background);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   overflow: scroll;
 }
 
@@ -593,7 +596,7 @@ a.fill-div {
   margin: 25% 2%;
   text-decoration: none;
   display: inline-block;
-  font-size: 1vw !important;
+  font-size: 1vh !important;
   cursor: pointer;
 }
 
@@ -636,15 +639,16 @@ a.fill-div {
   float: right;
   width: 85%;
   text-align: left;
+  overflow-x: hidden;
   background-color: var(--transparent-background) !important;
 }
 
 .code{
-font-family: var(--monospace-font);
-color: rgb(255, 111, 0);
-background-color: var(--transparent-background);
-padding: 2px;
-font-size: 105%;
+  font-family: var(--code-font);
+  color: var(--secondary-accent-activated);
+  background-color: var(--transparent-task);
+  padding: 2px;
+  font-size: 1.1vh;
 }
 
 /* Scrollbar formatting */
@@ -661,4 +665,18 @@ background-color: var(--transparent-hover);
 
 ::-webkit-scrollbar-corner {
 background: transparent;
+}
+
+.grid-container {
+  left:0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background-color: transparent;
+}
+
+.grid-item {
+  background-color: transparent;
+  border: 1px solid transparent;
+  text-align: center;
 }

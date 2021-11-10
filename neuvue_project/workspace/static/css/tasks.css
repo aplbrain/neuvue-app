@@ -35,17 +35,17 @@
 .jobHeader{
   background-color: var(--complete-color);
   border-radius: 8px 0 0 8px;
-  padding: 10px;
+  padding: 0.35vw;
   float: left;
   margin-top: 1%;
   left:0;
   width: 87%;
-  height:2vw;
+  height: 3vh;
   margin: 1% 0 1% 0%;
   float: left;
   font-family: var(--header-font);
   color: var(--background);
-  font-size: 1vw;
+  font-size: 1.3vh;
   text-align: left;
   font-weight: normal;
   cursor: pointer;
@@ -61,13 +61,13 @@
   border-radius: 0 8px 8px 0;
   right:0;
   width: 12.5%;
-  height: 2vw;
+  height: 3vh;
   border: 1.5px solid var(--complete-color);
   color: var(--complete-color);
-  padding: 10px;
+  padding: 0.2vh 0.2vw;
   float: right;
   font-family: var(--header-font);
-  font-size: 0.8vw;
+  font-size: 1vh;
   cursor: pointer;
   z-index: 2; 
   
@@ -93,7 +93,7 @@ table {
   background-color: transparent !important;
   border-radius: 8px;
   padding: 2%;
-  font-size: 14pt;
+  font-size: 1.2vh;
   position: relative;
   width: 100%;
   font-family: var(--header-font);
@@ -144,14 +144,14 @@ tbody.pending >:nth-child(2) {
 
   background-color: transparent !important;
   color: var(--primary-accent);
-  padding: 1% 1%;
+  padding: 0.8vh 1vw;
   border: 1.5px solid var(--transparent-hover);
   border-bottom: none;
   outline: none;
   text-align: center;
   cursor: pointer;
   transition: 0.3s;
-  font-size: 15px;
+  font-size: 1.1vh;
   border-radius: 8px 8px 0px 0px;
   width: 10%;
   
@@ -176,11 +176,12 @@ tbody.pending >:nth-child(2) {
   align-items: center;
   float: center;
   display: block;
+  font-size: 1.2vh;
   border-radius: 0px 8px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   background-color: var(--table-background) !important;
-  max-height: 15vw;
-  min-height: 15vw;
+  max-height: 20vh;
+  min-height: 20vh;
   overflow: -moz-scrollbars-vertical; 
   overflow-y: scroll;
   overflow-x: hidden;
