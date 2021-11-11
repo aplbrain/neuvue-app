@@ -30,7 +30,7 @@
                 </div>
                 <div class="sideContentInfo">
                     Namespace <br> 
-                    <code> {{namespace}} </code> <br>
+                    <code> {{display_name}} </code> <br>
                     Task ID <br> 
                     <code> {{task_id}} </code> <br>
                     Segmentation ID  <br>
@@ -165,14 +165,15 @@
 <script>
 
     // Side Bar Interaction
-    if ({{ request.session.num_visits }} === 0) {
-        openSideMenu();
-    } else if ({{ request.session.sidebar }} === 0) {
-        closeSideMenu();
-    } else {
-        openSideMenu();
-    }
-
+    // if ({{ request.session.num_visits }} === 0) {
+    //    openSideMenu();
+    // } else if ({{ request.session.sidebar }} === 0) {
+    //    closeSideMenu();
+    // } else {
+    //    openSideMenu();
+    //}
+    openSideMenu();
+    
     /* Patch to allow current active task button not need double click for first interaction */
     function activeTaskStartUp() {
         var currentTaskButton = document.getElementById("currentTask");
