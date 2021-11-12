@@ -51,6 +51,11 @@ ul li {
   overflow: hidden;
 }
 
+.basic.tasks {
+  width: 100%;
+  min-height: 100vh;
+}
+
 .intro {
   background-image: url('/static/images/xrayneuron01-min.png'); 
   background-size: cover;
