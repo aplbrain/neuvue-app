@@ -42,18 +42,17 @@ ul li {
 }
 .basic {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
-  background-size: cover;
+  background-size: 70vw;
+  height: 95vh;
+  overflow: hidden;
 }
 
 .basic.workspace {
   width: 100%;
-  min-height: 94vh;
-  overflow: hidden;
 }
 
 .basic.tasks {
   width: 100%;
-  min-height: 100vh;
 }
 
 .intro {
@@ -63,8 +62,8 @@ ul li {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  min-height: 100vh;
-  min-width: 100vw;
+  height: 95vh;
+  width: 100vw;
 }
 
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
