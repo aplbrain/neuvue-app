@@ -38,7 +38,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'is_open': False,
             'tasks_available': True,
             'instructions': '',
-            'namespace': namespace,
+            'display_name': settings.NAMESPACES[namespace]['display_name'],
             'sidebar': sidebar_status,
             'num_visits': num_visits
         }
@@ -83,12 +83,12 @@ class WorkspaceView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
 
-        if request.body:
-            body_unicode = request.body.decode('utf-8')
-            body = json.loads(body_unicode)
+        # if request.body:
+        #     body_unicode = request.body.decode('utf-8')
+        #     body = json.loads(body_unicode)
 
-            if 'sidebar_tab' in body:
-                request.session['sidebar'] = body['sidebar_tab']
+        #     if 'sidebar_tab' in body:
+        #         request.session['sidebar'] = body['sidebar_tab']
         
         namespace = kwargs.get('namespace')
 

@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -195,18 +195,18 @@ LOGOUT_REDIRECT_URL = '/'
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
 NAMESPACES = {
-    "split" : {
-        "display_name": "Multi-Soma Split",
-        "ng_link_type": "split"
+    "multiSomaSplit" : {
+        "display_name": "Multi-Soma Splitting",
+        "ng_link_type": "path"
     },
-    "trace": {
-        "display_name": "Tracing",
-        "ng_link_type": "trace"
+    "fullyProofread": {
+        "display_name": "Neuron Anatomy Labeling",
+        "ng_link_type": "point"
     },
-    "fullyproofreaddendrites": {
-        "display_name": "Trace the incomplete axons",
-        "ng_link_type": "trace"
-    }
+    "patProofread": {
+        "display_name": "Expert Labeling",
+        "ng_link_type": "point"
+    },
 }
 
 # Data Sources
