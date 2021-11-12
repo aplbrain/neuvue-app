@@ -129,7 +129,7 @@ overflow-x: hidden;
   margin-top: 1.5%;
   margin-bottom: 1%;
   width: 95%;
-  height: 85vh;
+  height: 83vh;
   order: 1;
 }
 
@@ -198,6 +198,7 @@ overflow-x: hidden;
   color: var(--background);
   width: 100%;
   padding: 0.25vh 0.25vh;
+  margin: 0vh 0.25vh;
   text-align: center;
   text-decoration: none;
   display: inline-block;
