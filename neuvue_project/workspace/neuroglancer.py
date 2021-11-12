@@ -17,9 +17,18 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-class Namespaces(str, Enum):
-    split = 'split'
-    trace = 'trace'
+class NeuroglancerLinkType(str, Enum):
+    """Enum for neuroglancer link types. Currently supported:
+
+    path -> expects a list of coordinates (metadata) and two soma points (points). 
+    Draws a path between all coordinates.
+    
+    points -> expects a list of coordinates (metadata), description (metadata), and 
+    group (metadata). Needs atleast one seed point (points). Places dot points for 
+    all coordinates listed.
+    """
+    path = 'path'
+    point = 'point'
 
 
 def create_base_state(seg_ids, coordinate):
@@ -130,7 +139,7 @@ def create_point_state(use_description=False):
         StateBuilder: Annotation State
     """
     if use_description:
-        anno = AnnotationLayerConfig("selected_points",
+        anno = AnnotationLayerConfig("annotations",
             mapping_rules=PointMapper(
                 "point_column_a", 
                 group_column="group", 
@@ -138,7 +147,7 @@ def create_point_state(use_description=False):
                 set_position=False),
         )
     else:
-        anno = AnnotationLayerConfig("selected_points",
+        anno = AnnotationLayerConfig("annotations",
             mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
         )
 
@@ -167,7 +176,7 @@ def construct_proofreading_url(task_df, points):
     # the base layer, the first element is None. 
     data_list = [None]
     ng_type = settings.NAMESPACES[task_df['namespace']]['ng_link_type']
-    if ng_type == Namespaces.split:
+    if ng_type == NeuroglancerLinkType.path:
 
         if points:
             # Append start and end soma coordinates
@@ -179,7 +188,7 @@ def construct_proofreading_url(task_df, points):
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
     
-    elif ng_type == Namespaces.trace: 
+    elif ng_type == NeuroglancerLinkType.point: 
         # Get grouping and annotation descriptions, if they exist
         coordinates = np.array(coordinates)
         group = task_df['metadata'].get('group')
