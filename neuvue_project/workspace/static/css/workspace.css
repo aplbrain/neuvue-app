@@ -241,6 +241,26 @@ background-color: var(--next-accent);
 color: var(--primary-accent);
 }
 
+.mainButton.submit.duo{
+  width: 40%;
+  float: left;
+  margin: 1vh 1vw;
+}
+
+.mainButton.submit.duo:hover{
+  
+}
+
+  .mainButton.flag.duo{
+    width: 40%;
+    float: right;
+    margin: 1vh 1vw;
+  }
+  
+  .mainButton.flag.duo:hover{
+    
+  }
+
 .copyButton{
   background-color: var(--secondary-accent);
   display: flex;
@@ -678,4 +698,22 @@ background: transparent;
   background-color: transparent;
   border: 1px solid transparent;
   text-align: center;
+}
+
+/* Container for sidecontent item */
+.interTaskBox {
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent) !important;
+  background-color: transparent;
+  margin-left: 35%;
+  width: 30vw;
+  margin-top: 42vh;
+  display: flex;
+  flex-direction: row;
+  display:inline-block;
+  margin-bottom: 2%;
+  overflow: auto;
+  overflow-x: hidden;
+  transition: 0s;
+
 }

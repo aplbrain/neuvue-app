@@ -30,13 +30,13 @@
                 </div>
                 <div class="sideContentInfo">
                     Namespace <br> 
-                    <code> {{namespace}} </code> <br>
+                    <span class ="code"> {{namespace}} </span> <br>
                     Task ID <br> 
-                    <code> {{task_id}} </code> <br>
+                    <span class ="code"> {{task_id}} </span> <br>
                     Segmentation ID  <br>
-                    <code> {{seg_id}} </code> <br>
+                    <span class ="code"> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
-                    <code> {{pcg_url}} </code> <br>
+                    <span class ="code"> {{pcg_url}} </span> <br>
                 </div>
             </div>
         </div>
@@ -101,22 +101,24 @@
                     </button>
                     {% else %}
 
-                    {%if tasks_available %}
-                    <button type="button" class="mainButton submit" id="btnStart">
-                        Start New  Task
-                    </button>
+                    <div class="interTaskBox">
+                        {%if tasks_available %}
+                        <button type="button" class="mainButton submit duo" id="btnStart">
+                            Start New  Task
+                        </button>
 
-                    {% else %}
-                    <button type="button" class="mainButton submit" disabled >
-                        No Pending Tasks
-                    </button> 
-                    
-                    {% endif%}
-                    
-                    <button type="button" class="mainButton flag" onclick= "document.location='{% url 'tasks' %}'">
-                        Exit Workspace
-                    </button>
-                    {% endif %}
+                        {% else %}
+                        <button type="button" class="mainButton submit duo" disabled >
+                            No Pending Tasks
+                        </button> 
+                        
+                        {% endif%}
+                        
+                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}'">
+                            Exit Workspace
+                        </button>
+                        {% endif %}
+                    </div>
 
                 </form>
         </div>
@@ -162,7 +164,7 @@
     </div> 
 </form>
 
-<script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"> 
 
     // Side Bar Interaction
     if ({{ request.session.num_visits }} === 0) {
@@ -173,28 +175,8 @@
         openSideMenu();
     }
 
-    /* Patch to allow current active task button not need double click for first interaction */
-    function activeTaskStartUp() {
-        var currentTaskButton = document.getElementById("currentTask");
-        currentTaskButton.classList.toggle("active");
-        var panel = currentTaskButton.nextElementSibling;
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
-        } else {
-            panel.style.display = "block";
-        }
-    }
-
-    /* Flag Modal */
-    function toggleTextbox(){
-        var reason=document.getElementById("select-flag");
-        var textbox = document.getElementById("text")
-        if(reason.value == "other")
-            textbox.style.display = "block"
-        else
-            textbox.style.display = "none"
-    }
-
+</script>
+<script>
     /* Function for getting the current Neuroglancer state */
     
     addStateEventListener('{{ng_url}}');
