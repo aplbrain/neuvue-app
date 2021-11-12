@@ -547,17 +547,16 @@ a.active,a:hover{
  /* Container for sidecontent info */
 .sideContentInfo {
   font-family: var(--monospace-font);
-  margin: 0 0 10 10px;
   padding: 5px 10px;
   position:relative;
-  font-size: 1.1vh;
+  font-size: 1.4vh;
   color: var(--primary-accent);
   width: 95%;
   border-radius: 4px;
-  background-color: var(--transparent-background);
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  overflow-wrap: break-word;
   overflow: scroll;
 }
 
@@ -648,7 +647,7 @@ a.fill-div {
   color: var(--secondary-accent-activated);
   background-color: var(--transparent-task);
   padding: 2px;
-  font-size: 1.1vh;
+  font-size: 1.3vh;
 }
 
 /* Scrollbar formatting */

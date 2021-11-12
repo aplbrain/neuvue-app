@@ -29,14 +29,14 @@
                     Task Information
                 </div>
                 <div class="sideContentInfo">
-                    Namespace  <br>
-                    <span class = "code"> {{namespace}} </span> <br>
+                    Namespace <br> 
+                    <code> {{namespace}} </code> <br>
                     Task ID <br> 
-                    <span class = "code"> {{task_id}} </span> <br>
+                    <code> {{task_id}} </code> <br>
                     Segmentation ID  <br>
-                    <span class = "code"> {{seg_id}} </span> <br>
+                    <code> {{seg_id}} </code> <br>
                     PCG Endpoint  <br> 
-                    <span class = "code"> {{pcg_url}} </span> <br>
+                    <code> {{pcg_url}} </code> <br>
                 </div>
             </div>
         </div>
@@ -47,65 +47,58 @@
         <div class="left">
             {% if is_open %}
             <iframe src="{{ng_url}}"
+                    width="95%" 
+                    height="500pt" 
                     class="neuroGlancer"
                     id="neuroGlancerFrame">
             </iframe>
             {% endif %}
             
             <! Buttons >
-                <form id="mainForm" action="" method="post" class="bottomBar" >
+                <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
                     
                     {% if is_open %}
-                    <div class="grid-container">
+                    <button
+                        id="btnSave" 
+                        type="button" 
+                        class="mainButton" 
+                    >
+                        Save Checkpoint
+                    </button>
                     
-                        <div class="grid-item">
-                            <button
-                                id="btnSave" 
-                                type="button" 
-                                class="mainButton" 
-                            >
-                                Save Checkpoint
-                            </button>
-                        </div>
-                        <div class="grid-item">
-                            <button
-                                id="btnReload" 
-                                type="button" 
-                                class="mainButton"
-                            >
-                                Reload Checkpoint
-                            </button>
-                        </div>
-                        <div class="grid-item">
-                            <button 
-                                name="btnSubmit"
-                                id="btnSubmit" 
-                                type="button" 
-                                class="mainButton submit" 
-                            >
-                                Submit Task
-                            </button>
-                        </div>
-                        <div class="grid-item">
-                            <button 
-                                type="button" 
-                                class="mainButton flag"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#flagModal">
-                                Flag Task
-                            </button>
-                        </div>
-                        <div class="grid-item">
-                        <button 
-                            id="btnStop"
-                            type="button"
-                            class="mainButton pause"
-                        >
-                            Exit Task
-                        </button>
-                        </div>
-                    </div>
+                    <button
+                        id="btnReload" 
+                        type="button" 
+                        class="mainButton"
+                    >
+                        Reload Checkpoint
+                    </button>
+            
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit" 
+                    >
+                        Submit Task
+                    </button>
+
+                    <button 
+                        type="button" 
+                        class="mainButton flag"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
+                    </button>
+                
+                    <button 
+                        id="btnStop"
+                        type="button"
+                        class="mainButton pause"
+                    >
+                        Exit Task
+                    </button>
                     {% else %}
 
                     {%if tasks_available %}
