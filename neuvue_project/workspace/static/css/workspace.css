@@ -38,9 +38,12 @@
 
 .basic {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
-  background-size: 50%;
-  min-height: 100vh;     
-  min-width: 100vw;
+  background-size: cover;
+}
+
+.basic.workspace {
+  width: 100%;
+  height: 94vh;
 }
 
 .intro {
@@ -123,7 +126,8 @@ overflow-x: hidden;
   border: 1px solid var(--background);
   margin-top: 1%;
   margin-bottom: 1%;
-  height: 42vw !important;
+  height: 38vw !important;
+  width: 95%;
   order: 1;
 }
 
