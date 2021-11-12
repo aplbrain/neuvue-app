@@ -82,7 +82,8 @@
                         Submit Task
                     </button>
 
-                    <button 
+                    <button
+                        id="btnFlag" 
                         type="button" 
                         class="mainButton flag"
                         data-bs-toggle="modal" 
@@ -152,8 +153,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnFlag">Submit</button>
+                    <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnFlagSubmit">Submit</button>
                 </div>
             </div>
         </div>
@@ -227,10 +228,18 @@
 
         $('#btnFlag').click(function() {
             getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
-                $('#flagForm').submit()
-            });
+                $('#neuroGlancerFrame').detach();
+            });   
+        })
+        
+        $('#btnFlagSubmit').click(function() {
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', window.localStorage.getItem('ngState')).appendTo('#flagForm');
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
+            $('#flagForm').submit()
+        })
+
+        $('#btnFlagClose').click(function() {
+            window.location.reload()
         })
 
         $('#btnStop').click(function() {
