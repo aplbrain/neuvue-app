@@ -36,7 +36,10 @@
 }
 
 /* Media */ 
-
+ul li {
+  padding: 0vh 0.5vw;
+  left:0vw;
+}
 .basic {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
   background-size: 50%;
