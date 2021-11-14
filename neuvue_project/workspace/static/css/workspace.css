@@ -99,7 +99,7 @@ overflow-x: hidden;
   background-color: transparent;
   width: 75%;
   top:-1%;
-  height: 95% !important;
+  height: 100% !important;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -135,9 +135,9 @@ overflow-x: hidden;
   border-radius: 8px;
   border: 1px solid var(--background);
   margin-top: 1.5%;
-  margin-bottom: 1%;
+  margin-bottom: 0%;
   width: 95%;
-  height: 83vh;
+  height: 100%;
   order: 1;
 }
 
@@ -187,14 +187,12 @@ overflow-x: hidden;
 .bottomBar {
   flex-grow: 1;
   order: 2;
-  padding:1%;
   background-color: transparent;
   height: 5% !important;
   width: 95%;
-  margin-bottom: 1%;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   order: 2;
 }
 
@@ -211,7 +209,7 @@ overflow-x: hidden;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 1.3vh;
+  font-size: 1.7vh;
 }
 
 .mainButton:hover{
