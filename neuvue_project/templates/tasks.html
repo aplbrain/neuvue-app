@@ -83,9 +83,23 @@
             <div class="sideContentTitle">
                 Stats
             </div>
+            
+            {% for namespace, context in data.items %}
             <div class="sideContentInfo">
-                Coming soon!
+                <h3> {{context.display_name}} </h3>
+                <p>  You've completed <span class="code">{{context.stats.weekly_tasks}} tasks this week</span> and 
+                    <span class="code">{{context.stats.total_tasks}} tasks in total</span>. 
+                </p> </br>
+
+                <p> This week you have recorded <span class="code">{{context.stats.weekly_time}} hours of proofreading</span>. 
+                In total you have recorded <span class="code">{{context.stats.total_time}} hours of proofreading</span>.
+                </p> </br>
+
+                <p>  On average, you complete tasks at a rate of <span class="code">{{context.stats.weekly_rate}} minutes per task</span>. 
+                This week your average rate is <span class="code">{{context.stats.total_rate}} minutes per task</span>.
+                </p> </br>
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>
