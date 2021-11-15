@@ -134,6 +134,16 @@ function updateSideBar(action) {
 }
 
 
+/* Flag Modal */
+function toggleTextbox(){
+    var reason=document.getElementById("select-flag");
+    var textbox = document.getElementById("text")
+    if(reason.value == "other")
+        textbox.style.display = "block"
+    else
+        textbox.style.display = "none"
+}
+
 
 
 
