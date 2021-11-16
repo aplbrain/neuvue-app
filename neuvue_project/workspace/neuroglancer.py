@@ -13,6 +13,8 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
+from .models import Namespace
+
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -175,7 +177,7 @@ def construct_proofreading_url(task_df, points):
     # Create a list of dataframes used for state creation. Since first state is 
     # the base layer, the first element is None. 
     data_list = [None]
-    ng_type = settings.NAMESPACES[task_df['namespace']]['ng_link_type']
+    ng_type = Namespace.objects.get(namespace = task_df['namespace']).ng_link_type
     if ng_type == NeuroglancerLinkType.path:
 
         if points:
