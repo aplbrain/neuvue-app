@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'workspace'
 ]
 
 MIDDLEWARE = [
@@ -194,20 +195,6 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://3.92.233.204:9005/"
-NAMESPACES = {
-    "multiSomaSplit" : {
-        "display_name": "Multi-Soma Splitting",
-        "ng_link_type": "path"
-    },
-    "fullyProofread": {
-        "display_name": "Neuron Anatomy Labeling",
-        "ng_link_type": "point"
-    },
-    "patProofread": {
-        "display_name": "Expert Labeling",
-        "ng_link_type": "point"
-    },
-}
 
 # Data Sources
 IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
