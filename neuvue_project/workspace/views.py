@@ -10,7 +10,7 @@ import time
 import json
 
 from .neuroglancer import construct_proofreading_url, construct_url_from_existing
-from .analysis import user_stats
+from .analytics import user_stats
 
 
 # import the logging library
