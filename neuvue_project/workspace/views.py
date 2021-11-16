@@ -11,6 +11,8 @@ import time
 import json
 
 from .neuroglancer import construct_proofreading_url, construct_url_from_existing
+from .analytics import user_stats
+
 
 # import the logging library
 import logging
@@ -163,6 +165,7 @@ class TaskView(View):
             context[namespace]["total_closed"] = 0
             context[namespace]["start"] = i*2
             context[namespace]["end"] = (i+1)*2
+            context[namespace]["stats"] = {}
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
@@ -173,6 +176,7 @@ class TaskView(View):
             context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
+            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
         
         return render(request, "tasks.html", {'data':context})
 
