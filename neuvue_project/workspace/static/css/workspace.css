@@ -27,6 +27,7 @@
   --transparent-task: #0a192fce;
   --transparent-shadow:#00000033;
   --transparent-hover:#e6f1ff50;
+  --transparent-analytics:#e6f1ff21;
 
   /* FONTS */
   --header-font: "Lato", sans-serif;
@@ -565,7 +566,7 @@ a.active,a:hover{
   text-decoration: none;
   transition: 0s;
   background-color: var(--background);
-  position: sticky;
+  /*position: sticky;*/
   top: 0;
 
 }
