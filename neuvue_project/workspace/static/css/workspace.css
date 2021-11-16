@@ -556,6 +556,7 @@ a.active,a:hover{
   overflow: auto;
   overflow-x: hidden;
   transition: 0s;
+  padding-bottom: 1vh;
 
 }
 /* Title for sidecontent item */
