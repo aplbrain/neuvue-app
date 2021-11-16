@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Namespace
 
 from neuvueclient import NeuvueQueue
 import numpy as np
@@ -38,7 +39,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'is_open': False,
             'tasks_available': True,
             'instructions': '',
-            'display_name': settings.NAMESPACES[namespace]['display_name'],
+            'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'sidebar': sidebar_status,
             'num_visits': num_visits
         }
@@ -149,9 +150,13 @@ class TaskView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        context = settings.NAMESPACES
-    
-        for i, namespace in enumerate(context.keys()):
+        context = {}
+        
+        for i, n_s in enumerate(Namespace.objects.all()):
+            namespace = n_s.namespace
+            context[namespace] = {}
+            context[namespace]["display_name"] = n_s.display_name
+            context[namespace]["ng_link_type"] = n_s.ng_link_type
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
