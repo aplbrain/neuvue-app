@@ -175,14 +175,13 @@
 <script type="text/javascript"> 
 
     // Side Bar Interaction
-    // if ({{ request.session.num_visits }} === 0) {
-    //    openSideMenu();
-    // } else if ({{ request.session.sidebar }} === 0) {
-    //    closeSideMenu();
-    // } else {
-    //    openSideMenu();
-    //}
-    openSideMenu();
+    if ({{ request.session.num_visits }} === 0) {
+       openSideMenu();
+    } else if ({{ request.session.sidebar }} === 0) {
+       closeSideMenu();
+    } else {
+       openSideMenu();
+    }
 
     /* Function for getting the current Neuroglancer state */
     

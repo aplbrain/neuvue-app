@@ -83,13 +83,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-
-        # if request.body:
-        #     body_unicode = request.body.decode('utf-8')
-        #     body = json.loads(body_unicode)
-
-        #     if 'sidebar_tab' in body:
-        #         request.session['sidebar'] = body['sidebar_tab']
         
         namespace = kwargs.get('namespace')
 
@@ -140,6 +133,13 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 ng_state=ng_state)
             return redirect(reverse('tasks'))
+        
+        elif request.body:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(request.body)
+
+            if 'sidebar_tab' in body:
+               request.session['sidebar'] = body['sidebar_tab']
         
         return redirect(reverse('workspace', args=[namespace]))
 
