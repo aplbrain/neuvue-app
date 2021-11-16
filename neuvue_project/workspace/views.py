@@ -177,8 +177,6 @@ class TaskView(View):
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-            # logging.debug(f"User Stats: {context[namespace]['stats']}")
-            # logging.debug(f"Pending table: {context[namespace]['pending']}")
         
         return render(request, "tasks.html", {'data':context})
 
