@@ -30,13 +30,14 @@
                 </div>
                 <div class="sideContentInfo">
                     Namespace <br> 
-                    <span class ="code"> {{display_name}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
-                    <span class ="code"> {{task_id}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
                     Segmentation ID  <br>
-                    <span class ="code"> {{seg_id}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
-                    <span class ="code"> {{pcg_url}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    
                 </div>
             </div>
         </div>
