@@ -4,7 +4,11 @@
 {% block content %}
 <! Information Hidden Menu >
 
+{% if is_open %}
 <div class="basic workspace">
+{% else %}
+<div class="basic interTask">
+{% endif %}
     <div id="neuVue-sidemenu" class="sidemenu">
         <div id="neuVue-sidebar" class="sidebar">
             <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
