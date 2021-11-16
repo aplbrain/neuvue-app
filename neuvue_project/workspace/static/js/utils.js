@@ -144,6 +144,10 @@ function toggleTextbox(){
         textbox.style.display = "none"
 }
 
+function copyToClipboard(copyInfo) {
+   /* Copy the text inside the text field */
+  navigator.clipboard.writeText(copyInfo);
+}
 
 
 
