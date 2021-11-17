@@ -135,7 +135,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             return redirect(reverse('tasks'))
         
         elif request.body:
-            body_unicode = request.body.decode('utf-8')
             body = json.loads(request.body)
 
             if 'sidebar_tab' in body:
