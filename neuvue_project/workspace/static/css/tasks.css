@@ -3,10 +3,10 @@
     margin-top: 1%;
     margin-left: 2%;
     float: left;
-    width: 75%;
+    width: 72%;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 0% 2% 10% 1%;
+    padding: 0% 2% 2% 1%;
 
 }
 
@@ -19,7 +19,7 @@
     margin-top: 1%;
     margin-right: 3.5%;
     height: 85vh;
-    width: 18%;
+    width: 22%;
     
     overflow: auto;
     overflow-x: hidden;
@@ -122,11 +122,36 @@ tr:hover {
   background-color: var(--transparent-hover);
   border-radius: 0px;
 }
-
+/*
 tbody.pending >:nth-child(2) {
   color: var(--complete-color) !important;
 }
+*/
+.analyticsTable{
+  color:var(--primary-accent);
+  background-color: var(--header-background);
+  font-size: 1.2vh;
+  width:100%;
+  border: 1px solid var(--secondary-accent);
+  border-radius: 8px !important;
+  border-collapse: initial;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
 
+.analyticsTable th{
+  background-color: var(--header-background);
+
+}
+
+.analyticsTable td{
+  background-color: var(--header-background);
+  /*color:yellow;*/
+}
+
+.analyticsTable tr:hover {
+  background-color: var(--transparent-analytics);
+}
 
 /* Tab Container */
 .bin{
@@ -154,7 +179,7 @@ tbody.pending >:nth-child(2) {
   transition: 0.3s;
   font-size: 1.5vh;
   border-radius: 8px 8px 0px 0px;
-  width: 10%;
+  min-width: 10%;
   
 }
 
@@ -188,6 +213,11 @@ tbody.pending >:nth-child(2) {
   overflow-x: hidden;
   width: 100%;
   
+}
+
+.analyticsSubHeader {
+  font-size: 2vh;
+  color: var(--primary-accent);
 }
 
 /* Controls the style of the scrollbars */
