@@ -674,6 +674,20 @@ a.fill-div {
   background-color: var(--transparent-background) !important;
 }
 
+.sideContentBox.memo {
+  color: var(--primary-accent);
+  background-color: var(--transparent-hover) !important;
+  font-family: var(--code-font);
+  border: transparent !important;
+  flex-direction: column;
+  display:inline-block;
+
+}
+.sideContentInfo.memo{
+  font-family: var(--code-font);
+  font-size: 1.2vh;
+}
+
 .code{
   font-family: var(--code-font);
   color: var(--secondary-accent-activated);
