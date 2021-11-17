@@ -49,10 +49,12 @@ ul li {
 
 .basic.workspace {
   width: 100%;
+  
 }
 
 .basic.tasks {
   width: 100%;
+  overflow: scroll;
 }
 
 .intro {
