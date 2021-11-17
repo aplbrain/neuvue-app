@@ -135,10 +135,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             return redirect(reverse('tasks'))
         
         elif request.body:
-            body = json.loads(request.body)
-
-            if 'sidebar_tab' in body:
-               request.session['sidebar'] = body['sidebar_tab']
+            try:
+                body = json.loads(request.body)
+                if 'sidebar_tab' in body:
+                    request.session['sidebar'] = body['sidebar_tab']
+            except Exception as e:
+                logging.error(f"POST Error: {e}")
         
         return redirect(reverse('workspace', args=[namespace]))
 
