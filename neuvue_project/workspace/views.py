@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
+from datetime import datetime, timezone
+from pytz import timezone
+import pytz
 import numpy as np
 import pandas as pd
 import time
@@ -193,6 +196,14 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
+        def utc_to_eastern(time_value):
+                utc = pytz.UTC
+                eastern = timezone('US/Eastern')
+                date_time = time_value.to_pydatetime()
+                date_time = utc.localize(time_value)
+                date_time = date_time.astimezone(eastern)  
+                return date_time
+
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -205,6 +216,10 @@ class TaskView(View):
                 "status": 'open'
                 })
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
+            
+            tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+            
+
         elif table == 'closed':
             closed_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -217,6 +232,10 @@ class TaskView(View):
                 "status": 'errored'
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+            
+            tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
+            tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
+           
         tasks.drop(columns=[
                 'active',
                 'metadata',
@@ -228,7 +247,6 @@ class TaskView(View):
             ], inplace=True)
         
         tasks['task_id'] = tasks.index
-
         return tasks.to_dict('records')
 
 class IndexView(View):
