@@ -3,7 +3,7 @@
 :root {
   /* PRIMARY COLORS #000e22;*/
   --background: #120c1a;
-  --header-background: #312244;
+  --header-background: #3122449f;
   --navbar-text: #e6f1ff;
   --primary-accent: #e6f1ff;
   --primary-accent-activated: #8892b0;
@@ -27,6 +27,7 @@
   --transparent-task: #0a192fce;
   --transparent-shadow:#00000033;
   --transparent-hover:#e6f1ff50;
+  --transparent-analytics:#e6f1ff21;
 
   /* FONTS */
   --header-font: "Lato", sans-serif;
@@ -572,7 +573,7 @@ a.active,a:hover{
   text-decoration: none;
   transition: 0s;
   background-color: var(--background);
-  position: sticky;
+  /*position: sticky;*/
   top: 0;
 
 }

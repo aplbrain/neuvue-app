@@ -11,6 +11,8 @@ import time
 import json
 
 from .neuroglancer import construct_proofreading_url, construct_url_from_existing
+from .analytics import user_stats
+
 
 # import the logging library
 import logging
@@ -183,6 +185,7 @@ class TaskView(View):
                 context[namespace]["end"] = (non_empty_namespace+1)*2
                 non_empty_namespace += 1
 
+            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
         
         return render(request, "tasks.html", {'data':context})
 
