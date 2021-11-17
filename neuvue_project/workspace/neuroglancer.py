@@ -2,7 +2,7 @@ from django.conf import settings
 import pandas as pd 
 import numpy as np 
 from typing import List
-from enum import Enum, auto
+import json
 from nglui.statebuilder import (
     ImageLayerConfig, 
     SegmentationLayerConfig, 
@@ -13,25 +13,11 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
-from .models import Namespace
+from .models import Namespace, NeuroglancerLinkType
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-class NeuroglancerLinkType(str, Enum):
-    """Enum for neuroglancer link types. Currently supported:
-
-    path -> expects a list of coordinates (metadata) and two soma points (points). 
-    Draws a path between all coordinates.
-    
-    points -> expects a list of coordinates (metadata), description (metadata), and 
-    group (metadata). Needs atleast one seed point (points). Places dot points for 
-    all coordinates listed.
-    """
-    path = 'path'
-    point = 'point'
-
 
 def create_base_state(seg_ids, coordinate):
     """Generates a base state containing imagery and segemntation layers. 
@@ -178,7 +164,7 @@ def construct_proofreading_url(task_df, points):
     # the base layer, the first element is None. 
     data_list = [None]
     ng_type = Namespace.objects.get(namespace = task_df['namespace']).ng_link_type
-    if ng_type == NeuroglancerLinkType.path:
+    if ng_type == NeuroglancerLinkType.PATH:
 
         if points:
             # Append start and end soma coordinates
@@ -190,7 +176,7 @@ def construct_proofreading_url(task_df, points):
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
     
-    elif ng_type == NeuroglancerLinkType.point: 
+    elif ng_type == NeuroglancerLinkType.POINT: 
         # Get grouping and annotation descriptions, if they exist
         coordinates = np.array(coordinates)
         group = task_df['metadata'].get('group')
@@ -199,6 +185,9 @@ def construct_proofreading_url(task_df, points):
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
+    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_url'):
+        return construct_url_from_existing(json.dumps(task_df['ng_url']))
+    
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
         )

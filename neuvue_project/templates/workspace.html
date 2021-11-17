@@ -55,7 +55,7 @@
             <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
-                    
+                    <! Save/Reload >
                     {% if is_open %}
                     <button
                         id="btnSave" 
@@ -72,7 +72,9 @@
                     >
                         Reload Checkpoint
                     </button>
-            
+
+                    <! Submit >
+                    {% if submission_method == "submit" %}
                     <button 
                         name="btnSubmit"
                         id="btnSubmit" 
@@ -81,7 +83,33 @@
                     >
                         Submit Task
                     </button>
+                    {% elif submission_method == "forced_choice" %}
+                    <button 
+                        id="btnYes" 
+                        type="button" 
+                        class="mainButton submit" 
+                    >
+                        Yes
+                    </button>
 
+                    <button 
+                        id="btnNo" 
+                        type="button" 
+                        class="mainButton flag" 
+                    >
+                        No
+                    </button>
+
+                    <button 
+                        id="btnUnsure" 
+                        type="button" 
+                        class="mainButton pause" 
+                    >
+                        Unsure
+                    </button>
+                    {% endif %}
+
+                    <! Flag/Stop >
                     <button
                         id="btnFlag" 
                         type="button" 
@@ -98,8 +126,9 @@
                     >
                         Exit Task
                     </button>
-                    {% else %}
 
+                    {% else %}
+                    <! In-between Tasks >
                     <div class="interTaskBox">
                         {%if tasks_available %}
                         <button type="button" class="mainButton submit duo" id="btnStart">
@@ -182,6 +211,15 @@
     /* Function for getting the current Neuroglancer state */
     
     addStateEventListener('{{ng_url}}');
+    
+    function submitForm(value) {
+        getCurrentNeuroglancerState('{{ng_url}}', function (data){
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
+            $('#mainForm').submit()
+        });
+    }
+
 
     $(document).ready(function() {
         // HACK. Reset the window storage so it doesnt reload previous tasks
@@ -202,13 +240,25 @@
             } 
         })
 
-        $('#btnSubmit').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'submit').appendTo('#mainForm');
-                $('#mainForm').submit()
+        if ('{{submission_method}}' == "submit"){
+            $('#btnSubmit').click(function(){
+                submitForm('submit');
             });
-        })
+
+        } else if ('{{submission_method}}' == "forced_choice") {
+            $('#btnYes').click(function(){
+                submitForm('yes');
+            });
+
+            $('#btnNo').click(function(){
+                submitForm('no');
+            });
+
+            $('#btnUnsure').click(function(){
+                submitForm('unsure');
+            });
+        }
+
 
         $('#btnFlag').click(function() {
             getCurrentNeuroglancerState('{{ng_url}}', function (data){

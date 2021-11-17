@@ -42,6 +42,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'tasks_available': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
+            'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'sidebar': sidebar_status,
             'num_visits': num_visits
         }
@@ -111,6 +112,17 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state)
+        
+        elif button in ['yes', 'no', 'unsure']:
+            logger.debug('Submitting task')
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state,
+                metadata={
+                    'decision': button
+                })
 
         elif button == 'flag':
             logger.debug('Flagging task')
