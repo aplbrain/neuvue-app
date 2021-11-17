@@ -142,10 +142,10 @@ overflow-x: hidden;
   box-shadow: 0 4px 8px 0 var(--transparent-shadow);
   border-radius: 8px;
   border: 1px solid var(--background);
-  margin-top: 1.5%;
-  margin-bottom: 0%;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
   width: 95%;
-  height: 100%;
+  height: 85vh;
   order: 1;
 }
 
@@ -194,14 +194,13 @@ overflow-x: hidden;
 /* button container below NG */
 .bottomBar {
   background-color: transparent;
-  height: 5vh !important;
   max-height:5vh;
-  bottom:0pt;
+  bottom:1.5vh;
   width: 95%;
   display: flex;
   flex-direction: row;
-  margin-top: 1vh;
   order:2;
+  position: absolute;
   /*align-items: flex-end;*/
 }
 
@@ -211,9 +210,10 @@ overflow-x: hidden;
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  width: 100%;
-  padding: 0.25vh 0.25vh;
-  margin: 0vh 0.25vh;
+  width: 19%;
+  height: 3.5vh;
+  padding: 0.15vh 0.25vh;
+  margin: 0vh 0.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
