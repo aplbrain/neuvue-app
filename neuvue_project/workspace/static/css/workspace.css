@@ -200,7 +200,6 @@ overflow-x: hidden;
   display: flex;
   flex-direction: row;
   order:2;
-  position: absolute;
   /*align-items: flex-end;*/
 }
 
@@ -731,9 +730,7 @@ background: transparent;
   overflow: hidden;
   overflow-x: hidden;
   transition: 0s;
-
 }
-
 
 
 .clipboard {
