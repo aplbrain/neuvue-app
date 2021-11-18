@@ -211,7 +211,7 @@ overflow-x: hidden;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 1.7vh;
+  font-size: 1.5vh;
 }
 
 .mainButton:hover{
@@ -253,25 +253,34 @@ background-color: var(--next-accent);
 color: var(--primary-accent);
 }
 
+
 .mainButton.submit.duo{
   width: 40%;
   float: left;
   margin: 1vh 1vw;
 }
 
-.mainButton.submit.duo:hover{
-  
+
+.mainButton.flag.duo{
+  width: 40%;
+  float: right;
+  margin: 1vh 1vw;
 }
 
-  .mainButton.flag.duo{
-    width: 40%;
-    float: right;
-    margin: 1vh 1vw;
-  }
-  
-  .mainButton.flag.duo:hover{
-    
-  }
+.mainButton.submit.trio{
+  margin-left: 10vw;
+  width: 30%;
+}
+.mainButton.flag.trio{
+  width: 30%;
+}
+.mainButton.pause.trio{
+  margin-right: 10vw;
+  width: 30%;
+}
+
+
+
 
 .copyButton{
   background-color: var(--secondary-accent);
