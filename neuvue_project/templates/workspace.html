@@ -51,7 +51,49 @@
 
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
+        
         <div class="left">
+            <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
+                {% csrf_token %}
+
+                <! Submission Options>
+                {% if is_open %}
+                {% if submission_method == "forced_choice" %}
+                <button 
+                    id="btnYes" 
+                    type="button" 
+                    class="mainButton submit quad" 
+                    style="margin-left: 18%;"
+                >
+                    Yes
+                </button>
+
+                <button 
+                    id="btnYesBut" 
+                    type="button" 
+                    class="mainButton submit quad" 
+                >
+                    Yes, but Error with Split
+                </button>
+
+                <button 
+                    id="btnNo" 
+                    type="button" 
+                    class="mainButton flag quad" 
+                >
+                    No
+                </button>
+
+                <button 
+                    id="btnUnsure" 
+                    type="button" 
+                    class="mainButton pause quad" 
+                >
+                    Unsure
+                </button>
+                {% endif %}
+                {% endif %}
+            </form>
             {% if is_open %}
             <iframe src="{{ng_url}}"
                     class="neuroGlancer"
@@ -60,8 +102,10 @@
             {% endif %}
             
             <! Buttons >
+                
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
+
                     <! Save/Reload >
                     {% if is_open %}
                     <button
@@ -76,6 +120,9 @@
                         id="btnReload" 
                         type="button" 
                         class="mainButton"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-right: 15vw;"
+                    {% endif %}
                     >
                         Reload Checkpoint
                     </button>
@@ -90,30 +137,6 @@
                     >
                         Submit Task
                     </button>
-                    {% elif submission_method == "forced_choice" %}
-                    <button 
-                        id="btnYes" 
-                        type="button" 
-                        class="mainButton submit trio" 
-                    >
-                        Yes
-                    </button>
-
-                    <button 
-                        id="btnNo" 
-                        type="button" 
-                        class="mainButton flag trio" 
-                    >
-                        No
-                    </button>
-
-                    <button 
-                        id="btnUnsure" 
-                        type="button" 
-                        class="mainButton pause trio" 
-                    >
-                        Unsure
-                    </button>
                     {% endif %}
 
                     <! Flag/Stop >
@@ -121,6 +144,9 @@
                         id="btnFlag" 
                         type="button" 
                         class="mainButton flag"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#flagModal">
                         Flag Task
@@ -154,7 +180,6 @@
                         </button>
                         {% endif %}
                     </div>
-
                 </form>
         </div>
     </div>
@@ -254,6 +279,10 @@
 
         } else if ('{{submission_method}}' == "forced_choice") {
             $('#btnYes').click(function(){
+                submitForm('yes');
+            });
+
+            $('#btnYesBut').click(function(){
                 submitForm('yes');
             });
 

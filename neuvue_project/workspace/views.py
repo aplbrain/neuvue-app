@@ -201,7 +201,7 @@ class TaskView(View):
                 eastern = timezone('US/Eastern')
                 date_time = time_value.to_pydatetime()
                 date_time = utc.localize(time_value)
-                date_time = date_time.astimezone(eastern)  
+                date_time = date_time.astimezone(eastern)
                 return date_time
 
         if table == 'pending':
@@ -235,7 +235,7 @@ class TaskView(View):
             
             tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
             tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
-           
+
         tasks.drop(columns=[
                 'active',
                 'metadata',

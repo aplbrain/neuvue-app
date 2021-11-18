@@ -267,16 +267,17 @@ color: var(--primary-accent);
   margin: 1vh 1vw;
 }
 
-.mainButton.submit.trio{
-  margin-left: 10vw;
-  width: 30%;
+.mainButton.submit.quad{
+  min-width: 12%;
+  max-width: 15%;
 }
-.mainButton.flag.trio{
-  width: 30%;
+.mainButton.flag.quad{
+  min-width: 12%;
+  max-width: 15%;
 }
-.mainButton.pause.trio{
-  margin-right: 10vw;
-  width: 30%;
+.mainButton.pause.quad{
+  min-width: 12%;
+  max-width: 15%;
 }
 
 
