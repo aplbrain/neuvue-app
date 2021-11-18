@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+from glob import glob
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'workspace'
+    'workspace',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -208,3 +209,21 @@ CONTRAST = {
     "white": 0.7
 }
 VOXEL_RESOLUTION = (4, 4, 40)
+
+# Neuroglancer Webpack Settings
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'LOADER_CLASS': 'neuvue.webpack.MultipleWebpackLoader',
+    'BUNDLE_DIR_NAME':  'workspace',
+    'CACHE': not DEBUG,
+    'STATS_FILES': glob(os.path.join(BASE_DIR, 'workspace/static','ts','wrapper', 'webpack-stats-*.json')),
+    'POLL_INTERVAL': 0.1,
+    'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+  }
+}
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js",True)
+
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace/static'))

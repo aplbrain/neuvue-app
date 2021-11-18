@@ -55,6 +55,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             # TODO: Redirect to task page for now, something went wrong...
             return redirect(reverse('tasks'))
 
+        # Redirect NG static files 
+        application_filename = request.path.split('/')[-1]
+        logging.debug(application_filename)
+        if application_filename in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/ts/wrapper/dist/{application_filename}', content_type='application/javascript')
+    
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), namespace)
@@ -79,11 +85,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state = None 
     
             if ng_state:
-                context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
+                context['ng_url'] = ng_state
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-                context['ng_url'] = construct_proofreading_url(task_df, points)
+                context['ng_url'] = construct_proofreading_url(task_df, points, return_as='json')
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):

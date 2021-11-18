@@ -1,0 +1,35 @@
+{
+  "status": "done",
+  "assets": {
+    "neuroglancer_draco.wasm": {
+      "name": "neuroglancer_draco.wasm",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/neuroglancer_draco.wasm"
+    },
+    "draco_decoder.wasm": {
+      "name": "draco_decoder.wasm",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/draco_decoder.wasm"
+    },
+    "chunk_worker.bundle.js": {
+      "name": "chunk_worker.bundle.js",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/chunk_worker.bundle.js"
+    },
+    "draco.bundle.js": {
+      "name": "draco.bundle.js",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/draco.bundle.js"
+    },
+    "chunk_worker.bundle.js.map": {
+      "name": "chunk_worker.bundle.js.map",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/chunk_worker.bundle.js.map"
+    },
+    "draco.bundle.js.map": {
+      "name": "draco.bundle.js.map",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/draco.bundle.js.map"
+    }
+  },
+  "chunks": {
+    "chunk_worker": [
+      "chunk_worker.bundle.js",
+      "chunk_worker.bundle.js.map"
+    ]
+  }
+}

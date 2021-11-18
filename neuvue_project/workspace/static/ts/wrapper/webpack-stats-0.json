@@ -1,0 +1,39 @@
+{
+  "status": "done",
+  "assets": {
+    "main.bundle.js": {
+      "name": "main.bundle.js",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/main.bundle.js"
+    },
+    "tfjs-library.bundle.js": {
+      "name": "tfjs-library.bundle.js",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/tfjs-library.bundle.js"
+    },
+    "main.bundle.js.map": {
+      "name": "main.bundle.js.map",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/main.bundle.js.map"
+    },
+    "tfjs-library.bundle.js.map": {
+      "name": "tfjs-library.bundle.js.map",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/tfjs-library.bundle.js.map"
+    },
+    "index.html": {
+      "name": "index.html",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/index.html"
+    },
+    "bossauth.html": {
+      "name": "bossauth.html",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/bossauth.html"
+    },
+    "auth_redirect.html": {
+      "name": "auth_redirect.html",
+      "path": "/Users/xenesd1/Projects/microns/proofreading/neuvue/neuvue_project/workspace/static/ts/wrapper/dist/workspace/auth_redirect.html"
+    }
+  },
+  "chunks": {
+    "main": [
+      "main.bundle.js",
+      "main.bundle.js.map"
+    ]
+  }
+}

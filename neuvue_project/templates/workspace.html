@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+{% load render_bundle from webpack_loader %}
+{% render_bundle 'main' %}
 <! Information Hidden Menu >
 
 {% if is_open %}
@@ -100,10 +102,7 @@
                 </form>
                 {% endif %}
 
-            <iframe src="{{ng_url}}"
-                    class="neuroGlancer"
-                    id="neuroGlancerFrame">
-            </iframe>
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
             {% endif %}
             
             <! Buttons >
@@ -258,6 +257,11 @@
 
 
     $(document).ready(function() {
+
+        var received_data = {{ ng_url|safe }};
+        console.log(received_data);
+        viewer.state.restoreState(received_data);
+
         // HACK. Reset the window storage so it doesnt reload previous tasks
         window.localStorage.removeItem('ngState');
 
