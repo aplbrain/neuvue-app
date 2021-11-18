@@ -53,48 +53,48 @@
     <div id="neuroglancer" class="leftFormatting">
         
         <div class="left">
-            <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
-                {% csrf_token %}
-
-                <! Submission Options>
-                {% if is_open %}
-                {% if submission_method == "forced_choice" %}
-                <button 
-                    id="btnYes" 
-                    type="button" 
-                    class="mainButton submit quad" 
-                    style="margin-left: 18%;"
-                >
-                    Yes
-                </button>
-
-                <button 
-                    id="btnYesBut" 
-                    type="button" 
-                    class="mainButton yesBut" 
-                >
-                    Yes, but Error with Split
-                </button>
-
-                <button 
-                    id="btnNo" 
-                    type="button" 
-                    class="mainButton flag quad" 
-                >
-                    No
-                </button>
-
-                <button 
-                    id="btnUnsure" 
-                    type="button" 
-                    class="mainButton pause quad" 
-                >
-                    Unsure
-                </button>
-                {% endif %}
-                {% endif %}
-            </form>
             {% if is_open %}
+                {% if submission_method == "forced_choice" %}
+                <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
+                    {% csrf_token %}
+
+                    <! Submission Options>
+                    <button 
+                        id="btnYes" 
+                        type="button" 
+                        class="mainButton submit quad" 
+                        style="margin-left: 18%;"
+                    >
+                        Yes
+                    </button>
+
+                    <button 
+                        id="btnYesBut" 
+                        type="button" 
+                        class="mainButton yesBut" 
+                    >
+                        Yes, requires split refinement
+                    </button>
+
+                    <button 
+                        id="btnNo" 
+                        type="button" 
+                        class="mainButton flag quad" 
+                    >
+                        No
+                    </button>
+
+                    <button 
+                        id="btnUnsure" 
+                        type="button" 
+                        class="mainButton pause quad" 
+                    >
+                        Unsure
+                    </button>
+                    
+                </form>
+                {% endif %}
+
             <iframe src="{{ng_url}}"
                     class="neuroGlancer"
                     id="neuroGlancerFrame">
@@ -283,7 +283,7 @@
             });
 
             $('#btnYesBut').click(function(){
-                submitForm('yes');
+                submitForm('yesConditional');
             });
 
             $('#btnNo').click(function(){
