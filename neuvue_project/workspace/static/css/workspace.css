@@ -20,6 +20,8 @@
   --complete-color:#96a5d4;
   --complete-color-actived:#738fe6;
   --progress: #96a5d4;
+  --yesBut: #da7f4b;
+  --yesBut-activated: #db763b;
 
   /* TRANSPARENT COLORS */
   --transparent-background: #120e1479;
@@ -211,7 +213,7 @@ overflow-x: hidden;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 1.7vh;
+  font-size: 1.5vh;
 }
 
 .mainButton:hover{
@@ -253,25 +255,44 @@ background-color: var(--next-accent);
 color: var(--primary-accent);
 }
 
+
 .mainButton.submit.duo{
   width: 40%;
   float: left;
   margin: 1vh 1vw;
 }
 
-.mainButton.submit.duo:hover{
-  
+
+.mainButton.flag.duo{
+  width: 40%;
+  float: right;
+  margin: 1vh 1vw;
 }
 
-  .mainButton.flag.duo{
-    width: 40%;
-    float: right;
-    margin: 1vh 1vw;
-  }
-  
-  .mainButton.flag.duo:hover{
-    
-  }
+.mainButton.submit.quad{
+  min-width: 12%;
+  max-width: 15%;
+}
+.mainButton.yesBut{
+  min-width: 12%;
+  max-width: 15%;
+  background-color: var(--yesBut);  
+}
+.mainButton.yesBut:hover{
+  background-color: var(--yesBut-activated);  
+}
+
+.mainButton.flag.quad{
+  min-width: 12%;
+  max-width: 15%;
+}
+.mainButton.pause.quad{
+  min-width: 12%;
+  max-width: 15%;
+}
+
+
+
 
 .copyButton{
   background-color: var(--secondary-accent);
