@@ -11,70 +11,72 @@
     <div class="neuvueRow">
         <div class="jobQueue" >
             {% for namespace, context in data.items %}
-            <div class="neuvueRow">
-                <div class="launch_NG" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
-                    <div class ="launch_NG_text">
-                        Start Proofreading
+                {% if context.total_tasks %}
+                    <div class="neuvueRow">
+                        <div class="launch_NG" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
+                            <div class ="launch_NG_text">
+                                Start Proofreading
+                            </div>
+                        </div>
+                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}}</div>
                     </div>
-                </div>
-                <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}}</div>
-            </div>
-            <div id="{{namespace}}Table" class ="bin" style="display:block;">
-                <div class="tab">
-                    <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}', {{context.start}}, {{context.end}},'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
-                    <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}', {{context.start}}, {{context.end}},'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
-                </div>
-                <div id="pending{{namespace}}" class="tabcontent">
-                    <div>
-                        <table>
-                            <tr>
-                                <th>Task ID</th>
-                                <th>Seg ID</th>
-                                <th>Created</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                {% comment %} <th>Flag Reason</th>
-                                <th>Notes</th> {% endcomment %}
-                            </tr>
-                            {% for row in  context.pending %}
-                            <tr>
-                                <td> {{ row.task_id }} </td>
-                                <td> {{ row.seg_id }} </td>
-                                <td> {{ row.created }} </td>
-                                <td> {{ row.priority }} </td>
-                                <td> {{ row.status }} </td>
-                            </tr>
-                            {% endfor %}
+                    <div id="{{namespace}}Table" class ="bin" style="display:block;">
+                        <div class="tab">
+                            <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}', {{context.start}}, {{context.end}},'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
+                            <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}', {{context.start}}, {{context.end}},'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
+                        </div>
+                        <div id="pending{{namespace}}" class="tabcontent">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th>Task ID</th>
+                                        <th>Seg ID</th>
+                                        <th>Created</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        {% comment %} <th>Flag Reason</th>
+                                        <th>Notes</th> {% endcomment %}
+                                    </tr>
+                                    {% for row in  context.pending %}
+                                    <tr>
+                                        <td> {{ row.task_id }} </td>
+                                        <td> {{ row.seg_id }} </td>
+                                        <td> {{ row.created }} </td>
+                                        <td> {{ row.priority }} </td>
+                                        <td> {{ row.status }} </td>
+                                    </tr>
+                                    {% endfor %}
 
-                        </table>
-                    </div>
-                </div>
-                <div id="closed{{namespace}}" class="tabcontent">
-                    <div>
-                        <table>
-                            <tr>
-                                <th>Task ID</th>
-                                <th>Seg ID</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Status</th>
-                                {% comment %} <th>Flag Reason</th>
-                                <th>Notes</th> {% endcomment %}
-                            </tr>
-                            {% for row in  context.closed %}
-                            <tr>
-                                <td> {{ row.task_id }} </td>
-                                <td> {{ row.seg_id }} </td>
-                                <td> {{ row.opened }} </td>
-                                <td> {{ row.closed }} </td>
-                                <td> {{ row.status }} </td>
-                            </tr>
-                            {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                        <div id="closed{{namespace}}" class="tabcontent">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th>Task ID</th>
+                                        <th>Seg ID</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Status</th>
+                                        {% comment %} <th>Flag Reason</th>
+                                        <th>Notes</th> {% endcomment %}
+                                    </tr>
+                                    {% for row in  context.closed %}
+                                    <tr>
+                                        <td> {{ row.task_id }} </td>
+                                        <td> {{ row.seg_id }} </td>
+                                        <td> {{ row.opened }} </td>
+                                        <td> {{ row.closed }} </td>
+                                        <td> {{ row.status }} </td>
+                                    </tr>
+                                    {% endfor %}
 
-                        </table>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -125,11 +127,17 @@
     start();
     function start() {
         {% for namespace, context in data.items %}
-        tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
-        tableHide("{{namespace}}Header","{{namespace}}Table");
+            if ({{context.total_tasks}}) {
+                tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
+                tableHide("{{namespace}}Header","{{namespace}}Table");
+                {% if not context.total_pending %}
+                    document.getElementById("{{namespace}}Header").click();
+                {% endif %}   
+            }
         {% endfor %}
     };
     
+                
     
     function tabToggle(evt, timeframe,start,end,buttonid) {
         
@@ -175,4 +183,3 @@
 
 </script>
 {% endblock %}
-

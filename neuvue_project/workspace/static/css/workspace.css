@@ -56,6 +56,14 @@ ul li {
   width: 100%;
 }
 
+.basic.interTask {
+  background-image: url('/static/images/xrayneuron02-min.png');
+  background-size: 120vw;
+  background-repeat: no-repeat;
+  height: 95vh;
+  width: 100vw;
+}
+
 .intro {
   background-image: url('/static/images/xrayneuron01-min.png'); 
   background-size: cover;
@@ -135,10 +143,10 @@ overflow-x: hidden;
   box-shadow: 0 4px 8px 0 var(--transparent-shadow);
   border-radius: 8px;
   border: 1px solid var(--background);
-  margin-top: 1.5%;
-  margin-bottom: 0%;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
   width: 95%;
-  height: 100%;
+  height: 85vh;
   order: 1;
 }
 
@@ -186,15 +194,14 @@ overflow-x: hidden;
 
 /* button container below NG */
 .bottomBar {
-  flex-grow: 1;
-  order: 2;
   background-color: transparent;
-  height: 5% !important;
+  max-height:5vh;
+  bottom:1.5vh;
   width: 95%;
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-  order: 2;
+  order:2;
+  /*align-items: flex-end;*/
 }
 
 /* buttons used in bottom container */
@@ -203,9 +210,10 @@ overflow-x: hidden;
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  width: 100%;
-  padding: 0.25vh 0.25vh;
-  margin: 0vh 0.25vh;
+  width: 19%;
+  height: 3.5vh;
+  padding: 0.15vh 0.25vh;
+  margin: 0vh 0.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -253,9 +261,8 @@ color: var(--primary-accent);
 }
 
 .mainButton.submit.duo{
-  width: 40%;
-  float: left;
-  margin: 1vh 1vw;
+  width: 90%;
+  margin: 1vh 1vw 1vh 1vw;
 }
 
 .mainButton.submit.duo:hover{
@@ -263,9 +270,8 @@ color: var(--primary-accent);
 }
 
   .mainButton.flag.duo{
-    width: 40%;
-    float: right;
-    margin: 1vh 1vw;
+    width: 90%;
+    margin: 0vh 1vw 1vh 1vw;
   }
   
   .mainButton.flag.duo:hover{
@@ -550,6 +556,7 @@ a.active,a:hover{
   overflow: auto;
   overflow-x: hidden;
   transition: 0s;
+  padding-bottom: 1vh;
 
 }
 /* Title for sidecontent item */
@@ -715,16 +722,29 @@ background: transparent;
 .interTaskBox {
   border-radius: 8px;
   border: 1.5px solid var(--secondary-accent) !important;
-  background-color: transparent;
-  margin-left: 35%;
-  width: 30vw;
-  margin-top: 42vh;
-  display: flex;
+  background-color: var(--transparent-background);
+  margin-top: 40vh;
+  min-width: 12vw;
+  height: 10vh;
   flex-direction: row;
   display:inline-block;
-  margin-bottom: 2%;
-  overflow: auto;
+  overflow: hidden;
   overflow-x: hidden;
   transition: 0s;
-
 }
+
+
+.clipboard {
+  color: var(--primary-accent);
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  float: right;
+  right:0;
+  top:0;
+  width: 15%;
+}
+.clipboard:hover {
+  color: var(--secondary-accent-activated);
+}
+

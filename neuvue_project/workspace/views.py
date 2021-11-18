@@ -85,13 +85,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-
-        # if request.body:
-        #     body_unicode = request.body.decode('utf-8')
-        #     body = json.loads(body_unicode)
-
-        #     if 'sidebar_tab' in body:
-        #         request.session['sidebar'] = body['sidebar_tab']
         
         namespace = kwargs.get('namespace')
 
@@ -143,6 +136,14 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state)
             return redirect(reverse('tasks'))
         
+        elif request.body:
+            try:
+                body = json.loads(request.body)
+                if 'sidebar_tab' in body:
+                    request.session['sidebar'] = body['sidebar_tab']
+            except Exception as e:
+                logging.error(f"POST Error: {e}")
+        
         return redirect(reverse('workspace', args=[namespace]))
 
 
@@ -153,7 +154,7 @@ class TaskView(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        
+
         for i, n_s in enumerate(Namespace.objects.all()):
             namespace = n_s.namespace
             context[namespace] = {}
@@ -163,19 +164,27 @@ class TaskView(View):
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
             context[namespace]["total_closed"] = 0
-            context[namespace]["start"] = i*2
-            context[namespace]["end"] = (i+1)*2
-            context[namespace]["stats"] = {}
+            context[namespace]["total_tasks"] = 0
+            context[namespace]["start"] = ""
+            context[namespace]["end"] = ""
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
             return render(request, "workspace.html", context)
+
+        non_empty_namespace = 0
 
         for namespace in context.keys():
             context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
             context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
+            context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
+            if (context[namespace]["total_tasks"]):
+                context[namespace]["start"] = non_empty_namespace*2
+                context[namespace]["end"] = (non_empty_namespace+1)*2
+                non_empty_namespace += 1
+
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
         
         return render(request, "tasks.html", {'data':context})

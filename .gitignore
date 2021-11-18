@@ -134,4 +134,4 @@ neuvue_project/.elasticbeanstalk/*
 !neuvue_project/.elasticbeanstalk/*.cfg.yml
 !neuvue_project/.elasticbeanstalk/*.global.yml
 
-static/
+/static/
