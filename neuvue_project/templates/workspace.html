@@ -4,7 +4,11 @@
 {% block content %}
 <! Information Hidden Menu >
 
+{% if is_open %}
 <div class="basic workspace">
+{% else %}
+<div class="basic interTask">
+{% endif %}
     <div id="neuVue-sidemenu" class="sidemenu">
         <div id="neuVue-sidebar" class="sidebar">
             <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
@@ -30,13 +34,14 @@
                 </div>
                 <div class="sideContentInfo">
                     Namespace <br> 
-                    <span class ="code"> {{display_name}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
-                    <span class ="code"> {{task_id}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
                     Segmentation ID  <br>
-                    <span class ="code"> {{seg_id}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
-                    <span class ="code"> {{pcg_url}} </span> <br>
+                    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    
                 </div>
             </div>
             <div class="sideContentBox memo">
@@ -193,7 +198,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Flagging Task #{{task_id}}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="" method="post" role="form">
@@ -231,14 +236,13 @@
 <script type="text/javascript"> 
 
     // Side Bar Interaction
-    // if ({{ request.session.num_visits }} === 0) {
-    //    openSideMenu();
-    // } else if ({{ request.session.sidebar }} === 0) {
-    //    closeSideMenu();
-    // } else {
-    //    openSideMenu();
-    //}
-    openSideMenu();
+    if ({{ request.session.num_visits }} === 0) {
+       openSideMenu();
+    } else if ({{ request.session.sidebar }} === 0) {
+       closeSideMenu();
+    } else {
+       openSideMenu();
+    }
 
     /* Function for getting the current Neuroglancer state */
     

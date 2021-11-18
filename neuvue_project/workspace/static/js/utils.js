@@ -34,10 +34,10 @@ function sidemenu_content() {
 
     if (neuroglancer_window.style.width != "75%" ) {
       openSideMenu();
-      // updateSideBar(1);
+      updateSideBar(1);
     } else {
       closeSideMenu();
-      // updateSideBar(0);
+      updateSideBar(0);
     }
 
 } 
@@ -144,6 +144,10 @@ function toggleTextbox(){
         textbox.style.display = "none"
 }
 
+function copyToClipboard(copyInfo) {
+   /* Copy the text inside the text field */
+  navigator.clipboard.writeText(copyInfo);
+}
 
 
 
