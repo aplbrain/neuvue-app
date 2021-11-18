@@ -113,10 +113,11 @@ def create_path_state():
     Returns:
         StateBuilder: Annotation State
     """
-    anno = AnnotationLayerConfig("selected_paths",
+    path = AnnotationLayerConfig("selected_paths", active=False,
         mapping_rules=LineMapper("point_column_a", "point_column_b", group_column="group"),
     )
-    return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
+    anno = AnnotationLayerConfig("merge_point")
+    return StateBuilder(layers=[path, anno], resolution=settings.VOXEL_RESOLUTION)
 
 
 def create_point_state(use_description=False):
