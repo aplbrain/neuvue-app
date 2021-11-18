@@ -20,6 +20,8 @@
   --complete-color:#96a5d4;
   --complete-color-actived:#738fe6;
   --progress: #96a5d4;
+  --yesBut: #da7f4b;
+  --yesBut-activated: #db763b;
 
   /* TRANSPARENT COLORS */
   --transparent-background: #120e1479;
@@ -271,6 +273,15 @@ color: var(--primary-accent);
   min-width: 12%;
   max-width: 15%;
 }
+.mainButton.yesBut{
+  min-width: 12%;
+  max-width: 15%;
+  background-color: var(--yesBut);  
+}
+.mainButton.yesBut:hover{
+  background-color: var(--yesBut-activated);  
+}
+
 .mainButton.flag.quad{
   min-width: 12%;
   max-width: 15%;
