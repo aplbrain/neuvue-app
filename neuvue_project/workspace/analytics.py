@@ -1,4 +1,6 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
+from pytz import timezone
+import pytz
 import numpy as np
 
 # import the logging library
@@ -16,9 +18,13 @@ def is_lastweek(timestamp):
     Returns:
         bool: True if in last week
     """
+    eastern = timezone('US/Eastern')
+    
     dt = timestamp.to_pydatetime()
-    weekago = datetime.now() - timedelta(days=7)
-    return weekago <= dt <= datetime.now()
+    now = eastern.localize(datetime.now())
+    weekago = now - timedelta(days=7)
+    
+    return weekago <= dt <= now
     
 def get_sum_time(table):
     seconds =  np.array([x['duration'] for x in table]).sum()

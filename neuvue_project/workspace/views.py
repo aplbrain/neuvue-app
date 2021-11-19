@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
+from datetime import datetime, timezone
+from pytz import timezone
+import pytz
 import numpy as np
 import pandas as pd
 import time
@@ -42,6 +45,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'tasks_available': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
+            'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'sidebar': sidebar_status,
             'num_visits': num_visits
         }
@@ -66,11 +70,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
-
-
-            # Manually get the points for now, populate in client later.
-            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-            
+ 
             # Construct NG URL from points or existing state
             try:
                 ng_state = json.loads(task_df.get('ng_state'))['value']
@@ -81,6 +81,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             if ng_state:
                 context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
             else:
+                # Manually get the points for now, populate in client later.
+                points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
                 context['ng_url'] = construct_proofreading_url(task_df, points)
         return render(request, "workspace.html", context)
 
@@ -104,6 +106,17 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state)
+        
+        elif button in ['yes', 'no', 'unsure', 'yesConditional']:
+            logger.debug('Submitting task')
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state,
+                metadata={
+                    'decision': button
+                })
 
         elif button == 'flag':
             logger.debug('Flagging task')
@@ -190,6 +203,14 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
+        def utc_to_eastern(time_value):
+                utc = pytz.UTC
+                eastern = timezone('US/Eastern')
+                date_time = time_value.to_pydatetime()
+                date_time = utc.localize(time_value)
+                date_time = date_time.astimezone(eastern)
+                return date_time
+
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -202,6 +223,10 @@ class TaskView(View):
                 "status": 'open'
                 })
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
+            
+            tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+            
+
         elif table == 'closed':
             closed_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -214,6 +239,10 @@ class TaskView(View):
                 "status": 'errored'
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+            
+            tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
+            tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
+
         tasks.drop(columns=[
                 'active',
                 'metadata',
@@ -225,7 +254,6 @@ class TaskView(View):
             ], inplace=True)
         
         tasks['task_id'] = tasks.index
-
         return tasks.to_dict('records')
 
 class IndexView(View):

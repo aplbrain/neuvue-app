@@ -87,33 +87,35 @@
             </div>
             
             {% for namespace, context in data.items %}
-            <div class="sideContentInfo">
-                <span class = "analyticsSubHeader"> {{context.display_name}} </span>
-                    <table class="analyticsTable">
-                    <thead>
-                        <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Tasks Closed</th>
-                        <th scope="col">Hours Logged</th>
-                        <th scope="col">Average Rate (minutes)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Last Week</th>
-                            <td>{{context.stats.weekly_tasks}}</td>
-                            <td>{{context.stats.weekly_time}}</td>
-                            <td>{{context.stats.weekly_rate}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Total</th>
-                            <td>{{context.stats.total_tasks}}</td>
-                            <td>{{context.stats.total_time}}</td>
-                            <td>{{context.stats.total_rate}}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-            </div>
+                {% if context.total_tasks %}
+                    <div class="sideContentInfo">
+                        <span class = "analyticsSubHeader"> {{context.display_name}} </span>
+                            <table class="analyticsTable">
+                            <thead>
+                                <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Tasks Closed</th>
+                                <th scope="col">Task Time</th>
+                                <th scope="col">Rate (minutes)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Last Week</th>
+                                    <td>{{context.stats.weekly_tasks}}</td>
+                                    <td>{{context.stats.weekly_time}}</td>
+                                    <td>{{context.stats.weekly_rate}}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Total</th>
+                                    <td>{{context.stats.total_tasks}}</td>
+                                    <td>{{context.stats.total_time}}</td>
+                                    <td>{{context.stats.total_rate}}</td>
+                                </tr>
+                            </tbody>
+                            </table>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

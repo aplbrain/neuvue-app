@@ -44,13 +44,62 @@
                     
                 </div>
             </div>
+            <div class="sideContentBox memo">
+                <div class="sideContentInfo memo">
+                    Pro Tip: Use Chrome and turn off toolbar in full screen! <br>
+                    Apple: CMD+SHIFT+F <br>
+                    PC: F11
+                </div>
+            </div>
         </div>
     </div> 
 
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
+        
         <div class="left">
             {% if is_open %}
+                {% if submission_method == "forced_choice" %}
+                <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
+                    {% csrf_token %}
+
+                    <! Submission Options>
+                    <button 
+                        id="btnYes" 
+                        type="button" 
+                        class="mainButton submit quad" 
+                        style="margin-left: 18%;"
+                    >
+                        Yes
+                    </button>
+
+                    <button 
+                        id="btnYesBut" 
+                        type="button" 
+                        class="mainButton yesBut" 
+                    >
+                        Yes, but requires refinement
+                    </button>
+
+                    <button 
+                        id="btnNo" 
+                        type="button" 
+                        class="mainButton flag quad" 
+                    >
+                        No
+                    </button>
+
+                    <button 
+                        id="btnUnsure" 
+                        type="button" 
+                        class="mainButton pause quad" 
+                    >
+                        Unsure
+                    </button>
+                    
+                </form>
+                {% endif %}
+
             <iframe src="{{ng_url}}"
                     class="neuroGlancer"
                     id="neuroGlancerFrame">
@@ -58,9 +107,11 @@
             {% endif %}
             
             <! Buttons >
+                
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
-                    
+
+                    <! Save/Reload >
                     {% if is_open %}
                     <button
                         id="btnSave" 
@@ -74,10 +125,15 @@
                         id="btnReload" 
                         type="button" 
                         class="mainButton"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-right: 15vw;"
+                    {% endif %}
                     >
                         Reload Checkpoint
                     </button>
-            
+
+                    <! Submit >
+                    {% if submission_method == "submit" %}
                     <button 
                         name="btnSubmit"
                         id="btnSubmit" 
@@ -86,11 +142,16 @@
                     >
                         Submit Task
                     </button>
+                    {% endif %}
 
+                    <! Flag/Stop >
                     <button
                         id="btnFlag" 
                         type="button" 
                         class="mainButton flag"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#flagModal">
                         Flag Task
@@ -103,8 +164,9 @@
                     >
                         Exit Task
                     </button>
-                    {% else %}
 
+                    {% else %}
+                    <! In-between Tasks >
                     <div class="interTaskBox">
                         {%if tasks_available %}
                         <button type="button" class="mainButton submit duo" id="btnStart">
@@ -123,7 +185,6 @@
                         </button>
                         {% endif %}
                     </div>
-
                 </form>
         </div>
     </div>
@@ -186,6 +247,15 @@
     /* Function for getting the current Neuroglancer state */
     
     addStateEventListener('{{ng_url}}');
+    
+    function submitForm(value) {
+        getCurrentNeuroglancerState('{{ng_url}}', function (data){
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
+            $('#mainForm').submit()
+        });
+    }
+
 
     $(document).ready(function() {
         // HACK. Reset the window storage so it doesnt reload previous tasks
@@ -206,13 +276,29 @@
             } 
         })
 
-        $('#btnSubmit').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'submit').appendTo('#mainForm');
-                $('#mainForm').submit()
+        if ('{{submission_method}}' == "submit"){
+            $('#btnSubmit').click(function(){
+                submitForm('submit');
             });
-        })
+
+        } else if ('{{submission_method}}' == "forced_choice") {
+            $('#btnYes').click(function(){
+                submitForm('yes');
+            });
+
+            $('#btnYesBut').click(function(){
+                submitForm('yesConditional');
+            });
+
+            $('#btnNo').click(function(){
+                submitForm('no');
+            });
+
+            $('#btnUnsure').click(function(){
+                submitForm('unsure');
+            });
+        }
+
 
         $('#btnFlag').click(function() {
             getCurrentNeuroglancerState('{{ng_url}}', function (data){

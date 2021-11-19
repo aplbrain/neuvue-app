@@ -134,4 +134,7 @@ neuvue_project/.elasticbeanstalk/*
 !neuvue_project/.elasticbeanstalk/*.cfg.yml
 !neuvue_project/.elasticbeanstalk/*.global.yml
 
+# Static files
 /static/
+/neuvue_project/workspace/static/ts/wrapper/third_party
+/neuvue_project/workspace/static/ts/wrapper/node_modules
