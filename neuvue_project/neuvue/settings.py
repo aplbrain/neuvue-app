@@ -37,7 +37,7 @@ if DEBUG is False:
     # Fix Health Check issues 
     import requests
     try:
-        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4').text
+        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=3).text
     except requests.exceptions.ConnectionError:
         pass
     else:
