@@ -153,6 +153,16 @@ overflow-x: hidden;
   height: 85vh;
   order: 1;
 }
+.neuroglancer-container {
+  box-shadow: 0 4px 8px 0 var(--transparent-shadow);
+  border-radius: 8px;
+  border: 1px solid var(--background);
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  width: 95%;
+  height: 85vh;
+  order: 1;
+}
 
 /* formats the Task ID, Segmentation ID, and Pychunked graph container */
 .topBar {

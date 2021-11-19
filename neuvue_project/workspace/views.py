@@ -30,6 +30,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
+        # TODO:
+        # This redirects NG static files.  Currently, NG redirects directly to root in their js
+        # e.g tries to load /workspace/chunk_worker.bundle.js
+        # This hacky solution works.
+        if namespace in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
         num_visits = request.session.get('num_visits', 0)
         sidebar_status = request.session.get('sidebar', 1)
         
@@ -37,7 +43,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         request.session['sidebar'] = sidebar_status
 
         context = {
-            'ng_url': settings.NG_CLIENT,
+            'ng_url': {},
             'pcg_url': settings.PROD_PCG_SOURCE,
             'task_id': '',
             'seg_id': '',
@@ -55,11 +61,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             # TODO: Redirect to task page for now, something went wrong...
             return redirect(reverse('tasks'))
 
-        # Redirect NG static files 
-        application_filename = request.path.split('/')[-1]
-        logging.debug(application_filename)
-        if application_filename in settings.STATIC_NG_FILES:
-            return redirect(f'/static/workspace/ts/wrapper/dist/{application_filename}', content_type='application/javascript')
+        
+        
+        
+        
     
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
@@ -265,3 +270,6 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
+class AuthView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "auth_redirect.html")

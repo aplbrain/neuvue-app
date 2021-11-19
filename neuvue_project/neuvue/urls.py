@@ -15,13 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
 from workspace.views import WorkspaceView
 from workspace.views import TaskView
 from workspace.views import IndexView
-
+from workspace.views import AuthView
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
     path('tasks/', TaskView.as_view(), name="tasks"),
@@ -29,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
+    path('auth_redirect.html',AuthView.as_view(),name='auth_redirect')
 ]
 
 

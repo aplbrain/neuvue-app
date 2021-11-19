@@ -211,19 +211,19 @@ CONTRAST = {
 VOXEL_RESOLUTION = (4, 4, 40)
 
 # Neuroglancer Webpack Settings
-WEBPACK_LOADER = {
-  'DEFAULT': {
-    'LOADER_CLASS': 'neuvue.webpack.MultipleWebpackLoader',
-    'BUNDLE_DIR_NAME':  'workspace',
-    'CACHE': not DEBUG,
-    'STATS_FILES': glob(os.path.join(BASE_DIR, 'workspace/static','ts','wrapper', 'webpack-stats-*.json')),
-    'POLL_INTERVAL': 0.1,
-    'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-  }
-}
+# WEBPACK_LOADER = {
+#   'DEFAULT': {
+#     'LOADER_CLASS': 'neuvue.webpack.MultipleWebpackLoader',
+#     'BUNDLE_DIR_NAME':  'workspace',
+#     'CACHE': not DEBUG,
+#     'STATS_FILES': glob(os.path.join(BASE_DIR, 'workspace', 'static','ts','wrapper', 'webpack-stats-*.json')),
+#     'POLL_INTERVAL': 0.1,
+#     'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+#   }
+# }
 
 if DEBUG:
     import mimetypes
     mimetypes.add_type("application/javascript", ".js",True)
 
-STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace/static'))
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace','static','workspace'))
