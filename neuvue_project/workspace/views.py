@@ -195,7 +195,7 @@ class TaskView(View):
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
-                context[namespace]["end"] = (non_empty_namespace+1)*2
+                context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
