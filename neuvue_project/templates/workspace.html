@@ -330,5 +330,11 @@
         })
     })
 
+    window.addEventListener('beforeunload', function (e) {
+            console.log("asdkjfhlkajshdlfjk");
+            e.preventDefault();
+            e.returnValue = '';
+    });
+
 </script>
 {% endblock %}
