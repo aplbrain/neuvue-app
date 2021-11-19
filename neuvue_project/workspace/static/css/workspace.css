@@ -267,36 +267,39 @@ color: var(--primary-accent);
 
 .mainButton.submit.duo{
   width: 90%;
-  margin: 1vh 1vw 1vh 1vw;
+  font-size: 1.5vh;
+  margin: 1vh 1vw 0vh 1vw;
 }
 
 
 .mainButton.flag.duo{
-  width: 40%;
-  float: right;
+  width: 90%;
+  font-size: 1.5vh;
   margin: 1vh 1vw;
 }
 
 .mainButton.submit.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
+  margin-left: 22%;
 }
 .mainButton.yesBut{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 15%;
+  max-width: 18%;
   background-color: var(--yesBut);  
 }
 .mainButton.yesBut:hover{
+  border: 3px solid var(--yesBut-activated);
   background-color: var(--yesBut-activated);  
 }
 
 .mainButton.flag.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
 }
 .mainButton.pause.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
 }
 
 
@@ -764,7 +767,7 @@ background: transparent;
   margin-top: 40vh;
   min-width: 12vw;
   height: 10vh;
-  flex-direction: row;
+  flex-direction: column;
   display:inline-block;
   overflow: hidden;
   overflow-x: hidden;
