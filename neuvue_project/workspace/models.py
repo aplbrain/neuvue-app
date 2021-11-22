@@ -38,9 +38,16 @@ class Namespace(models.Model):
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.POINT)
     submission_method = models.CharField(max_length=50, choices=submission_method_choices, default="submit")
-    PCG_SOURCE = models.CharField(max_length=300, choices=pcg_choices, default='Minnie')
-    IMG_SOURCE = models.CharField(max_length=300, choices=img_choices, default='Minnie')
+    PCG_SOURCE = models.CharField(max_length=300, choices=pcg_choices, default='https://minnie.microns-daf.com/segmentation/table/minnie3_v1')
+    IMG_SOURCE = models.CharField(max_length=300, choices=img_choices, default='https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em')
+    
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
         return self.namespace
+
+
+    """
+    PCG_SOURCE = models.CharField(max_length=300, choices=pcg_choices, default="Minnie")
+    IMG_SOURCE = models.CharField(max_length=300, choices=img_choices, default="Minnie")
+    """

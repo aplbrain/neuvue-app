@@ -38,7 +38,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         context = {
             'ng_url': settings.NG_CLIENT,
-            'pcg_url': settings.PROD_PCG_SOURCE,
+            'pcg_url': Namespace.objects.get(namespace = namespace).PCG_SOURCE,
             'task_id': '',
             'seg_id': '',
             'is_open': False,
@@ -173,6 +173,8 @@ class TaskView(View):
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
+            context[namespace]["PCG_SOURCE"] = n_s.PCG_SOURCE
+            context[namespace]["IMG_SOURCE"] = n_s.IMG_SOURCE
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
