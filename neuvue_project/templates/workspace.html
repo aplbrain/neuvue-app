@@ -330,10 +330,14 @@
         })
     })
 
+
+   // window.beforeunload = function() {
+   //     return 'Please press Exit Task before exiting';
+   // }
+
     window.addEventListener('beforeunload', function (e) {
-            console.log("asdkjfhlkajshdlfjk");
-            e.preventDefault();
-            e.returnValue = '';
+        e.preventDefault(); 
+        e.returnValue = '';
     });
 
 </script>
