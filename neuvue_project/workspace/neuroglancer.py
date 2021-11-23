@@ -186,8 +186,9 @@ def construct_proofreading_url(task_df, points):
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
-    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_url'):
-        return construct_url_from_existing(json.dumps(task_df['ng_url']))
+    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_state'):
+        state = json.loads(task_df['ng_state'])['value']
+        return construct_url_from_existing(json.dumps(state))
     
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
