@@ -5,9 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
-from datetime import datetime, timezone
-from pytz import timezone
-import pytz
 import numpy as np
 import pandas as pd
 import time
@@ -15,7 +12,7 @@ import json
 
 from .neuroglancer import construct_proofreading_url, construct_url_from_existing
 from .analytics import user_stats
-
+from .utils import utc_to_eastern
 
 # import the logging library
 import logging
@@ -203,14 +200,6 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
-        def utc_to_eastern(time_value):
-                utc = pytz.UTC
-                eastern = timezone('US/Eastern')
-                date_time = time_value.to_pydatetime()
-                date_time = utc.localize(time_value)
-                date_time = date_time.astimezone(eastern)
-                return date_time
-
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -240,6 +229,13 @@ class TaskView(View):
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
+            # Check if there are any NaNs in opened column
+            # TODO: Fix this in the database side of things 
+            if tasks['opened'].isnull().values.any() or tasks['closed'].isnull().values.any():
+                default =  pd.to_datetime('1969-12-31')
+                tasks['opened'] = tasks['opened'].fillna(default)
+                tasks['closed'] = tasks['closed'].fillna(default)
+    
             tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
             tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
@@ -255,6 +251,7 @@ class TaskView(View):
         
         tasks['task_id'] = tasks.index
         return tasks.to_dict('records')
+
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
