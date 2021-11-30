@@ -285,9 +285,11 @@ color: var(--primary-accent);
   min-width: 12%;
   max-width: 15%;
   background-color: var(--yesBut);  
+  font-size: 1.2vh;
 }
 .mainButton.yesBut:hover{
   background-color: var(--yesBut-activated);  
+  
 }
 
 .mainButton.flag.quad{

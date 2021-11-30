@@ -25,21 +25,22 @@ class Namespace(models.Model):
         ('submit', 'Submit Button'),
         ('forced_choice', 'Yes/No/Maybe Button'),
     ]
-    pcg_choices = [
-        ('Minnie', 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1'),
-        ('Pinky', 'https://global.daf-apis.com/info/datastack/pinky_sandbox'),
-    ]
-    img_choices = [
-        ('Minnie', 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em'),
-        ('Pinky', 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked'),
-    ]
+
+    class PcgChoices(models.TextChoices):
+        MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie')
+        PINKY = 'https://global.daf-apis.com/info/datastack/pinky_sandbox', _('Pinky')
+
+    class ImgChoices(models.TextChoices):
+        MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie')
+        PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
+
 
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.POINT)
     submission_method = models.CharField(max_length=50, choices=submission_method_choices, default="submit")
-    PCG_SOURCE = models.CharField(max_length=300, choices=pcg_choices, default='https://minnie.microns-daf.com/segmentation/table/minnie3_v1')
-    IMG_SOURCE = models.CharField(max_length=300, choices=img_choices, default='https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em')
+    pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
+    img_source = models.CharField(max_length=300, choices=ImgChoices.choices, default=ImgChoices.MINNIE)
     
     
     def __str__(self):
@@ -47,7 +48,4 @@ class Namespace(models.Model):
         return self.namespace
 
 
-    """
-    PCG_SOURCE = models.CharField(max_length=300, choices=pcg_choices, default="Minnie")
-    IMG_SOURCE = models.CharField(max_length=300, choices=img_choices, default="Minnie")
-    """
+
