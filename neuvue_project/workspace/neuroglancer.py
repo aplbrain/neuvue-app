@@ -58,10 +58,14 @@ def create_base_state(seg_ids, coordinate):
     
     # Create SegmentationLayerConfig
     seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    segmentation_view_options = {'alpha_selected': 0.6,
+                             'alpha_3d': 0.3}
     seg_layer = SegmentationLayerConfig(
         name='seg', 
         source=seg_source, 
-        fixed_ids=seg_ids)
+        fixed_ids=seg_ids,
+        view_kws=segmentation_view_options
+        )
     view_options = {'position': coordinate, 'zoom_image': 20}
 
     return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
@@ -170,7 +174,8 @@ def construct_proofreading_url(task_df, points):
     # appropriate Neuroglancer functions. 
     seg_ids = [task_df['seg_id']]
     base_state = create_base_state(seg_ids, points[0])
-
+    print("this is what base state is", base_state)
+    print("this is base_state type", type(base_state))
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
 
@@ -189,6 +194,7 @@ def construct_proofreading_url(task_df, points):
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
+        print("original", chained_state)
     
     elif ng_type == NeuroglancerLinkType.point: 
         # Get grouping and annotation descriptions, if they exist
@@ -198,6 +204,7 @@ def construct_proofreading_url(task_df, points):
         data_list.append( generate_point_df(coordinates, description=description, group=group))
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
+        
 
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
