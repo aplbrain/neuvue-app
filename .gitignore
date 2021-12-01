@@ -135,3 +135,4 @@ neuvue_project/.elasticbeanstalk/*
 !neuvue_project/.elasticbeanstalk/*.global.yml
 
 /static/
+neuvue_project/workspace/static/ts/wrapper/webpack-stats-*
