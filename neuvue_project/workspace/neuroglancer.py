@@ -174,8 +174,7 @@ def construct_proofreading_url(task_df, points):
     # appropriate Neuroglancer functions. 
     seg_ids = [task_df['seg_id']]
     base_state = create_base_state(seg_ids, points[0])
-    print("this is what base state is", base_state)
-    print("this is base_state type", type(base_state))
+
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
 
@@ -194,7 +193,6 @@ def construct_proofreading_url(task_df, points):
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
-        print("original", chained_state)
     
     elif ng_type == NeuroglancerLinkType.point: 
         # Get grouping and annotation descriptions, if they exist
@@ -204,7 +202,6 @@ def construct_proofreading_url(task_df, points):
         data_list.append( generate_point_df(coordinates, description=description, group=group))
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
-        
 
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
