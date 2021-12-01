@@ -15,7 +15,7 @@ import json
 
 from .neuroglancer import construct_proofreading_url, construct_url_from_existing
 from .analytics import user_stats
-
+from .utils import utc_to_eastern
 
 # import the logging library
 import logging
@@ -206,7 +206,7 @@ class TaskView(View):
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
-                context[namespace]["end"] = (non_empty_namespace+1)*2
+                context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
@@ -251,6 +251,13 @@ class TaskView(View):
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
+            # Check if there are any NaNs in opened column
+            # TODO: Fix this in the database side of things 
+            if tasks['opened'].isnull().values.any() or tasks['closed'].isnull().values.any():
+                default =  pd.to_datetime('1969-12-31')
+                tasks['opened'] = tasks['opened'].fillna(default)
+                tasks['closed'] = tasks['closed'].fillna(default)
+    
             tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
             tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
@@ -266,6 +273,7 @@ class TaskView(View):
         
         tasks['task_id'] = tasks.index
         return tasks.to_dict('records')
+
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):

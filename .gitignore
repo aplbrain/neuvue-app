@@ -133,6 +133,10 @@ dmypy.json
 neuvue_project/.elasticbeanstalk/*
 !neuvue_project/.elasticbeanstalk/*.cfg.yml
 !neuvue_project/.elasticbeanstalk/*.global.yml
-
+# Static files
 /static/
+
+# Generated files from wrapper
 neuvue_project/workspace/static/ts/wrapper/webpack-stats-*
+neuvue_project/workspace/static/ts/wrapper/third_party
+neuvue_project/workspace/static/ts/wrapper/node_modules
