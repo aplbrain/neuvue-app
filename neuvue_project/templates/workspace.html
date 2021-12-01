@@ -228,6 +228,25 @@
         </div>
     </div> 
 </form>
+
+<div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you still Proofreading?</h5>
+                <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label class="custom-select-label" for="flag">This is simply for time keeping purposes, please press yes or no</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="timeoutModalNo" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="timeoutModalYes" data-bs-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
@@ -316,6 +335,25 @@
             window.location.reload()
         })
 
+        $('#timeoutModalYes').click(function() {
+            isTimeout('true');
+            //dont take to task page
+        })
+
+        $('#timeoutModalNo').click(function() {
+            isTimeout('true');
+            //take to task page
+            getCurrentNeuroglancerState('{{ng_url}}', function (data){
+                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
+                $('#mainForm').submit()
+            });
+        })
+
+        $('#btnTimeoutClose').click(function() {
+            //window.location.reload()
+        })
+
         $('#btnStop').click(function() {
             getCurrentNeuroglancerState('{{ng_url}}', function (data){
                 $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
@@ -328,17 +366,47 @@
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
             $('#mainForm').submit();
         })
+
+
+
+        //Netflix are you still there script v
+        var idleTime = 0;
+        // Increment the idle time counter every minute.
+        var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+        // Zero the idle timer on mouse movement.
+        $(this).mousemove(function (e) {
+            idleTime = 0;
+        });
+        $(this).keypress(function (e) {
+            idleTime = 0;
+        });
+        //Netflix are you still there script ^
+
+        //Netflix are you still there script 
+        function timerIncrement() {
+            idleTime++;
+            if (idleTime >= 1) { 
+                console.log("in modal");
+                $('#timeoutModal').modal('show');
+                isModalOpen('true', (1 * 60)); //second parameter should be in seconds
+            }
+        }
+
+
+
     })
 
 
-   // window.beforeunload = function() {
-   //     return 'Please press Exit Task before exiting';
-   // }
 
     window.addEventListener('beforeunload', function (e) {
+        //automatically saves
+        getCurrentNeuroglancerState('{{ng_url}}');
         e.preventDefault(); 
         e.returnValue = '';
     });
+
+
 
 </script>
 {% endblock %}

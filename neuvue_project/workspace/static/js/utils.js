@@ -150,6 +150,40 @@ function copyToClipboard(copyInfo) {
 }
 
 
+function isTimeout(bool) {
+  
+  const csrftoken = getCookie('csrftoken');
+
+  const myInit = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, text/plain, */*',
+          'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({'isTimeout': bool}), //Duration = total_time - inactivity_time - modal_open_time - start time
+      credentials: 'same-origin',
+  };
+  fetch('', myInit);
+}
+
+
+function isModalOpen(bool, idleTime) {
+  
+  const csrftoken = getCookie('csrftoken');
+
+  const myInit = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, text/plain, */*',
+          'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({'isModalOpen': bool, 'idleTime': idleTime}), //Duration = total_time - inactivity_time - modal_open_time - start time
+      credentials: 'same-origin',
+  };
+  fetch('', myInit);
+}
 
 
 

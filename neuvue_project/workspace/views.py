@@ -33,8 +33,10 @@ class WorkspaceView(LoginRequiredMixin, View):
         num_visits = request.session.get('num_visits', 0)
         sidebar_status = request.session.get('sidebar', 1)
         
+        #the following code seems redundant no?
         request.session['num_visits'] = num_visits + 1
         request.session['sidebar'] = sidebar_status
+
 
         context = {
             'ng_url': settings.NG_CLIENT,
@@ -47,7 +49,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'sidebar': sidebar_status,
-            'num_visits': num_visits
+            'num_visits': num_visits,
         }
 
         if namespace is None:
@@ -97,8 +99,18 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         ng_state = request.POST.get('ngState')
         start_time = request.session.get('start_time')
-        duration = time.time() - start_time if start_time else 0
-        
+        modalCloseTime = request.session.get('modalCloseTime', 0) 
+        modalOpenTime = request.session.get('modalOpenTime', 0)
+        idleTime = request.session.get('idleTime', 0)
+        modalDuration = modalCloseTime - modalOpenTime if modalCloseTime != 0 else 0
+        duration = (time.time() - ((idleTime) + (modalDuration))) - start_time if start_time else 0
+
+        #reset after modal is closed
+        if modalCloseTime != 0 and modalOpenTime != 0:
+            request.session['modalOpenTime'] = 0
+            request.session['modalCloseTime'] = 0
+            request.session['idleTime'] = 0
+
         if button == 'submit':
             logger.debug('Submitting task')
             self.client.patch_task(
@@ -151,12 +163,29 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif request.body:
             try:
+
                 body = json.loads(request.body)
+
                 if 'sidebar_tab' in body:
                     request.session['sidebar'] = body['sidebar_tab']
+
+                if 'isModalOpen' in body:
+                    if body['isModalOpen'] == 'true':
+                        request.session['modalOpenTime'] = time.time()
+
+                if 'idleTime' in body:
+                    request.session['idleTime'] = body['idleTime']
+
+                if 'isTimeout' in body:
+                    if body['isTimeout'] == 'true':
+                        request.session['modalCloseTime'] = time.time()
+
+
+
             except Exception as e:
                 logging.error(f"POST Error: {e}")
         
+
         return redirect(reverse('workspace', args=[namespace]))
 
 
