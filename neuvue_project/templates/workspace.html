@@ -57,7 +57,6 @@
 
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
-        <div id="neuroglancer-container" class="neuroglancer-container"></div>
         <div class="left">
             {% if is_open %}
                 {% if submission_method == "forced_choice" %}
@@ -102,7 +101,7 @@
 
             
             {% endif %}
-            
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
             <! Buttons >
                 
                 <form id="mainForm" action="" method="post" class="bottomBar">
