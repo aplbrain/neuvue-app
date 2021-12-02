@@ -44,10 +44,14 @@ def create_base_state(seg_ids, coordinate):
     
     # Create SegmentationLayerConfig
     seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    segmentation_view_options = {'alpha_selected': 0.6,
+                             'alpha_3d': 0.3}
     seg_layer = SegmentationLayerConfig(
         name='seg', 
         source=seg_source, 
-        fixed_ids=seg_ids)
+        fixed_ids=seg_ids,
+        view_kws=segmentation_view_options
+        )
     view_options = {'position': coordinate, 'zoom_image': 20}
 
     return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
