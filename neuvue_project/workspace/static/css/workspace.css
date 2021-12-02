@@ -113,7 +113,6 @@ overflow-x: hidden;
   background-color: transparent;
   width: 75%;
   top:-1%;
-  height: 100% !important;
   position: relative;
   display: flex;
   flex-direction: row;

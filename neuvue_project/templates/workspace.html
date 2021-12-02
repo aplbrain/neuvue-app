@@ -54,7 +54,6 @@
             </div>
         </div>
     </div> 
-
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
         <div class="left">
@@ -99,11 +98,16 @@
                 </form>
                 {% endif %}
 
-                <div id="neuroglancer-container" class="neuroglancer-container"></div>
-            {% endif %}
-            
-            <! Buttons >
                 
+            {% endif %}
+        </div>
+    </div> 
+
+
+
+    <div id="neuroglancer" class="leftFormatting">
+        <div class="left">       
+            <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
 
@@ -184,6 +188,7 @@
                 </form>
         </div>
     </div>
+    <div id="neuroglancer-container" class="neuroglancer-container" style="height:30vh;"></div>
 </div>
 
 <form id="flagForm" method="post">
