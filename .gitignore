@@ -138,3 +138,5 @@ neuvue_project/.elasticbeanstalk/*
 /static/
 /neuvue_project/workspace/static/ts/wrapper/third_party
 /neuvue_project/workspace/static/ts/wrapper/node_modules
+
+old_migrations/
