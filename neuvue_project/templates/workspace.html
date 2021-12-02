@@ -100,13 +100,11 @@
 
                 
             {% endif %}
-        </div>
-    </div> 
-
-
-
-    <div id="neuroglancer" class="leftFormatting">
-        <div class="left">       
+            {% if is_open %}
+                <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% else %}
+                <div id="neuroglancer-container" class="neuroglancer-container" style="display: none !important;"></div>
+            {% endif %}
             <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
@@ -188,7 +186,7 @@
                 </form>
         </div>
     </div>
-    <div id="neuroglancer-container" class="neuroglancer-container" style="height:30vh;"></div>
+    
 </div>
 
 <form id="flagForm" method="post">

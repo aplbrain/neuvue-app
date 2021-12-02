@@ -113,6 +113,7 @@ overflow-x: hidden;
   background-color: transparent;
   width: 75%;
   top:-1%;
+  height: 90vh;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -161,6 +162,8 @@ overflow-x: hidden;
   margin-bottom: 1vh;
   width: 95%;
   height: 85vh;
+  overflow: hidden;
+  color: var(--primary-accent);
   order: 1;
 }
 
@@ -400,109 +403,6 @@ float: left;
 .the-icons {
 font-size: 25px;
 }
-
-/* NAVIGATION BAR */
-
-/* *{
-  padding: 0;
-  margin: 0;
-  text-decoration: none;
-  list-style: none;
-  box-sizing: border-box;
-}
-body{
-  font-family: var(--body-font)
-}
-nav{
-  background: var(--header-background);
-  height: 70px;
-  width: 100%;
-}
-label.logo{
-  font-family: var(--header-font);
-  color: var(--navbar-text);
-  font-size: 50px;
-  padding: 0 2%;
-  line-height: 70px;
-  font-weight: lighter;
-  cursor: pointer;
-  z-index: 2;
-}
-nav ul{
-  float: right;
-  margin-right: 20px;
-}
-nav ul li{
-  display: inline-block;
-  line-height: 70px;
-  margin: 0 5px;
-}
-nav ul li a{
-  font-family: var(--monospace-font);
-  color: var(--navbar-text);
-  font-size: 17px;
-  padding: 7px 13px;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-a.active,a:hover{
-  background-color: transparent;
-  border-radius: 8px;
-  color: var(--navbar-text) !important;
-  border: 1.5px solid var(--secondary-accent);
-}
-.checkbtn{
-  font-size: 30px;
-  color: var(--navbar-text);
-  float: right;
-  line-height: 70px;
-  margin-right: 40px;
-  cursor: pointer;
-  display: none;
-}
-#check{
-  display: none;
-}
-@media (max-width: 952px){
-  label.logo{
-    font-size: 30px;
-    padding-left: 50px;
-  }
-  nav ul li a{
-    font-size: 16px;
-  }
-}
-@media (max-width: 858px){
-  .checkbtn{
-    display: block;
-  }
-  ul{
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    background: #2c3e50;
-    top: 70px;
-    left: -100%;
-    text-align: center;
-    transition: all .5s;
-  }
-  nav ul li{
-    display: block;
-    margin: 50px 0;
-    line-height: 30px;
-  }
-  nav ul li a{
-    font-size: 20px;
-  }
-  a:hover,a.active{
-      background-color: transparent;
-      border-radius: 8px;
-      border: 1.5px solid var(--secondary-accent);
-  }
-  #check:checked ~ ul{
-    left: 0;
-  }
-} */
 
 /* Task buttons in the TaskQueue sidebar container*/
 
@@ -799,3 +699,20 @@ background: transparent;
   color: var(--secondary-accent-activated);
 }
 
+.neuroglancer-annotation-hiding-list-scrollarea {
+  overflow-x: hidden;
+  top:0;
+  height: 53vh;
+  overflow-y: scroll;
+}
+.neuroglancer-layer-side-panel{
+  heigh:100%;
+  overflow-y: scroll;
+}
+
+/**
+.neuroglancer-viewer.neuroglancer-noselect.neuroglancer-show-panel-borders{
+  height:100%;
+  overflow-y: hidden;
+}
+**/
