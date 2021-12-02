@@ -202,9 +202,15 @@ PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
 DEV_PCG_SOURCE = None
 
 # Neuroglancer Settings
+# TODO: Move this as a internal model separate from the django config
 NG_CLIENT = "https://neuroglancer.neuvue.io"
-CONTRAST = {
-    "black": 0.35, 
-    "white": 0.7
+DATASET_VIEWER_OPTIONS = {
+    "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em": {
+        "contrast": {
+            "black": 0.35, 
+            "white": 0.7
+        }
+    }
 }
-VOXEL_RESOLUTION = (4, 4, 40)
+
+VOXEL_RESOLUTION = [4, 4, 40]
