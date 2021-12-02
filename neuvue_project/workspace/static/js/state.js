@@ -18,5 +18,5 @@ function getCurrentNeuroglancerState(url, callback) {
         if (callback) {
             callback(window.localStorage['ngState']);
         }
-    }, 200);
+    }, 500);
 }
