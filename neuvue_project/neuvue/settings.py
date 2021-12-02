@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -195,6 +195,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
+
+# Task Timeout in Seconds
+TIMEOUT = 10
 
 # Data Sources
 IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"

@@ -235,9 +235,6 @@
                 <h5 class="modal-title">Are you still Proofreading?</h5>
                 <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <label class="custom-select-label" for="flag">This is simply for time keeping purposes, please press yes or no</label>
-            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="timeoutModalNo" data-bs-dismiss="modal">No</button>
                 <button type="button" class="btn btn-primary" id="timeoutModalYes" data-bs-dismiss="modal">Yes</button>
@@ -274,7 +271,7 @@
         });
     }
 
-
+    // Button Submission
     $(document).ready(function() {
         // HACK. Reset the window storage so it doesnt reload previous tasks
         window.localStorage.removeItem('ngState');
@@ -334,31 +331,13 @@
             window.location.reload()
         })
 
-        $('#timeoutModalYes').click(function() {
-            isTimeout('true');
-            //dont take to task page
-        })
-
         $('#timeoutModalNo').click(function() {
-            isTimeout('true');
-            //take to task page
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-                $('#mainForm').submit()
+            submitForm('stop');
             });
-        })
-
-        $('#btnTimeoutClose').click(function() {
-            //window.location.reload()
         })
 
         $('#btnStop').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-                $('#mainForm').submit()
-            });
+            submitForm('stop');
         })
 
         $('#btnStart').click(function() {
@@ -366,37 +345,32 @@
             $('#mainForm').submit();
         })
 
-
-
-        //Netflix are you still there script v
+       // Inactivity Timer
         var idleTime = 0;
+        
+        // seconds to check for inactivity
+        var incrementAmount = 5;
+        
         // Increment the idle time counter every minute.
-        var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+        var idleInterval = setInterval(timerIncrement, incrementAmount*1000); 
 
-        // Zero the idle timer on mouse movement.
+        // Zero the idle timer on mouse movement or keypress.
         $(this).mousemove(function (e) {
             idleTime = 0;
         });
         $(this).keypress(function (e) {
             idleTime = 0;
         });
-        //Netflix are you still there script ^
 
-        //Netflix are you still there script 
+        // Inactivity Timer
         function timerIncrement() {
-            idleTime++;
-            if (idleTime >= 1) { 
-                console.log("in modal");
+            console.log(idleTime);
+            if (idleTime >= '{{timeout}}') { 
                 $('#timeoutModal').modal('show');
-                isModalOpen('true', (1 * 60)); //second parameter should be in seconds
+                updateIdleTime(idleTime); //second parameter should be in seconds
             }
+            idleTime += incrementAmount;
         }
-
-
-
-    })
-
-
 
     window.addEventListener('beforeunload', function (e) {
         //automatically saves
@@ -404,8 +378,6 @@
         e.preventDefault(); 
         e.returnValue = '';
     });
-
-
 
 </script>
 {% endblock %}

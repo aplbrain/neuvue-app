@@ -27,10 +27,10 @@ class WorkspaceView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
+
+        # Sidebar Tracking
         num_visits = request.session.get('num_visits', 0)
         sidebar_status = request.session.get('sidebar', 1)
-        
-        #the following code seems redundant no?
         request.session['num_visits'] = num_visits + 1
         request.session['sidebar'] = sidebar_status
 
@@ -47,6 +47,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'sidebar': sidebar_status,
             'num_visits': num_visits,
+            'timeout': settings.TIMEOUT
         }
 
         if namespace is None:
@@ -96,17 +97,8 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         ng_state = request.POST.get('ngState')
         start_time = request.session.get('start_time')
-        modalCloseTime = request.session.get('modalCloseTime', 0) 
-        modalOpenTime = request.session.get('modalOpenTime', 0)
         idleTime = request.session.get('idleTime', 0)
-        modalDuration = modalCloseTime - modalOpenTime if modalCloseTime != 0 else 0
-        duration = (time.time() - ((idleTime) + (modalDuration))) - start_time if start_time else 0
-
-        #reset after modal is closed
-        if modalCloseTime != 0 and modalOpenTime != 0:
-            request.session['modalOpenTime'] = 0
-            request.session['modalCloseTime'] = 0
-            request.session['idleTime'] = 0
+        duration = time.time() - idleTime - start_time if start_time else 0
 
         if button == 'submit':
             logger.debug('Submitting task')
@@ -166,18 +158,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 if 'sidebar_tab' in body:
                     request.session['sidebar'] = body['sidebar_tab']
 
-                if 'isModalOpen' in body:
-                    if body['isModalOpen'] == 'true':
-                        request.session['modalOpenTime'] = time.time()
-
                 if 'idleTime' in body:
                     request.session['idleTime'] = body['idleTime']
-
-                if 'isTimeout' in body:
-                    if body['isTimeout'] == 'true':
-                        request.session['modalCloseTime'] = time.time()
-
-
 
             except Exception as e:
                 logging.error(f"POST Error: {e}")
