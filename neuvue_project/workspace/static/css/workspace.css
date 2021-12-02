@@ -696,3 +696,7 @@ background: transparent;
   overflow-y: scroll;
 }
 
+.neuroglancer-context-menu.neuroglancer-viewer-context-menu{
+  display: none;
+}
+
