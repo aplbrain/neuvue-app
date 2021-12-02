@@ -131,6 +131,7 @@
         {% for namespace, context in data.items %}
             if ({{context.total_tasks}}) {
                 tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
+                document.getElementById("pending{{namespace}}Tab").click();
                 tableHide("{{namespace}}Header","{{namespace}}Table");
                 {% if not context.total_pending %}
                     document.getElementById("{{namespace}}Header").click();

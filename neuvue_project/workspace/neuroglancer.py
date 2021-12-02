@@ -44,10 +44,14 @@ def create_base_state(seg_ids, coordinate):
     
     # Create SegmentationLayerConfig
     seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    segmentation_view_options = {'alpha_selected': 0.6,
+                             'alpha_3d': 0.3}
     seg_layer = SegmentationLayerConfig(
         name='seg', 
         source=seg_source, 
-        fixed_ids=seg_ids)
+        fixed_ids=seg_ids,
+        view_kws=segmentation_view_options
+        )
     view_options = {'position': coordinate, 'zoom_image': 20}
 
     return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
@@ -186,8 +190,9 @@ def construct_proofreading_url(task_df, points):
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
-    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_url'):
-        return construct_url_from_existing(json.dumps(task_df['ng_url']))
+    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_state'):
+        state = json.loads(task_df['ng_state'])['value']
+        return construct_url_from_existing(json.dumps(state))
     
     return chained_state.render_state(
             data_list, return_as='url', url_prefix=settings.NG_CLIENT
