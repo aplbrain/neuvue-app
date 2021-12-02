@@ -19,21 +19,26 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def create_base_state(seg_ids, coordinate):
+def create_base_state(seg_ids, coordinate, namespace):
     """Generates a base state containing imagery and segemntation layers. 
 
     Args:
         seg_ids (list): seg_ids to select in the view
         coordinate (tuple|list): collection of three integer voxel coordinates, XYZ order.
-
+        namespace (str): task namespace
     Returns:
         StateBuilder: Base State
     """
     
     # Create ImageLayerConfig
-    img_source = "precomputed://" + settings.IMG_SOURCE
-    black = settings.CONTRAST.get("black", 0)
-    white = settings.CONTRAST.get("white", 1)
+    img_source = "precomputed://" + Namespace.objects.get(namespace = namespace).img_source
+    try: 
+        black = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["black"]
+        white = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["white"]
+    except KeyError:
+        black = 0
+        white = 1
+    
     img_layer = ImageLayerConfig(
         name='em',
         source=img_source, 
@@ -43,7 +48,7 @@ def create_base_state(seg_ids, coordinate):
         )
     
     # Create SegmentationLayerConfig
-    seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    seg_source = "graphene://" + Namespace.objects.get(namespace = namespace).pcg_source
     seg_layer = SegmentationLayerConfig(
         name='seg', 
         source=seg_source, 
@@ -156,7 +161,7 @@ def construct_proofreading_url(task_df, points):
     # TODO: Automatically iterate through Namespaces and map them to the 
     # appropriate Neuroglancer functions. 
     seg_ids = [task_df['seg_id']]
-    base_state = create_base_state(seg_ids, points[0])
+    base_state = create_base_state(seg_ids, points[0], task_df['namespace'])
 
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])

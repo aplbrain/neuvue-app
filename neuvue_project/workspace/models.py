@@ -19,28 +19,25 @@ class NeuroglancerLinkType(models.TextChoices):
     POINT = 'point', _('Annotation Layer')
     PREGENERATED = 'pregen', _('Pregenerated')
 
+class SubmissionMethod(models.TextChoices):
+    SUBMIT = 'submit', _('Submit Button')
+    FORCED_CHOICE = 'forced_choice', _('Yes/No/Maybe Button')
+
+class PcgChoices(models.TextChoices):
+    MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')
+    PINKY = 'https://minnie.microns-daf.com/segmentation/table/pinky_nf_v2', _('Pinky')
+
+class ImageChoices(models.TextChoices):
+    MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie65')
+    PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
 class Namespace(models.Model):
-    submission_method_choices = [
-        ('submit', 'Submit Button'),
-        ('forced_choice', 'Yes/No/Maybe Button'),
-    ]
-
-    class PcgChoices(models.TextChoices):
-        MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie')
-        PINKY = 'https://global.daf-apis.com/info/datastack/pinky_sandbox', _('Pinky')
-
-    class ImgChoices(models.TextChoices):
-        MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie')
-        PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
-
-
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.POINT)
-    submission_method = models.CharField(max_length=50, choices=submission_method_choices, default="submit")
+    submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
-    img_source = models.CharField(max_length=300, choices=ImgChoices.choices, default=ImgChoices.MINNIE)
+    img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     
     
     def __str__(self):

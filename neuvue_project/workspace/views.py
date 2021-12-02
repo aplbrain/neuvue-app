@@ -173,8 +173,8 @@ class TaskView(View):
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
-            context[namespace]["PCG_SOURCE"] = n_s.pcg_source
-            context[namespace]["IMG_SOURCE"] = n_s.img_source
+            context[namespace]["pcg_source"] = n_s.pcg_source
+            context[namespace]["img_source"] = n_s.img_source
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
