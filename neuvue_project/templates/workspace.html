@@ -250,11 +250,10 @@
     // addStateEventListener('{{ng_url}}');
     
     function submitForm(value) {
-        getCurrentNeuroglancerState('{{ng_url}}', function (data){
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
-            $('#mainForm').submit()
-        });
+        let data = viewer.state.toJSON();
+        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
+        $('#mainForm').submit();
     }
 
 
@@ -268,18 +267,17 @@
         window.localStorage.removeItem('ngState');
 
         $('#btnSave').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}');
+            window.localStorage['ngState'] = viewer.state.toJSON();
         })
 
         $('#btnReload').click(function() {
             if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState'])['value'];
-                let prefix = new URL('{{ng_url}}').origin + '/#!';
-                $('#neuroGlancerFrame').attr('src', prefix + JSON.stringify(state));
+                let state = JSON.parse(window.localStorage['ngState']);
+                viewer.state.restoreState(state)
             }
-            else {
-                $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
-            } 
+            // else {
+            //     $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
+            // } 
         })
 
         if ('{{submission_method}}' == "submit"){
@@ -323,11 +321,12 @@
         })
 
         $('#btnStop').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-                $('#mainForm').submit()
-            });
+            let data = viewer.state.toJSON();
+            
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
+            $('#mainForm').submit();
+            
         })
 
         $('#btnStart').click(function() {
