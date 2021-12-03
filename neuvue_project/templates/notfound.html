@@ -1,44 +1,64 @@
-{% extends "base.html" %}
 {% load static %}
 
-{% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<head>
+    <script type="text/javascript">
+        var address_to_model ="{% static 'mesh/axolotl.glb' %}"; // Pass this variable to .js file
+    </script>
+</head>
+<body>
 
-<script type="text/javascript">
+</body>
 
-const scene = new three.Scene(); 
-const camera = new three.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-const renderer = new three.WebGLRenderer(); 
-var clock = new THREE.Clock();
-var dt = 0;
-renderer.setSize( window.innerWidth, window.innerHeight ); 
-document.body.appendChild( renderer.domElement );
+<script type="module">
+    import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/build/three.module.js';
+    import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/loaders/GLTFLoader.js';
 
-var loader = new three.GLTFLoader();
-loader.load("{% static "mesh/axolotl.glb" %}", function (gltf) {
-  var model = gltf.scene;
-  var mixer = new three.AnimationMixer(model);
-  var clip1 = gltf.animations[0];
-  var action1 = mixer.clipAction(clip1);
-  action1.play();
-});
+    const scene = new THREE.Scene();
+    console.log(scene)
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    var clock = new THREE.Clock();
+    var dt = 0;
+    var light = new THREE.AmbientLight(0xf6e86d);
 
-start = () => {
-    renderer.setAnimationLoop(() => {
-    // render a frame
-    // ... in render loop
-    dt = clock.getDelta()
-    mixer.update(dt);
+    scene.add(light);
 
-    renderer.render(this.scene, this.camera);
+
+
+
+
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    console.log("kk")
+    var loader = new GLTFLoader();
+    loader.load(address_to_model, function (gltf) {
+        var model = gltf.scene;
+        console.log(model);
+        var mixer = new THREE.AnimationMixer(model);
+        console.log(mixer);
+        var clip1 = gltf.animations[0];
+        var action1 = mixer.clipAction(clip1);
+        action1.play();
     });
-}
 
-stop = () =>  {
-    renderer.setAnimationLoop(null);
-}
+  //  var start = () => {
+  //      renderer.setAnimationLoop(() => {
+  //          // render a frame
+  //          // ... in render loop
+  //          dt = clock.getDelta()
+  //          mixer.update(dt);
 
-start();
+  //          renderer.render(this.scene, this.camera);
+  //      });
+  //  }
+
+  //  var stop = () => {
+  //      renderer.setAnimationLoop(null);
+  //  }
+
+  //  start();
 //request animation frame can be used as well as set animation loop
 //function render(){
 //  requestAnimationFrame(render);
@@ -51,6 +71,4 @@ start();
 //
 //render();
 
-
 </script>
-{% endblock %}
