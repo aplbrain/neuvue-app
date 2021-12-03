@@ -232,7 +232,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Are you still Proofreading?</h5>
+                <h5 class="modal-title">Continue proofreading?</h5>
                 <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
@@ -331,11 +331,6 @@
             window.location.reload()
         })
 
-        $('#timeoutModalNo').click(function() {
-            submitForm('stop');
-            });
-        })
-
         $('#btnStop').click(function() {
             submitForm('stop');
         })
@@ -343,6 +338,11 @@
         $('#btnStart').click(function() {
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
             $('#mainForm').submit();
+        })
+        
+        $('#timeoutModalNo').click(function() {
+            submitForm('stop');
+            });
         })
 
        // Inactivity Timer
