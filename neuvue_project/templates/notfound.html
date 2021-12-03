@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+
+const scene = new three.Scene(); 
+const camera = new three.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const renderer = new three.WebGLRenderer(); 
+var clock = new THREE.Clock();
+var dt = 0;
+renderer.setSize( window.innerWidth, window.innerHeight ); 
+document.body.appendChild( renderer.domElement );
+
+var loader = new three.GLTFLoader();
+loader.load("{% static "mesh/axolotl.glb" %}", function (gltf) {
+  var model = gltf.scene;
+  var mixer = new three.AnimationMixer(model);
+  var clip1 = gltf.animations[0];
+  var action1 = mixer.clipAction(clip1);
+  action1.play();
+});
+
+start = () => {
+    renderer.setAnimationLoop(() => {
+    // render a frame
+    // ... in render loop
+    dt = clock.getDelta()
+    mixer.update(dt);
+
+    renderer.render(this.scene, this.camera);
+    });
+}
+
+stop = () =>  {
+    renderer.setAnimationLoop(null);
+}
+
+start();
+//request animation frame can be used as well as set animation loop
+//function render(){
+//  requestAnimationFrame(render);
+//
+//  delta = clock.getDelta();
+//  object.position.z += speed * delta;
+//
+//  renderer.render(scene, camera);
+//}
+//
+//render();
+
+
+</script>
+{% endblock %}

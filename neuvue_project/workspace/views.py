@@ -259,3 +259,7 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
+
+class NotFoundView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "notfound.html")
