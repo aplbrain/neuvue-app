@@ -258,3 +258,7 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
+
+class TokenView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "token.html")

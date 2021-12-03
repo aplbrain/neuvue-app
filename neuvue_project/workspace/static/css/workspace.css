@@ -359,6 +359,16 @@ font-size: 2vh;
 text-align: center;
 order: 1;
 }
+
+/* Token Generation */ 
+
+.token-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10%;
+  width: 40%;
+  }
+
 /* PROGRESS BAR */
 
 .progress {
