@@ -96,10 +96,11 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
 
         ng_state = request.POST.get('ngState')
-        start_time = request.session.get('start_time')
+        start_time = request.session.get('start_time', 0)
         idleTime = request.session.get('idleTime', 0)
-        duration = time.time() - idleTime - start_time if start_time else 0
-
+        duration = max(0, time.time() - idleTime - start_time)
+        logging.debug(time.time() - idleTime - start_time)
+        logging.debug(idleTime)
         if button == 'submit':
             logger.debug('Submitting task')
             self.client.patch_task(

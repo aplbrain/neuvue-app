@@ -271,6 +271,12 @@
         });
     }
 
+    function exitAlert(e) {
+        getCurrentNeuroglancerState('{{ng_url}}');
+        e.preventDefault(); 
+        e.returnValue = '';
+    }
+
     // Button Submission
     $(document).ready(function() {
         // HACK. Reset the window storage so it doesnt reload previous tasks
@@ -332,6 +338,7 @@
         })
 
         $('#btnStop').click(function() {
+            window.removeEventListener('beforeunload', exitAlert);
             submitForm('stop');
         })
 
@@ -372,12 +379,7 @@
             idleTime += incrementAmount;
         }
 
-    window.addEventListener('beforeunload', function (e) {
-        //automatically saves
-        getCurrentNeuroglancerState('{{ng_url}}');
-        e.preventDefault(); 
-        e.returnValue = '';
-    });
+    window.addEventListener('beforeunload', exitAlert);
 
 </script>
 {% endblock %}
