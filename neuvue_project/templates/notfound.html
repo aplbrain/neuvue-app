@@ -2,7 +2,7 @@
 
 <head>
     <script type="text/javascript">
-        var address_to_model = "{% static 'mesh/axolotl.glb' %}"; 
+        var address_to_model = "{% static 'mesh/axolotl2.glb' %}";
     </script>
 </head>
 
@@ -14,125 +14,167 @@
     import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/build/three.module.js';
     import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
+    import { EffectComposer } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/RenderPass.js';
+    import { OutlinePass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/OutlinePass.js';
+    import { ShaderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/ShaderPass.js';
+    import { FXAAShader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/shaders/FXAAShader.js';
 
 
 
-    class LoadAxolotl {
-        constructor() {
-            this.Setup();
-        }
 
-        Setup() {
-            this._renderer = new THREE.WebGLRenderer({
-                antialias: true,
-            });
-            this._renderer.shadowMap.enabled = true;
-            this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            this._renderer.setPixelRatio(window.devicePixelRatio);
-            this._renderer.setSize(window.innerWidth, window.innerHeight);
-            this._clock = new THREE.Clock();
+    var renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+    });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    var _clock = new THREE.Clock();
 
 
-            document.body.appendChild(this._renderer.domElement);
+    document.body.appendChild(renderer.domElement);
 
-            window.addEventListener('resize', () => {
-                this.OnWindowResize();
-            }, false);
+    window.addEventListener('resize', () => {
+        OnWindowResize();
+    }, false);
 
-            const fov = 60;
-            const aspect = 1920 / 1080;
-            const near = 1.0;
-            const far = 1000.0;
-            this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-            this._camera.position.set(75, 20, 0);
+    const fov = 60;
+    const aspect = 1920 / 1080;
+    const near = 1.0;
+    const far = 1000.0;
+    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera.position.set(75, 20, 0);
 
-            this._scene = new THREE.Scene();
+    var scene = new THREE.Scene();
 
-            let light = new THREE.DirectionalLight(0xFFFFFF, .9);
-            light.position.set(20, 100, 10);
-            light.target.position.set(0, 0, 0);
-            light.castShadow = true;
-            light.shadow.bias = -0.001;
-            light.shadow.mapSize.width = 2048;
-            light.shadow.mapSize.height = 2048;
-            light.shadow.camera.near = 0.1;
-            light.shadow.camera.far = 500.0;
-            light.shadow.camera.near = 0.5;
-            light.shadow.camera.far = 500.0;
-            light.shadow.camera.left = 100;
-            light.shadow.camera.right = -100;
-            light.shadow.camera.top = 100;
-            light.shadow.camera.bottom = -100;
-            this._scene.add(light);
+    let light = new THREE.DirectionalLight(0xFFFFFF, .9);
+    light.position.set(20, 100, 10);
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    light.shadow.bias = -0.001;
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 500.0;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = 500.0;
+    light.shadow.camera.left = 100;
+    light.shadow.camera.right = -100;
+    light.shadow.camera.top = 100;
+    light.shadow.camera.bottom = -100;
+    scene.add(light);
 
-            light = new THREE.AmbientLight(0xFFFFFF, 4.0);
-            this._scene.add(light);
-
-            const controls = new OrbitControls(
-                this._camera, this._renderer.domElement
-            );
-            controls.target.set(0, 20, 0);
-            controls.update();
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
 
 
-            const plane = new THREE.Mesh(
-                new THREE.PlaneGeometry(100, 100, 10, 10),
-                new THREE.MeshStandardMaterial({
-                    color: 0x202020,
-                }));
-            plane.castShadow = false;
-            plane.receiveShadow = true;
-            plane.rotation.x = -Math.PI / 2;
-            this._scene.add(plane);
+    let light2 = new THREE.AmbientLight(0xFFFFFF, 4.0);
+    scene.add(light2);
 
-            this._previousRAF = null;
+    const controls = new OrbitControls(
+        camera, renderer.domElement
+    );
+    controls.target.set(0, 20, 0);
+    controls.update();
+    const lightPurple = new THREE.MeshToonMaterial({ color: 0x67547A })
+    const darkPurple = new THREE.MeshToonMaterial({ color: 0x371E50 })
 
-            this.LoadModel(this._scene, this._renderer, this._camera, this._clock);
-        }
+    var mixer = null;
+    var loader = new GLTFLoader();
+    var model;
 
-        LoadModel(scene, renderer, camera, clock) {
-            var mixer = null;
-            var loader = new GLTFLoader();
-            loader.load(address_to_model, function (glb) {
-                var model = glb.scene;
-
-                glb.scene.traverse(c => {
-                    c.castShadow = true;
-                });
-
-                mixer = new THREE.AnimationMixer(model);
-                var clip1 = glb.animations[0];
-                var action1 = mixer.clipAction(clip1);
-                action1.play();
-                scene.add(glb.scene)
-
-                renderer.setAnimationLoop(() => {
-
-                    mixer.update(clock.getDelta());
-
-                    renderer.render(scene, camera);
-                });
-
-            })
+   // let composer = new EffectComposer(renderer);
+   // const renderPass = new RenderPass(scene, camera);
+   // composer.addPass(renderPass);
+   // let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
 
 
-        }
+   // outlinePass.edgeStrength = 8;
+   // outlinePass.visibleEdgeColor.set('#f71b1b');
+   // outlinePass.hiddenEdgeColor.set('#ac6b20');
+   // composer.addPass(outlinePass);
 
 
-        OnWindowResize() {
-            this._camera.aspect = window.innerWidth / window.innerHeight;
-            this._camera.updateProjectionMatrix();
-            this._renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+   // let effectFXAA = new ShaderPass(FXAAShader);
+   // effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+   // composer.addPass(effectFXAA);
+
+    loader.load(address_to_model, function (glb) {
+        model = glb.scene;
+        console.log("here")
+        console.log(model)
+
+       // let selectedObjects = [];
+       // selectedObjects.push(model);
+       // outlinePass.selectedObjects = selectedObjects;
+       // console.log(outlinePass.selectedObjects)
+       // composer.addPass(outlinePass);
+        model.scale.multiplyScalar(20);
+
+        glb.scene.traverse(c => {
+            c.castShadow = true;
+        });
+
+        var mixer = new THREE.AnimationMixer(model);
+        var clip1 = glb.animations[0];
+        var action1 = mixer.clipAction(clip1);
+
+        action1.play();
+        scene.add(glb.scene)
+
+       // var outlineMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.BackSide } );
+       // var outlineMesh = new THREE.Mesh( model, outlineMaterial );
+       // console.log(model.position)
+       // var target = new THREE.Vector3(); 
+       // model.getWorldPosition( target );
+       // outlineMesh.position.x = target.x
+       // outlineMesh.position.y = target.y
+       // outlineMesh.position.z = target.z
+       // outlineMesh.scale.multiplyScalar(1.05);
+
+       // scene.add( outlineMesh );
+
+        renderer.setAnimationLoop(() => {
+
+            mixer.update(_clock.getDelta());
+
+            renderer.render(scene, camera);
+        });
+
+    })
 
 
+
+
+
+    function OnWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    // window.addEventListener('pointermove', function (e) {
+    //     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    //     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    //     checkIntersection();
+    // });
 
-    let app = null;
 
-    window.addEventListener('DOMContentLoaded', () => {
-        app = new LoadAxolotl();
-    });
+    //raycaster.setFromCamera( mouse, camera );
+    //const intersects = raycaster.intersectObject( scene, true );
+
+    //if (intersects.length > 0) {
+    //var obj = intersects[0].object; // the object that was intersected
+    //console.log(obj)
+
+    //console.log("here")
+
+
+
+
+
+
 
 </script>
