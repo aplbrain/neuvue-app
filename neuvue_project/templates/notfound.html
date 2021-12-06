@@ -81,44 +81,84 @@
     const lightPurple = new THREE.MeshToonMaterial({ color: 0x67547A })
     const darkPurple = new THREE.MeshToonMaterial({ color: 0x371E50 })
 
-    var mixer = null;
+    let mixer;
     var loader = new GLTFLoader();
     var model;
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+
+
+    let fraction = 0;
+    const up = new THREE.Vector3(0, 1, 0);
+    const axis = new THREE.Vector3();
+
+    const geo = new THREE.PlaneGeometry(500, 500);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+    const plane = new THREE.Mesh(geo, mat);
+    plane.position.x += -50
+    plane.rotation.y = Math.PI / 2;
+
+    scene.add(plane);
+
+    animate();
 
     loader.load(address_to_model, function (glb) {
         model = glb.scene;
 
         model.scale.multiplyScalar(20);
+        model.rotation.z = -Math.PI / 2;
 
-
-        glb.scene.traverse(function (child) {
+        model.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
                 var newMat = new THREE.MeshToonMaterial()
                 newMat.color = child.material.color;
                 child.material = newMat;
                 child.material.skinning = true
 
+                child.castShadow = true;
+                child.frustumCulled = false;
             }
-            child.castShadow = true;
         })
 
-
-        var mixer = new THREE.AnimationMixer(model);
+        mixer = new THREE.AnimationMixer(model);
         var clip1 = glb.animations[0];
         var action1 = mixer.clipAction(clip1);
 
         action1.play();
-        scene.add(glb.scene)
-        console.log(action1.play())
-
-        renderer.setAnimationLoop(() => {
-
-            mixer.update(clock.getDelta());
-
-            renderer.render(scene, camera);
-        });
+        scene.add(model)
 
     })
+
+    //ANIMATE
+    function animate() {
+        requestAnimationFrame(animate);
+
+        if (mixer) mixer.update(clock.getDelta());
+
+        scene.traverse(function (child) {
+            if (child instanceof THREE.Group) {
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects([plane]);
+                const item = intersects[0];
+                item.point.x += 20 
+                child.position.copy(item.point);
+            }
+
+        })
+        renderer.render(scene, camera);
+    }
+
+    document.addEventListener('pointermove', (event) => {
+        console.log('Pointer moved')
+        // Update the mouse variable
+        event.preventDefault();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    });
+
 
 
     function OnWindowResize() {
@@ -126,11 +166,6 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
-
-    window.addEventListener('pointermove', function (e) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    });
 
 
 </script>
