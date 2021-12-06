@@ -31,7 +31,7 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    var _clock = new THREE.Clock();
+    var clock = new THREE.Clock();
 
 
     document.body.appendChild(renderer.domElement);
@@ -42,7 +42,7 @@
 
     const fov = 60;
     const aspect = 1920 / 1080;
-    const near = 1.0;
+    const near = 0.1;
     const far = 1000.0;
     var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.set(75, 20, 0);
@@ -70,7 +70,7 @@
     var mouse = new THREE.Vector2();
 
 
-    let light2 = new THREE.AmbientLight(0xFFFFFF, 4.0);
+    let light2 = new THREE.AmbientLight(0xFFFFFF, 3.0);
     scene.add(light2);
 
     const controls = new OrbitControls(
@@ -85,37 +85,23 @@
     var loader = new GLTFLoader();
     var model;
 
-   // let composer = new EffectComposer(renderer);
-   // const renderPass = new RenderPass(scene, camera);
-   // composer.addPass(renderPass);
-   // let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
-
-
-   // outlinePass.edgeStrength = 8;
-   // outlinePass.visibleEdgeColor.set('#f71b1b');
-   // outlinePass.hiddenEdgeColor.set('#ac6b20');
-   // composer.addPass(outlinePass);
-
-
-   // let effectFXAA = new ShaderPass(FXAAShader);
-   // effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-   // composer.addPass(effectFXAA);
-
     loader.load(address_to_model, function (glb) {
         model = glb.scene;
-        console.log("here")
-        console.log(model)
 
-       // let selectedObjects = [];
-       // selectedObjects.push(model);
-       // outlinePass.selectedObjects = selectedObjects;
-       // console.log(outlinePass.selectedObjects)
-       // composer.addPass(outlinePass);
         model.scale.multiplyScalar(20);
 
-        glb.scene.traverse(c => {
-            c.castShadow = true;
-        });
+
+        glb.scene.traverse(function (child) {
+            if (child instanceof THREE.Mesh) {
+                var newMat = new THREE.MeshToonMaterial()
+                newMat.color = child.material.color;
+                child.material = newMat;
+                child.material.skinning = true
+
+            }
+            child.castShadow = true;
+        })
+
 
         var mixer = new THREE.AnimationMixer(model);
         var clip1 = glb.animations[0];
@@ -123,30 +109,16 @@
 
         action1.play();
         scene.add(glb.scene)
-
-       // var outlineMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.BackSide } );
-       // var outlineMesh = new THREE.Mesh( model, outlineMaterial );
-       // console.log(model.position)
-       // var target = new THREE.Vector3(); 
-       // model.getWorldPosition( target );
-       // outlineMesh.position.x = target.x
-       // outlineMesh.position.y = target.y
-       // outlineMesh.position.z = target.z
-       // outlineMesh.scale.multiplyScalar(1.05);
-
-       // scene.add( outlineMesh );
+        console.log(action1.play())
 
         renderer.setAnimationLoop(() => {
 
-            mixer.update(_clock.getDelta());
+            mixer.update(clock.getDelta());
 
             renderer.render(scene, camera);
         });
 
     })
-
-
-
 
 
     function OnWindowResize() {
@@ -155,26 +127,10 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    // window.addEventListener('pointermove', function (e) {
-    //     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    //     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    //     checkIntersection();
-    // });
-
-
-    //raycaster.setFromCamera( mouse, camera );
-    //const intersects = raycaster.intersectObject( scene, true );
-
-    //if (intersects.length > 0) {
-    //var obj = intersects[0].object; // the object that was intersected
-    //console.log(obj)
-
-    //console.log("here")
-
-
-
-
-
+    window.addEventListener('pointermove', function (e) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    });
 
 
 </script>
