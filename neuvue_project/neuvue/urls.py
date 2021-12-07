@@ -21,6 +21,7 @@ from django.contrib.auth.views import LogoutView
 from workspace.views import WorkspaceView
 from workspace.views import TaskView
 from workspace.views import IndexView
+from dashboard.views import DashboardView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
+    path('dashboard/', DashboardView.as_view(), name="dashboard")
 ]
 
 
