@@ -259,6 +259,6 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
 
-class TokenView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "token.html")
+class TokenView(View, LoginRequiredMixin):
+    def get(self, request, code=None, *args, **kwargs):
+        return render(request, "token.html", {"code": code})

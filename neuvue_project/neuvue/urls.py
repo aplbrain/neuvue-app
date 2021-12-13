@@ -31,7 +31,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
-    path('token/', TokenView.as_view(), name='token')
+    path('token/<str:code>', TokenView.as_view(), name='token')
 ]
 
 

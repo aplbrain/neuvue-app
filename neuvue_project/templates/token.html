@@ -9,7 +9,7 @@
         {% if user.is_authenticated %}
             <button type="button" class="btn btn-primary btn-lg">Generate Token</button>
             </br>
-            <input class="form-control" type="text" placeholder="Token here" readonly>
+            <input class="form-control" type="text" placeholder="{{code}}" readonly>
         {% else %}
             <span class="index-title-sub-text">Please log in to generate API token.</span>
         {% endif %}
