@@ -18,9 +18,9 @@
                                 Start Proofreading
                             </div>
                         </div>
-                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}}</div>
+                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
                     </div>
-                    <div id="{{namespace}}Table" class ="bin" style="display:block;">
+                    <div id="{{namespace}}Table" class ="bin" style="display:none;">
                         <div class="tab">
                             <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}', {{context.start}}, {{context.end}},'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
                             <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}', {{context.start}}, {{context.end}},'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>

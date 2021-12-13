@@ -43,8 +43,8 @@ class WorkspaceView(LoginRequiredMixin, View):
         request.session['sidebar'] = sidebar_status
 
         context = {
-            'ng_url': {},
-            'pcg_url': settings.PROD_PCG_SOURCE,
+            'ng_url': settings.NG_CLIENT,
+            'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
             'task_id': '',
             'seg_id': '',
             'is_open': False,
@@ -184,6 +184,8 @@ class TaskView(View):
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
+            context[namespace]["pcg_source"] = n_s.pcg_source
+            context[namespace]["img_source"] = n_s.img_source
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
