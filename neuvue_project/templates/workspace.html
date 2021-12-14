@@ -247,7 +247,7 @@
     // addStateEventListener('{{ng_url}}');
     
     function submitForm(value) {
-        let data = viewer.state.toJSON();
+        let data = JSON.stringify(viewer.state.toJSON());
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
         $('#mainForm').submit();
@@ -265,7 +265,7 @@
         window.localStorage.removeItem('ngState');
 
         $('#btnSave').click(function() {
-            window.localStorage['ngState'] = viewer.state.toJSON();
+            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
         })
 
         $('#btnReload').click(function() {
@@ -319,7 +319,7 @@
         })
 
         $('#btnStop').click(function() {
-            let data = viewer.state.toJSON();
+            let data = JSON.stringiy(viewer.state.toJSON());
             
             $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');

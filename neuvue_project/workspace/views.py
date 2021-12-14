@@ -43,7 +43,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         request.session['sidebar'] = sidebar_status
 
         context = {
-            'ng_url': settings.NG_CLIENT,
+            'ng_url': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
             'task_id': '',
             'seg_id': '',
@@ -69,6 +69,8 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), namespace)
+        logging.debug(f"received task_df: {task_df}")
+
         if not task_df:
             context['tasks_available'] = False
             pass
@@ -85,6 +87,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Construct NG URL from points or existing state
             try:
                 ng_state = json.loads(task_df.get('ng_state'))['value']
+                logging.debug(f"received state from task_df: {ng_state}")
             except Exception as e:
                 logging.warning(f'Unable to pull ng_state for task: {e}')
                 ng_state = None 
