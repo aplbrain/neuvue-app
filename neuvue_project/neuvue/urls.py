@@ -21,6 +21,7 @@ from django.contrib.auth.views import LogoutView
 from workspace.views import WorkspaceView
 from workspace.views import TaskView
 from workspace.views import IndexView
+from workspace.views import InspectTaskView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -29,6 +30,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
+    path('inspect/', InspectTaskView.as_view(), name="inspect"), 
+    path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect")
 ]
 
 

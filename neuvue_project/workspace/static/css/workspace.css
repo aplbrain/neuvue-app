@@ -393,6 +393,13 @@ float: left;
 font-size: 25px;
 }
 
+.inspect-container {
+  display: block;
+  margin: auto;
+  padding-top: 20%;
+  width: 40%;
+  }
+
 /* NAVIGATION BAR */
 
 /* *{
