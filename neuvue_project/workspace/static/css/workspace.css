@@ -20,10 +20,10 @@
   --complete-color:#96a5d4;
   --complete-color-actived:#738fe6;
   --progress: #96a5d4;
-  --yesBut: #da7f4b;
-  --yesBut-activated: #db763b;
-  --noBut: #9d6608;
-  --noBut-activated: #6d4807;
+  --yesBut: #bed34b;
+  --yesBut-activated: #abc032;
+  --noBut: #da7f4b;
+  --noBut-activated: #db763b;
 
   /* TRANSPARENT COLORS */
   --transparent-background: #120e1479;
@@ -48,6 +48,8 @@ ul li {
 .basic {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
   background-size: 70vw;
+  background-repeat: repeat;
+  height: 96vh;
   overflow: hidden;
 }
 
@@ -283,7 +285,7 @@ color: var(--primary-accent);
 .mainButton.submit.quad{
   min-width: 10%;
   max-width: 12%;
-  margin-left: 22%;
+  margin-left: 11%;
 }
 .mainButton.yesBut{
   min-width: 15%;
