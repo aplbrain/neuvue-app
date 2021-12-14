@@ -22,6 +22,8 @@
   --progress: #96a5d4;
   --yesBut: #da7f4b;
   --yesBut-activated: #db763b;
+  --noBut: #9d6608;
+  --noBut-activated: #6d4807;
 
   /* TRANSPARENT COLORS */
   --transparent-background: #120e1479;
@@ -287,11 +289,21 @@ color: var(--primary-accent);
   min-width: 15%;
   max-width: 18%;
   background-color: var(--yesBut);  
-  font-size: 1.2vh;
 }
 .mainButton.yesBut:hover{
   border: 3px solid var(--yesBut-activated);
   background-color: var(--yesBut-activated);  
+  
+}
+
+.mainButton.noBut{
+  min-width: 15%;
+  max-width: 18%;
+  background-color: var(--noBut); 
+}
+.mainButton.noBut:hover{
+  border: 3px solid var(--noBut-activated);
+  background-color: var(--noBut-activated);  
   
 }
 
