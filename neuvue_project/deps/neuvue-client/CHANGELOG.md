@@ -1,6 +1,0 @@
-- **0.2.1**
-    - Fix infamous `_id` index error when a result has zero rows; now returns an empty dataframe with the correct columns.
-    - Add test suite
-    - Add `limit` argument when requesting large numbers of results
-    - Enable environment-variable authentication
-    - Fix unauthorized-access infinite loop

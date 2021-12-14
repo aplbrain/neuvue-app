@@ -1,3 +1,0 @@
-[submodule "neuvue-client"]
-	path = neuvue_project/deps/neuvue-client
-	url = https://github.com/aplbrain/neuvue-client.git
