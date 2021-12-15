@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -197,10 +197,6 @@ LOGOUT_REDIRECT_URL = '/'
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
 
-# Data Sources
-IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
-PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
-DEV_PCG_SOURCE = None
 
 # Neuroglancer Settings
 # TODO: Move this as a internal model separate from the django config
@@ -214,18 +210,6 @@ DATASET_VIEWER_OPTIONS = {
     }
 }
 VOXEL_RESOLUTION = (4, 4, 40)
-
-# Neuroglancer Webpack Settings
-# WEBPACK_LOADER = {
-#   'DEFAULT': {
-#     'LOADER_CLASS': 'neuvue.webpack.MultipleWebpackLoader',
-#     'BUNDLE_DIR_NAME':  'workspace',
-#     'CACHE': not DEBUG,
-#     'STATS_FILES': glob(os.path.join(BASE_DIR, 'workspace', 'static','ts','wrapper', 'webpack-stats-*.json')),
-#     'POLL_INTERVAL': 0.1,
-#     'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-#   }
-# }
 
 if DEBUG:
     import mimetypes
