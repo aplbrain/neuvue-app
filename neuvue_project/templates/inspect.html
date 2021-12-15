@@ -71,9 +71,7 @@
 
 <div id="neuroglancer" class="leftFormatting">
   <div class="left">    
-    <iframe src="{{ng_url}}" class="neuroGlancer" id="neuroGlancerFrame"> </iframe>
-
-
+    <div id="neuroglancer-container" class="neuroglancer-container"></div>
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'inspect' %}'">
           Exit
@@ -94,6 +92,11 @@
     closeSideMenu();
   } else {
     openSideMenu();
+  }
+
+  $(document).ready(function() {
+    var received_data = {{ ng_state|safe }};
+    viewer.state.restoreState(received_data);
   }
 
 </script>

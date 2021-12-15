@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <! Information Hidden Menu >
 
 {% if is_open %}
@@ -53,10 +54,8 @@
             </div>
         </div>
     </div> 
-
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
-        
         <div class="left">
             {% if is_open %}
                 {% if submission_method == "forced_choice" %}
@@ -107,14 +106,14 @@
                 </form>
                 {% endif %}
 
-            <iframe src="{{ng_url}}"
-                    class="neuroGlancer"
-                    id="neuroGlancerFrame">
-            </iframe>
-            {% endif %}
-            
-            <! Buttons >
                 
+            {% endif %}
+            {% if is_open %}
+                <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% else %}
+                <div id="neuroglancer-container" class="neuroglancer-container" style="display: none !important;"></div>
+            {% endif %}
+            <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
 
@@ -195,6 +194,7 @@
                 </form>
         </div>
     </div>
+    
 </div>
 
 <form id="flagForm" method="post">
@@ -238,8 +238,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript" src="{% static "js/state.js" %}"></script>
-
+<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
 
     // Side Bar Interaction
@@ -250,37 +249,29 @@
     } else {
        openSideMenu();
     }
-
-    /* Function for getting the current Neuroglancer state */
-    
-    addStateEventListener('{{ng_url}}');
     
     function submitForm(value) {
-        getCurrentNeuroglancerState('{{ng_url}}', function (data){
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
-            $('#mainForm').submit()
-        });
+        let data = JSON.stringify(viewer.state.toJSON());
+        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
+        $('#mainForm').submit();
     }
 
 
     $(document).ready(function() {
-        // HACK. Reset the window storage so it doesnt reload previous tasks
-        window.localStorage.removeItem('ngState');
+
+        var received_data = {{ ng_state|safe }};
+        viewer.state.restoreState(received_data);
 
         $('#btnSave').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}');
+            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
         })
 
         $('#btnReload').click(function() {
             if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState'])['value'];
-                let prefix = new URL('{{ng_url}}').origin + '/#!';
-                $('#neuroGlancerFrame').attr('src', prefix + JSON.stringify(state));
+                let state = JSON.parse(window.localStorage['ngState']);
+                viewer.state.restoreState(state)
             }
-            else {
-                $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
-            } 
         })
 
         if ('{{submission_method}}' == "submit"){
@@ -309,30 +300,21 @@
                 submitForm('unsure');
             });
         }
-
-
-        $('#btnFlag').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('#neuroGlancerFrame').detach();
-            });   
-        })
         
         $('#btnFlagSubmit').click(function() {
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', window.localStorage.getItem('ngState')).appendTo('#flagForm');
+            let data = JSON.stringiy(viewer.state.toJSON());
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
             $('#flagForm').submit()
         })
 
-        $('#btnFlagClose').click(function() {
-            window.location.reload()
-        })
-
         $('#btnStop').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-                $('#mainForm').submit()
-            });
+            let data = JSON.stringiy(viewer.state.toJSON());
+            
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
+            $('#mainForm').submit();
+            
         })
 
         $('#btnStart').click(function() {
