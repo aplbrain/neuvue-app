@@ -104,7 +104,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 status="closed",
                 ng_state=ng_state)
         
-        elif button in ['yes', 'no', 'unsure', 'yesConditional']:
+        elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
