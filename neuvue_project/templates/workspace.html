@@ -68,7 +68,7 @@
                         type="button" 
                         class="mainButton submit quad" 
                     >
-                        Yes
+                        Confirm Split
                     </button>
 
                     <button 
@@ -76,7 +76,15 @@
                         type="button" 
                         class="mainButton yesBut" 
                     >
-                        Yes, but requires refinement
+                        Split Requires Refinement
+                    </button>
+
+                    <button 
+                    id="btnNoBut" 
+                    type="button" 
+                    class="mainButton noBut" 
+                    >
+                        Reject Split but Error Nearby
                     </button>
 
                     <button 
@@ -84,7 +92,7 @@
                         type="button" 
                         class="mainButton flag quad" 
                     >
-                        No
+                        Reject Split
                     </button>
 
                     <button 
@@ -288,6 +296,10 @@
 
             $('#btnYesBut').click(function(){
                 submitForm('yesConditional');
+            });
+
+            $('#btnNoBut').click(function(){
+                submitForm('errorNearby');
             });
 
             $('#btnNo').click(function(){

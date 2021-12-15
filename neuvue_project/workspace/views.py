@@ -121,7 +121,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 status="closed",
                 ng_state=ng_state)
         
-        elif button in ['yes', 'no', 'unsure', 'yesConditional']:
+        elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -286,3 +286,51 @@ class IndexView(View):
 class AuthView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "auth_redirect.html")
+
+
+class InspectTaskView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, task_id=None, *args, **kwargs):
+        context = {
+            "task_id": task_id,
+            "ng_url": None,
+            "error": None
+        }
+
+        if task_id is None:
+            return render(request, "inspect.html", context)
+
+        try:
+            task_df = self.client.get_task(task_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "inspect.html", context)
+    
+        namespace =  task_df['namespace']
+        try:
+            ng_state = json.loads(task_df.get('ng_state'))['value']
+        except Exception as e:
+            logging.warning(f'Unable to pull ng_state for task: {e}')
+            ng_state = None 
+        
+        context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
+        context['task_id'] = task_df['_id']
+        context['seg_id'] = task_df['seg_id']
+        context['instructions'] = task_df['instructions']
+        context['assignee'] = task_df['assignee']
+        context['display_name'] = Namespace.objects.get(namespace = namespace).display_name
+        context['pcg_url'] = Namespace.objects.get(namespace = namespace).pcg_source
+        context['status'] =  task_df['status']
+        
+        metadata = task_df['metadata']['metadata']
+        if metadata.get('decision'):
+            context['decision'] = metadata['decision']
+        return render(request, "inspect.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        task_id = request.POST.get("task_id")
+        return redirect(reverse('inspect', kwargs={"task_id":task_id}))
