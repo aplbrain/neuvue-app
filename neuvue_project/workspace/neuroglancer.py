@@ -154,7 +154,7 @@ def create_point_state(use_description=False):
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def construct_proofreading_url(task_df, points, return_as='url'):
+def construct_proofreading_state(task_df, points, return_as='json'):
     """Generates a Neuroglancer URL with the path/annotation information preloaded.
 
     Args:
@@ -197,11 +197,11 @@ def construct_proofreading_url(task_df, points, return_as='url'):
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
-    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_url'):
+    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_state'):
         if return_as == 'json':
             return task_df['ng_state']
-        else:
-            return construct_url_from_existing(json.dumps(task_df['ng_url']))
+        elif return_as == 'url':
+            return construct_url_from_existing(json.dumps(task_df['ng_state']))
     
     return chained_state.render_state(
             data_list, return_as=return_as, url_prefix=settings.NG_CLIENT

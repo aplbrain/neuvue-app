@@ -249,9 +249,6 @@
     } else {
        openSideMenu();
     }
-
-    /* Function for getting the current Neuroglancer state */
-    // addStateEventListener('{{ng_url}}');
     
     function submitForm(value) {
         let data = JSON.stringify(viewer.state.toJSON());
@@ -263,12 +260,8 @@
 
     $(document).ready(function() {
 
-        var received_data = {{ ng_url|safe }};
+        var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
-
-
-        // HACK. Reset the window storage so it doesnt reload previous tasks
-        window.localStorage.removeItem('ngState');
 
         $('#btnSave').click(function() {
             window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
@@ -279,9 +272,6 @@
                 let state = JSON.parse(window.localStorage['ngState']);
                 viewer.state.restoreState(state)
             }
-            // else {
-            //     $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
-            // } 
         })
 
         if ('{{submission_method}}' == "submit"){
@@ -310,22 +300,12 @@
                 submitForm('unsure');
             });
         }
-
-
-        $('#btnFlag').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('#neuroGlancerFrame').detach();
-            });   
-        })
         
         $('#btnFlagSubmit').click(function() {
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', window.localStorage.getItem('ngState')).appendTo('#flagForm');
+            let data = JSON.stringiy(viewer.state.toJSON());
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
             $('#flagForm').submit()
-        })
-
-        $('#btnFlagClose').click(function() {
-            window.location.reload()
         })
 
         $('#btnStop').click(function() {

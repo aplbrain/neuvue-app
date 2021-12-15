@@ -13,7 +13,7 @@ import pandas as pd
 import time
 import json
 
-from .neuroglancer import construct_proofreading_url, construct_url_from_existing
+from .neuroglancer import construct_proofreading_state, construct_url_from_existing
 from .analytics import user_stats
 from .utils import utc_to_eastern
 
@@ -43,7 +43,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         request.session['sidebar'] = sidebar_status
 
         context = {
-            'ng_url': {},
+            'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
             'task_id': '',
             'seg_id': '',
@@ -61,16 +61,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             # TODO: Redirect to task page for now, something went wrong...
             return redirect(reverse('tasks'))
 
-        
-        
-        
-        
-    
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), namespace)
-        logging.debug(f"received task_df: {task_df}")
-
+        
         if not task_df:
             context['tasks_available'] = False
             pass
@@ -86,18 +80,19 @@ class WorkspaceView(LoginRequiredMixin, View):
  
             # Construct NG URL from points or existing state
             try:
-                ng_state = json.loads(task_df.get('ng_state'))['value']
-                logging.debug(f"received state from task_df: {ng_state}")
+                ng_state = json.loads(task_df.get('ng_state'))
             except Exception as e:
                 logging.warning(f'Unable to pull ng_state for task: {e}')
                 ng_state = None 
     
             if ng_state:
-                context['ng_url'] = ng_state
+                if ng_state.get('value'):
+                    ng_state = ng_state['value']
+                context['ng_state'] = json.dumps(ng_state)
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-                context['ng_url'] = construct_proofreading_url(task_df, points, return_as='json')
+                context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -283,10 +278,10 @@ class TaskView(View):
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
+
 class AuthView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "auth_redirect.html")
-
 
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
@@ -294,9 +289,12 @@ class InspectTaskView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
+        if task_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{task_id}', content_type='application/javascript')
+
         context = {
             "task_id": task_id,
-            "ng_url": None,
+            "ng_state": None,
             "error": None
         }
 
@@ -315,8 +313,16 @@ class InspectTaskView(View):
         except Exception as e:
             logging.warning(f'Unable to pull ng_state for task: {e}')
             ng_state = None 
-        
-        context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
+
+        if ng_state:
+            if ng_state.get('value'):
+                ng_state = ng_state['value']
+            context['ng_state'] = json.dumps(ng_state)
+        else:
+            # Manually get the points for now, populate in client later.
+            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
+            context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+
         context['task_id'] = task_df['_id']
         context['seg_id'] = task_df['seg_id']
         context['instructions'] = task_df['instructions']
@@ -325,7 +331,7 @@ class InspectTaskView(View):
         context['pcg_url'] = Namespace.objects.get(namespace = namespace).pcg_source
         context['status'] =  task_df['status']
         
-        metadata = task_df['metadata']['metadata']
+        metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
         return render(request, "inspect.html", context)
