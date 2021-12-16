@@ -109,10 +109,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         ng_state = request.POST.get('ngState')
         start_time = request.session.get('start_time', 0)
         idleTime = request.session.get('idleTime', 0)
-        duration = max(0, time.time() - idleTime - start_time)
+        duration = time.time() - idleTime - start_time
+        logging.debug("DURATION")
         logging.debug(time.time() - idleTime - start_time)
         logging.debug(idleTime)
         if button == 'submit':
+            request.session['start_time'] = None
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -121,6 +123,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state)
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
+            request.session['start_time'] = None
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -132,6 +135,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 })
 
         elif button == 'flag':
+            request.session['start_time'] = None
             logger.debug('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
@@ -151,10 +155,9 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 self.client.patch_task(task_df["_id"], status="open")
             
-            #initialize timer 
-            request.session["start_time"] = time.time()
         
         elif button == 'stop':
+            request.session['start_time'] = None
             logger.debug('Stopping proofreading app')
             self.client.patch_task(
                 task_df["_id"], 
@@ -171,7 +174,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     request.session['sidebar'] = body['sidebar_tab']
 
                 if 'idleTime' in body:
-                    request.session['idleTime'] = body['idleTime']
+                    request.session['idleTime'] += body['idleTime']
+                    
 
             except Exception as e:
                 logging.error(f"POST Error: {e}")
