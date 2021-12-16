@@ -806,8 +806,8 @@ background: transparent;
   margin-bottom: 1vh;
   height: 100% !important;
   width: 95%;
-  overflow: hidden;
   color: var(--primary-accent);
+  overflow:auto;
   order: 1;
 }
 .neuroglancer-minimizable-group-flexible.neuroglancer-annotation-hiding-list-parent{
@@ -816,6 +816,7 @@ background: transparent;
 }
 .neuroglancer-tab-content.neuroglancer-annotation-layer-view{
   height: 45vh;
+  overflow-y: scroll;
 }
 
 .neuroglancer-annotation-hiding-list-scrollarea{
@@ -828,5 +829,12 @@ background: transparent;
 
 .neuroglancer-context-menu.neuroglancer-viewer-context-menu{
   display: none;
+}
+.neuroglancer-minimizable-group-flexible{
+  max-height: 45vh !important;
+  overflow-y: scroll !important;
+}
+.neuroglancer-stack-view{
+  height: 45vh;
 }
 
