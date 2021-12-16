@@ -309,7 +309,7 @@ class InspectTaskView(View):
     
         namespace =  task_df['namespace']
         try:
-            ng_state = json.loads(task_df.get('ng_state'))['value']
+            ng_state = json.loads(task_df.get('ng_state'))
         except Exception as e:
             logging.warning(f'Unable to pull ng_state for task: {e}')
             ng_state = None 

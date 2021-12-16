@@ -831,10 +831,7 @@ background: transparent;
   display: none;
 }
 .neuroglancer-minimizable-group-flexible{
-  max-height: 45vh !important;
+  max-height: 20vh !important;
   overflow-y: scroll !important;
-}
-.neuroglancer-stack-view{
-  height: 45vh;
 }
 
