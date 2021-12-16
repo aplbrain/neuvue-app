@@ -274,7 +274,6 @@
     }
 
     function exitAlert(e) {
-        getCurrentNeuroglancerState('{{ng_url}}');
         e.preventDefault(); 
         e.returnValue = '';
     }
@@ -341,6 +340,7 @@
         })
         
         $('#timeoutModalNo').click(function() {
+            window.removeEventListener('beforeunload', exitAlert);
             submitForm('stop');
             });
         })
@@ -371,8 +371,10 @@
             }
             idleTime += incrementAmount;
         }
-
+    
+    {% if is_open %}
     window.addEventListener('beforeunload', exitAlert);
+    {% endif %}
 
 </script>
 {% endblock %}
