@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+from glob import glob
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'workspace'
+    'workspace',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -199,11 +200,6 @@ NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
 # Task Timeout in Seconds
 TIMEOUT = 10
 
-# Data Sources
-IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
-PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
-DEV_PCG_SOURCE = None
-
 # Neuroglancer Settings
 # TODO: Move this as a internal model separate from the django config
 NG_CLIENT = "https://neuroglancer.neuvue.io"
@@ -215,5 +211,10 @@ DATASET_VIEWER_OPTIONS = {
         }
     }
 }
+VOXEL_RESOLUTION = (4, 4, 40)
 
-VOXEL_RESOLUTION = [4, 4, 40]
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js",True)
+
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace','static','workspace'))
