@@ -812,12 +812,18 @@ background: transparent;
 }
 .neuroglancer-minimizable-group-flexible.neuroglancer-annotation-hiding-list-parent{
   overflow-y: hidden !important;
-  height: 60vh;
+  height: 45vh;
+}
+.neuroglancer-tab-content.neuroglancer-annotation-layer-view{
+  height: 45vh;
 }
 
-.neuroglancer-annotation-hiding-list-scrollarea {
+.neuroglancer-annotation-hiding-list-scrollarea{
   overflow-x: hidden;
   overflow-y: scroll;
+}
+.neuroglancer-tab-content.neuroglancer-annotations-tab{
+  height: 45vh;
 }
 
 .neuroglancer-context-menu.neuroglancer-viewer-context-menu{
