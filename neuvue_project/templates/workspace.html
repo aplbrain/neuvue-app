@@ -48,8 +48,39 @@
             <div class="sideContentBox memo">
                 <div class="sideContentInfo memo">
                     Pro Tip: Use Chrome and turn off toolbar in full screen! <br>
-                    Apple: CMD+SHIFT+F <br>
-                    PC: F11
+                    Mac: CMD+SHIFT+F <br>
+                    PC: F11 <br>
+                    <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th scope="col">Shortcut</th>
+                            <th scope="col">Mac</th>
+                            <th scope="col">PC</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Save Checkpoint</th>
+                            <td>CTRL+OPT+S</td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Reload Checkpoint</th>
+                            <td>CTRL+OPT+R</td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Flag Task</th>
+                            <td>CTRL+OPT+F</td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Exit Task</th>
+                            <td>CTRL+OPT+E</td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -123,6 +154,7 @@
                         id="btnSave" 
                         type="button" 
                         class="mainButton" 
+                        accesskey="s"
                     >
                         Save Checkpoint
                     </button>
@@ -131,6 +163,7 @@
                         id="btnReload" 
                         type="button" 
                         class="mainButton"
+                        accesskey="r"
                     {% if submission_method == "forced_choice" %}
                         style="margin-right: 15vw;"
                     {% endif %}
@@ -155,6 +188,7 @@
                         id="btnFlag" 
                         type="button" 
                         class="mainButton flag"
+                        accesskey="f"
                     {% if submission_method == "forced_choice" %}
                         style="margin-left: 15vw;"
                     {% endif %}
@@ -167,6 +201,7 @@
                         id="btnStop"
                         type="button"
                         class="mainButton pause"
+                        accesskey="e"
                     >
                         Exit Task
                     </button>
