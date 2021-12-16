@@ -1,14 +1,17 @@
+{% extends "base.html" %}
 {% load static %}
 
-<head>
-    <script type="text/javascript">
-        var address_to_model = "{% static 'mesh/axolotl2.glb' %}";
-    </script>
-</head>
 
-<body>
+{% block content %}
 
-</body>
+<script type="text/javascript">
+    var address_to_model = "{% static 'mesh/axolotl2.glb' %}";
+</script>
+
+<div class="container">
+    <p class='text'> Just keep swimming, this page doesn't exist</p>
+    <div class='main' id='main'></div>
+</div>
 
 <script type="module">
     import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/build/three.module.js';
@@ -33,8 +36,7 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     var clock = new THREE.Clock();
 
-
-    document.body.appendChild(renderer.domElement);
+    document.getElementById("main").appendChild(renderer.domElement);
 
     window.addEventListener('resize', () => {
         OnWindowResize();
@@ -127,6 +129,37 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
-
-
 </script>
+
+<style>
+    .container {
+        display: flex;
+        width: 100%;
+        position: relative;
+        margin: auto;
+        top: 50%;
+        align-items: center;
+        flex-direction: column;
+        gap: .5%;
+    }
+    .main {
+        width: 25%;
+        position: relative;
+        order: 2;
+        transform:translateY(-20%);
+        margin-right: 74vw;
+    }
+
+    .text {
+        font-size: 3vw;
+        width: 100%;
+        margin-left: 30%;
+        transform:translateY(15vh);
+        position: relative;
+        order: 1;
+        color:aliceblue;
+    }
+    canvas { outline: none; border: none; }
+</style>
+
+{% endblock %}
