@@ -302,20 +302,15 @@
         }
         
         $('#btnFlagSubmit').click(function() {
-            let data = JSON.stringiy(viewer.state.toJSON());
+            let data = JSON.stringify(viewer.state.toJSON());
             $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
             $('#flagForm').submit()
         })
 
-        $('#btnStop').click(function() {
-            let data = JSON.stringiy(viewer.state.toJSON());
-            
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-            $('#mainForm').submit();
-            
-        })
+        $('#btnStop').click(function(){
+            submitForm('stop')
+        });
 
         $('#btnStart').click(function() {
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
