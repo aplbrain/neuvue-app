@@ -367,7 +367,7 @@
             console.log(idleTime);
             if (idleTime >= '{{timeout}}') { 
                 $('#timeoutModal').modal('show');
-                updateIdleTime(idleTime); //second parameter should be in seconds
+                updateIdleTime(incrementAmount); //second parameter should be in seconds
             }
             idleTime += incrementAmount;
         }
