@@ -72,7 +72,8 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         elif task_df['status'] == 'open':
             # Reset session timer
-            request.session["start_time"] = time.time()
+            if not request.session.get('start_time'):
+                request.session["start_time"] = time.time()
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
