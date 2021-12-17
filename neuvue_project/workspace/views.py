@@ -5,12 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
-from datetime import datetime, timezone
-from pytz import timezone
-import pytz
 import numpy as np
 import pandas as pd
-import time
 import json
 
 from .neuroglancer import construct_proofreading_state, construct_url_from_existing
@@ -100,7 +96,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
     
-        logging.debug(f"DURATION: {duration}")
 
         if button == 'submit':
             logger.debug('Submitting task')
@@ -198,14 +193,6 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
-        def utc_to_eastern(time_value):
-                utc = pytz.UTC
-                eastern = timezone('US/Eastern')
-                date_time = time_value.to_pydatetime()
-                date_time = utc.localize(time_value)
-                date_time = date_time.astimezone(eastern)
-                return date_time
-
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
