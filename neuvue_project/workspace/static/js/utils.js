@@ -34,10 +34,10 @@ function sidemenu_content() {
 
     if (neuroglancer_window.style.width != "75%" ) {
       openSideMenu();
-      window.localStorage.setItem('sidebarStatus', 'open')
+      window.localStorage.setItem('sidebarStatus', 'open');
     } else {
       closeSideMenu();
-      window.localStorage.setItem('sidebarStatus', 'closed')
+      window.localStorage.setItem('sidebarStatus', 'closed');
     }
 
 } 
