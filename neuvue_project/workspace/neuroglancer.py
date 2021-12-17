@@ -19,6 +19,27 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+####Only for testing, remove the below#####
+from caveclient import CAVEclient
+
+seg_id = 864691135474648896
+client = CAVEclient('minnie65_phase3_v1')
+output_df = client.materialize.query_table(
+            "synapses_pni_2", 
+            filter_in_dict={"post_pt_root_id": [seg_id]}, 
+            limit=100)
+
+pre_post = output_df["pre_pt_position"]
+
+
+post_post = output_df["post_pt_position"]
+
+presyn_df = pd.DataFrame({'index':pre_post.index, 'presyn':pre_post.values})
+
+postsyn_df = pd.DataFrame({'index':post_post.index, 'presyn':post_post.values})
+
+####Only for testing, remove the above#####
+
 def create_base_state(seg_ids, coordinate, namespace):
     """Generates a base state containing imagery and segemntation layers. 
 
@@ -184,6 +205,13 @@ def construct_proofreading_url(task_df, points):
             coordinates.append(points[-1])
             coordinates = np.array(coordinates)
         
+
+        #if presyn exists, create new basestate, path state, and chainsedstate
+        #creates path between 2 points
+        if task_df['metadata'].get('presyn_coordinates'):
+            connect_path_state = create_path_state()
+            chained_state = ChainedStateBuilder([base_state, connect_path_state])
+
         data_list.append( generate_path_df(coordinates))
         path_state = create_path_state()
         chained_state = ChainedStateBuilder([base_state, path_state])
