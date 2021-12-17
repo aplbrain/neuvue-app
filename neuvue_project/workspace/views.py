@@ -115,7 +115,16 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata={
                     'decision': button
                 })
-
+        
+        elif button == 'skip':
+            logger.debug('Skipping task')
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration,
+                priority=task_df['priority']-1, 
+                status="pending",
+                metadata={'skipped': True})
+        
         elif button == 'flag':
             logger.debug('Flagging task')
             flag_reason = request.POST.get('flag')

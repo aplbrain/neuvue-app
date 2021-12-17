@@ -186,7 +186,21 @@
                         Submit Task
                     </button>
                     {% endif %}
-
+                    
+                    <! Skip >
+                    <button
+                        id="btnSkip" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#skipModal">
+                        Skip Task
+                    </button>
+                    
                     <! Flag/Stop >
                     <button
                         id="btnFlag" 
@@ -235,6 +249,30 @@
     </div>
     
 </div>
+
+<form id="skipForm" method="post">
+    {% csrf_token %}
+    <!-- Skip Modal -->
+    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to skip? (Your progress will NOT be saved!)
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" role="form"></form>
+                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
+                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -396,6 +434,10 @@
                 submitForm('unsure');
             });
         }
+        
+        $('#btnSkipSubmit').click(function() {
+            submitForm('skip', '#skipForm')
+        })
         
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')
