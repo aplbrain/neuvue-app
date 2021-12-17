@@ -34,10 +34,10 @@ function sidemenu_content() {
 
     if (neuroglancer_window.style.width != "75%" ) {
       openSideMenu();
-      updateSideBar(1);
+      window.localStorage.setItem('sidebarStatus', 'open');
     } else {
       closeSideMenu();
-      updateSideBar(0);
+      window.localStorage.setItem('sidebarStatus', 'closed');
     }
 
 } 
@@ -107,32 +107,6 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-function updateSideBar(action) {
-  
-  const csrftoken = getCookie('csrftoken');
-
-  const myInit = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json, text/plain, */*',
-          'X-CSRFToken': csrftoken,
-      },
-      body: JSON.stringify({'sidebar_tab': action}),
-      credentials: 'same-origin',
-  };
-  fetch('', myInit).then(function (response) {
-      /*
-      if (response.ok) {
-          console.log('success')
-      }
-      else {
-          console.log('failed')
-      }
-      */
-  });
-}
-
 
 /* Flag Modal */
 function toggleTextbox(){
@@ -148,8 +122,6 @@ function copyToClipboard(copyInfo) {
    /* Copy the text inside the text field */
   navigator.clipboard.writeText(copyInfo);
 }
-
-
 
 
 

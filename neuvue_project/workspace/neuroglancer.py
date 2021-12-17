@@ -19,21 +19,26 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def create_base_state(seg_ids, coordinate):
+def create_base_state(seg_ids, coordinate, namespace):
     """Generates a base state containing imagery and segemntation layers. 
 
     Args:
         seg_ids (list): seg_ids to select in the view
         coordinate (tuple|list): collection of three integer voxel coordinates, XYZ order.
-
+        namespace (str): task namespace
     Returns:
         StateBuilder: Base State
     """
     
     # Create ImageLayerConfig
-    img_source = "precomputed://" + settings.IMG_SOURCE
-    black = settings.CONTRAST.get("black", 0)
-    white = settings.CONTRAST.get("white", 1)
+    img_source = "precomputed://" + Namespace.objects.get(namespace = namespace).img_source
+    try: 
+        black = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["black"]
+        white = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["white"]
+    except KeyError:
+        black = 0
+        white = 1
+    
     img_layer = ImageLayerConfig(
         name='em',
         source=img_source, 
@@ -43,11 +48,17 @@ def create_base_state(seg_ids, coordinate):
         )
     
     # Create SegmentationLayerConfig
-    seg_source = "graphene://" + settings.PROD_PCG_SOURCE
+    seg_source = "graphene://" + Namespace.objects.get(namespace = namespace).pcg_source
+    segmentation_view_options = {
+        'alpha_selected': 0.6,
+        'alpha_3d': 0.3
+        }
     seg_layer = SegmentationLayerConfig(
         name='seg', 
         source=seg_source, 
-        fixed_ids=seg_ids)
+        fixed_ids=seg_ids,
+        view_kws=segmentation_view_options
+        )
     view_options = {'position': coordinate, 'zoom_image': 20}
 
     return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
@@ -143,7 +154,7 @@ def create_point_state(use_description=False):
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def construct_proofreading_url(task_df, points):
+def construct_proofreading_state(task_df, points, return_as='json'):
     """Generates a Neuroglancer URL with the path/annotation information preloaded.
 
     Args:
@@ -156,7 +167,7 @@ def construct_proofreading_url(task_df, points):
     # TODO: Automatically iterate through Namespaces and map them to the 
     # appropriate Neuroglancer functions. 
     seg_ids = [task_df['seg_id']]
-    base_state = create_base_state(seg_ids, points[0])
+    base_state = create_base_state(seg_ids, points[0], task_df['namespace'])
 
     # Get any annotation coordinates. Append original points.
     coordinates = task_df['metadata'].get('coordinates', [])
@@ -186,11 +197,14 @@ def construct_proofreading_url(task_df, points):
         point_state = create_point_state(bool(description))
         chained_state = ChainedStateBuilder([base_state, point_state])
 
-    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_url'):
-        return construct_url_from_existing(json.dumps(task_df['ng_url']))
+    elif ng_type == NeuroglancerLinkType.PREGENERATED and task_df.get('ng_state'):
+        if return_as == 'json':
+            return task_df['ng_state']
+        elif return_as == 'url':
+            return construct_url_from_existing(json.dumps(task_df['ng_state']))
     
     return chained_state.render_state(
-            data_list, return_as='url', url_prefix=settings.NG_CLIENT
+            data_list, return_as=return_as, url_prefix=settings.NG_CLIENT
         )
     
 def construct_url_from_existing(state: str):

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <! Information Hidden Menu >
 
 {% if is_open %}
@@ -44,19 +45,50 @@
                     
                 </div>
             </div>
-            <div class="sideContentBox memo">
-                <div class="sideContentInfo memo">
-                    Pro Tip: Use Chrome and turn off toolbar in full screen! <br>
-                    Apple: CMD+SHIFT+F <br>
-                    PC: F11
-                </div>
+            
+            <! Shortcuts >
+            <div class="sideContentInfo">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                        <th scope="col">Shortcut</th>
+                        <th scope="col">Mac</th>
+                        <th scope="col">Windows</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">Save Checkpoint</th>
+                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>S</kbd></td>
+                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Reload Checkpoint</th>
+                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>R</kbd></td>
+                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>R</kbd></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Flag Task</th>
+                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>F</kbd></td>
+                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Exit Task</th>
+                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>E</kbd></td>
+                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>E</kbd></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Full Screen (Chrome)</th>
+                        <td><kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
+                        <td><kbd>F11</kbd></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div> 
-
     <! Neuroglancer >
     <div id="neuroglancer" class="leftFormatting">
-        
         <div class="left">
             {% if is_open %}
                 {% if submission_method == "forced_choice" %}
@@ -68,9 +100,8 @@
                         id="btnYes" 
                         type="button" 
                         class="mainButton submit quad" 
-                        style="margin-left: 18%;"
                     >
-                        Yes
+                        Confirm Split
                     </button>
 
                     <button 
@@ -78,7 +109,15 @@
                         type="button" 
                         class="mainButton yesBut" 
                     >
-                        Yes, but requires refinement
+                        Split Requires Refinement
+                    </button>
+
+                    <button 
+                    id="btnNoBut" 
+                    type="button" 
+                    class="mainButton noBut" 
+                    >
+                        Reject Split but Error Nearby
                     </button>
 
                     <button 
@@ -86,7 +125,7 @@
                         type="button" 
                         class="mainButton flag quad" 
                     >
-                        No
+                        Reject Split
                     </button>
 
                     <button 
@@ -100,14 +139,14 @@
                 </form>
                 {% endif %}
 
-            <iframe src="{{ng_url}}"
-                    class="neuroGlancer"
-                    id="neuroGlancerFrame">
-            </iframe>
-            {% endif %}
-            
-            <! Buttons >
                 
+            {% endif %}
+            {% if is_open %}
+                <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% else %}
+                <div id="neuroglancer-container" class="neuroglancer-container" style="display: none !important;"></div>
+            {% endif %}
+            <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar">
                     {% csrf_token %}
 
@@ -117,6 +156,7 @@
                         id="btnSave" 
                         type="button" 
                         class="mainButton" 
+                        accesskey="s"
                     >
                         Save Checkpoint
                     </button>
@@ -125,6 +165,7 @@
                         id="btnReload" 
                         type="button" 
                         class="mainButton"
+                        accesskey="r"
                     {% if submission_method == "forced_choice" %}
                         style="margin-right: 15vw;"
                     {% endif %}
@@ -149,6 +190,7 @@
                         id="btnFlag" 
                         type="button" 
                         class="mainButton flag"
+                        accesskey="f"
                     {% if submission_method == "forced_choice" %}
                         style="margin-left: 15vw;"
                     {% endif %}
@@ -161,6 +203,7 @@
                         id="btnStop"
                         type="button"
                         class="mainButton pause"
+                        accesskey="e"
                     >
                         Exit Task
                     </button>
@@ -188,6 +231,7 @@
                 </form>
         </div>
     </div>
+    
 </div>
 
 <form id="flagForm" method="post">
@@ -228,52 +272,95 @@
         </div>
     </div> 
 </form>
+
+<div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Continue proofreading?</h5>
+                <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="timeoutModalNo" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="timeoutModalYes" data-bs-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript" src="{% static "js/state.js" %}"></script>
-
+<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
 
-    // Side Bar Interaction
-    if ({{ request.session.num_visits }} === 0) {
-       openSideMenu();
-    } else if ({{ request.session.sidebar }} === 0) {
-       closeSideMenu();
+    if (window.localStorage.getItem('sidebarStatus') == 'open') {
+        openSideMenu();
+    } else if (window.localStorage.getItem('sidebarStatus') == 'closed') {
+        closeSideMenu();
     } else {
-       openSideMenu();
+        openSideMenu();
+    }
+    
+    function submitForm(value, form='#mainForm') {
+        window.removeEventListener('beforeunload', exitAlert);
+        let data = JSON.stringify(viewer.state.toJSON());
+        let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
+        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+        $(form).submit();
     }
 
-    /* Function for getting the current Neuroglancer state */
-    
-    addStateEventListener('{{ng_url}}');
-    
-    function submitForm(value) {
-        getCurrentNeuroglancerState('{{ng_url}}', function (data){
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
-            $('#mainForm').submit()
-        });
+    function exitAlert(e) {
+        e.preventDefault(); 
+        e.returnValue = '';
     }
+    
+    // Current time 
+    var startTime = Math.floor(Date.now()/1000);
+    
+    // Inactivity Timer
+    var idleTime = 0;
+    var totalIdleTime = 0;
 
+    // seconds to check for inactivity
+    var incrementAmount = 5;
+    
+    // Increment the idle time counter every minute.
+    setInterval(timerIncrement, incrementAmount*1000); 
 
+    // Zero the idle timer on mouse movement or keypress.
+    $(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+    $(this).keypress(function (e) {
+        idleTime = 0;
+    });
+
+    function timerIncrement() {
+        if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
+            $('#timeoutModal').modal('show');
+            totalIdleTime += incrementAmount
+        }
+        idleTime += incrementAmount;
+    }
+    
+    // Button Submission
     $(document).ready(function() {
-        // HACK. Reset the window storage so it doesnt reload previous tasks
-        window.localStorage.removeItem('ngState');
+
+        var received_data = {{ ng_state|safe }};
+        viewer.state.restoreState(received_data);
 
         $('#btnSave').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}');
+            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
         })
 
         $('#btnReload').click(function() {
             if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState'])['value'];
-                let prefix = new URL('{{ng_url}}').origin + '/#!';
-                $('#neuroGlancerFrame').attr('src', prefix + JSON.stringify(state));
+                let state = JSON.parse(window.localStorage['ngState']);
+                viewer.state.restoreState(state)
             }
-            else {
-                $('#neuroGlancerFrame').attr('src', function (i, val) { return val; });
-            } 
         })
 
         if ('{{submission_method}}' == "submit"){
@@ -290,6 +377,10 @@
                 submitForm('yesConditional');
             });
 
+            $('#btnNoBut').click(function(){
+                submitForm('errorNearby');
+            });
+
             $('#btnNo').click(function(){
                 submitForm('no');
             });
@@ -298,37 +389,28 @@
                 submitForm('unsure');
             });
         }
-
-
-        $('#btnFlag').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('#neuroGlancerFrame').detach();
-            });   
-        })
         
         $('#btnFlagSubmit').click(function() {
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', window.localStorage.getItem('ngState')).appendTo('#flagForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
-            $('#flagForm').submit()
+            submitForm('flag', '#flagForm')
         })
 
-        $('#btnFlagClose').click(function() {
-            window.location.reload()
-        })
-
-        $('#btnStop').click(function() {
-            getCurrentNeuroglancerState('{{ng_url}}', function (data){
-                $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-                $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'stop').appendTo('#mainForm');
-                $('#mainForm').submit()
-            });
-        })
+        $('#btnStop').click(function(){
+            submitForm('stop');
+        });
 
         $('#btnStart').click(function() {
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
             $('#mainForm').submit();
         })
+        
+        $('#timeoutModalNo').click(function() {
+            submitForm('stop');
+        });
     })
+    
+    {% if is_open %}
+    window.addEventListener('beforeunload', exitAlert);
+    {% endif %}
 
 </script>
 {% endblock %}

@@ -11,6 +11,37 @@ source  venv/bin/activate
 pip install -r neuvue_project/requirements.txt
 ```
 
+
+## (optional) Compiling the neuroglancer project
+
+A working neuroglancer compilation is included under `neuvue_project/workspace/static/workspace/`. However, if the underlying neuroglancer client needs to change,it must be compiled and linked.
+
+Requirements: [nvm](https://github.com/nvm-sh/nvm)
+
+1. Clone the neuroglancer repo, and build it
+	```
+	git clone https://github.com/aplbrain/neuroglancer
+	nvm install --lts
+	cd neuroglancer
+	npm i
+	npm run build
+	npm link
+	```
+
+1. Build the NG wrapper
+	```
+	cd neuvue_project/workspace/static/ts/wrapper
+	ln -s <absolute-path-to-neuroglancer>/src/neuroglancer ./third_party/neuroglancer
+	npm i
+	npm link neuroglancer
+	npm run build
+	``` 
+1. Copy the built files to static
+	```
+	cd neuvue_project/workspace/static/ts/wrapper
+	cp -r dist/workspace ../../
+	```
+
 ## Running a development environment
 
 For development purposes, there is a included neuvueDB.sqlite3 database file containing the tables needed to run the Django app. By default, the settings are configured for production which uses a cloud-enabled MySQL datatbase server. Here are the steps to enable development mode. 

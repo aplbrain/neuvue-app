@@ -20,8 +20,10 @@
   --complete-color:#96a5d4;
   --complete-color-actived:#738fe6;
   --progress: #96a5d4;
-  --yesBut: #da7f4b;
-  --yesBut-activated: #db763b;
+  --yesBut: #bed34b;
+  --yesBut-activated: #abc032;
+  --noBut: #da7f4b;
+  --noBut-activated: #db763b;
 
   /* TRANSPARENT COLORS */
   --transparent-background: #120e1479;
@@ -46,13 +48,13 @@ ul li {
 .basic {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
   background-size: 70vw;
+  background-repeat: repeat;
+  height: 96vh;
   overflow: hidden;
 }
 
 .basic.workspace {
   width: 100%;
-  height: 95vh;
-  
 }
 
 .basic.tasks {
@@ -112,7 +114,7 @@ overflow-x: hidden;
   background-color: transparent;
   width: 75%;
   top:-1%;
-  height: 100% !important;
+  height: 95vh;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -140,19 +142,6 @@ overflow-x: hidden;
   padding-top:20px;
 }
 
-
-/* NG container */
-/* width and height defined in workspace.html*/
-.neuroGlancer {
-  box-shadow: 0 4px 8px 0 var(--transparent-shadow);
-  border-radius: 8px;
-  border: 1px solid var(--background);
-  margin-top: 1vh;
-  margin-bottom: 1vh;
-  width: 95%;
-  height: 85vh;
-  order: 1;
-}
 
 /* formats the Task ID, Segmentation ID, and Pychunked graph container */
 .topBar {
@@ -267,36 +256,51 @@ color: var(--primary-accent);
 
 .mainButton.submit.duo{
   width: 90%;
-  margin: 1vh 1vw 1vh 1vw;
+  font-size: 1.5vh;
+  margin: 1vh 1vw 0vh 1vw;
 }
 
 
 .mainButton.flag.duo{
-  width: 40%;
-  float: right;
+  width: 90%;
+  font-size: 1.5vh;
   margin: 1vh 1vw;
 }
 
 .mainButton.submit.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
+  margin-left: 11%;
 }
 .mainButton.yesBut{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 15%;
+  max-width: 18%;
   background-color: var(--yesBut);  
 }
 .mainButton.yesBut:hover{
+  border: 3px solid var(--yesBut-activated);
   background-color: var(--yesBut-activated);  
+  
+}
+
+.mainButton.noBut{
+  min-width: 15%;
+  max-width: 18%;
+  background-color: var(--noBut); 
+}
+.mainButton.noBut:hover{
+  border: 3px solid var(--noBut-activated);
+  background-color: var(--noBut-activated);  
+  
 }
 
 .mainButton.flag.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
 }
 .mainButton.pause.quad{
-  min-width: 12%;
-  max-width: 15%;
+  min-width: 10%;
+  max-width: 12%;
 }
 
 
@@ -387,6 +391,13 @@ float: left;
 .the-icons {
 font-size: 25px;
 }
+
+.inspect-container {
+  display: block;
+  margin: auto;
+  padding-top: 20%;
+  width: 40%;
+  }
 
 /* NAVIGATION BAR */
 
@@ -764,7 +775,7 @@ background: transparent;
   margin-top: 40vh;
   min-width: 12vw;
   height: 10vh;
-  flex-direction: row;
+  flex-direction: column;
   display:inline-block;
   overflow: hidden;
   overflow-x: hidden;
@@ -784,5 +795,43 @@ background: transparent;
 }
 .clipboard:hover {
   color: var(--secondary-accent-activated);
+}
+
+/* NG container */
+.neuroglancer-container {
+  box-shadow: 0 4px 8px 0 var(--transparent-shadow);
+  border-radius: 8px;
+  border: 1px solid var(--background);
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  height: 100% !important;
+  width: 95%;
+  color: var(--primary-accent);
+  overflow:auto;
+  order: 1;
+}
+.neuroglancer-minimizable-group-flexible.neuroglancer-annotation-hiding-list-parent{
+  overflow-y: hidden !important;
+  height: 45vh;
+}
+.neuroglancer-tab-content.neuroglancer-annotation-layer-view{
+  height: 45vh;
+  overflow-y: scroll;
+}
+
+.neuroglancer-annotation-hiding-list-scrollarea{
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.neuroglancer-tab-content.neuroglancer-annotations-tab{
+  height: 45vh;
+}
+
+.neuroglancer-context-menu.neuroglancer-viewer-context-menu{
+  display: none;
+}
+.neuroglancer-minimizable-group-flexible{
+  max-height: 20vh !important;
+  overflow-y: scroll !important;
 }
 

@@ -5,17 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
-from datetime import datetime, timezone
-from pytz import timezone
-import pytz
 import numpy as np
 import pandas as pd
-import time
 import json
 
-from .neuroglancer import construct_proofreading_url, construct_url_from_existing
+from .neuroglancer import construct_proofreading_state, construct_url_from_existing
 from .analytics import user_stats
-
+from .utils import utc_to_eastern
 
 # import the logging library
 import logging
@@ -30,15 +26,16 @@ class WorkspaceView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
-        num_visits = request.session.get('num_visits', 0)
-        sidebar_status = request.session.get('sidebar', 1)
-        
-        request.session['num_visits'] = num_visits + 1
-        request.session['sidebar'] = sidebar_status
+        # TODO:
+        # This redirects NG static files.  Currently, NG redirects directly to root in their js
+        # e.g tries to load /workspace/chunk_worker.bundle.js
+        # This hacky solution works.
+        if namespace in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
         context = {
-            'ng_url': settings.NG_CLIENT,
-            'pcg_url': settings.PROD_PCG_SOURCE,
+            'ng_state': {},
+            'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
             'task_id': '',
             'seg_id': '',
             'is_open': False,
@@ -46,8 +43,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'sidebar': sidebar_status,
-            'num_visits': num_visits
+            'timeout': settings.TIMEOUT
         }
 
         if namespace is None:
@@ -58,13 +54,13 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), namespace)
+        
         if not task_df:
             context['tasks_available'] = False
             pass
 
         elif task_df['status'] == 'open':
-            # Reset session timer
-            request.session["start_time"] = time.time()
+
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -73,17 +69,19 @@ class WorkspaceView(LoginRequiredMixin, View):
  
             # Construct NG URL from points or existing state
             try:
-                ng_state = json.loads(task_df.get('ng_state'))['value']
+                ng_state = json.loads(task_df.get('ng_state'))
             except Exception as e:
                 logging.warning(f'Unable to pull ng_state for task: {e}')
                 ng_state = None 
     
             if ng_state:
-                context['ng_url'] = construct_url_from_existing(json.dumps(ng_state))
+                if ng_state.get('value'):
+                    ng_state = ng_state['value']
+                context['ng_state'] = json.dumps(ng_state)
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
-                context['ng_url'] = construct_proofreading_url(task_df, points)
+                context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -93,12 +91,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
 
+        # All form submissions include button name and ng state
         button = request.POST.get('button')
-
         ng_state = request.POST.get('ngState')
-        start_time = request.session.get('start_time')
-        duration = time.time() - start_time if start_time else 0
-        
+        duration = int(request.POST.get('duration', 0))
+    
+
         if button == 'submit':
             logger.debug('Submitting task')
             self.client.patch_task(
@@ -107,7 +105,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 status="closed",
                 ng_state=ng_state)
         
-        elif button in ['yes', 'no', 'unsure', 'yesConditional']:
+        elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -138,8 +136,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 self.client.patch_task(task_df["_id"], status="open")
             
-            #initialize timer 
-            request.session["start_time"] = time.time()
         
         elif button == 'stop':
             logger.debug('Stopping proofreading app')
@@ -148,15 +144,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 ng_state=ng_state)
             return redirect(reverse('tasks'))
-        
-        elif request.body:
-            try:
-                body = json.loads(request.body)
-                if 'sidebar_tab' in body:
-                    request.session['sidebar'] = body['sidebar_tab']
-            except Exception as e:
-                logging.error(f"POST Error: {e}")
-        
+    
         return redirect(reverse('workspace', args=[namespace]))
 
 
@@ -173,6 +161,8 @@ class TaskView(View):
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
+            context[namespace]["pcg_source"] = n_s.pcg_source
+            context[namespace]["img_source"] = n_s.img_source
             context[namespace]["pending"] = []
             context[namespace]["closed"] = []
             context[namespace]["total_pending"] = 0
@@ -195,7 +185,7 @@ class TaskView(View):
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
-                context[namespace]["end"] = (non_empty_namespace+1)*2
+                context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
@@ -203,14 +193,6 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
-        def utc_to_eastern(time_value):
-                utc = pytz.UTC
-                eastern = timezone('US/Eastern')
-                date_time = time_value.to_pydatetime()
-                date_time = utc.localize(time_value)
-                date_time = date_time.astimezone(eastern)
-                return date_time
-
         if table == 'pending':
             pending_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
@@ -240,6 +222,13 @@ class TaskView(View):
                 })
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
+            # Check if there are any NaNs in opened column
+            # TODO: Fix this in the database side of things 
+            if tasks['opened'].isnull().values.any() or tasks['closed'].isnull().values.any():
+                default =  pd.to_datetime('1969-12-31')
+                tasks['opened'] = tasks['opened'].fillna(default)
+                tasks['closed'] = tasks['closed'].fillna(default)
+    
             tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
             tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
@@ -256,6 +245,7 @@ class TaskView(View):
         tasks['task_id'] = tasks.index
         return tasks.to_dict('records')
 
+
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
@@ -263,3 +253,65 @@ class IndexView(View):
 class NotFoundView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "notfound.html")
+        
+class AuthView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "auth_redirect.html")
+
+class InspectTaskView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, task_id=None, *args, **kwargs):
+        if task_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{task_id}', content_type='application/javascript')
+
+        context = {
+            "task_id": task_id,
+            "ng_state": None,
+            "error": None
+        }
+
+        if task_id is None:
+            return render(request, "inspect.html", context)
+
+        try:
+            task_df = self.client.get_task(task_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "inspect.html", context)
+    
+        namespace =  task_df['namespace']
+        try:
+            ng_state = json.loads(task_df.get('ng_state'))
+        except Exception as e:
+            logging.warning(f'Unable to pull ng_state for task: {e}')
+            ng_state = None 
+
+        if ng_state:
+            if ng_state.get('value'):
+                ng_state = ng_state['value']
+            context['ng_state'] = json.dumps(ng_state)
+        else:
+            # Manually get the points for now, populate in client later.
+            points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
+            context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+
+        context['task_id'] = task_df['_id']
+        context['seg_id'] = task_df['seg_id']
+        context['instructions'] = task_df['instructions']
+        context['assignee'] = task_df['assignee']
+        context['display_name'] = Namespace.objects.get(namespace = namespace).display_name
+        context['pcg_url'] = Namespace.objects.get(namespace = namespace).pcg_source
+        context['status'] =  task_df['status']
+        
+        metadata = task_df['metadata']
+        if metadata.get('decision'):
+            context['decision'] = metadata['decision']
+        return render(request, "inspect.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        task_id = request.POST.get("task_id")
+        return redirect(reverse('inspect', kwargs={"task_id":task_id}))
