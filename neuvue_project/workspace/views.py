@@ -36,11 +36,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         # This hacky solution works.
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
-        num_visits = request.session.get('num_visits', 0)
-        sidebar_status = request.session.get('sidebar', 1)
-        request.session['num_visits'] = num_visits + 1
-        request.session['sidebar'] = sidebar_status
-
 
         context = {
             'ng_state': {},
@@ -52,8 +47,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'sidebar': sidebar_status,
-            'num_visits': num_visits,
             'timeout': settings.TIMEOUT
         }
 
@@ -71,9 +64,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             pass
 
         elif task_df['status'] == 'open':
-            # Reset session timer
-            if not request.session.get('start_time'):
-                request.session["start_time"] = time.time()
+
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
@@ -104,17 +95,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
 
+        # All form submissions include button name and ng state
         button = request.POST.get('button')
-
         ng_state = request.POST.get('ngState')
-        start_time = request.session.get('start_time', 0)
-        idleTime = request.session.get('idleTime', 0)
-        duration = time.time() - idleTime - start_time
-        logging.debug("DURATION")
-        logging.debug(time.time() - idleTime - start_time)
-        logging.debug(idleTime)
+        duration = int(request.POST.get('duration', 0))
+    
+        logging.debug(f"DURATION: {duration}")
+
         if button == 'submit':
-            request.session['start_time'] = None
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -123,7 +111,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state)
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
-            request.session['start_time'] = None
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
@@ -135,7 +122,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 })
 
         elif button == 'flag':
-            request.session['start_time'] = None
             logger.debug('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
@@ -157,30 +143,13 @@ class WorkspaceView(LoginRequiredMixin, View):
             
         
         elif button == 'stop':
-            request.session['start_time'] = None
             logger.debug('Stopping proofreading app')
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state)
             return redirect(reverse('tasks'))
-        
-        elif request.body:
-            try:
-
-                body = json.loads(request.body)
-
-                if 'sidebar_tab' in body:
-                    request.session['sidebar'] = body['sidebar_tab']
-
-                if 'idleTime' in body:
-                    request.session['idleTime'] += body['idleTime']
-                    
-
-            except Exception as e:
-                logging.error(f"POST Error: {e}")
-        
-
+    
         return redirect(reverse('workspace', args=[namespace]))
 
 

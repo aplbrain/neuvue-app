@@ -257,27 +257,58 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
 
-    // Side Bar Interaction
-    if ({{ request.session.num_visits }} === 0) {
-       openSideMenu();
-    } else if ({{ request.session.sidebar }} === 0) {
-       closeSideMenu();
+    if (window.localStorage.getItem('sidebarStatus') == 'open') {
+        openSideMenu();
+    } else if (window.localStorage.getItem('sidebarStatus') == 'closed') {
+        closeSideMenu();
     } else {
-       openSideMenu();
+        openSideMenu();
     }
     
-    function submitForm(value) {
+    function submitForm(value, form='#mainForm') {
+        window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
-        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#mainForm');
-        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo('#mainForm');
-        $('#mainForm').submit();
+        let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
+        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+        $(form).submit();
     }
 
     function exitAlert(e) {
         e.preventDefault(); 
         e.returnValue = '';
     }
+    
+    // Current time 
+    var startTime = Math.floor(Date.now()/1000);
+    
+    // Inactivity Timer
+    var idleTime = 0;
+    var totalIdleTime = 0;
 
+    // seconds to check for inactivity
+    var incrementAmount = 5;
+    
+    // Increment the idle time counter every minute.
+    setInterval(timerIncrement, incrementAmount*1000); 
+
+    // Zero the idle timer on mouse movement or keypress.
+    $(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+    $(this).keypress(function (e) {
+        idleTime = 0;
+    });
+
+    function timerIncrement() {
+        if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
+            $('#timeoutModal').modal('show');
+            totalIdleTime += incrementAmount
+        }
+        idleTime += incrementAmount;
+    }
+    
     // Button Submission
     $(document).ready(function() {
 
@@ -323,14 +354,10 @@
         }
         
         $('#btnFlagSubmit').click(function() {
-            let data = JSON.stringify(viewer.state.toJSON());
-            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo('#flagForm');
-            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'flag').appendTo('#flagForm');
-            $('#flagForm').submit()
+            submitForm('flag', '#flagForm')
         })
 
         $('#btnStop').click(function(){
-            window.removeEventListener('beforeunload', exitAlert);
             submitForm('stop');
         });
 
@@ -340,37 +367,9 @@
         })
         
         $('#timeoutModalNo').click(function() {
-            window.removeEventListener('beforeunload', exitAlert);
             submitForm('stop');
-            });
-        })
-
-       // Inactivity Timer
-        var idleTime = 0;
-        
-        // seconds to check for inactivity
-        var incrementAmount = 5;
-        
-        // Increment the idle time counter every minute.
-        var idleInterval = setInterval(timerIncrement, incrementAmount*1000); 
-
-        // Zero the idle timer on mouse movement or keypress.
-        $(this).mousemove(function (e) {
-            idleTime = 0;
         });
-        $(this).keypress(function (e) {
-            idleTime = 0;
-        });
-
-        // Inactivity Timer
-        function timerIncrement() {
-            console.log(idleTime);
-            if (idleTime >= '{{timeout}}') { 
-                $('#timeoutModal').modal('show');
-                updateIdleTime(incrementAmount); //second parameter should be in seconds
-            }
-            idleTime += incrementAmount;
-        }
+    })
     
     {% if is_open %}
     window.addEventListener('beforeunload', exitAlert);
