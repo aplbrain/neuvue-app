@@ -198,7 +198,7 @@ LOGOUT_REDIRECT_URL = '/'
 NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
 
 # Task Timeout in Seconds
-TIMEOUT = 10
+TIMEOUT = 900
 
 # Neuroglancer Settings
 # TODO: Move this as a internal model separate from the django config
