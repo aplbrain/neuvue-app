@@ -118,12 +118,21 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button == 'skip':
             logger.debug('Skipping task')
-            self.client.patch_task(
-                task_df["_id"], 
-                duration=duration,
-                priority=task_df['priority']-1, 
-                status="pending",
-                metadata={'skipped': True})
+            try:
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    priority=task_df['priority']-1, 
+                    status="pending",
+                    metadata={'skipped': True})
+            except Exception:
+                logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
+                logging.warning(f'This task has reached the maximum number of skips.')
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    status="pending",
+                    metadata={'skipped': True})
         
         elif button == 'flag':
             logger.debug('Flagging task')
