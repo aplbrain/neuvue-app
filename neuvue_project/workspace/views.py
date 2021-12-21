@@ -250,10 +250,6 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "index.html")
 
-class NotFoundView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "notfound.html")
-        
 class AuthView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "auth_redirect.html")
