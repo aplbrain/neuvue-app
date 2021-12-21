@@ -56,6 +56,15 @@ class DashboardView(View, LoginRequiredMixin):
                 'assignee': user,
                 'namespace': namespace
             })
+            user_tasks = task_df.drop(columns=[
+                    'active',
+                    'points',
+                    'assignee',
+                    'namespace',
+                    'instructions',
+                    '__v'
+                ])
+            user_tasks['task_id'] = user_tasks.index
 
             # Append row info 
             row = {
@@ -64,7 +73,8 @@ class DashboardView(View, LoginRequiredMixin):
                 'open': self._get_status_count(task_df, 'open'),
                 'closed': self._get_status_count(task_df, 'closed'),
                 'errored': self._get_status_count(task_df, 'errored'),
-                'last_closed': self._get_latest_closed_time(task_df)
+                'last_closed': self._get_latest_closed_time(task_df),
+                'user_tasks': user_tasks.to_dict('records')
             }
 
             table_rows.append(row)
@@ -72,6 +82,8 @@ class DashboardView(View, LoginRequiredMixin):
             tp += int(row['pending'])
             to += int(row['open'])
             te += int(row['errored'])
+
+            
         return table_rows, (tc, tp, to, te)
     
     def _get_status_count(self, task_df, status):
