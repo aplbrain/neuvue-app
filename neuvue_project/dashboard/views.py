@@ -16,6 +16,9 @@ class DashboardView(View, LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, group=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+        
         Namespaces = apps.get_model('workspace', 'Namespace')
         
         context = {}
