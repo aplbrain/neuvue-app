@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+from glob import glob
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'workspace', 
     'dashboard'
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -197,10 +198,8 @@ LOGOUT_REDIRECT_URL = '/'
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
 
-# Data Sources
-IMG_SOURCE = "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em"
-PROD_PCG_SOURCE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1"
-DEV_PCG_SOURCE = None
+# Task Timeout in Seconds
+TIMEOUT = 900
 
 # Neuroglancer Settings
 # TODO: Move this as a internal model separate from the django config
@@ -213,5 +212,10 @@ DATASET_VIEWER_OPTIONS = {
         }
     }
 }
+VOXEL_RESOLUTION = (4, 4, 40)
 
-VOXEL_RESOLUTION = [4, 4, 40]
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js",True)
+
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace','static','workspace'))
