@@ -1,0 +1,14 @@
+{
+  "name": "ngwrapper",
+  "description": "wrapper of neuroglancer to embed in Neuvue app",
+  "scripts": {
+    "build": "webpack --config ./config/webpack.config.js --env=workspace"
+  },
+  "dependencies": {
+  
+  },
+  "devDependencies": {
+    "webpack-bundle-tracker": "^1.4.0"
+
+  }
+}

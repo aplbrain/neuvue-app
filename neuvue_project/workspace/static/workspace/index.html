@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>neuroglancer</title>
+  <script>
+    // localStorage test
+    {
+      const type = 'localStorage';
+      let storage;
+      try {
+        storage = window[type];
+        let x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+      } catch (e) {
+        const outOfSpace = e instanceof DOMException && (
+          // everything except Firefox
+          e.code === 22 ||
+          // Firefox
+          e.code === 1014 ||
+          // test name field too, because code might not be present
+          // everything except Firefox
+          e.name === 'QuotaExceededError' ||
+          // Firefox
+          e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+          // acknowledge QuotaExceededError only if there's something already stored
+          (storage && storage.length !== 0);
+
+        if (!outOfSpace) {
+          alert('Local Storage has been disabled, please renable it in Chrome');
+        }
+      }
+    }
+    // WebGL2 support test
+    {
+      const gl = document.createElement('canvas').getContext('webgl2');
+      if (!gl) {
+        alert('Your browser does not support WebGL2, or it is not enabled. Please use a browser that does, such as Chrome or Firefox.');
+      }
+    }
+  </script>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+</head>
+
+<body>
+  <div id="neuroglancer-error">Loading...</div>
+  <div id="neuroglancer-container"></div>
+<script type="text/javascript" src="main.bundle.js"></script></body>
+
+</html>
