@@ -207,7 +207,7 @@
                         class="mainButton pause"
                         accesskey="e"
                     >
-                        Exit Task
+                        Save and Exit Task
                     </button>
 
                     {% else %}
@@ -295,6 +295,8 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
+    // Delete previous state info
+    window.localStorage.removeItem("ngState")
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
