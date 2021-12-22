@@ -196,7 +196,7 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-NEUVUE_QUEUE_ADDR = "http://34.203.245.144:9005/"
+NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io"
 
 # Task Timeout in Seconds
 TIMEOUT = 900
