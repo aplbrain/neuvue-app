@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -168,6 +168,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'workspace/static')
 ]   
 
+DATA_UPLOAD_MAX_MEMORY_SIZE=10485760
 
 
 # Default primary key field type
