@@ -228,7 +228,7 @@
                         onclick="loadingSpinner('exit_task_load')"
                     >
                         <div id = 'exit_task_load'>
-                            Exit Task
+                            Save and Exit Task
                         </div>
                     </button>
 
@@ -325,6 +325,8 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
+    // Delete previous state info
+    window.localStorage.removeItem("ngState")
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
