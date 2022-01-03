@@ -102,40 +102,56 @@
                         id="btnYes" 
                         type="button" 
                         class="mainButton submit quad" 
+                        onclick="loadingSpinner('confirm_load')"
                     >
-                        Confirm Split
+                        <div id = 'confirm_load'>
+                             Confirm Split
+                         </div>
                     </button>
 
                     <button 
                         id="btnYesBut" 
                         type="button" 
                         class="mainButton yesBut" 
+                        onclick="loadingSpinner('refinement_load')"
                     >
-                        Split Requires Refinement
+                        <div id = 'refinement_load'>
+                            Split Requires Refinement
+                        </div>
                     </button>
 
                     <button 
                     id="btnNoBut" 
                     type="button" 
                     class="mainButton noBut" 
+                    onclick="loadingSpinner('errorNearby_load')"
+                    
                     >
-                        Reject Split but Error Nearby
+                        <div id = 'errorNearby_load'>
+                            Reject Split but Error Nearby
+                        </div>
                     </button>
 
                     <button 
                         id="btnNo" 
                         type="button" 
                         class="mainButton flag quad" 
+                        onclick="loadingSpinner('reject_load')"
                     >
-                        Reject Split
+                        <div id = 'reject_load'>
+                            Reject Split
+                        </div>
                     </button>
 
                     <button 
                         id="btnUnsure" 
                         type="button" 
                         class="mainButton pause quad" 
+                        onclick="loadingSpinner('unsure_load')"
                     >
-                        Unsure
+                        <div id = 'unsure_load'>
+                            Unsure
+                        </div>
                     </button>
                     
                 </form>
@@ -181,9 +197,12 @@
                         name="btnSubmit"
                         id="btnSubmit" 
                         type="button" 
-                        class="mainButton submit" 
+                        class="mainButton submit"
+                        onclick="loadingSpinner('submit_task_load')" 
                     >
-                        Submit Task
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
                     </button>
                     {% endif %}
 
@@ -206,16 +225,21 @@
                         type="button"
                         class="mainButton pause"
                         accesskey="e"
+                        onclick="loadingSpinner('exit_task_load')"
                     >
-                        Save and Exit Task
+                        <div id = 'exit_task_load'>
+                            Save and Exit Task
+                        </div>
                     </button>
 
                     {% else %}
                     <! In-between Tasks >
                     <div class="interTaskBox">
                         {%if tasks_available %}
-                        <button type="button" class="mainButton submit duo" id="btnStart">
-                            Start New  Task
+                        <button type="button" class="mainButton submit duo" id="btnStart" onclick="loadingSpinner('start_new_task')">
+                            <div id = 'start_new_task'>
+                                Start New  Task
+                            </div>
                         </button>
 
                         {% else %}
@@ -225,15 +249,21 @@
                         
                         {% endif%}
                         
-                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}'">
-                            Exit Workspace
+                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                            <div id = 'exit_workspace'>
+                                Exit Workspace
+                            </div>
                         </button>
                         {% endif %}
                     </div>
                 </form>
         </div>
     </div>
-    
+    <div style="display:none;">
+        <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
 
 <form id="flagForm" method="post">
@@ -311,6 +341,13 @@
         return "https://neuroglancer.neuvue.io/#!" + data
     }
 
+    function loadingSpinner(parent_div_name) {
+         var parent_div = document.getElementById(parent_div_name);
+         var spinner = document.getElementById('loading-spinner');
+         parent_div.innerHTML = '';
+         parent_div.append(spinner);
+     }
+     
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
