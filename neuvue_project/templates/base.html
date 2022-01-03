@@ -50,7 +50,14 @@
                         <b> {{user.username}} </b>
                     </a>
                     <ul class="dropdown-menu me-2 dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item disabled" href="#" aria-disabled="true">Preferences</a></li>
+                        <li><a class="dropdown-item" href="#" >Preferences</a></li>
+
+                        
+                        <li><a class="slidecontainer">
+                            <input type="range" min="1" max="100" value="30" class="slider" id="myRange">
+                        </a></li>
+                          
+
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url "logout" %}">Logout</a></li>
                     </ul>

@@ -31,6 +31,10 @@ class ImageChoices(models.TextChoices):
     MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie65')
     PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
+class ParamChoices(models.TextChoices):
+    ALPHA_DEFAULT = 0.5
+    ALPHA_3D = 0.3
+
 class Namespace(models.Model):
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
@@ -40,6 +44,10 @@ class Namespace(models.Model):
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     
     
+class Config(models.Model):
+    submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
+    param_source = models.CharField(max_length=300, choices=ParamChoices.choices, default=ParamChoices.ALPHA_DEFAULT)
+
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
         return self.namespace
