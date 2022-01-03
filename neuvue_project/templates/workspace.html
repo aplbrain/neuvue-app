@@ -196,6 +196,9 @@
                     {% if submission_method == "forced_choice" %}
                         style="margin-left: 15vw;"
                     {% endif %}
+                    {% if skipable == False %}
+                        disabled
+                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#skipModal">
                         Skip Task

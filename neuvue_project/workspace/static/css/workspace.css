@@ -11,6 +11,8 @@
   --secondary-accent-activated: #00a2a5;
   --next-accent: #118d4f;
   --next-accent-activated: #099c52;
+  --skip-accent:#d3ca4b;
+  --skip-accent-activated: #d1c304;
   --flag-accent: #b14646;
   --flag-accent-activated: #cf4b4b;
   --pause-accent: #9c9999;
@@ -239,6 +241,17 @@ color: var(--primary-accent);
 .mainButton.pause:hover{
 border: 3px solid var(--pause-accent);
 background: var(--pause-accent);
+color: var(--primary-accent);
+}
+
+.mainButton.skip{
+  background-color: var(--skip-accent);
+  color: var(--background);
+}
+
+.mainButton.skip:hover{
+border: 3px solid var(--skip-accent);
+background: var(--skip-accent);
 color: var(--primary-accent);
 }
 

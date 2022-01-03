@@ -40,6 +40,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
+            'skipable': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
@@ -66,6 +67,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            if task_df['priority'] < 2:
+                context['skipable'] = False
  
             # Construct NG URL from points or existing state
             try:
