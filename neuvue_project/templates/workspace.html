@@ -188,6 +188,7 @@
                     {% endif %}
                     
                     <! Skip >
+                    {% if skipable %}
                     <button
                         id="btnSkip" 
                         type="button" 
@@ -196,13 +197,11 @@
                     {% if submission_method == "forced_choice" %}
                         style="margin-left: 15vw;"
                     {% endif %}
-                    {% if skipable == False %}
-                        disabled
-                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#skipModal">
                         Skip Task
                     </button>
+                    {% endif %}
                     
                     <! Flag/Stop >
                     <button
