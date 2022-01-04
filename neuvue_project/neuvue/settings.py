@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'workspace',
+    'workspace', 
+    'dashboard',
     'webpack_loader'
 ]
 
@@ -167,6 +168,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'workspace/static')
 ]   
 
+DATA_UPLOAD_MAX_MEMORY_SIZE=10485760
 
 
 # Default primary key field type
