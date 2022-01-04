@@ -62,7 +62,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         else:
 
-            if task_df['status'] == 'closed':
+            if task_df['status'] == 'pending':
                 self.client.patch_task(task_df["_id"], status="open")
             
             # Update Context
