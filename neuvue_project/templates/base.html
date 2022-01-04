@@ -3,6 +3,22 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style> 
+            .preferences {
+                width: 30vw;
+                position: relative;
+                transform: translate(-26.2vw, 1vh);
+             }
+            .row-container {
+                display: flex;
+                flex-direction: row;
+                gap: 1vw;
+                position: relative;
+                justify-content: center;
+                
+
+            }
+        </style>
         {% block header_includes %}{% endblock %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,14 +65,27 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <b> {{user.username}} </b>
                     </a>
-                    <ul class="dropdown-menu me-2 dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu me-2 dropdown-menu-dark preferences" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#" >Preferences</a></li>
+                    
+                        <div class="row-container">  
+                            <div > 2D Data Transparency </div>
 
+
+                            <li><a class="slidecontainer dropdown-item"> 
+                                <input type="range" min="0" max="1" value="0.3" class="slider" id="myRange">
+                            </a></li>
+
+                        </div>
+
+                        <div class="row-container">  
+                            <div > 3D Mesh Transparency </div>
+
+                            <li><a class="slidecontainer dropdown-item">
+                                <input type="range" min="0" max="1" value="0.6" class="slider" id="myRange">
+                            </a></li>
+                        </div>
                         
-                        <li><a class="slidecontainer">
-                            <input type="range" min="1" max="100" value="30" class="slider" id="myRange">
-                        </a></li>
-                          
 
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url "logout" %}">Logout</a></li>

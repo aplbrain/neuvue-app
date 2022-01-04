@@ -12,6 +12,8 @@ import json
 from .neuroglancer import construct_proofreading_state, construct_url_from_existing
 from .analytics import user_stats
 from .utils import utc_to_eastern
+from .models import Config
+
 
 # import the logging library
 import logging
