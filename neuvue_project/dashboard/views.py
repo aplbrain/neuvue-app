@@ -55,7 +55,7 @@ class DashboardView(View, LoginRequiredMixin):
             task_df = self.client.get_tasks(sieve={
                 'assignee': user,
                 'namespace': namespace
-            })
+            }, return_states=False, return_metadata=False)
 
             # Append row info 
             row = {
