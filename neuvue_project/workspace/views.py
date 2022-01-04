@@ -219,12 +219,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'pending'
-                })
+                }, return_metadata=False, return_states=False)
             open_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'open'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
             
             tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -235,12 +235,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'closed'
-                })
+                }, return_metadata=False, return_states=False)
             errored_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'errored'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
             # Check if there are any NaNs in opened column
@@ -255,7 +255,6 @@ class TaskView(View):
 
         tasks.drop(columns=[
                 'active',
-                'metadata',
                 'points',
                 'assignee',
                 'namespace',
