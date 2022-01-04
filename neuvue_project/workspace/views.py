@@ -40,6 +40,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
+            'skipable': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
@@ -69,6 +70,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            if task_df['priority'] < 2:
+                context['skipable'] = False
  
             # Construct NG URL from points or existing state
             try:
@@ -118,7 +121,25 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata={
                     'decision': button
                 })
-
+        
+        elif button == 'skip':
+            logger.debug('Skipping task')
+            try:
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    priority=task_df['priority']-1, 
+                    status="pending",
+                    metadata={'skipped': True})
+            except Exception:
+                logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
+                logging.warning(f'This task has reached the maximum number of skips.')
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    status="pending",
+                    metadata={'skipped': True})
+        
         elif button == 'flag':
             logger.debug('Flagging task')
             flag_reason = request.POST.get('flag')
@@ -201,12 +222,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'pending'
-                })
+                }, return_metadata=False, return_states=False)
             open_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'open'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
             
             tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -217,12 +238,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'closed'
-                })
+                }, return_metadata=False, return_states=False)
             errored_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'errored'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
             # Check if there are any NaNs in opened column
@@ -237,7 +258,6 @@ class TaskView(View):
 
         tasks.drop(columns=[
                 'active',
-                'metadata',
                 'points',
                 'assignee',
                 'namespace',
