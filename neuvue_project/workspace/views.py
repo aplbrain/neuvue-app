@@ -250,6 +250,16 @@ class TaskView(View):
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
+
+        if Config.objects.filter(user=str(request.user)).count() == 0:
+            slider1 = request.GET.get('slider1', 0)
+            slider2 = request.GET.get('slider2', 0)
+            config = Config.objects.create(alpha_selected= slider1, alpha_3d= slider2, user=str(request.user))
+            config.save()
+
+        else:
+            config = Config.objects.filter(user=str(request.user)).order_by('-id')[0] #latest
+
         return render(request, "index.html")
 
 class AuthView(View):
@@ -260,6 +270,8 @@ class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
+
+
 
     def get(self, request, task_id=None, *args, **kwargs):
         if task_id in settings.STATIC_NG_FILES:
