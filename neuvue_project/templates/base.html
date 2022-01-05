@@ -3,7 +3,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <style> 
+
             .preferences {
                 width: 30vw;
                 position: relative;
@@ -15,10 +17,10 @@
                 gap: 1vw;
                 position: relative;
                 justify-content: center;
-                
-
             }
+
         </style>
+
         {% block header_includes %}{% endblock %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +35,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
         <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     </head>
        
     <! Navigation Bar >
@@ -71,10 +74,11 @@
                         <div class="row-container">  
                             <div > 2D Data Transparency </div>
 
-
                             <li><a class="slidecontainer dropdown-item"> 
-                                <input type="range" min="0" max="1" value="0.3" class="slider" id="myRange">
+                                <input id="slider1" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="0"/>
                             </a></li>
+
+                            <div id="slider1Display"></div>
 
                         </div>
 
@@ -82,9 +86,17 @@
                             <div > 3D Mesh Transparency </div>
 
                             <li><a class="slidecontainer dropdown-item">
-                                <input type="range" min="0" max="1" value="0.6" class="slider" id="myRange">
+                                <input id="slider2" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="0"/>
                             </a></li>
+
+                            <div id="slider2Display"></div>
+
                         </div>
+
+                        <li>
+                            <button id="saveConfig" type="button" class="btn btn-secondary" style="position:relative;margin-left:0.8vw;margin-top:1vh;">Save</button>
+                        </li>
+
                         
 
                         <li><hr class="dropdown-divider"></li>
@@ -102,6 +114,34 @@
         </div>
         </nav>
 
+        <script>
+
+            //display slider
+            document.getElementById("slider1Display").innerHTML = document.getElementById("slider1").value / 100
+            document.getElementById("slider2Display").innerHTML = document.getElementById("slider2").value / 100
+
+            document.getElementById("slider1").onchange = function() {
+                document.getElementById("slider1Display").innerHTML = document.getElementById("slider1").value / 100
+            }
+            document.getElementById("slider2").onchange = function() {
+                document.getElementById("slider2Display").innerHTML = document.getElementById("slider2").value / 100
+            }
+
+
+            function submitSlider() {
+                var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
+                $(document.body).append(form)
+                $('<input>').attr('type', 'hidden').attr('name', 'slider1').attr('value', document.getElementById("slider1").value / 100).appendTo(form);
+                $('<input>').attr('type', 'hidden').attr('name', 'slider2').attr('value', document.getElementById("slider2").value / 100).appendTo(form);
+                $(form).submit();
+            }
+
+            $( "#saveConfig" ).click(function() {
+                submitSlider()
+            });
+
+
+        </script>
     {% block content %}{% endblock %}
     </body>
 </html>
