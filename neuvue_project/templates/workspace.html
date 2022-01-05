@@ -190,6 +190,36 @@
                     >
                         Reload Checkpoint
                     </button> {% endcomment %}
+                    
+                    <! Flag >
+                    <button
+                        id="btnFlag" 
+                        type="button" 
+                        class="mainButton flag"
+                        accesskey="f"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
+                    </button>
+
+                    <! Skip >
+                    {% if skipable %}
+                    <button
+                        id="btnSkip" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#skipModal">
+                        Skip Task
+                    </button>
+                    {% endif %}
 
                     <! Submit >
                     {% if submission_method == "submit" %}
@@ -206,36 +236,7 @@
                     </button>
                     {% endif %}
                     
-                    <! Skip >
-                    {% if skipable %}
-                    <button
-                        id="btnSkip" 
-                        type="button" 
-                        class="mainButton skip"
-                        accesskey="k"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
-                    {% endif %}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#skipModal">
-                        Skip Task
-                    </button>
-                    {% endif %}
-                    
-                    <! Flag/Stop >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
-                    {% endif %}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
-                
+                    <! Stop >
                     <button 
                         id="btnStop"
                         type="button"
