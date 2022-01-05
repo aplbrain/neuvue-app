@@ -49,10 +49,9 @@ def create_base_state(seg_ids, coordinate, namespace):
     
     # Create SegmentationLayerConfig
     seg_source = "graphene://" + Namespace.objects.get(namespace = namespace).pcg_source
-    param_source = Config.objects.get(namespace = namespace).param_source
     segmentation_view_options = {
-        'alpha_selected': 0.6,
-        'alpha_3d': 0.3
+        'alpha_selected': settings.ALPHA_SELECTED,
+        'alpha_3d': settings.ALPHA_3D,
         }
     seg_layer = SegmentationLayerConfig(
         name='seg', 

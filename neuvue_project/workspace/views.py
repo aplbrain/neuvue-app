@@ -252,13 +252,17 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
 
         if Config.objects.filter(user=str(request.user)).count() == 0:
-            slider1 = request.GET.get('slider1', 0)
-            slider2 = request.GET.get('slider2', 0)
-            config = Config.objects.create(alpha_selected= slider1, alpha_3d= slider2, user=str(request.user))
+            alpha_selected = request.GET.get('slider1', 0)
+            alpha_3d = request.GET.get('slider2', 0)
+            config = Config.objects.create(alpha_selected= alpha_selected, alpha_3d= alpha_3d, user=str(request.user))
+            settings.ALPHA_SELECTED = float(alpha_selected)
+            settings.ALPHA_3D = float(alpha_3d)
             config.save()
 
         else:
             config = Config.objects.filter(user=str(request.user)).order_by('-id')[0] #latest
+            settings.ALPHA_SELECTED = float(config.alpha_selected)
+            settings.ALPHA_3D = float(config.alpha_3d)
 
         return render(request, "index.html")
 
