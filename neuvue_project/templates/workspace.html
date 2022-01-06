@@ -170,7 +170,7 @@
 
                     <! Save/Reload >
                     {% if is_open %}
-                    <button
+                    {% comment %} <button
                         id="btnSave" 
                         type="button" 
                         class="mainButton" 
@@ -189,7 +189,37 @@
                     {% endif %}
                     >
                         Reload Checkpoint
+                    </button> {% endcomment %}
+                    
+                    <! Flag >
+                    <button
+                        id="btnFlag" 
+                        type="button" 
+                        class="mainButton flag"
+                        accesskey="f"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
                     </button>
+
+                    <! Skip >
+                    {% if skipable %}
+                    <button
+                        id="btnSkip" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#skipModal">
+                        Skip Task
+                    </button>
+                    {% endif %}
 
                     <! Submit >
                     {% if submission_method == "submit" %}
@@ -205,21 +235,8 @@
                         </div>
                     </button>
                     {% endif %}
-
-                    <! Flag/Stop >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
-                    {% endif %}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
-                
+                    
+                    <! Stop >
                     <button 
                         id="btnStop"
                         type="button"
@@ -265,6 +282,30 @@
         </div>
     </div>
 </div>
+
+<form id="skipForm" method="post">
+    {% csrf_token %}
+    <!-- Skip Modal -->
+    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to skip? (Your progress will NOT be saved!)
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" role="form"></form>
+                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
+                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -326,7 +367,7 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
     // Delete previous state info
-    window.localStorage.removeItem("ngState")
+    // window.localStorage.removeItem("ngState")
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
@@ -398,16 +439,16 @@
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
 
-        $('#btnSave').click(function() {
-            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
-        })
+        // $('#btnSave').click(function() {
+        //    window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
+        // }) 
 
-        $('#btnReload').click(function() {
-            if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState']);
-                viewer.state.restoreState(state)
-            }
-        })
+        //  $('#btnReload').click(function() {
+        //      if (window.localStorage.getItem('ngState') !== null){
+        //          let state = JSON.parse(window.localStorage['ngState']);
+        //          viewer.state.restoreState(state)
+        //      }
+        //  })
 
         if ('{{submission_method}}' == "submit"){
             $('#btnSubmit').click(function(){
@@ -435,6 +476,10 @@
                 submitForm('unsure');
             });
         }
+        
+        $('#btnSkipSubmit').click(function() {
+            submitForm('skip', '#skipForm')
+        })
         
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')

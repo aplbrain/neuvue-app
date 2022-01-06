@@ -3,12 +3,18 @@
 
 ## Installation
 
+Clone the application recursively so that the neuvue-client submodule will also be included.
+```shell
+git clone https://github.com/aplbrain/neuvue-app.git --recursive
+```
+
 Create a python3 virtual environment and install the requirements in neuvue_project/requirements.txt. 
 
 ```shell
 python -m venv venv
 source  venv/bin/activate
-pip install -r neuvue_project/requirements.txt
+cd neuvue_project
+pip install -r requirements.txt
 ```
 
 
