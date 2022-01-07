@@ -55,16 +55,7 @@ class DashboardView(View, LoginRequiredMixin):
             task_df = self.client.get_tasks(sieve={
                 'assignee': user,
                 'namespace': namespace
-            })
-            user_tasks = task_df.drop(columns=[
-                    'active',
-                    'points',
-                    'assignee',
-                    'namespace',
-                    'instructions',
-                    '__v'
-                ])
-            user_tasks['task_id'] = user_tasks.index
+            }, return_states=False, return_metadata=False)
 
             # Append row info 
             row = {
@@ -74,7 +65,7 @@ class DashboardView(View, LoginRequiredMixin):
                 'closed': self._get_status_count(task_df, 'closed'),
                 'errored': self._get_status_count(task_df, 'errored'),
                 'last_closed': self._get_latest_closed_time(task_df),
-                'user_tasks': user_tasks.to_dict('records')
+                'user_tasks': task_df.to_dict('records')
             }
 
             table_rows.append(row)

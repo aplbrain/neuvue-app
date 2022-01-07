@@ -11,6 +11,8 @@
   --secondary-accent-activated: #00a2a5;
   --next-accent: #118d4f;
   --next-accent-activated: #099c52;
+  --skip-accent:#d3ca4b;
+  --skip-accent-activated: #d1c304;
   --flag-accent: #b14646;
   --flag-accent-activated: #cf4b4b;
   --pause-accent: #9c9999;
@@ -247,6 +249,17 @@ background: var(--pause-accent);
 color: var(--primary-accent);
 }
 
+.mainButton.skip{
+  background-color: var(--skip-accent);
+  color: var(--background);
+}
+
+.mainButton.skip:hover{
+border: 3px solid var(--skip-accent);
+background: var(--skip-accent);
+color: var(--primary-accent);
+}
+
 .mainButton.submit{
 background-color: var(--next-accent);
 color: var(--background);
@@ -260,14 +273,14 @@ color: var(--primary-accent);
 
 
 .mainButton.submit.duo{
-  width: 90%;
+  width: 18vw;
   font-size: 1.5vh;
   margin: 1vh 1vw 0vh 1vw;
 }
 
 
 .mainButton.flag.duo{
-  width: 90%;
+  width: 18vw;
   font-size: 1.5vh;
   margin: 1vh 1vw;
 }
@@ -778,7 +791,7 @@ background: transparent;
   border: 1.5px solid var(--secondary-accent) !important;
   background-color: var(--transparent-background);
   margin-top: 40vh;
-  min-width: 12vw;
+  width: 20vw;
   height: 10vh;
   flex-direction: column;
   display:inline-block;

@@ -102,40 +102,56 @@
                         id="btnYes" 
                         type="button" 
                         class="mainButton submit quad" 
+                        onclick="loadingSpinner('confirm_load')"
                     >
-                        Confirm Split
+                        <div id = 'confirm_load'>
+                             Confirm Split
+                         </div>
                     </button>
 
                     <button 
                         id="btnYesBut" 
                         type="button" 
                         class="mainButton yesBut" 
+                        onclick="loadingSpinner('refinement_load')"
                     >
-                        Split Requires Refinement
+                        <div id = 'refinement_load'>
+                            Split Requires Refinement
+                        </div>
                     </button>
 
                     <button 
                     id="btnNoBut" 
                     type="button" 
                     class="mainButton noBut" 
+                    onclick="loadingSpinner('errorNearby_load')"
+                    
                     >
-                        Reject Split but Error Nearby
+                        <div id = 'errorNearby_load'>
+                            Reject Split but Error Nearby
+                        </div>
                     </button>
 
                     <button 
                         id="btnNo" 
                         type="button" 
                         class="mainButton flag quad" 
+                        onclick="loadingSpinner('reject_load')"
                     >
-                        Reject Split
+                        <div id = 'reject_load'>
+                            Reject Split
+                        </div>
                     </button>
 
                     <button 
                         id="btnUnsure" 
                         type="button" 
                         class="mainButton pause quad" 
+                        onclick="loadingSpinner('unsure_load')"
                     >
-                        Unsure
+                        <div id = 'unsure_load'>
+                            Unsure
+                        </div>
                     </button>
                     
                 </form>
@@ -154,7 +170,7 @@
 
                     <! Save/Reload >
                     {% if is_open %}
-                    <button
+                    {% comment %} <button
                         id="btnSave" 
                         type="button" 
                         class="mainButton" 
@@ -173,21 +189,9 @@
                     {% endif %}
                     >
                         Reload Checkpoint
-                    </button>
-
-                    <! Submit >
-                    {% if submission_method == "submit" %}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit" 
-                    >
-                        Submit Task
-                    </button>
-                    {% endif %}
-
-                    <! Flag/Stop >
+                    </button> {% endcomment %}
+                    
+                    <! Flag >
                     <button
                         id="btnFlag" 
                         type="button" 
@@ -200,22 +204,59 @@
                         data-bs-target="#flagModal">
                         Flag Task
                     </button>
-                
+
+                    <! Skip >
+                    {% if skipable %}
+                    <button
+                        id="btnSkip" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                    {% if submission_method == "forced_choice" %}
+                        style="margin-left: 15vw;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#skipModal">
+                        Skip Task
+                    </button>
+                    {% endif %}
+
+                    <! Submit >
+                    {% if submission_method == "submit" %}
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit"
+                        onclick="loadingSpinner('submit_task_load')" 
+                    >
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
+                    </button>
+                    {% endif %}
+                    
+                    <! Stop >
                     <button 
                         id="btnStop"
                         type="button"
                         class="mainButton pause"
                         accesskey="e"
+                        onclick="loadingSpinner('exit_task_load')"
                     >
-                        Exit Task
+                        <div id = 'exit_task_load'>
+                            Save and Exit Task
+                        </div>
                     </button>
 
                     {% else %}
                     <! In-between Tasks >
                     <div class="interTaskBox">
                         {%if tasks_available %}
-                        <button type="button" class="mainButton submit duo" id="btnStart">
-                            Start New  Task
+                        <button type="button" class="mainButton submit duo" id="btnStart" onclick="loadingSpinner('start_new_task')">
+                            <div id = 'start_new_task'>
+                                Start New  Task
+                            </div>
                         </button>
 
                         {% else %}
@@ -225,16 +266,46 @@
                         
                         {% endif%}
                         
-                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}'">
-                            Exit Workspace
+                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                            <div id = 'exit_workspace'>
+                                Exit Workspace
+                            </div>
                         </button>
                         {% endif %}
                     </div>
                 </form>
         </div>
     </div>
-    
+    <div style="display:none;">
+        <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
+
+<form id="skipForm" method="post">
+    {% csrf_token %}
+    <!-- Skip Modal -->
+    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to skip? (Your progress will NOT be saved!)
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" role="form"></form>
+                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
+                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -295,6 +366,8 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
+    // Delete previous state info
+    // window.localStorage.removeItem("ngState")
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
@@ -309,6 +382,13 @@
         return "https://neuroglancer.neuvue.io/#!" + data
     }
 
+    function loadingSpinner(parent_div_name) {
+         var parent_div = document.getElementById(parent_div_name);
+         var spinner = document.getElementById('loading-spinner');
+         parent_div.innerHTML = '';
+         parent_div.append(spinner);
+     }
+     
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
@@ -359,16 +439,16 @@
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
 
-        $('#btnSave').click(function() {
-            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
-        })
+        // $('#btnSave').click(function() {
+        //    window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
+        // }) 
 
-        $('#btnReload').click(function() {
-            if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState']);
-                viewer.state.restoreState(state)
-            }
-        })
+        //  $('#btnReload').click(function() {
+        //      if (window.localStorage.getItem('ngState') !== null){
+        //          let state = JSON.parse(window.localStorage['ngState']);
+        //          viewer.state.restoreState(state)
+        //      }
+        //  })
 
         if ('{{submission_method}}' == "submit"){
             $('#btnSubmit').click(function(){
@@ -396,6 +476,10 @@
                 submitForm('unsure');
             });
         }
+        
+        $('#btnSkipSubmit').click(function() {
+            submitForm('skip', '#skipForm')
+        })
         
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')
