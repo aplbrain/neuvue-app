@@ -168,7 +168,7 @@
                             <tbody>
                                 {% for row in table %}
                                 <tr>
-                                <th scope="row"><button id="usernameLink" data-bs-toggle="modal" data-bs-target="#userModal"> {{row.username}} </button></th>
+                                <th scope="row"><button id="userLink_{{row.username}}"> {{row.username}} </button></th>
                                 <td>{{row.pending}}</td>
                                 <td>{{row.open}}</td>
                                 <td>{{row.closed}}</td>
@@ -189,14 +189,14 @@
 </div>
 
 
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <h5 class="modal-title" id="userModalTitle">Username</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div id="userModalBody" class="modal-body">
           ...
         </div>
         <div class="modal-footer">
@@ -210,6 +210,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
     // Button Submission
     $(document).ready(function() {
@@ -218,10 +219,38 @@
             console.log("Not implemented");
         });
 
-        $('#userLink').click(function(){
-            console.log("Not implemented");
-        });
-
+        {% for row in table %}
+            $("#userLink_{{row.username}}").click(function(){
+                console.log("Clicked {{row.username}}");
+                $('#userModalTitle').text("{{row.username}}")
+                $('#userModalBody').html(`
+                    <table id='userTable' class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                            <th scope="col">Task ID</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Opened</th>
+                            <th scope="col">Closed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for taskrow in row.user_tasks %}
+                            <tr>
+                            <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
+                            <td>{{taskrow.status}}</td>
+                            <td>{{taskrow.created}}</td>
+                            <td>{{taskrow.opened}}</td>
+                            <td>{{taskrow.closed}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>  
+                `)
+                $('#userTable').DataTable();
+                $('#userModal').modal('show');
+            });
+        {% endfor %}
     })
 </script>
 {% endblock %}
