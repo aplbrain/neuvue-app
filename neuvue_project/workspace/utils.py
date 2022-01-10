@@ -1,5 +1,22 @@
+from django.core.validators import URLValidator
+import json
 from pytz import timezone
 import pytz
+
+def is_url(value):
+    validate = URLValidator()
+    try:
+        validate(value)
+        return True
+    except:
+        return False
+
+def is_json(value):
+    try:
+        json.loads(value)
+        return True
+    except:
+        return False
 
 def utc_to_eastern(time_value):
     """Converts a pandas datetime object to a US/Easten datetime.

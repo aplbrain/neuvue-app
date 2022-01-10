@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -9,9 +10,9 @@ import numpy as np
 import pandas as pd
 import json
 
-from .neuroglancer import construct_proofreading_state, construct_url_from_existing
+from .neuroglancer import construct_proofreading_state, get_from_state_server, post_to_state_server, get_from_json
 from .analytics import user_stats
-from .utils import utc_to_eastern
+from .utils import utc_to_eastern, is_url, is_json
 
 # import the logging library
 import logging
@@ -74,16 +75,18 @@ class WorkspaceView(LoginRequiredMixin, View):
                 context['skipable'] = False
  
             # Construct NG URL from points or existing state
-            try:
-                ng_state = json.loads(task_df.get('ng_state'))
-            except Exception as e:
-                logging.warning(f'Unable to pull ng_state for task: {e}')
-                ng_state = None 
+            # Dev Note: We always load ng state if one is available, overriding 
+            # generating the state. However, config options can be applied after
+            # a state is obtained.
+            ng_state = task_df.get('ng_state')
     
             if ng_state:
-                if ng_state.get('value'):
-                    ng_state = ng_state['value']
-                context['ng_state'] = json.dumps(ng_state)
+                if is_url(ng_state):
+                    context['ng_state'] = get_from_state_server(ng_state)
+
+                elif is_json(ng_state):
+                    # NG State is already in JSON format
+                    context['ng_state'] = get_from_json(ng_state)
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
@@ -102,9 +105,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
     
-
+        try:
+            ng_state = post_to_state_server(ng_state)
+        except:
+            logger.debug("Unable to post state to JSON State Server")
+            
         if button == 'submit':
             logger.debug('Submitting task')
+
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 

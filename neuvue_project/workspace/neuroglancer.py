@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np 
 from typing import List
 import json
+import requests
+import os 
+
 from nglui.statebuilder import (
     ImageLayerConfig, 
     SegmentationLayerConfig, 
@@ -209,3 +212,57 @@ def construct_proofreading_state(task_df, points, return_as='json'):
     
 def construct_url_from_existing(state: str):
     return settings.NG_CLIENT + '/#!' + state
+
+def get_from_state_server(url: str): 
+    """Gets JSON state string from state server
+
+    Args:
+        url (str): json state server link
+    Returns:
+        (str): JSON String 
+    """
+    resp = requests.get(url)
+    # Make sure its a json string
+    if 'json' in resp.headers.get('content-type'):
+        return resp.text
+    else:
+        return "{}"
+
+
+def post_to_state_server(state: str): 
+    """Posts JSON string to state server
+
+    Args:
+        state (str): NG State string
+    
+    Returns:
+        str: url string
+    """
+    # Get the authorization token from caveclient
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': os.environ['CaveclientToken']
+    }
+
+    # Post! 
+    resp = requests.post(settings.JSON_STATE_SERVER, data=json.dumps(state), headers=headers)
+
+    # Response will contain the URL for the state you just posted
+    return resp.text
+
+def get_from_json(raw_state: str):
+    """Get Neuroglancer state from JSON string
+
+    #TODO: Apply config settings here eventually.
+    
+    Args:
+        raw state (str): neuroglancer string
+    Returns:
+        str: validated neuroglancer state
+    """
+    state_obj = json.loads(raw_state)
+    if state_obj.get('value'):
+        return json.dumps(state_obj['value'])
+    else:
+        return raw_state
+    
