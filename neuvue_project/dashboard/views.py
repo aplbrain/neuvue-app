@@ -59,6 +59,12 @@ class DashboardView(View, LoginRequiredMixin):
                 'assignee': user,
                 'namespace': namespace
             }, return_states=False, return_metadata=False)
+            task_df= task_df.sort_values('created', ascending=False)
+            last_closed = self._format_time(task_df['closed'].max())
+            task_df['task_id'] = task_df.index
+            task_df['opened'] = task_df['opened'].apply(self._format_time)
+            task_df['closed'] = task_df['closed'].apply(self._format_time)
+            task_df['created'] = task_df['created'].apply(self._format_time)
 
             # Append row info 
             row = {
@@ -67,7 +73,8 @@ class DashboardView(View, LoginRequiredMixin):
                 'open': self._get_status_count(task_df, 'open'),
                 'closed': self._get_status_count(task_df, 'closed'),
                 'errored': self._get_status_count(task_df, 'errored'),
-                'last_closed': self._get_latest_closed_time(task_df)
+                'last_closed': last_closed,
+                'user_tasks': task_df.to_dict('records')
             }
 
             table_rows.append(row)
@@ -75,6 +82,8 @@ class DashboardView(View, LoginRequiredMixin):
             tp += int(row['pending'])
             to += int(row['open'])
             te += int(row['errored'])
+
+            
         return table_rows, (tc, tp, to, te)
 
     def _generate_table_csv(self, table_rows):
@@ -83,14 +92,14 @@ class DashboardView(View, LoginRequiredMixin):
         print(value)
         return value
     
-    def _get_status_count(self, task_df, status):
-        return task_df['status'].value_counts().get(status, 0)
-
-    def _get_latest_closed_time(self, task_df):
+    def _format_time(self, x):
         try:
-            return task_df['closed'].max().strftime('%Y-%m-%d %H:%M:%S')
+            return x.strftime('%Y-%m-%d %H:%M:%S')
         except:
             return 'N/A'
+
+    def _get_status_count(self, task_df, status):
+        return task_df['status'].value_counts().get(status, 0)
 
     def post(self, request, *args, **kwargs):
         Namespaces = apps.get_model('workspace', 'Namespace')
