@@ -31,8 +31,6 @@ class ImageChoices(models.TextChoices):
     MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie65')
     PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
-
-
 class Namespace(models.Model):
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
@@ -42,14 +40,8 @@ class Namespace(models.Model):
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     
     
-class Config(models.Model):
-    user = models.CharField(max_length=10, default = None)
-    alpha_selected= models.CharField(max_length=10, default=0.6)
-    alpha_3d= models.CharField(max_length=10, default=0.3)
-
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
         return self.namespace
-
 
 

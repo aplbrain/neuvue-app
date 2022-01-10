@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'workspace', 
     'dashboard',
+    'preferences',
     'webpack_loader'
 ]
 
@@ -213,8 +214,7 @@ DATASET_VIEWER_OPTIONS = {
     }
 }
 VOXEL_RESOLUTION = (4, 4, 40)
-ALPHA_SELECTED = 0.6
-ALPHA_3D = 0.3
+USER = "user"
 
 if DEBUG:
     import mimetypes

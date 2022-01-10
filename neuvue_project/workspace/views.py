@@ -12,8 +12,8 @@ import json
 from .neuroglancer import construct_proofreading_state, construct_url_from_existing
 from .analytics import user_stats
 from .utils import utc_to_eastern
-from .models import Config
-
+from django.apps import apps
+Config = apps.get_model('preferences', 'Config')
 
 # import the logging library
 import logging
@@ -42,6 +42,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
+            'skipable': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
@@ -61,13 +62,18 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['tasks_available'] = False
             pass
 
-        elif task_df['status'] == 'open':
+        else:
 
+            if task_df['status'] == 'pending':
+                self.client.patch_task(task_df["_id"], status="open")
+            
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            if task_df['priority'] < 2:
+                context['skipable'] = False
  
             # Construct NG URL from points or existing state
             try:
@@ -84,6 +90,16 @@ class WorkspaceView(LoginRequiredMixin, View):
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
                 context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+            
+        
+        #make ng state preferences changes, json string to dict
+        config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
+        selected_alpha = config.alpha_selected
+        cdict = json.loads(context['ng_state'])
+        cdict['layers'][1]['selectedAlpha'] = float(selected_alpha)
+        #convert from dict back to json string
+        context['ng_state'] = json.dumps(cdict) 
+
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -117,7 +133,25 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata={
                     'decision': button
                 })
-
+        
+        elif button == 'skip':
+            logger.debug('Skipping task')
+            try:
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    priority=task_df['priority']-1, 
+                    status="pending",
+                    metadata={'skipped': True})
+            except Exception:
+                logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
+                logging.warning(f'This task has reached the maximum number of skips.')
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    status="pending",
+                    metadata={'skipped': True})
+        
         elif button == 'flag':
             logger.debug('Flagging task')
             flag_reason = request.POST.get('flag')
@@ -200,12 +234,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'pending'
-                })
+                }, return_metadata=False, return_states=False)
             open_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'open'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
             
             tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -216,12 +250,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'closed'
-                })
+                }, return_metadata=False, return_states=False)
             errored_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'errored'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
             
             # Check if there are any NaNs in opened column
@@ -236,7 +270,6 @@ class TaskView(View):
 
         tasks.drop(columns=[
                 'active',
-                'metadata',
                 'points',
                 'assignee',
                 'namespace',
@@ -250,20 +283,6 @@ class TaskView(View):
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-
-        if Config.objects.filter(user=str(request.user)).count() == 0:
-            alpha_selected = request.GET.get('slider1', 0)
-            alpha_3d = request.GET.get('slider2', 0)
-            config = Config.objects.create(alpha_selected= alpha_selected, alpha_3d= alpha_3d, user=str(request.user))
-            settings.ALPHA_SELECTED = float(alpha_selected)
-            settings.ALPHA_3D = float(alpha_3d)
-            config.save()
-
-        else:
-            config = Config.objects.filter(user=str(request.user)).order_by('-id')[0] #latest
-            settings.ALPHA_SELECTED = float(config.alpha_selected)
-            settings.ALPHA_3D = float(config.alpha_3d)
-
         return render(request, "index.html")
 
 class AuthView(View):
@@ -274,8 +293,6 @@ class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
         return super().dispatch(request, *args, **kwargs)
-
-
 
     def get(self, request, task_id=None, *args, **kwargs):
         if task_id in settings.STATIC_NG_FILES:
