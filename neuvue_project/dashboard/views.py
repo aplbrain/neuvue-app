@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.apps import apps
+import pandas as pd
 
 from neuvueclient import NeuvueQueue
 from typing import List
@@ -30,11 +31,13 @@ class DashboardView(View, LoginRequiredMixin):
         
         users = self._get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
+        table_csv = self._generate_table_csv(table)
         
         context['group'] = group
         context['namespace'] = namespace
         context['display_name'] = Namespaces.objects.get(namespace = namespace).display_name
         context['table'] = table
+        context['table_csv'] = table_csv
         context['total_closed'] = counts[0]
         context['total_pending'] = counts[1]
         context['total_open'] = counts[2]
@@ -73,6 +76,12 @@ class DashboardView(View, LoginRequiredMixin):
             to += int(row['open'])
             te += int(row['errored'])
         return table_rows, (tc, tp, to, te)
+
+    def _generate_table_csv(self, table_rows):
+        df = pd.DataFrame(table_rows)
+        value = df.to_csv(index=False)
+        print(value)
+        return value
     
     def _get_status_count(self, task_df, status):
         return task_df['status'].value_counts().get(status, 0)

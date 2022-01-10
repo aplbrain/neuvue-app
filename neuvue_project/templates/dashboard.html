@@ -150,8 +150,12 @@
             <div class="col-lg-12">
                 <div class="card text-center">
                     <div class="card-header">
-                        Records for <b> {{display_name}} </b> in <b> {{group}} </b> 
-                        <span style="float:right"> <button id="exportBtn" class="btn btn-primary"> Export to CSV </button> </span>
+                        Records for <b> {{display_name}} </b> in <b> {{group}} </b>
+                        <span style="float:right">
+                            <button id="exportBtn" class="btn btn-primary">
+                                    Export to CSV
+                            </button>
+                        </span>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped table-hover">
@@ -190,15 +194,17 @@
 
     {% endif %}
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
     // Button Submission
-    let exportButton = document.getElementById("exportBtn");
-    exportButton.addEventListener("click", (e) => {
-      console.log("Hannah");
-    });
+    const exportButton = document.getElementById("exportBtn");
+    exportButton.addEventListener('click', (e) => {
+        let csv_string = 'data:text/csv;charset=utf-8,' + '{{table_csv | linebreaksbr}}';
+        csv_string = csv_string.split('<br>').join('\n');
+        const encodedUri = encodeURI(csv_string);
+        window.open(encodedUri);
+    }); 
 
 </script>
 
