@@ -153,7 +153,7 @@
                         Records for <b> {{display_name}} </b> in <b> {{group}} </b>
                         <span style="float:right">
                             <button id="exportBtn" class="btn btn-primary">
-                                    Export to CSV
+                                Export to CSV
                             </button>
                         </span>
                     </div>
@@ -200,10 +200,26 @@
     // Button Submission
     const exportButton = document.getElementById("exportBtn");
     exportButton.addEventListener('click', (e) => {
+
+        // Create link element
+        const link = document.createElement('a');
+        link.style.display = 'none';
+
+        // Construct csv content
         let csv_string = 'data:text/csv;charset=utf-8,' + '{{table_csv | linebreaksbr}}';
         csv_string = csv_string.split('<br>').join('\n');
         const encodedUri = encodeURI(csv_string);
-        window.open(encodedUri);
+        link.setAttribute('href', encodedUri);
+
+        // Construct filename
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
+        link.setAttribute('download', filename)
+
+        // Perform download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
     }); 
 
 </script>
