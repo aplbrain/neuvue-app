@@ -31,8 +31,7 @@ class PreferencesView(View):
          #update existing config
         elif len(request.GET) == num_of_params:
             print("UPDATE?")
-            config = Config.objects.filter(
-                user=str(request.user)).order_by('-id')[0]  # latest
+            config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
             config.alpha_selected = request.GET.get('alphaSelected')
             #config.alpha_3d = request.GET.get('alpha3D')
             config.save()

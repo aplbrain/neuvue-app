@@ -13,13 +13,14 @@ from .neuroglancer import construct_proofreading_state, construct_url_from_exist
 from .analytics import user_stats
 from .utils import utc_to_eastern
 from django.apps import apps
-Config = apps.get_model('preferences', 'Config')
 
 # import the logging library
 import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+#to access preferences config
+Config = apps.get_model('preferences', 'Config')
 
 class WorkspaceView(LoginRequiredMixin, View):
 
@@ -95,6 +96,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         #make ng state preferences changes, json string to dict
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
         selected_alpha = config.alpha_selected
+
         cdict = json.loads(context['ng_state'])
         cdict['layers'][1]['selectedAlpha'] = float(selected_alpha)
         #convert from dict back to json string
