@@ -9,7 +9,7 @@
         <div class="row-container">  
             <div > 2D Data Transparency </div>
 
-            <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="0"/>
+            <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="{{ alphaSelected }}"/>
 
             <div id="alphaSelectedDisplay"></div>
 
@@ -37,10 +37,11 @@
 
         <script>
 
-            //display slider
+            //original display
             document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
             //document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
 
+            //onchange display
             document.getElementById("alphaSelected").onchange = function() {
                 document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
             }

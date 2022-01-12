@@ -4,13 +4,21 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+def convert_for_context(var):
+    #slider input needs to be 1 to 100 so I divide the og value by 100 for the display to show 0 to 1 in the js
+    pref = float(var)
+    pref = pref * 100
+    return str(pref)
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-
+        num_of_params = 1
         settings.USER = request.user
-        alpha_selected = request.GET.get('alphaSelected', '0.6')
+        alpha_selected = request.GET.get('alphaSelected')
+        print(alpha_selected)
         #alpha_3d = request.GET.get('alpha3D', '0.3')
+
+        print(len(request.GET))
 
         #new config
         if Config.objects.filter(user=str(request.user)).count() == 0:
@@ -21,7 +29,7 @@ class PreferencesView(View):
             config.save()
 
          #update existing config
-        elif 'alphaSelected' in request.GET and 'alpha3D' in request.GET:
+        elif len(request.GET) == num_of_params:
             print("UPDATE?")
             config = Config.objects.filter(
                 user=str(request.user)).order_by('-id')[0]  # latest
@@ -33,4 +41,12 @@ class PreferencesView(View):
             print("USE?")
             config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
 
-        return render(request, "preferences.html")
+        #redefine incase we are using previous configs variables
+        alpha_selected = config.alpha_selected
+        alpha_selected = convert_for_context(alpha_selected)
+
+        context = {
+            'alphaSelected': str(alpha_selected),
+        }
+
+        return render(request, "preferences.html", context)

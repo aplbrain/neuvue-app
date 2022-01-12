@@ -10,9 +10,3 @@ class Config(models.Model):
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
         return self.namespace
-
-
-
-
-
-# Create your models here.
