@@ -221,12 +221,13 @@ def get_from_state_server(url: str):
     Returns:
         (str): JSON String 
     """
-    resp = requests.get(url)
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': f"Bearer {os.environ['CaveclientToken']}"
+    }
+    resp = requests.get(url, headers=headers)
     # Make sure its a json string
-    if 'json' in resp.headers.get('content-type'):
-        return resp.text
-    else:
-        return "{}"
+    return resp.text
 
 
 def post_to_state_server(state: str): 
@@ -241,14 +242,14 @@ def post_to_state_server(state: str):
     # Get the authorization token from caveclient
     headers = {
         'content-type': 'application/json',
-        'Authorization': os.environ['CaveclientToken']
+        'Authorization': f"Bearer {os.environ['CaveclientToken']}"
     }
 
     # Post! 
-    resp = requests.post(settings.JSON_STATE_SERVER, data=json.dumps(state), headers=headers)
+    resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
 
     # Response will contain the URL for the state you just posted
-    return resp.text
+    return str(resp.json())
 
 def get_from_json(raw_state: str):
     """Get Neuroglancer state from JSON string

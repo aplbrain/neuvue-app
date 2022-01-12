@@ -82,11 +82,14 @@ class WorkspaceView(LoginRequiredMixin, View):
     
             if ng_state:
                 if is_url(ng_state):
+                    logging.debug("Getting state from JSON State Server")
+                    print(get_from_state_server(ng_state))
                     context['ng_state'] = get_from_state_server(ng_state)
 
                 elif is_json(ng_state):
                     # NG State is already in JSON format
                     context['ng_state'] = get_from_json(ng_state)
+
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
