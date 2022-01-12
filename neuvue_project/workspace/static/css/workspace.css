@@ -594,7 +594,20 @@ a.active,a:hover{
   width: 95%;
   border-radius: 4px;
 }
-
+/* task tags */
+.sideContentInput{
+  display: flex;
+  padding: 5px 10px;
+  width: 95%;
+}
+.sideContentTextArea{
+  background-color: var(--transparent-background);
+  color: var(--primary-accent);
+  overflow: scroll;
+  border: 0px;
+  width: 100%;
+  resize: none;
+}
 /* Container for sidecontent item */
 .sideContentBox {
   border-radius: 8px;
