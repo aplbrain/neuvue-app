@@ -101,15 +101,15 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
-    
-
+        tags = [tag.strip() for tag in set(request.POST.get('tags').split(','))]
         if button == 'submit':
             logger.debug('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                ng_state=ng_state)
+                ng_state=ng_state,
+                tags=tags)
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.debug('Submitting task')
@@ -120,7 +120,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 metadata={
                     'decision': button
-                })
+                },
+                tags=tags)
         
         elif button == 'skip':
             logger.debug('Skipping task')
@@ -130,7 +131,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     priority=task_df['priority']-1, 
                     status="pending",
-                    metadata={'skipped': True})
+                    metadata={'skipped': True},tags=tags)
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
@@ -138,7 +139,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df["_id"],
                     duration=duration,
                     status="pending",
-                    metadata={'skipped': True})
+                    metadata={'skipped': True},
+                    tags=tags)
         
         elif button == 'flag':
             logger.debug('Flagging task')
@@ -151,7 +153,9 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="errored", 
                 ng_state=ng_state,
-                metadata=metadata)
+                metadata=metadata,
+                tags=tags,
+                )
         
         elif button == 'start':
             logger.debug('Starting new task')
@@ -166,7 +170,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
-                ng_state=ng_state)
+                ng_state=ng_state,
+                tags=tags)
             return redirect(reverse('tasks'))
     
         return redirect(reverse('workspace', args=[namespace]))
