@@ -101,7 +101,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
-        tags = [tag.strip() for tag in set(request.POST.get('tags').split(','))]
+        tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
         if button == 'submit':
             logger.debug('Submitting task')
             self.client.patch_task(
@@ -131,7 +131,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     priority=task_df['priority']-1, 
                     status="pending",
-                    metadata={'skipped': True},tags=tags)
+                    metadata={'skipped': True},
+                    tags=tags)
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
