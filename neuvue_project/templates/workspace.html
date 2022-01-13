@@ -27,7 +27,15 @@
                     {{ instructions.prompt }}
                 </div>
             </div>
-            
+            <! Task Notes >
+            <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
+                <div class="sideContentTitle">
+                    Task tags
+                </div>
+                <div class="sideContentInput" >
+                    <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma seperated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                </div>
+            </div>
             <! Task Information >
             <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
                 <div class="sideContentTitle">
@@ -197,8 +205,14 @@
                         type="button" 
                         class="mainButton flag"
                         accesskey="f"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
+                    {% if submission_method == "forced_choice" and skipable %}
+                        style="margin-left: 20%;"
+                    {% elif submission_method == "forced_choice" %}
+                        style="margin-left: 30%;"
+                    {% elif skipable %}
+                        style="margin-left: 11%;"
+                    {% else %}
+                        style="margin-left: 20%;"
                     {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#flagModal">
@@ -212,9 +226,6 @@
                         type="button" 
                         class="mainButton skip"
                         accesskey="k"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
-                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#skipModal">
                         Skip Task

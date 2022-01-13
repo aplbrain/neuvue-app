@@ -82,7 +82,7 @@ class DashboardView(View, LoginRequiredMixin):
 
             
         return table_rows, (tc, tp, to, te)
-    
+
     def _format_time(self, x):
         try:
             return x.strftime('%Y-%m-%d %H:%M:%S')

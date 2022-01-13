@@ -12,6 +12,7 @@
       {% csrf_token %}
       <div class="form-group">
         <input class="form-control" id="taskIDInput" placeholder="Enter Task ID" name="task_id" required="true">
+        <br>
         <input type="submit" class="btn btn-primary" value="Submit">
         {% if error%}
         <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
