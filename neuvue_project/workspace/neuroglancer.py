@@ -225,11 +225,11 @@ def get_from_state_server(url: str):
     """
     headers = {
         'content-type': 'application/json',
-        'Authorization': f"Bearer {os.environ['CaveclientToken']}"
+        'Authorization': f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
     }
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
-        raise Exception("POST Unsuccessful")
+        raise Exception("GET Unsuccessful")
     
     # TODO: Make sure its JSON String
     return resp.text
@@ -247,7 +247,7 @@ def post_to_state_server(state: str):
     # Get the authorization token from caveclient
     headers = {
         'content-type': 'application/json',
-        'Authorization': f"Bearer {os.environ['CaveclientToken']}"
+        'Authorization': f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
     }
 
     # Post! 
