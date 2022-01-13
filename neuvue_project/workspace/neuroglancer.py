@@ -5,6 +5,7 @@ from typing import List
 import json
 import requests
 import os 
+import backoff
 
 from nglui.statebuilder import (
     ImageLayerConfig, 
@@ -213,6 +214,7 @@ def construct_proofreading_state(task_df, points, return_as='json'):
 def construct_url_from_existing(state: str):
     return settings.NG_CLIENT + '/#!' + state
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def get_from_state_server(url: str): 
     """Gets JSON state string from state server
 
@@ -226,10 +228,13 @@ def get_from_state_server(url: str):
         'Authorization': f"Bearer {os.environ['CaveclientToken']}"
     }
     resp = requests.get(url, headers=headers)
-    # Make sure its a json string
+    if resp.status_code != 200:
+        raise Exception("POST Unsuccessful")
+    
+    # TODO: Make sure its JSON String
     return resp.text
 
-
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def post_to_state_server(state: str): 
     """Posts JSON string to state server
 
@@ -248,6 +253,9 @@ def post_to_state_server(state: str):
     # Post! 
     resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
 
+    if resp.status_code != 200:
+        raise Exception("POST Unsuccessful")
+    
     # Response will contain the URL for the state you just posted
     return str(resp.json())
 

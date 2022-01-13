@@ -263,7 +263,7 @@ class TaskView(View):
                 "namespace": namespace,
                 "status": 'errored'
                 }, return_metadata=False, return_states=False)
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed', ascending=False)
             
             # Check if there are any NaNs in opened column
             # TODO: Fix this in the database side of things 
@@ -321,16 +321,17 @@ class InspectTaskView(View):
             return render(request, "inspect.html", context)
     
         namespace =  task_df['namespace']
-        try:
-            ng_state = json.loads(task_df.get('ng_state'))
-        except Exception as e:
-            logging.warning(f'Unable to pull ng_state for task: {e}')
-            ng_state = None 
+        ng_state = task_df.get('ng_state')
 
         if ng_state:
-            if ng_state.get('value'):
-                ng_state = ng_state['value']
-            context['ng_state'] = json.dumps(ng_state)
+            if is_url(ng_state):
+                logging.debug("Getting state from JSON State Server")
+                context['ng_state'] = get_from_state_server(ng_state)
+
+            elif is_json(ng_state):
+                # NG State is already in JSON format
+                context['ng_state'] = get_from_json(ng_state)
+
         else:
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
