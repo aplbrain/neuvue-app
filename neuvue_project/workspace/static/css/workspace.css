@@ -288,7 +288,7 @@ color: var(--primary-accent);
 .mainButton.submit.quad{
   min-width: 10%;
   max-width: 12%;
-  margin-left: 11%;
+  margin-left: 13%;
 }
 .mainButton.yesBut{
   min-width: 15%;
