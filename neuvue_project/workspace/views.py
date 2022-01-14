@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -9,9 +10,9 @@ import numpy as np
 import pandas as pd
 import json
 
-from .neuroglancer import construct_proofreading_state, construct_url_from_existing
+from .neuroglancer import construct_proofreading_state, get_from_state_server, post_to_state_server, get_from_json
 from .analytics import user_stats
-from .utils import utc_to_eastern
+from .utils import utc_to_eastern, is_url, is_json
 
 # import the logging library
 import logging
@@ -74,16 +75,21 @@ class WorkspaceView(LoginRequiredMixin, View):
                 context['skipable'] = False
  
             # Construct NG URL from points or existing state
-            try:
-                ng_state = json.loads(task_df.get('ng_state'))
-            except Exception as e:
-                logging.warning(f'Unable to pull ng_state for task: {e}')
-                ng_state = None 
+            # Dev Note: We always load ng state if one is available, overriding 
+            # generating the state. However, config options can be applied after
+            # a state is obtained.
+            ng_state = task_df.get('ng_state')
     
             if ng_state:
-                if ng_state.get('value'):
-                    ng_state = ng_state['value']
-                context['ng_state'] = json.dumps(ng_state)
+                if is_url(ng_state):
+                    logging.debug("Getting state from JSON State Server")
+                    print(get_from_state_server(ng_state))
+                    context['ng_state'] = get_from_state_server(ng_state)
+
+                elif is_json(ng_state):
+                    # NG State is already in JSON format
+                    context['ng_state'] = get_from_json(ng_state)
+
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
@@ -101,9 +107,16 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+    
+        try:
+            ng_state = post_to_state_server(ng_state)
+        except:
+            logger.warning("Unable to post state to JSON State Server")
+            
         tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
         if button == 'submit':
-            logger.debug('Submitting task')
+            logger.info('Submitting task')
+
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -112,7 +125,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 tags=tags)
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
-            logger.debug('Submitting task')
+            logger.info('Submitting task')
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -124,7 +137,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 tags=tags)
         
         elif button == 'skip':
-            logger.debug('Skipping task')
+            logger.info('Skipping task')
             try:
                 self.client.patch_task(
                     task_df["_id"],
@@ -144,7 +157,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     tags=tags)
         
         elif button == 'flag':
-            logger.debug('Flagging task')
+            logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
             metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
@@ -159,7 +172,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 )
         
         elif button == 'start':
-            logger.debug('Starting new task')
+            logger.info('Starting new task')
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
@@ -167,7 +180,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             
         
         elif button == 'stop':
-            logger.debug('Stopping proofreading app')
+            logger.info('Stopping proofreading app')
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -250,7 +263,7 @@ class TaskView(View):
                 "namespace": namespace,
                 "status": 'errored'
                 }, return_metadata=False, return_states=False)
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed', ascending=False)
             
             # Check if there are any NaNs in opened column
             # TODO: Fix this in the database side of things 
@@ -308,16 +321,17 @@ class InspectTaskView(View):
             return render(request, "inspect.html", context)
     
         namespace =  task_df['namespace']
-        try:
-            ng_state = json.loads(task_df.get('ng_state'))
-        except Exception as e:
-            logging.warning(f'Unable to pull ng_state for task: {e}')
-            ng_state = None 
+        ng_state = task_df.get('ng_state')
 
         if ng_state:
-            if ng_state.get('value'):
-                ng_state = ng_state['value']
-            context['ng_state'] = json.dumps(ng_state)
+            if is_url(ng_state):
+                logging.debug("Getting state from JSON State Server")
+                context['ng_state'] = get_from_state_server(ng_state)
+
+            elif is_json(ng_state):
+                # NG State is already in JSON format
+                context['ng_state'] = get_from_json(ng_state)
+
         else:
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
