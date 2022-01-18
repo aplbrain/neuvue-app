@@ -6,7 +6,9 @@
     <div class="pref_main_container">
 
         <div class="navbar-text" style='font-size:1vw;'> Preferences </div>
+
         <div class="row-container">  
+
             <div class=navbar-text> 2D Data Transparency </div>
 
             <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="{{ alphaSelected }}"/>
@@ -17,18 +19,16 @@
 
         <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
        
-        <!--
         <div class="row-container">  
             <div > 3D Mesh Transparency </div>
 
-            <input id="alpha3D" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="0"/>
+            <input id="alpha3D" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="{{alpha3D}}"/>
 
             <div id="alpha3DDisplay"></div>
 
         </div>
 
         <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
-        -->
 
         <button id="saveConfig" type="button" class="btn btn-secondary" style="width:5vw;">Save</button>
 
@@ -39,21 +39,21 @@
 
             //original display
             document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
-            //document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+            document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
 
             //onchange display
             document.getElementById("alphaSelected").onchange = function() {
                 document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
             }
-           // document.getElementById("alpha3D").onchange = function() {
-           //     document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
-           // }
+            document.getElementById("alpha3D").onchange = function() {
+                document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+            }
 
 
             function submitSlider() {
                 var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
                 $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', document.getElementById("alphaSelected").value / 100).appendTo(form);
-                //$('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
+                $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
                 $(document.body).append(form)
                 $(form).submit();
             }

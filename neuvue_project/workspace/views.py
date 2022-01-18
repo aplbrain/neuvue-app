@@ -95,10 +95,13 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         #make ng state preferences changes, json string to dict
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
-        selected_alpha = config.alpha_selected
+        alpha_selected = config.alpha_selected
+        alpha_3d = config.alpha_3d
 
         cdict = json.loads(context['ng_state'])
-        cdict['layers'][1]['selectedAlpha'] = float(selected_alpha)
+        cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+        if "objectAlpha" in cdict['layers'][1].keys():
+            cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
         #convert from dict back to json string
         context['ng_state'] = json.dumps(cdict) 
 

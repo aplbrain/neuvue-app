@@ -12,11 +12,9 @@ def convert_for_context(var):
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-        num_of_params = 1
+        num_of_params = 2
         settings.USER = request.user
-        alpha_selected = request.GET.get('alphaSelected')
-        print(alpha_selected)
-        #alpha_3d = request.GET.get('alpha3D', '0.3')
+        
 
         print(len(request.GET))
 
@@ -24,7 +22,7 @@ class PreferencesView(View):
         if Config.objects.filter(user=str(request.user)).count() == 0:
             print("NEW?")
             alpha_selected = request.GET.get('alphaSelected', '0.6')
-            #alpha_3d = request.GET.get('alpha3D', '0.3')
+            alpha_3d = request.GET.get('alpha3D', '0.3')
             config = Config.objects.create(alpha_selected=alpha_selected, user=str(request.user))
             config.save()
 
@@ -33,7 +31,7 @@ class PreferencesView(View):
             print("UPDATE?")
             config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
             config.alpha_selected = request.GET.get('alphaSelected')
-            #config.alpha_3d = request.GET.get('alpha3D')
+            config.alpha_3d = request.GET.get('alpha3D')
             config.save()
          #use previous config
         else:
@@ -42,10 +40,14 @@ class PreferencesView(View):
 
         #redefine incase we are using previous configs variables
         alpha_selected = config.alpha_selected
+        alpha_3d = config.alpha_3d
+
         alpha_selected = convert_for_context(alpha_selected)
+        alpha_3d = convert_for_context(alpha_3d)
 
         context = {
             'alphaSelected': str(alpha_selected),
+            'alpha3D': str(alpha_3d),
         }
 
         return render(request, "preferences.html", context)
