@@ -263,23 +263,12 @@
                     {% else %}
                     <! In-between Tasks >
                     <div class="interTaskBox">
-                        {%if tasks_available %}
-                        <button type="button" class="mainButton submit duo" id="btnStart" onclick="loadingSpinner('start_new_task')">
-                            <div id = 'start_new_task'>
-                                Start New  Task
-                            </div>
-                        </button>
-
-                        {% else %}
-                        <button type="button" class="mainButton submit duo" disabled >
-                            No Pending Tasks
-                        </button> 
-                        
-                        {% endif%}
-                        
+                        <div class="interTaskTitle">
+                            {{display_name}} Tasks Complete
+                        </div>
                         <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
-                                Exit Workspace
+                                Return to Task page
                             </div>
                         </button>
                         {% endif %}
