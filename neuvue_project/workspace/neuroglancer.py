@@ -1,11 +1,15 @@
 from django.conf import settings
 import pandas as pd 
 import numpy as np 
+from caveclient import CAVEclient
 from typing import List
+from datetime import datetime
 import json
 import requests
 import os 
 import backoff
+import matplotlib.pyplot as plt
+import networkx as nx
 
 from nglui.statebuilder import (
     ImageLayerConfig, 
@@ -274,4 +278,80 @@ def get_from_json(raw_state: str):
         return json.dumps(state_obj['value'])
     else:
         return raw_state
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def _get_lineage_graph(root_id:str, cave_client):
+    """Get a lineage graph with exponential backoff.
+
+    Args:
+        root_id (str): segment root id
+        cave_client (CAVEClient): caveclient instance
+
+    Raises:
+        e: All exceptions
+
+    Returns:
+        dict: lineage graph
+    """
+    # print(root_id)
+    # print(type(root_id))
+    try:
+        return cave_client.chunkedgraph.get_lineage_graph([root_id], timestamp_past=datetime(year=2021, month=11, day=1))
+    except Exception as e:
+        logging.error(e)
+        raise e
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def _get_soma_center(root_ids: List, cave_client):
+    """Get the first soma center of a list of root IDs with exponential backoff.
+
+    Args:
+        root_id (str): segment root id
+        cave_client (CAVEClient): caveclient instance
+    Raises:
+        e: All exceptions
+
+    Returns:
+        array: array for the position of the soma
+    """
+    try:
+        soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            'pt_root_id': root_ids
+        })
+    except Exception as e:
+        logging.error(e)
+        raise e
     
+    return soma_df.iloc[0]['pt_position']
+
+
+def construct_lineage_state(root_id:str):
+    """Construct state for the lineage viewer.
+
+    Args:
+        root_id (str): segment root id
+
+    Returns:
+        string: json-formatted state
+    """
+    root_id = root_id.strip()
+    print("ROOTID", root_id)
+    cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    # Lineage graph gives you the nodes and edges of a root IDs history
+    lineage_graph = _get_lineage_graph(root_id, cave_client)
+
+    # We need the root ids and a position to create a base state.
+    # Since this is not part of any particular namespace, I chose automatedSplit 
+    # to ensure the neuroglancer state uses Minnie data. 
+    root_ids = [x['id'] for x in lineage_graph['nodes']]
+    position = _get_soma_center(root_ids[:3], cave_client)
+    base_state = create_base_state(root_ids[:3], position, 'automatedSplit')
+
+    # For the rest of the IDs, we can add them to the seg layer as unselected.
+    base_state_dict = base_state.render_state(return_as='dict')
+    for layer in base_state_dict['layers']:
+        if layer['name'] == 'seg':
+            layer['hiddenSegments'] = root_ids[3:]
+
+    return json.dumps(base_state_dict)
