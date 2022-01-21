@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -362,6 +361,9 @@ class InspectTaskView(View):
 
 class LineageView(View):
     def get(self, request, root_id=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
         if root_id in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
 
