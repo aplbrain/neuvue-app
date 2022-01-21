@@ -813,6 +813,24 @@ background: transparent;
   transition: 0s;
 }
 
+.interTaskTitle {
+  font-family: var(--header-font);
+  color: var(--primary-accent);
+  border-radius: 2px;
+  font-size: 1.8vh;
+  z-index: 10;
+  padding: 1%;
+  flex-grow: 2;
+  text-align: center;
+  align-items: left;
+  text-decoration: none;
+  transition: 0s;
+  background-color: var(--background);
+  /*position: sticky;*/
+  top: 0;
+
+}
+
 
 .clipboard {
   color: var(--primary-accent);
