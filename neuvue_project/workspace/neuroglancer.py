@@ -8,8 +8,6 @@ import json
 import requests
 import os 
 import backoff
-import matplotlib.pyplot as plt
-import networkx as nx
 
 from nglui.statebuilder import (
     ImageLayerConfig, 
