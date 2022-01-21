@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -10,7 +9,7 @@ import pandas as pd
 
 from .neuroglancer import (
     construct_proofreading_state, 
-    construct_lineage_state,
+    construct_lineage_state_and_graph,
     get_from_state_server, 
     post_to_state_server, 
     get_from_json
@@ -362,13 +361,16 @@ class InspectTaskView(View):
 
 class LineageView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        print("GET: ROOT ID :", root_id)
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
         if root_id in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
 
         context = {
             "root_id": root_id,
             "ng_state": None,
+            "graph": None,
             "error": None
         }
 
@@ -376,7 +378,7 @@ class LineageView(View):
             return render(request, "lineage.html", context)
 
         try:
-            context['ng_state'] = construct_lineage_state(root_id)
+            context['ng_state'], context['graph'] = construct_lineage_state_and_graph(root_id)
         except Exception as e: 
             context['error'] = e
             return render(request, "lineage.html", context)
