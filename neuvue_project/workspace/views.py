@@ -6,11 +6,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
-import numpy as np
 import pandas as pd
-import json
 
-from .neuroglancer import construct_proofreading_state, get_from_state_server, post_to_state_server, get_from_json
+from .neuroglancer import (
+    construct_proofreading_state, 
+    construct_lineage_state,
+    get_from_state_server, 
+    post_to_state_server, 
+    get_from_json
+    )
+
 from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json
 
@@ -354,3 +359,30 @@ class InspectTaskView(View):
     def post(self, request, *args, **kwargs):
         task_id = request.POST.get("task_id")
         return redirect(reverse('inspect', kwargs={"task_id":task_id}))
+
+class LineageView(View):
+    def get(self, request, root_id=None, *args, **kwargs):
+        print("GET: ROOT ID :", root_id)
+        if root_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
+
+        context = {
+            "root_id": root_id,
+            "ng_state": None,
+            "error": None
+        }
+
+        if root_id is None:
+            return render(request, "lineage.html", context)
+
+        try:
+            context['ng_state'] = construct_lineage_state(root_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "lineage.html", context)
+        return render(request, "lineage.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        root_id = request.POST.get("root_id")
+        return redirect(reverse('lineage', kwargs={"root_id":root_id}))
