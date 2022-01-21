@@ -41,6 +41,10 @@
               Root ID <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root_id}}')"><i class="fa fa-copy"></i></button> {{root_id}} </span> <br>
           </div>
+          <div class="sideContentInfo">
+            Lineage Graph <br> 
+            <div style="align-items: center"> {{ graph|safe }}</div> 
+        </div>
       </div>
   </div>
 </div> 

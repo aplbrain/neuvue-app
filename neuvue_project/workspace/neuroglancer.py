@@ -8,6 +8,8 @@ import json
 import requests
 import os 
 import backoff
+import networkx as nx
+
 
 from nglui.statebuilder import (
     ImageLayerConfig, 
@@ -291,10 +293,9 @@ def _get_lineage_graph(root_id:str, cave_client):
     Returns:
         dict: lineage graph
     """
-    # print(root_id)
-    # print(type(root_id))
+
     try:
-        return cave_client.chunkedgraph.get_lineage_graph([root_id], timestamp_past=datetime(year=2021, month=11, day=1))
+        return cave_client.chunkedgraph.get_lineage_graph([root_id], timestamp_past=datetime(year=2021, month=11, day=1), as_nx_graph=True)
     except Exception as e:
         logging.error(e)
         raise e
@@ -322,8 +323,11 @@ def _get_soma_center(root_ids: List, cave_client):
     
     return soma_df.iloc[0]['pt_position']
 
+def _get_nx_graph_image(nx_graph):
+    dot = nx.drawing.nx_pydot.to_pydot(nx_graph)
+    return dot.create_svg().decode()
 
-def construct_lineage_state(root_id:str):
+def construct_lineage_state_and_graph(root_id:str):
     """Construct state for the lineage viewer.
 
     Args:
@@ -338,18 +342,22 @@ def construct_lineage_state(root_id:str):
     
     # Lineage graph gives you the nodes and edges of a root IDs history
     lineage_graph = _get_lineage_graph(root_id, cave_client)
+    graph_image = _get_nx_graph_image(lineage_graph)
 
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
-    root_ids = [x['id'] for x in lineage_graph['nodes']]
+    root_ids = [str(x) for x in lineage_graph]
+
     position = _get_soma_center(root_ids[:3], cave_client)
     base_state = create_base_state(root_ids[:3], position, 'automatedSplit')
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as='dict')
+    base_state_dict['layout'] = '3d'
+    base_state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     for layer in base_state_dict['layers']:
         if layer['name'] == 'seg':
             layer['hiddenSegments'] = root_ids[3:]
 
-    return json.dumps(base_state_dict)
+    return json.dumps(base_state_dict), graph_image
