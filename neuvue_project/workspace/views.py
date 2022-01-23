@@ -344,6 +344,8 @@ class InspectTaskView(View):
         context['display_name'] = Namespace.objects.get(namespace = namespace).display_name
         context['pcg_url'] = Namespace.objects.get(namespace = namespace).pcg_source
         context['status'] =  task_df['status']
+        if 'flag_reason' in task_df['metadata'].keys():
+            context['flag_reason'] =  task_df['metadata']['flag_reason']
         
         metadata = task_df['metadata']
         if metadata.get('decision'):
