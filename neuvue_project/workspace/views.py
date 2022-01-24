@@ -6,6 +6,7 @@ from .models import Namespace
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
+import json
 
 from .neuroglancer import (
     construct_proofreading_state, 
@@ -111,6 +112,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+        ng_differ_stack = json.loads(request.POST.get('ngDifferStack'), strict=False)
     
         try:
             ng_state = post_to_state_server(ng_state)
@@ -118,18 +120,26 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.warning("Unable to post state to JSON State Server")
             
         tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
-        if button == 'submit':
-            logger.info('Submitting task')
 
+
+        if button == 'submit':
+            logger.debug('Submitting task')
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                ng_state=ng_state,
-                tags=tags)
+                tags=tags,
+                ng_state=ng_state)
+            # Add new differ stack entry
+            self.client.post_differ_stack(
+                task_df["_id"],
+                ng_differ_stack
+            )
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.info('Submitting task')
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -139,6 +149,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                     'decision': button
                 },
                 tags=tags)
+            # Add new differ stack entry
+            self.client.post_differ_stack(
+                task_df["_id"],
+                ng_differ_stack
+            )
         
         elif button == 'skip':
             logger.info('Skipping task')
@@ -166,6 +181,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             other_reason = request.POST.get('flag-other')
             metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
 
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -174,6 +190,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata=metadata,
                 tags=tags,
                 )
+            # Add new differ stack entry
+            self.client.post_differ_stack(
+                task_df["_id"],
+                ng_differ_stack
+            )
         
         elif button == 'start':
             logger.info('Starting new task')
@@ -205,6 +226,7 @@ class TaskView(View):
 
         for i, n_s in enumerate(Namespace.objects.all()):
             namespace = n_s.namespace
+            print(namespace)
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
