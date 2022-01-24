@@ -3,65 +3,119 @@
 
 
 {% block content %}
-    <div class="pref_main_container">
+<div class="pref_main_container">
 
-        <div class="navbar-text" style='font-size:1vw;'> Preferences </div>
+    <div class="navbar-text" style='font-size:1vw;'> Preferences </div>
 
-        <div class="row-container">  
+    <div class="row-container">
 
-            <div class=navbar-text> 2D Data Transparency </div>
+        <div class=navbar-text> 2D Data Transparency </div>
 
-            <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="{{ alphaSelected }}"/>
+        <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1"
+            value="{{ alphaSelected }}" />
 
-            <div id="alphaSelectedDisplay"></div>
+        <div id="alphaSelectedDisplay"></div>
 
-        </div>
+    </div>
 
-        <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
-       
-        <div class="row-container">  
-            <div > 3D Mesh Transparency </div>
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
 
-            <input id="alpha3D" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1" value="{{alpha3D}}"/>
+    <div class="row-container">
+        <div> 3D Mesh Transparency </div>
 
-            <div id="alpha3DDisplay"></div>
+        <input id="alpha3D" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1"
+            value="{{alpha3D}}" />
 
-        </div>
+        <div id="alpha3DDisplay"></div>
 
-        <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
+    </div>
 
-        <button id="saveConfig" type="button" class="btn btn-secondary" style="width:5vw;">Save</button>
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
 
-    </div> 
+    <div class="row-container">
+        <div> For layout, choose: xy/yz/xz, 3d, a combination of xy/yz/xz and 3d or 4panel (all panes)</div>
+    </div>
 
-
-        <script>
-
-            //original display
-            document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
-            document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
-
-            //onchange display
-            document.getElementById("alphaSelected").onchange = function() {
-                document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
-            }
-            document.getElementById("alpha3D").onchange = function() {
-                document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
-            }
+    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+    <label for="vehicle1"> I have a bike</label><br>
 
 
-            function submitSlider() {
-                var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
-                $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', document.getElementById("alphaSelected").value / 100).appendTo(form);
-                $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
-                $(document.body).append(form)
-                $(form).submit();
-            }
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
 
-            $( "#saveConfig" ).click(function() {
-                submitSlider()
-            });
+    <button id="saveConfig" type="button" class="btn btn-secondary" style="width:5vw;">Save</button>
+
+</div>
 
 
-        </script>
+<script>
+
+    //original display
+    document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
+    document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+
+    //onchange display
+    document.getElementById("alphaSelected").onchange = function () {
+        document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
+    }
+    document.getElementById("alpha3D").onchange = function () {
+        document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+    }
+
+
+    function submitSlider() {
+        var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
+        $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', document.getElementById("alphaSelected").value / 100).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
+        $(document.body).append(form)
+        $(form).submit();
+    }
+
+    $("#saveConfig").click(function () {
+        submitSlider()
+    });
+
+    $(".checkbox-menu").on("change", "input[type='checkbox']", function () {
+        $(this).closest("li").toggleClass("active", this.checked);
+    });
+
+    $(document).on('click', '.allow-focus', function (e) {
+        e.stopPropagation();
+    });
+
+</script>
+
+<style>
+    .checkbox-menu li label {
+        display: block;
+        padding: 3px 10px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+        margin: 0;
+        transition: background-color .4s ease;
+    }
+
+    .checkbox-menu li input {
+        margin: 0px 5px;
+        top: 2px;
+        position: relative;
+    }
+
+    .checkbox-menu li.active label {
+        background-color: #cbcbff;
+        font-weight: bold;
+    }
+
+    .checkbox-menu li label:hover,
+    .checkbox-menu li label:focus {
+        background-color: #f5f5f5;
+    }
+
+    .checkbox-menu li.active label:hover,
+    .checkbox-menu li.active label:focus {
+        background-color: #b8b8ff;
+    }
+</style>
 {% endblock %}
