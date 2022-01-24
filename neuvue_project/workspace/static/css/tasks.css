@@ -94,7 +94,7 @@ table {
   background-color: transparent !important;
   border-radius: 8px;
   padding: 2%;
-  font-size: 1.5vh;
+  font-size: 1.65vh;
   position: relative;
   width: 100%;
   font-family: var(--header-font);
@@ -130,7 +130,7 @@ tbody.pending >:nth-child(2) {
 .analyticsTable{
   color:var(--primary-accent);
   background-color: var(--header-background);
-  font-size: 1.2vh;
+  font-size: 1.4vh;
   width:100%;
   border: 1px solid var(--secondary-accent);
   border-radius: 8px !important;
@@ -145,6 +145,7 @@ tbody.pending >:nth-child(2) {
 }
 
 .analyticsTable td{
+  padding-left: 5% !important;
   background-color: var(--header-background);
   /*color:yellow;*/
 }
@@ -206,7 +207,7 @@ tbody.pending >:nth-child(2) {
   border-radius: 0px 8px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   background-color: var(--table-background) !important;
-  max-height: 20vh;
+  max-height: 30vh;
   min-height: 20vh;
   overflow: -moz-scrollbars-vertical; 
   overflow-y: scroll;
