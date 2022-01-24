@@ -127,32 +127,6 @@ tbody.pending >:nth-child(2) {
   color: var(--complete-color) !important;
 }
 */
-.analyticsTable{
-  color:var(--primary-accent);
-  background-color: var(--header-background);
-  font-size: 1.4vh;
-  width:100%;
-  border: 1px solid var(--secondary-accent);
-  border-radius: 8px !important;
-  border-collapse: initial;
-  margin-top: 1vh;
-  margin-bottom: 1vh;
-}
-
-.analyticsTable th{
-  background-color: var(--header-background);
-
-}
-
-.analyticsTable td{
-  padding-left: 5% !important;
-  background-color: var(--header-background);
-  /*color:yellow;*/
-}
-
-.analyticsTable tr:hover {
-  background-color: var(--transparent-analytics);
-}
 
 /* Tab Container */
 .bin{
