@@ -206,11 +206,17 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button == 'stop':
             logger.info('Stopping proofreading app')
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
                 tags=tags)
+            # Add new differ stack entry
+            self.client.post_differ_stack(
+                task_df["_id"],
+                ng_differ_stack
+            )
             return redirect(reverse('tasks'))
     
         return redirect(reverse('workspace', args=[namespace]))
