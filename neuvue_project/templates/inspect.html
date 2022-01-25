@@ -68,6 +68,8 @@
               Decision  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br> 
               {% endif %}
+              Neuroglancer Link <br> 
+              <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
           </div>
       </div>
   </div>
@@ -92,7 +94,12 @@
 <script type="text/javascript">
   // Side Bar Interaction
   openSideMenu();
-
+  
+  function getLink() {
+    let data = JSON.stringify(viewer.state.toJSON());
+    return "https://neuroglancer.neuvue.io/#!" + data
+  }
+  
   // Neuroglancer State Load 
   $(document).ready(function() {
     var received_data = {{ ng_state|safe }};
