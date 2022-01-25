@@ -25,7 +25,7 @@ class SubmissionMethod(models.TextChoices):
 
 class PcgChoices(models.TextChoices):
     MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')
-    PINKY = 'https://minnie.microns-daf.com/segmentation/table/pinky_nf_v2', _('Pinky')
+    PINKY = 'https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox', _('Pinky')
 
 class ImageChoices(models.TextChoices):
     MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie65')
@@ -34,7 +34,7 @@ class ImageChoices(models.TextChoices):
 class Namespace(models.Model):
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
-    ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.POINT)
+    ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.PREGENERATED)
     submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
