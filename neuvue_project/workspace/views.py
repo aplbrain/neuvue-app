@@ -112,7 +112,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
-        ng_differ_stack = json.loads(request.POST.get('ngDifferStack'), strict=False)
+        ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
     
         try:
             ng_state = post_to_state_server(ng_state)
@@ -132,10 +132,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 tags=tags)
             # Add new differ stack entry
-            self.client.post_differ_stack(
-                task_df["_id"],
-                ng_differ_stack
-            )
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.info('Submitting task')
@@ -150,10 +151,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 },
                 tags=tags)
             # Add new differ stack entry
-            self.client.post_differ_stack(
-                task_df["_id"],
-                ng_differ_stack
-            )
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
         
         elif button == 'skip':
             logger.info('Skipping task')
@@ -191,10 +193,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 tags=tags,
                 )
             # Add new differ stack entry
-            self.client.post_differ_stack(
-                task_df["_id"],
-                ng_differ_stack
-            )
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
         
         elif button == 'start':
             logger.info('Starting new task')
@@ -213,10 +216,11 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 tags=tags)
             # Add new differ stack entry
-            self.client.post_differ_stack(
-                task_df["_id"],
-                ng_differ_stack
-            )
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
             return redirect(reverse('tasks'))
     
         return redirect(reverse('workspace', args=[namespace]))
