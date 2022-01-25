@@ -123,14 +123,14 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 
         if button == 'submit':
-            logger.debug('Submitting task')
+            logger.info('Submitting task')
             # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                tags=tags,
-                ng_state=ng_state)
+                ng_state=ng_state,
+                tags=tags)
             # Add new differ stack entry
             self.client.post_differ_stack(
                 task_df["_id"],
@@ -232,7 +232,6 @@ class TaskView(View):
 
         for i, n_s in enumerate(Namespace.objects.all()):
             namespace = n_s.namespace
-            print(namespace)
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
