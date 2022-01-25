@@ -73,6 +73,9 @@
   $(document).ready(function() {
     var received_data = {{ ng_state|safe }};
     viewer.state.restoreState(received_data);
+
+    $("svg").attr('width', '100%');
+    $("svg").attr('height', '100%');
   })
   </script>
 {% endblock %}
