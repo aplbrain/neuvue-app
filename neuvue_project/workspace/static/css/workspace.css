@@ -655,7 +655,7 @@ a.active,a:hover{
   position:relative;
   font-size: 1.4vh;
   color: var(--primary-accent);
-  width: 95%;
+  width: 100%;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -884,3 +884,30 @@ background: transparent;
   overflow-y: scroll !important;
 }
 
+/* Analytics table */
+.analyticsTable{
+  color:var(--primary-accent);
+  background-color: transparent;
+  font-size: 1.4vh;
+  width:100%;
+  border: 1px solid var(--secondary-accent);
+  border-radius: 8px !important;
+  border-collapse: initial;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
+
+.analyticsTable th{
+  background-color: var(--header-background);
+
+}
+
+.analyticsTable td{
+  padding:1%;
+  background-color: var(--transparent-background);
+  /*color:yellow;*/
+}
+
+.analyticsTable tr:hover {
+  background-color: var(--transparent-analytics);
+}
