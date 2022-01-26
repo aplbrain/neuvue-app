@@ -99,6 +99,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         alpha_3d = config.alpha_3d
 
         cdict = json.loads(context['ng_state'])
+        #cdict["layout"] = 
         cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
         if "objectAlpha" in cdict['layers'][1].keys():
             cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
