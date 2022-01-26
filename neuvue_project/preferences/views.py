@@ -12,7 +12,8 @@ def convert_for_context(var):
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-        num_of_params = 3
+        #num_of_params = 3
+        num_of_params = 2
         settings.USER = request.user
         
 
@@ -45,11 +46,11 @@ class PreferencesView(View):
         alpha_selected = convert_for_context(alpha_selected)
         alpha_3d = convert_for_context(alpha_3d)
         #not in models yet V, still testing
-        layout = request.GET.get('layout')
+        #layout = request.GET.get('layout')
         context = {
             'alphaSelected': str(alpha_selected),
             'alpha3D': str(alpha_3d),
-            'layout': layout
+            #'layout': layout
         }
 
         return render(request, "preferences.html", context)

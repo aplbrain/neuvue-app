@@ -33,7 +33,7 @@
     <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
 
     <div class="row-container">
-        <div> For layout, choose: xy/yz/xz, 3d, a combination of xy/yz/xz and 3d or 4panel (all panes)</div>
+        <div> Choose your layout </div>
     </div>
 
     <div class="checkbox-row">
@@ -88,7 +88,7 @@
         var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
         $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', document.getElementById("alphaSelected").value / 100).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'layout').attr('value', getLayout()).appendTo(form);
+        //$('<input>').attr('type', 'hidden').attr('name', 'layout').attr('value', getLayout()).appendTo(form);
         $(document.body).append(form)
         $(form).submit();
     }
