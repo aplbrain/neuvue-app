@@ -12,6 +12,7 @@
       {% csrf_token %}
       <div class="form-group">
         <input class="form-control" id="taskIDInput" placeholder="Enter Task ID" name="task_id" required="true">
+        <br>
         <input type="submit" class="btn btn-primary" value="Submit">
         {% if error%}
         <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
@@ -59,10 +60,16 @@
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{assignee}}')"><i class="fa fa-copy"></i></button> {{assignee}}  </span>  <br>
               Status  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{status}}')"><i class="fa fa-copy"></i></button> {{status}}  </span>  <br>
+              {% if flag_reason %}
+              Flag Reason  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{flag_reason}}')"><i class="fa fa-copy"></i></button> {{flag_reason}}  </span>  <br> 
+              {% endif %}
               {% if decision %}
               Decision  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br> 
               {% endif %}
+              Neuroglancer Link <br> 
+              <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
           </div>
       </div>
   </div>
@@ -87,7 +94,12 @@
 <script type="text/javascript">
   // Side Bar Interaction
   openSideMenu();
-
+  
+  function getLink() {
+    let data = JSON.stringify(viewer.state.toJSON());
+    return "https://neuroglancer.neuvue.io/#!" + data
+  }
+  
   // Neuroglancer State Load 
   $(document).ready(function() {
     var received_data = {{ ng_state|safe }};

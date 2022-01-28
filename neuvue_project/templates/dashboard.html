@@ -150,11 +150,15 @@
             <div class="col-lg-12">
                 <div class="card text-center">
                     <div class="card-header">
-                        Records for <b> {{display_name}} </b> in <b> {{group}} </b> 
-                        <span style="float:right"> <button id="btnExport" class="btn btn-primary"> Export to CSV </button> </span>
+                        Records for <b> {{display_name}} </b> in <b> {{group}} </b>
+                        <span style="float:right">
+                            <button id="exportBtn" class="btn btn-primary">
+                                Export to CSV
+                            </button>
+                        </span>
                     </div>
                     <div class="card-body">
-                        <table class="table table-striped table-hover">
+                        <table id="summary-table" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                 <th scope="col">Username</th>
@@ -209,14 +213,11 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
-    // Button Submission
-    $(document).ready(function() {
 
-        $('#btnExport').click(function(){
-            console.log("Not implemented");
-        });
+    $(document).ready(function() {
 
         {% for row in table %}
             $("#userLink_{{row.username}}").click(function(){
@@ -251,5 +252,20 @@
             });
         {% endfor %}
     })
+
+    // Export as CSV Button
+    const exportButton = document.getElementById("exportBtn");
+    exportButton.addEventListener('click', (e) => {
+
+        // Construct filename
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
+
+        // Perform download
+        $('#summary-table').table2csv('download', {'filename': filename});
+
+    }); 
+
+
 </script>
 {% endblock %}
+
