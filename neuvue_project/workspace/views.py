@@ -33,6 +33,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
+        session_task_count = request.session.get('session_task_count', 0)
         context = {
             'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
@@ -44,7 +45,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'timeout': settings.TIMEOUT
+            'timeout': settings.TIMEOUT,
+            'session_task_count' : session_task_count
         }
 
         if namespace is None:
@@ -101,10 +103,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+        session_task_count = request.session.get('session_task_count', 0)
     
 
         if button == 'submit':
             logger.debug('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -113,6 +117,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.debug('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -145,7 +150,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
             metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
-
+            request.session['session_task_count'] = session_task_count +1
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -213,7 +218,8 @@ class TaskView(View):
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-        
+        #resets completed task count for session
+        request.session['session_task_count'] = 0
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
