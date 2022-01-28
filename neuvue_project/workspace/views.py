@@ -272,8 +272,12 @@ class TaskView(View):
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-        #resets completed task count for session
+        
+        
+        # Reset session count when task page loads. This ensures session counts only increment
+        # for one task type at a time
         request.session['session_task_count'] = 0
+
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
