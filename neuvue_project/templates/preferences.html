@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="pref_main_container">
+
+    <div class="navbar-text" style='font-size:1vw;'> Preferences </div>
+
+    <div class="row-container">
+
+        <div class=navbar-text> 2D Data Transparency </div>
+
+        <input id="alphaSelected" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1"
+            value="{{ alphaSelected }}" />
+
+        <div id="alphaSelectedDisplay"></div>
+
+    </div>
+
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
+
+    <div class="row-container">
+        <div> 3D Mesh Transparency </div>
+
+        <input id="alpha3D" type="range" data-slider-min="0" data-slider-max="100" data-slider-step="1"
+            value="{{alpha3D}}" />
+
+        <div id="alpha3DDisplay"></div>
+
+    </div>
+
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
+
+    <div class="row-container">
+        <div> Choose your layout </div>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="xy">
+        <label for="xy"> xy</label><br>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="yz">
+        <label for="yz"> yz</label><br>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="xz">
+        <label for="xz"> xz</label><br>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="3d">
+        <label for="3d"> 3d</label><br>
+    </div>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="4panel">
+        <label for="4panel"> 4panel</label><br>
+    </div>
+
+
+    <hr class="dropdown-divider" style="width:95vw;position:relative;margin:auto;">
+
+    <button id="saveConfig" type="button" class="btn btn-secondary" style="width:5vw;">Save</button>
+
+</div>
+
+
+<script>
+    //layout original display update
+    var xy = document.getElementById("xy");
+    var yz = document.getElementById("yz");
+    var xz = document.getElementById("xz");
+    var three_d = document.getElementById("3d");
+    var four_panel = document.getElementById("4panel");
+    var layout_config = "{{layout}}"
+    if (layout_config.includes("xy")) {
+        xy.checked = true
+    }
+    else if (layout_config.includes("yz")) {
+        yz.checked = true
+    }
+    else if (layout_config.includes("xz")) {
+        xz.checked = true
+    }
+    if (layout_config.includes("3d")) {
+        three_d.checked = true
+    }
+    if (layout_config.includes("4panel")) {
+        four_panel.checked = true
+    }
+
+    //original display
+    document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
+    document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+
+    //onchange display
+    document.getElementById("alphaSelected").onchange = function () {
+        document.getElementById("alphaSelectedDisplay").innerHTML = document.getElementById("alphaSelected").value / 100
+    }
+    document.getElementById("alpha3D").onchange = function () {
+        document.getElementById("alpha3DDisplay").innerHTML = document.getElementById("alpha3D").value / 100
+    }
+
+
+    function submitSlider() {
+        var form = $('<form>').attr('action', '').attr('method', 'get').attr('class', 'bottomBar').attr('style', 'order: 0;')
+        $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', document.getElementById("alphaSelected").value / 100).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', document.getElementById("alpha3D").value / 100).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'layout').attr('value', getLayout()).appendTo(form);
+        $(document.body).append(form)
+        $(form).submit();
+    }
+
+    $("#saveConfig").click(function () {
+        submitSlider()
+    });
+
+    //checkbox
+
+    $("#xy").click(function () {
+        checkBox("xy")
+    });
+
+    $("#yz").click(function () {
+        checkBox("yz")
+    });
+
+    $("#xz").click(function () {
+        checkBox("xz")
+    });
+
+    $("#3d").click(function () {
+        checkBox("3d")
+    });
+
+    $("#4panel").click(function () {
+        checkBox("4panel")
+    });
+
+    function checkBox(id) {
+        var lastchecked = document.getElementById(id);
+        var xy = document.getElementById("xy");
+        var yz = document.getElementById("yz");
+        var xz = document.getElementById("xz");
+        var three_d = document.getElementById("3d");
+        var four_panel = document.getElementById("4panel");
+        //first three can only individually be checked
+        if (lastchecked.checked == true && lastchecked.id == "xy") {
+            yz.checked = false
+            xz.checked = false
+            four_panel.checked = false
+        }
+
+        if (lastchecked.checked == true && lastchecked.id == "yz") {
+            xy.checked = false
+            xz.checked = false
+            four_panel.checked = false
+        }
+
+        if (lastchecked.checked == true && lastchecked.id == "xz") {
+            yz.checked = false
+            xy.checked = false
+            four_panel.checked = false
+        }
+        //if 4panel is checked 
+        if (lastchecked.checked == true && lastchecked.id == "4panel") {
+            xy.checked = false
+            yz.checked = false
+            xz.checked = false
+            three_d.checked = false
+        }
+        //3d
+        if (lastchecked.checked == true && lastchecked.id == "3d") {
+            four_panel.checked = false
+        }
+    }
+
+    function getLayout() {
+        var xy = document.getElementById("xy").checked;
+        var yz = document.getElementById("yz").checked;
+        var xz = document.getElementById("xz").checked;
+        var three_d = document.getElementById("3d").checked;
+        var four_panel = document.getElementById("4panel").checked;
+        var arr = []
+        var complete = []
+        var string = ""
+        arr.push({"xy": xy}, {"yz": yz}, {"xz": xz}, {"3d": three_d}, {"4panel": four_panel})
+        layouts = ["xy","yz","xz", "3d", "4panel"] 
+        complete_layouts = []
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i][layouts[i]] == true) {
+                complete.push(arr[i])
+                complete_layouts.push(layouts[i])
+            }
+        }
+        if (complete_layouts.includes("xy")) {
+            string += "xy"
+        }
+        else if (complete_layouts.includes("yz")) {
+            string += "yz"
+        }
+        else if (complete_layouts.includes("xz")) {
+            string += "xz"
+        }
+        if (complete_layouts.includes("3d")) {
+            if (complete_layouts.includes("xy") || complete_layouts.includes("yz") || complete_layouts.includes("xz")) {
+                string += "-3d"
+            }
+            else {
+                string += "3d"
+            }
+        }
+        if (complete_layouts.includes("4panel")) {
+            string += "4panel"
+        }
+        return string
+    }
+    
+
+
+
+
+
+</script>
+<style>
+
+    .checkbox-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1vw;
+    }
+
+</style>
+{% endblock %}

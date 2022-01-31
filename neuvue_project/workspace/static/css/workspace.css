@@ -840,3 +840,28 @@ background: transparent;
   overflow-y: scroll !important;
 }
 
+.preferences {
+  width: 15vw;
+  position: relative;
+  transform: translate(-10vw, 1vh);
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
+  position: relative;
+  justify-content: center;
+}
+
+.pref_main_container {
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  position: relative;
+  justify-content: left;
+  margin-left: 2vw;
+  margin-top: 2vw;
+  color: var(--navbar-text);
+
+}

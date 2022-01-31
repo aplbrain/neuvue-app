@@ -18,6 +18,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+from django.apps import apps
+Config = apps.get_model('preferences', 'Config')
 
 class WorkspaceView(LoginRequiredMixin, View):
 
@@ -82,6 +84,21 @@ class WorkspaceView(LoginRequiredMixin, View):
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
                 context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+
+        #make ng state preferences changes, json string to dict
+        config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
+        alpha_selected = config.alpha_selected
+        alpha_3d = config.alpha_3d
+        layout = config.layout
+
+        cdict = json.loads(context['ng_state'])
+        cdict["layout"] = str(layout)
+        cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+        if "objectAlpha" in cdict['layers'][1].keys():
+            cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
+        #convert from dict back to json string
+        context['ng_state'] = json.dumps(cdict)
+
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
