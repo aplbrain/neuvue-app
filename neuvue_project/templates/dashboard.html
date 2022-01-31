@@ -229,6 +229,7 @@
                             <tr>
                             <th scope="col">Task ID</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Priority</th>
                             <th scope="col">Created</th>
                             <th scope="col">Opened</th>
                             <th scope="col">Closed</th>
@@ -239,6 +240,7 @@
                             <tr>
                             <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
                             <td>{{taskrow.status}}</td>
+                            <td>{{taskrow.priority}}</td>
                             <td>{{taskrow.created}}</td>
                             <td>{{taskrow.opened}}</td>
                             <td>{{taskrow.closed}}</td>
