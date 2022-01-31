@@ -1,8 +1,16 @@
 from django.conf import settings
 import pandas as pd 
 import numpy as np 
+from caveclient import CAVEclient
 from typing import List
+from datetime import datetime
 import json
+import requests
+import os 
+import backoff
+import networkx as nx
+
+
 from nglui.statebuilder import (
     ImageLayerConfig, 
     SegmentationLayerConfig, 
@@ -209,3 +217,147 @@ def construct_proofreading_state(task_df, points, return_as='json'):
     
 def construct_url_from_existing(state: str):
     return settings.NG_CLIENT + '/#!' + state
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def get_from_state_server(url: str): 
+    """Gets JSON state string from state server
+
+    Args:
+        url (str): json state server link
+    Returns:
+        (str): JSON String 
+    """
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
+    }
+    resp = requests.get(url, headers=headers)
+    if resp.status_code != 200:
+        raise Exception("GET Unsuccessful")
+    
+    # TODO: Make sure its JSON String
+    return resp.text
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def post_to_state_server(state: str): 
+    """Posts JSON string to state server
+
+    Args:
+        state (str): NG State string
+    
+    Returns:
+        str: url string
+    """
+    # Get the authorization token from caveclient
+    headers = {
+        'content-type': 'application/json',
+        'Authorization': f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
+    }
+
+    # Post! 
+    resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
+
+    if resp.status_code != 200:
+        raise Exception("POST Unsuccessful")
+    
+    # Response will contain the URL for the state you just posted
+    return str(resp.json())
+
+def get_from_json(raw_state: str):
+    """Get Neuroglancer state from JSON string
+
+    #TODO: Apply config settings here eventually.
+    
+    Args:
+        raw state (str): neuroglancer string
+    Returns:
+        str: validated neuroglancer state
+    """
+    state_obj = json.loads(raw_state)
+    if state_obj.get('value'):
+        return json.dumps(state_obj['value'])
+    else:
+        return raw_state
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def _get_lineage_graph(root_id:str, cave_client):
+    """Get a lineage graph with exponential backoff.
+
+    Args:
+        root_id (str): segment root id
+        cave_client (CAVEClient): caveclient instance
+
+    Raises:
+        e: All exceptions
+
+    Returns:
+        dict: lineage graph
+    """
+
+    try:
+        return cave_client.chunkedgraph.get_lineage_graph([root_id], timestamp_past=datetime(year=2021, month=11, day=1), as_nx_graph=True)
+    except Exception as e:
+        logging.error(e)
+        raise e
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def _get_soma_center(root_ids: List, cave_client):
+    """Get the first soma center of a list of root IDs with exponential backoff.
+
+    Args:
+        root_id (str): segment root id
+        cave_client (CAVEClient): caveclient instance
+    Raises:
+        e: All exceptions
+
+    Returns:
+        array: array for the position of the soma
+    """
+    try:
+        soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            'pt_root_id': root_ids
+        })
+    except Exception as e:
+        logging.error(e)
+        raise e
+    
+    return soma_df.iloc[0]['pt_position']
+
+def _get_nx_graph_image(nx_graph):
+    dot = nx.drawing.nx_pydot.to_pydot(nx_graph)
+    return dot.create_svg().decode()
+
+def construct_lineage_state_and_graph(root_id:str):
+    """Construct state for the lineage viewer.
+
+    Args:
+        root_id (str): segment root id
+
+    Returns:
+        string: json-formatted state
+    """
+    root_id = root_id.strip()
+    print("ROOTID", root_id)
+    cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    # Lineage graph gives you the nodes and edges of a root IDs history
+    lineage_graph = _get_lineage_graph(root_id, cave_client)
+    graph_image = _get_nx_graph_image(lineage_graph)
+
+    # We need the root ids and a position to create a base state.
+    # Since this is not part of any particular namespace, I chose automatedSplit 
+    # to ensure the neuroglancer state uses Minnie data. 
+    root_ids = [str(x) for x in lineage_graph]
+
+    position = _get_soma_center(root_ids[:3], cave_client)
+    base_state = create_base_state(root_ids[:3], position, 'automatedSplit')
+
+    # For the rest of the IDs, we can add them to the seg layer as unselected.
+    base_state_dict = base_state.render_state(return_as='dict')
+    base_state_dict['layout'] = '3d'
+    base_state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    for layer in base_state_dict['layers']:
+        if layer['name'] == 'seg':
+            layer['hiddenSegments'] = root_ids[3:]
+
+    return json.dumps(base_state_dict), graph_image

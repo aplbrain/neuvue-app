@@ -206,6 +206,7 @@ TIMEOUT = 900
 # Neuroglancer Settings
 # TODO: Move this as a internal model separate from the django config
 NG_CLIENT = "https://neuroglancer.neuvue.io"
+JSON_STATE_SERVER = "https://global.daf-apis.com/nglstate/post"
 DATASET_VIEWER_OPTIONS = {
     "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em": {
         "contrast": {

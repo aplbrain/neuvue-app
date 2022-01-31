@@ -1,17 +1,23 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
-import numpy as np
 import pandas as pd
 import json
 
-from .neuroglancer import construct_proofreading_state, construct_url_from_existing
+from .neuroglancer import (
+    construct_proofreading_state, 
+    construct_lineage_state_and_graph,
+    get_from_state_server, 
+    post_to_state_server, 
+    get_from_json
+    )
+
 from .analytics import user_stats
-from .utils import utc_to_eastern
+from .utils import utc_to_eastern, is_url, is_json
 
 # import the logging library
 import logging
@@ -35,6 +41,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
+        session_task_count = request.session.get('session_task_count', 0)
         context = {
             'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
@@ -42,10 +49,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
+            'skipable': True,
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'timeout': settings.TIMEOUT
+            'timeout': settings.TIMEOUT,
+            'session_task_count' : session_task_count
         }
 
         if namespace is None:
@@ -61,25 +70,34 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['tasks_available'] = False
             pass
 
-        elif task_df['status'] == 'open':
+        else:
 
+            if task_df['status'] == 'pending':
+                self.client.patch_task(task_df["_id"], status="open")
+            
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            if task_df['priority'] < 2:
+                context['skipable'] = False
  
             # Construct NG URL from points or existing state
-            try:
-                ng_state = json.loads(task_df.get('ng_state'))
-            except Exception as e:
-                logging.warning(f'Unable to pull ng_state for task: {e}')
-                ng_state = None 
+            # Dev Note: We always load ng state if one is available, overriding 
+            # generating the state. However, config options can be applied after
+            # a state is obtained.
+            ng_state = task_df.get('ng_state')
     
             if ng_state:
-                if ng_state.get('value'):
-                    ng_state = ng_state['value']
-                context['ng_state'] = json.dumps(ng_state)
+                if is_url(ng_state):
+                    logging.debug("Getting state from JSON State Server")
+                    context['ng_state'] = get_from_state_server(ng_state)
+
+                elif is_json(ng_state):
+                    # NG State is already in JSON format
+                    context['ng_state'] = get_from_json(ng_state)
+
             else:
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
@@ -112,18 +130,38 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+        session_task_count = request.session.get('session_task_count', 0)
+        ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
     
+        try:
+            ng_state = post_to_state_server(ng_state)
+        except:
+            logger.warning("Unable to post state to JSON State Server")
+            
+        tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
+
 
         if button == 'submit':
-            logger.debug('Submitting task')
+            logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                ng_state=ng_state)
+                ng_state=ng_state,
+                tags=tags)
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
-            logger.debug('Submitting task')
+            logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
@@ -131,23 +169,60 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 metadata={
                     'decision': button
-                })
-
+                },
+                tags=tags)
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
+        
+        elif button == 'skip':
+            logger.info('Skipping task')
+            try:
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    priority=task_df['priority']-1, 
+                    status="pending",
+                    metadata={'skipped': True},
+                    tags=tags)
+            except Exception:
+                logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
+                logging.warning(f'This task has reached the maximum number of skips.')
+                self.client.patch_task(
+                    task_df["_id"],
+                    duration=duration,
+                    status="pending",
+                    metadata={'skipped': True},
+                    tags=tags)
+        
         elif button == 'flag':
-            logger.debug('Flagging task')
+            logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
             metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
+            request.session['session_task_count'] = session_task_count +1
 
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="errored", 
                 ng_state=ng_state,
-                metadata=metadata)
+                metadata=metadata,
+                tags=tags,
+                )
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
         
         elif button == 'start':
-            logger.debug('Starting new task')
+            logger.info('Starting new task')
             if not task_df:
                 logging.warning('Cannot start task, no tasks available.')
             else:
@@ -155,11 +230,19 @@ class WorkspaceView(LoginRequiredMixin, View):
             
         
         elif button == 'stop':
-            logger.debug('Stopping proofreading app')
+            logger.info('Stopping proofreading app')
+            # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
-                ng_state=ng_state)
+                ng_state=ng_state,
+                tags=tags)
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
             return redirect(reverse('tasks'))
     
         return redirect(reverse('workspace', args=[namespace]))
@@ -207,6 +290,11 @@ class TaskView(View):
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
         
+        
+        # Reset session count when task page loads. This ensures session counts only increment
+        # for one task type at a time
+        request.session['session_task_count'] = 0
+
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
@@ -215,12 +303,12 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'pending'
-                })
+                }, return_metadata=False, return_states=False)
             open_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'open'
-                })
+                }, return_metadata=False, return_states=False)
             tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
             
             tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -231,13 +319,13 @@ class TaskView(View):
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'closed'
-                })
+                }, return_metadata=False, return_states=False)
             errored_tasks = self.client.get_tasks(sieve={
                 "assignee": username, 
                 "namespace": namespace,
                 "status": 'errored'
-                })
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed')
+                }, return_metadata=False, return_states=False)
+            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed', ascending=False)
             
             # Check if there are any NaNs in opened column
             # TODO: Fix this in the database side of things 
@@ -251,7 +339,6 @@ class TaskView(View):
 
         tasks.drop(columns=[
                 'active',
-                'metadata',
                 'points',
                 'assignee',
                 'namespace',
@@ -296,16 +383,17 @@ class InspectTaskView(View):
             return render(request, "inspect.html", context)
     
         namespace =  task_df['namespace']
-        try:
-            ng_state = json.loads(task_df.get('ng_state'))
-        except Exception as e:
-            logging.warning(f'Unable to pull ng_state for task: {e}')
-            ng_state = None 
+        ng_state = task_df.get('ng_state')
 
         if ng_state:
-            if ng_state.get('value'):
-                ng_state = ng_state['value']
-            context['ng_state'] = json.dumps(ng_state)
+            if is_url(ng_state):
+                logging.debug("Getting state from JSON State Server")
+                context['ng_state'] = get_from_state_server(ng_state)
+
+            elif is_json(ng_state):
+                # NG State is already in JSON format
+                context['ng_state'] = get_from_json(ng_state)
+
         else:
             # Manually get the points for now, populate in client later.
             points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
@@ -318,6 +406,8 @@ class InspectTaskView(View):
         context['display_name'] = Namespace.objects.get(namespace = namespace).display_name
         context['pcg_url'] = Namespace.objects.get(namespace = namespace).pcg_source
         context['status'] =  task_df['status']
+        if 'flag_reason' in task_df['metadata'].keys():
+            context['flag_reason'] =  task_df['metadata']['flag_reason']
         
         metadata = task_df['metadata']
         if metadata.get('decision'):
@@ -328,3 +418,33 @@ class InspectTaskView(View):
     def post(self, request, *args, **kwargs):
         task_id = request.POST.get("task_id")
         return redirect(reverse('inspect', kwargs={"task_id":task_id}))
+
+class LineageView(View):
+    def get(self, request, root_id=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
+        if root_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
+
+        context = {
+            "root_id": root_id,
+            "ng_state": None,
+            "graph": None,
+            "error": None
+        }
+
+        if root_id is None:
+            return render(request, "lineage.html", context)
+
+        try:
+            context['ng_state'], context['graph'] = construct_lineage_state_and_graph(root_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "lineage.html", context)
+        return render(request, "lineage.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        root_id = request.POST.get("root_id")
+        return redirect(reverse('lineage', kwargs={"root_id":root_id}))

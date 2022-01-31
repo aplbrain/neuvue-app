@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
 
-from workspace.views import WorkspaceView
-from workspace.views import TaskView
-from workspace.views import IndexView
-from workspace.views import AuthView
-from workspace.views import InspectTaskView
+from workspace.views import (
+    WorkspaceView,
+    TaskView,
+    IndexView,
+    AuthView,
+    InspectTaskView,
+    LineageView
+    )
 from preferences.views import PreferencesView
 from dashboard.views import DashboardView
 
@@ -37,7 +40,9 @@ urlpatterns = [
     path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardView.as_view(), name="dashboard"),
     path('auth_redirect.html',AuthView.as_view(),name='auth_redirect'),
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
-    path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect")
+    path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect"),
+    path('lineage/', LineageView.as_view(), name="lineage"), 
+    path('lineage/<str:root_id>', LineageView.as_view(), name="lineage")
 ]
 
 

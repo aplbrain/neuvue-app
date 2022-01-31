@@ -18,6 +18,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
         <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
     </head>
        
     <! Navigation Bar >
@@ -42,6 +43,10 @@
                 {% if request.user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "dashboard" %}">Admin Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a>
                 </li>
                 {% endif%}
                 

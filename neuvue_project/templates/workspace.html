@@ -27,7 +27,15 @@
                     {{ instructions.prompt }}
                 </div>
             </div>
-            
+            <! Task Notes >
+            <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
+                <div class="sideContentTitle">
+                    Task tags
+                </div>
+                <div class="sideContentInput" >
+                    <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma seperated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                </div>
+            </div>
             <! Task Information >
             <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
                 <div class="sideContentTitle">
@@ -42,6 +50,8 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    Tasks Completed This Session <br> 
+                    <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
                     <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
                     
@@ -50,7 +60,7 @@
             
             <! Shortcuts >
             <div class="sideContentInfo">
-                <table class="table table-dark">
+                <table class="analyticsTable" style="font-size: 1.2vh;">
                     <thead>
                         <tr>
                         <th scope="col">Shortcut</th>
@@ -60,29 +70,29 @@
                     </thead>
                     <tbody>
                         <tr>
-                        <th scope="row">Save Checkpoint</th>
-                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>S</kbd></td>
-                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd></td>
+                            <td scope="row">Save Checkpoint</td>
+                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>S</kbd></td>
+                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd></td>
                         </tr>
                         <tr>
-                        <th scope="row">Reload Checkpoint</th>
-                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>R</kbd></td>
-                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>R</kbd></td>
+                            <td scope="row">Reload Checkpoint</td>
+                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>R</kbd></td>
+                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>R</kbd></td>
                         </tr>
                         <tr>
-                        <th scope="row">Flag Task</th>
-                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>F</kbd></td>
-                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
+                            <td scope="row">Flag Task</td>
+                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>F</kbd></td>
+                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
                         </tr>
                         <tr>
-                        <th scope="row">Exit Task</th>
-                        <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>E</kbd></td>
-                        <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>E</kbd></td>
+                            <td scope="row">Exit Task</td>
+                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>E</kbd></td>
+                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>E</kbd></td>
                         </tr>
                         <tr>
-                        <th scope="row">Full Screen (Chrome)</th>
-                        <td><kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
-                        <td><kbd>F11</kbd></td>
+                            <td scope="row">Full Screen (Chrome)</td>
+                            <td><kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
+                            <td><kbd>F11</kbd></td>
                         </tr>
                     </tbody>
                 </table>
@@ -170,7 +180,7 @@
 
                     <! Save/Reload >
                     {% if is_open %}
-                    <button
+                    {% comment %} <button
                         id="btnSave" 
                         type="button" 
                         class="mainButton" 
@@ -189,7 +199,40 @@
                     {% endif %}
                     >
                         Reload Checkpoint
+                    </button> {% endcomment %}
+                    
+                    <! Flag >
+                    <button
+                        id="btnFlag" 
+                        type="button" 
+                        class="mainButton flag"
+                        accesskey="f"
+                    {% if submission_method == "forced_choice" and skipable %}
+                        style="margin-left: 20%;"
+                    {% elif submission_method == "forced_choice" %}
+                        style="margin-left: 30%;"
+                    {% elif skipable %}
+                        style="margin-left: 11%;"
+                    {% else %}
+                        style="margin-left: 20%;"
+                    {% endif %}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
                     </button>
+
+                    <! Skip >
+                    {% if skipable %}
+                    <button
+                        id="btnSkip" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#skipModal">
+                        Skip Task
+                    </button>
+                    {% endif %}
 
                     <! Submit >
                     {% if submission_method == "submit" %}
@@ -205,21 +248,8 @@
                         </div>
                     </button>
                     {% endif %}
-
-                    <! Flag/Stop >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-left: 15vw;"
-                    {% endif %}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
-                
+                    
+                    <! Stop >
                     <button 
                         id="btnStop"
                         type="button"
@@ -235,23 +265,12 @@
                     {% else %}
                     <! In-between Tasks >
                     <div class="interTaskBox">
-                        {%if tasks_available %}
-                        <button type="button" class="mainButton submit duo" id="btnStart" onclick="loadingSpinner('start_new_task')">
-                            <div id = 'start_new_task'>
-                                Start New  Task
-                            </div>
-                        </button>
-
-                        {% else %}
-                        <button type="button" class="mainButton submit duo" disabled >
-                            No Pending Tasks
-                        </button> 
-                        
-                        {% endif%}
-                        
+                        <div class="interTaskTitle">
+                            {{display_name}} Tasks Complete
+                        </div>
                         <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
-                                Exit Workspace
+                                Return to Task page
                             </div>
                         </button>
                         {% endif %}
@@ -265,6 +284,30 @@
         </div>
     </div>
 </div>
+
+<form id="skipForm" method="post">
+    {% csrf_token %}
+    <!-- Skip Modal -->
+    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to skip? (Your progress will NOT be saved!)
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" role="form"></form>
+                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
+                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -326,7 +369,7 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 <script type="text/javascript"> 
     // Delete previous state info
-    window.localStorage.removeItem("ngState")
+    // window.localStorage.removeItem("ngState")
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
@@ -351,10 +394,12 @@
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
+        let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
         $(form).submit();
     }
 
@@ -398,16 +443,16 @@
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
 
-        $('#btnSave').click(function() {
-            window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
-        })
+        // $('#btnSave').click(function() {
+        //    window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
+        // }) 
 
-        $('#btnReload').click(function() {
-            if (window.localStorage.getItem('ngState') !== null){
-                let state = JSON.parse(window.localStorage['ngState']);
-                viewer.state.restoreState(state)
-            }
-        })
+        //  $('#btnReload').click(function() {
+        //      if (window.localStorage.getItem('ngState') !== null){
+        //          let state = JSON.parse(window.localStorage['ngState']);
+        //          viewer.state.restoreState(state)
+        //      }
+        //  })
 
         if ('{{submission_method}}' == "submit"){
             $('#btnSubmit').click(function(){
@@ -435,6 +480,10 @@
                 submitForm('unsure');
             });
         }
+        
+        $('#btnSkipSubmit').click(function() {
+            submitForm('skip', '#skipForm')
+        })
         
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')
