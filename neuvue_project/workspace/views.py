@@ -39,6 +39,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
+        session_task_count = request.session.get('session_task_count', 0)
         context = {
             'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
@@ -50,7 +51,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'timeout': settings.TIMEOUT
+            'timeout': settings.TIMEOUT,
+            'session_task_count' : session_task_count
         }
 
         if namespace is None:
@@ -88,7 +90,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             if ng_state:
                 if is_url(ng_state):
                     logging.debug("Getting state from JSON State Server")
-                    print(get_from_state_server(ng_state))
                     context['ng_state'] = get_from_state_server(ng_state)
 
                 elif is_json(ng_state):
@@ -112,6 +113,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+        session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
     
         try:
@@ -124,6 +126,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         if button == 'submit':
             logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
             # Update task data
             self.client.patch_task(
                 task_df["_id"], 
@@ -140,6 +143,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
             # Update task data
             self.client.patch_task(
                 task_df["_id"], 
@@ -182,6 +186,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
             metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
+            request.session['session_task_count'] = session_task_count +1
 
             # Update task data
             self.client.patch_task(
@@ -268,6 +273,11 @@ class TaskView(View):
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
         
+        
+        # Reset session count when task page loads. This ensures session counts only increment
+        # for one task type at a time
+        request.session['session_task_count'] = 0
+
         return render(request, "tasks.html", {'data':context})
 
     def _generate_table(self, table, username, namespace):
