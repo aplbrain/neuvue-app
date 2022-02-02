@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
+from django.apps import apps
+
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -24,7 +26,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-from django.apps import apps
+
+
 Config = apps.get_model('preferences', 'Config')
 
 class WorkspaceView(LoginRequiredMixin, View):

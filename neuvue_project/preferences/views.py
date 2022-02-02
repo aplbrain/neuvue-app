@@ -4,6 +4,13 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# import the logging library
+import logging
+logging.basicConfig(level=logging.DEBUG)
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
+
 def convert_for_context(var):
     #slider input needs to be 1 to 100 so I divide the og value by 100 for the display to show 0 to 1 in the js
     pref = float(var)
@@ -12,33 +19,29 @@ def convert_for_context(var):
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-        num_of_params = 3
+        num_of_params = len(Config._meta.get_fields()) - 1
         settings.USER = request.user
-        
 
-        print(len(request.GET))
-        print(request.GET)
-
-        #new config
+        # new config
         if Config.objects.filter(user=str(request.user)).count() == 0:
-            print("NEW?")
+            logging.debug(f"New Config for {request.user}.")
             alpha_selected = request.GET.get('alphaSelected', '0.6')
             alpha_3d = request.GET.get('alpha3D', '0.3')
             layout = request.GET.get('layout', '4panel')
             config = Config.objects.create(alpha_selected=alpha_selected, user=str(request.user))
             config.save()
 
-         #update existing config
+        # update existing config
         elif len(request.GET) == num_of_params:
-            print("UPDATE?")
+            logging.debug(f"Update Config for {request.user}.")
             config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
             config.alpha_selected = request.GET.get('alphaSelected')
             config.alpha_3d = request.GET.get('alpha3D')
             config.layout = request.GET.get('layout')
             config.save()
-         #use previous config
+        # use previous config
         else:
-            print("USE?")
+            logging.debug(f"Getting Config for {request.user}.")
             config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]  # latest
 
         #redefine incase we are using previous configs variables
