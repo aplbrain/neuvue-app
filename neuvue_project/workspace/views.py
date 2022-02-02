@@ -170,7 +170,14 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata={'skipped': True},
+                    ng_state=ng_state, 
                     tags=tags)
+                # Add new differ stack entry
+                if ng_differ_stack != []:
+                    self.client.post_differ_stack(
+                        task_df["_id"],
+                        ng_differ_stack
+                    )
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
@@ -179,6 +186,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     status="pending",
                     metadata={'skipped': True},
+                    ng_state=ng_state, 
                     tags=tags)
         
         elif button == 'flag':
