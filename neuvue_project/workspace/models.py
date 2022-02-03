@@ -22,6 +22,7 @@ class NeuroglancerLinkType(models.TextChoices):
 class SubmissionMethod(models.TextChoices):
     SUBMIT = 'submit', _('Submit Button')
     FORCED_CHOICE = 'forced_choice', _('Yes/No/Maybe Button')
+    DECIDE_AND_SUBMIT = 'decide_and_submit', _('Decide and Submit Button')
 
 class PcgChoices(models.TextChoices):
     MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')

@@ -290,6 +290,12 @@ color: var(--primary-accent);
   max-width: 12%;
   margin-left: 13%;
 }
+
+.mainButton:active, .mainButton.active {
+  border: 2.5px solid white;
+  color: var(--primary-accent);
+}
+
 .mainButton.yesBut{
   min-width: 15%;
   max-width: 18%;

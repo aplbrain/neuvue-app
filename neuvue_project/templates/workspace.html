@@ -170,6 +170,56 @@
                     </button>
                     
                 </form>
+                {% elif submission_method == "decide_and_submit" %}
+                    <div id="decide_and_submit_buttons" class="bottomBar" style="order: 0;">
+                        <button 
+                            id="yes" 
+                            type="button" 
+                            class="mainButton submit quad" 
+                            onclick="updateButtonSelected('yes')"
+                        >
+                            Confirm Split
+                        </button>
+
+                        <button 
+                            id="yesConditional" 
+                            type="button" 
+                            class="mainButton yesBut" 
+                            onclick="updateButtonSelected('yesConditional')"
+                        >
+                            Split Requires Refinement
+                        </button>
+
+                        <button 
+                        id="errorNearby" 
+                        type="button" 
+                        class="mainButton noBut" 
+                        onclick="updateButtonSelected('errorNearby')"
+                        
+                        >
+                            Reject Split but Error Nearby
+                        </button>
+
+                        <button 
+                            id="no" 
+                            type="button" 
+                            class="mainButton flag quad" 
+                            onclick="updateButtonSelected('no')"
+                        >
+                            Reject Split
+                        </button>
+
+                        <button 
+                            id="unsure" 
+                            type="button" 
+                            class="mainButton pause quad" 
+                            onclick="updateButtonSelected('unsure')"
+                        >
+                            Unsure
+                        </button>
+
+                    </div>
+                    
                 {% endif %}
 
                 
@@ -252,6 +302,17 @@
                             Submit Task
                         </div>
                     </button>
+                    {% elif submission_method == "decide_and_submit"%}
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit"
+                    >
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
+                    </button>
                     {% endif %}
                     
                     <! Stop >
@@ -313,6 +374,8 @@
         </div>
     </div> 
 </form>
+
+
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -437,11 +500,25 @@
     function timerIncrement() {
         if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
             $('#timeoutModal').modal('show');
-            totalIdleTime += incrementAmount
+            totalIdleTime += incrementAmount;
         }
         idleTime += incrementAmount;
     }
-    
+
+    var current_button_selection = 'noneSelected'
+
+    function updateButtonSelected(button_title){
+        // deactivate the old button
+        if (current_button_selection != 'noneSelected'){
+            var previously_selecected_button = document.getElementById(current_button_selection);
+            previously_selecected_button.classList.toggle("active");
+        }
+        // activate the new one
+        current_button_selection = button_title;
+        var selected_button = document.getElementById(button_title);
+        selected_button.classList.toggle("active");
+    }
+
     // Button Submission
     $(document).ready(function() {
 
@@ -463,7 +540,6 @@
             $('#btnSubmit').click(function(){
                 submitForm('submit');
             });
-
         } else if ('{{submission_method}}' == "forced_choice") {
             $('#btnYes').click(function(){
                 submitForm('yes');
@@ -484,8 +560,17 @@
             $('#btnUnsure').click(function(){
                 submitForm('unsure');
             });
+        } else if ('{{submission_method}}' == "decide_and_submit"){
+            $('#btnSubmit').click(function(){
+                if (current_button_selection != 'noneSelected'){
+                    loadingSpinner('submit_task_load');
+                    submitForm(current_button_selection);
+                } else {
+                    alert("Please select a decision!");
+                }
+            });
         }
-        
+
         $('#btnSkipSubmit').click(function() {
             submitForm('skip', '#skipForm')
         })
