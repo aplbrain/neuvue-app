@@ -630,9 +630,9 @@ a.active,a:hover{
   font-family: var(--header-font);
   color: var(--primary-accent);
   border-radius: 2px;
-  font-size: 2.2vh;
+  font-size: 1.8vh;
   z-index: 10;
-  padding: 5%;
+  padding: 2.5%;
   flex-grow: 2;
   text-align: center;
   align-items: left;
@@ -651,7 +651,7 @@ a.active,a:hover{
  /* Container for sidecontent info */
 .sideContentInfo {
   font-family: var(--monospace-font);
-  padding: 5px 10px;
+  padding: 0px 10px;
   position:relative;
   font-size: 1.4vh;
   color: var(--primary-accent);
@@ -659,9 +659,7 @@ a.active,a:hover{
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden !important;
   overflow-wrap: break-word;
-  overflow: scroll;
 }
 
 /* Sidebar Expandable */
@@ -706,14 +704,11 @@ a.fill-div {
 /* the entire sidebar (content  + access bar) */
 .sidemenu {
   height: 99%;
-
   width: 25%;
   position: fixed;
-  
   z-index: 1;
   right: 0;
   background-color: var(--transparent-background);
-  overflow: hidden;
 }
 
 .sidemenu a {
@@ -742,7 +737,7 @@ a.fill-div {
   float: right;
   width: 85%;
   text-align: left;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: var(--transparent-background) !important;
 }
 
@@ -889,14 +884,16 @@ background: transparent;
   color:var(--primary-accent);
   background-color: transparent;
   font-size: 1.4vh;
-  width:100%;
+  width:100% !important;
   border: 1px solid var(--secondary-accent);
   border-radius: 8px !important;
   border-collapse: initial;
   margin-top: 1vh;
   margin-bottom: 1vh;
 }
-
+.analyticsTable.mini{
+  font-size: 0.6vh;
+}
 .analyticsTable th{
   background-color: var(--header-background);
 
@@ -910,4 +907,10 @@ background: transparent;
 
 .analyticsTable tr:hover {
   background-color: var(--transparent-analytics);
+}
+
+.btn.btn-info{
+  background-color: var(--secondary-accent-activated);
+  border-color: transparent;
+  font-size: 1.2vh;
 }

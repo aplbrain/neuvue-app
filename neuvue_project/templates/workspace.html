@@ -59,8 +59,8 @@
             </div>
             
             <! Shortcuts >
-            <div class="sideContentInfo">
-                <table class="analyticsTable" style="font-size: 1.2vh;">
+            <div class="sideContentInfo" style="padding: 0 !important;">
+                <table class="analyticsTable mini" style="font-size: 1.2vh;">
                     <thead>
                         <tr>
                         <th scope="col">Shortcut</th>
@@ -286,7 +286,7 @@
 </div>
 
 <form id="skipForm" method="post">
-    {% csrf_token %}
+    {% csrf_token %} 
     <!-- Skip Modal -->
     <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
@@ -296,7 +296,7 @@
                     <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to skip? (Your progress will NOT be saved!)
+                    Are you sure you want to skip? (Your progress WILL be saved!)
                 </div>
                 <div class="modal-footer">
                     <form action="" method="post" role="form"></form>
