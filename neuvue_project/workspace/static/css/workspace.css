@@ -914,10 +914,11 @@ background: transparent;
 
 }
 
-.dropdown-divider {
+.row-divider {
   width:35vw;
   position:relative;
-  margin:auto;
+  margin-top:2vh;
+  margin-bottom: 2vh;
 }
 /* Analytics table */
 .analyticsTable{
