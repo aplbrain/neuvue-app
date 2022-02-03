@@ -503,17 +503,14 @@
     var current_button_selection = 'noneSelected'
 
     function updateButtonSelected(button_title){
+        // deactivate the old button
+        if (current_button_selection != 'noneSelected'){
+            var previously_selecected_button = document.getElementById(current_button_selection);
+            previously_selecected_button.classList.toggle("active");
+        }
+        // activate the new one
         current_button_selection = button_title;
         var selected_button = document.getElementById(button_title);
-        console.log(selected_button);
-        selected_button.click();
-        var all_buttons = document.getElementById("decide_and_submit_buttons");
-        var children = all_buttons.children;
-        for (var i = 0; i < children.length; i++) {
-            var child_button = children[i];
-            child_button.style.border= "transparent";
-        }
-        selected_button.style.border = "pink";
         selected_button.classList.toggle("active");
     }
 

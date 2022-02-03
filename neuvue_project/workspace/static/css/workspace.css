@@ -291,9 +291,8 @@ color: var(--primary-accent);
   margin-left: 13%;
 }
 
-.mainButton.submit.quad:active, .mainButton.submit.quad.active {
-  border: 5px solid white;
-  background-color: var(--next-accent);
+.mainButton:active, .mainButton.active {
+  border: 2.5px solid white;
   color: var(--primary-accent);
 }
 
