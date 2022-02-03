@@ -102,6 +102,9 @@
             $("#alpha3DDisplay").html($("#alpha3D").val());
         });
 
+        // Select correct layout 
+        $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
+        
         // Submit Button
         $('#saveConfig').click(function() {
             submitConfig();
