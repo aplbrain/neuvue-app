@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="pref_main_container">
+    <form id="configForm" action="" method="post" >
+    {% csrf_token %}
+    <div class="navbar-text" style='font-size:1vw;'> <h2> Neuroglancer Preferences </h2>
+        Neuroglancer preferences will overwrite all task states to the specified configuration.
+        <hr class="dropdown-divider">
+        <div class="form-check form-switch">
+            <label class="form-check-label" for="configSwitch"> Enable/Disable Preferences </label>
+            <input class="form-check-input" type="checkbox" id="configSwitch">
+        </div>
+    </div>
+    <div id="neuroglancerConfig">
+        <hr class="dropdown-divider">
+        <div class="row-container">
+            <div> 2D Segmentation Data Opacity </div>
+            
+            <input id="alphaSelected" type="range" class="form-range" min="0" 
+                max="1" step="0.01" value="{{ alphaSelected }}" />
+            
+            <div id="alphaSelectedDisplay" class="form-label">"{{ alphaSelected }}"</div>
+
+        </div>
+        <hr class="dropdown-divider">
+        <div class="row-container">
+            <div> 3D Segmentation Data Opacity </div>
+            
+            <input id="alpha3D" type="range" class="form-range" min="0" 
+                max="1" step="0.01" value="{{alpha3D}}" />
+
+            <div id="alpha3DDisplay" class="form-label">"{{alpha3D}}"</div>
+        </div>
+
+        <hr class="dropdown-divider">
+
+        <div class="row-container">
+            <div> Panel Layout </div>
+            <select name="layout" class="form-select" id="layoutSelect" >
+                <option>xy-3d</option>
+                <option>yz-3d</option>
+                <option>xz-3d</option>
+                <option>4panel</option>
+                <option>3d</option>
+            </select> 
+        </div>
+
+        <hr class="dropdown-divider">
+    </div>
+    <div style="flex-direction:column;">
+        <button id="saveConfig" type="button" class="btn btn-primary" style="width:10vw;">Save</button>
+        <button id="resetConfig" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
+    </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+    function submitConfig() {
+        let form = '#configForm'
+        let enabled = $('#configSwitch').is(":checked");
+        let alphaSelected = $('#alphaSelected').val();
+        let alpha3D = $('#alpha3D').val();
+
+        $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', alphaSelected).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', alpha3D).appendTo(form);
+        $(form).submit();
+    }
+    $(document).ready(function() {
+        $("#configSwitch").change(function() {
+            if ($("#configSwitch").is(':checked')) {
+
+                $("#neuroglancerConfig").show(100);
+            } else {
+                $("#neuroglancerConfig").hide(100);
+            }
+        });
+        
+        if ("{{enabled}}" == "True") {
+            $("#neuroglancerConfig").show();
+            $("#configSwitch").prop( "checked", true );
+        } else {
+            $("#neuroglancerConfig").hide();
+            $("#configSwitch").prop( "checked", false );
+        }
+
+        // Display value on sliders
+        $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
+        $("#alpha3DDisplay").html($("#alpha3D").val() );
+
+        // Update value on sliders
+        $("#alphaSelected").change(function( ){
+            $("#alphaSelectedDisplay").html($("#alphaSelected").val());
+        });
+        
+        $("#alpha3D").change(function( ){
+            $("#alpha3DDisplay").html($("#alpha3D").val());
+        });
+
+        // Select correct layout 
+        $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
+        
+        // Submit Button
+        $('#saveConfig').click(function() {
+            submitConfig();
+        })
+
+    });
+
+</script>
+{% endblock %}

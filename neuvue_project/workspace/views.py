@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
+
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -13,7 +14,8 @@ from .neuroglancer import (
     construct_lineage_state_and_graph,
     get_from_state_server, 
     post_to_state_server, 
-    get_from_json
+    get_from_json,
+    apply_state_config
     )
 
 from .analytics import user_stats
@@ -24,6 +26,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
 
 class WorkspaceView(LoginRequiredMixin, View):
 
@@ -100,6 +103,10 @@ class WorkspaceView(LoginRequiredMixin, View):
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
                 context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+
+            # Apply configuration options.
+            context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
+
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):

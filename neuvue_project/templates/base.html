@@ -54,8 +54,8 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <b> {{user.username}} </b>
                     </a>
-                    <ul class="dropdown-menu me-2 dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item disabled" href="#" aria-disabled="true">Preferences</a></li>
+                    <ul class="dropdown-menu me-2 dropdown-menu-dark preferences" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url "preferences" %}" >Preferences</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url "logout" %}">Logout</a></li>
                     </ul>

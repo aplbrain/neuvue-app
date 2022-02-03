@@ -25,11 +25,12 @@ from workspace.views import (
     InspectTaskView,
     LineageView
     )
-
+from preferences.views import PreferencesView
 from dashboard.views import DashboardView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
+    path('preferences/', PreferencesView.as_view(), name="preferences"),
     path('tasks/', TaskView.as_view(), name="tasks"),
     path('workspace/<str:namespace>', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),

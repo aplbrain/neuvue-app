@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'workspace', 
     'dashboard',
-    'webpack_loader'
+    'webpack_loader',
+    'preferences'
 ]
 
 MIDDLEWARE = [
