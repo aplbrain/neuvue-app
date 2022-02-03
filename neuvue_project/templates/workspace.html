@@ -166,51 +166,55 @@
                     
                 </form>
                 {% elif submission_method == "decide_and_submit" %}
-                    <button 
-                        id="btnYes" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="updateButtonSelected('yes')"
-                    >
-                        Confirm Split
-                    </button>
+                    <div id="decide_and_submit_buttons" class="bottomBar" style="order: 0;">
+                        <button 
+                            id="yes" 
+                            type="button" 
+                            class="mainButton submit quad" 
+                            onclick="updateButtonSelected('yes')"
+                        >
+                            Confirm Split
+                        </button>
 
-                    <button 
-                        id="btnYesBut" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="updateButtonSelected('yesConditional')"
-                    >
-                        Split Requires Refinement
-                    </button>
+                        <button 
+                            id="yesConditional" 
+                            type="button" 
+                            class="mainButton yesBut" 
+                            onclick="updateButtonSelected('yesConditional')"
+                        >
+                            Split Requires Refinement
+                        </button>
 
-                    <button 
-                    id="btnNoBut" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="updateButtonSelected('errorNearby')"
+                        <button 
+                        id="errorNearby" 
+                        type="button" 
+                        class="mainButton noBut" 
+                        onclick="updateButtonSelected('errorNearby')"
+                        
+                        >
+                            Reject Split but Error Nearby
+                        </button>
+
+                        <button 
+                            id="no" 
+                            type="button" 
+                            class="mainButton flag quad" 
+                            onclick="updateButtonSelected('no')"
+                        >
+                            Reject Split
+                        </button>
+
+                        <button 
+                            id="unsure" 
+                            type="button" 
+                            class="mainButton pause quad" 
+                            onclick="updateButtonSelected('unsure')"
+                        >
+                            Unsure
+                        </button>
+
+                    </div>
                     
-                    >
-                        Reject Split but Error Nearby
-                    </button>
-
-                    <button 
-                        id="btnNo" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="updateButtonSelected('no')"
-                    >
-                        Reject Split
-                    </button>
-
-                    <button 
-                        id="btnUnsure" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="updateButtonSelected('unsure')"
-                    >
-                        Unsure
-                    </button>
                 {% endif %}
 
                 
@@ -299,7 +303,6 @@
                         id="btnSubmit" 
                         type="button" 
                         class="mainButton submit"
-                        onclick="loadingSpinner('submit_task_load')" 
                     >
                         <div id = 'submit_task_load'>
                             Submit Task
@@ -501,7 +504,19 @@
 
     function updateButtonSelected(button_title){
         current_button_selection = button_title;
+        var selected_button = document.getElementById(button_title);
+        console.log(selected_button);
+        selected_button.click();
+        var all_buttons = document.getElementById("decide_and_submit_buttons");
+        var children = all_buttons.children;
+        for (var i = 0; i < children.length; i++) {
+            var child_button = children[i];
+            child_button.style.border= "transparent";
+        }
+        selected_button.style.border = "pink";
+        selected_button.classList.toggle("active");
     }
+
     // Button Submission
     $(document).ready(function() {
 
@@ -546,6 +561,7 @@
         } else if ('{{submission_method}}' == "decide_and_submit"){
             $('#btnSubmit').click(function(){
                 if (current_button_selection != 'noneSelected'){
+                    loadingSpinner('submit_task_load');
                     submitForm(current_button_selection);
                 } else {
                     alert("Please select a decision!");

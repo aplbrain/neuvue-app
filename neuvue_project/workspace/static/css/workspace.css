@@ -290,6 +290,13 @@ color: var(--primary-accent);
   max-width: 12%;
   margin-left: 13%;
 }
+
+.mainButton.submit.quad:active, .mainButton.submit.quad.active {
+  border: 5px solid white;
+  background-color: var(--next-accent);
+  color: var(--primary-accent);
+}
+
 .mainButton.yesBut{
   min-width: 15%;
   max-width: 18%;
