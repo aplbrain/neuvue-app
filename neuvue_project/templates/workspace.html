@@ -46,6 +46,10 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
+                    {% if was_skipped %}
+                    Skipped <br> 
+                    <span class ="code">{{was_skipped}}</span><br>
+                    {% endif %}
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
@@ -59,8 +63,8 @@
             </div>
             
             <! Shortcuts >
-            <div class="sideContentInfo" style="padding: 0 !important;">
-                <table class="analyticsTable mini" style="font-size: 1.2vh;">
+            <div class="sideContentBox" style="padding: 0 !important;">
+                <table class="analyticsTable mini">
                     <thead>
                         <tr>
                         <th scope="col">Shortcut</th>
@@ -97,6 +101,7 @@
                     </tbody>
                 </table>
             </div>
+            <br><br><br><br><br>
         </div>
     </div> 
     <! Neuroglancer >

@@ -734,10 +734,12 @@ a.fill-div {
   right: 0;
   margin-top: 4%;
   margin-right: 2%;
+  height:100%;
   float: right;
   width: 85%;
   text-align: left;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--transparent-background) !important;
 }
 
@@ -803,7 +805,7 @@ background: transparent;
   height: 10vh;
   flex-direction: column;
   display:inline-block;
-  overflow: hidden;
+  overflow-y: hidden;
   overflow-x: hidden;
   transition: 0s;
 }
@@ -924,7 +926,10 @@ background: transparent;
   margin-bottom: 1vh;
 }
 .analyticsTable.mini{
-  font-size: 0.6vh;
+  font-size: 1.1vh;
+  border: transparent;
+  margin-top: 0vh;
+  margin-bottom: 0vh;
 }
 .analyticsTable th{
   background-color: var(--header-background);

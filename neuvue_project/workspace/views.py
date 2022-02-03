@@ -55,7 +55,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'timeout': settings.TIMEOUT,
-            'session_task_count' : session_task_count
+            'session_task_count' : session_task_count,
+            'was_skipped':False,
         }
 
         if namespace is None:
@@ -81,8 +82,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            context['was_skipped'] = task_df['metadata'].get('skipped')
             if task_df['priority'] < 2:
                 context['skipable'] = False
+                
  
             # Construct NG URL from points or existing state
             # Dev Note: We always load ng state if one is available, overriding 
