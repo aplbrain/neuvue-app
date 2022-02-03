@@ -907,7 +907,14 @@ background: transparent;
   margin-left: 2vw;
   margin-top: 2vw;
   color: var(--navbar-text);
+  width: 25vw;
 
+}
+
+.dropdown-divider {
+  width:35vw;
+  position:relative;
+  margin:auto;
 }
 /* Analytics table */
 .analyticsTable{

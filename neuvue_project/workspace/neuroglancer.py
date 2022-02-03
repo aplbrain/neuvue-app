@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.apps import apps
 import pandas as pd 
 import numpy as np 
 from caveclient import CAVEclient
@@ -26,6 +27,8 @@ from .models import Namespace, NeuroglancerLinkType
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+Config = apps.get_model('preferences', 'Config')
 
 def create_base_state(seg_ids, coordinate, namespace):
     """Generates a base state containing imagery and segemntation layers. 
@@ -361,3 +364,23 @@ def construct_lineage_state_and_graph(root_id:str):
             layer['hiddenSegments'] = root_ids[3:]
 
     return json.dumps(base_state_dict), graph_image
+
+def apply_state_config(state:str, username:str):
+    #make ng state preferences changes, json string to dict
+    config = Config.objects.filter(user=username).order_by('-id')[0]
+    
+    if not config.enabled:
+        return state
+    
+    alpha_selected = config.alpha_selected
+    alpha_3d = config.alpha_3d
+    layout = config.layout
+
+    cdict = json.loads(state)
+    cdict["layout"] = str(layout)
+    cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+    
+    if "objectAlpha" in cdict['layers'][1].keys():
+        cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
+
+    return json.dumps(cdict)

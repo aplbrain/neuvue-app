@@ -1,8 +1,9 @@
-from .models import Config
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Config
 
 # import the logging library
 import logging
@@ -19,8 +20,7 @@ def convert_for_context(var):
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-        num_of_params = len(Config._meta.get_fields()) - 1
-        settings.USER = request.user
+        num_of_params = len(Config._meta.get_fields()) - 2
 
         # new config
         if Config.objects.filter(user=str(request.user)).count() == 0:
