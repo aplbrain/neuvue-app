@@ -367,8 +367,12 @@ def construct_lineage_state_and_graph(root_id:str):
 
 def apply_state_config(state:str, username:str):
     #make ng state preferences changes, json string to dict
-    config = Config.objects.filter(user=username).order_by('-id')[0]
-    
+    try:
+        config = Config.objects.filter(user=username).order_by('-id')[0]
+    except Exception as e:
+        logging.error(e) 
+        return state
+
     if not config.enabled:
         return state
     
