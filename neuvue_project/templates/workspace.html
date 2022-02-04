@@ -464,10 +464,12 @@
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
+        let operation_ids = JSON.stringify(operation_ids);
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'operation_ids').attr('value', operation_ids).appendTo(form);
         $(form).submit();
     }
 
