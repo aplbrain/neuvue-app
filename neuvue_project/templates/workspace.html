@@ -332,9 +332,12 @@
                     <! In-between Tasks >
                     <div class="interTaskBox">
                         <div class="interTaskTitle">
-                            {{display_name}} Tasks Complete
+                            Tasks Complete <br> {{display_name}} 
                         </div>
-                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                        <button 
+                            type="button" 
+                            class="mainButton return" 
+                            onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
                                 Return to Task page
                             </div>
