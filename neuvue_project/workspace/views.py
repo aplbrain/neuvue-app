@@ -453,5 +453,5 @@ class AuthView(View):
         return render(request, "auth_redirect.html")
 
 class TokenView(View):
-    def get(self, request, code=None, *args, **kwargs):
-        return render(request, "token.html", context={'code': code})
+    def get(self, request, *args, **kwargs):
+        return render(request, "token.html", context={'code': request.GET.get('code')})
