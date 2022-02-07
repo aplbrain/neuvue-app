@@ -40,7 +40,7 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
     path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardView.as_view(), name="dashboard"),
     path('auth_redirect.html',AuthView.as_view(),name='auth_redirect'),
-    path('token/code=<str:code>', TokenView.as_view(), name='token'),
+    path('token/?code=<str:code>', TokenView.as_view(), name='token'),
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
     path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect"),
     path('lineage/', LineageView.as_view(), name="lineage"), 
