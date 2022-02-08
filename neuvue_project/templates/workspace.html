@@ -597,5 +597,21 @@
     window.addEventListener('beforeunload', exitAlert);
     {% endif %}
 
+    document.addEventListener('keydown', function (event) {
+    console.log(event.keyCode)
+        //90 corresponds to option key 
+        if (event.key == "o"){
+            
+            console.log("decrease 0.2")
+
+            // submitConfig(); //from preferences
+            //<input id="alphaSelected" type="range" class="form-range" min="0" 
+                //max="1" step="0.01" value="{{ alphaSelected }}" />
+        }
+
+        if (event.key == "p"){
+            console.log("increase 0.2")
+        }
+    })
 </script>
 {% endblock %}
