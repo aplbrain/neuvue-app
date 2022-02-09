@@ -279,10 +279,13 @@ color: var(--primary-accent);
 }
 
 
-.mainButton.flag.duo{
+.mainButton.return{
+  background-color: var(--flag-accent);
+  color: var(--background);
+  /* width: 18vw; */
   width: 18vw;
   font-size: 1.5vh;
-  margin: 1vh 1vw;
+  margin: 0.5vh 1vw;
 }
 
 .mainButton.submit.quad{
@@ -808,7 +811,7 @@ background: transparent;
   background-color: var(--transparent-background);
   margin-top: 40vh;
   width: 20vw;
-  height: 10vh;
+  height: 14vh;
   flex-direction: column;
   display:inline-block;
   overflow-y: hidden;
@@ -819,19 +822,17 @@ background: transparent;
 .interTaskTitle {
   font-family: var(--header-font);
   color: var(--primary-accent);
-  border-radius: 2px;
+  border-radius: 3px;
   font-size: 1.8vh;
   z-index: 10;
-  padding: 1%;
+  padding: 3%;
   flex-grow: 2;
   text-align: center;
   align-items: left;
   text-decoration: none;
   transition: 0s;
   background-color: var(--background);
-  /*position: sticky;*/
   top: 0;
-
 }
 
 
