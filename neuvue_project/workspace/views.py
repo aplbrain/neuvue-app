@@ -446,7 +446,7 @@ class LineageView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+        return render(request, "404.html")
 
 class AuthView(View):
     def get(self, request, *args, **kwargs):
