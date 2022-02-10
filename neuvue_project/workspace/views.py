@@ -351,14 +351,6 @@ class TaskView(View):
         return tasks.to_dict('records')
 
 
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
-
-class AuthView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "auth_redirect.html")
-
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
@@ -449,3 +441,17 @@ class LineageView(View):
     def post(self, request, *args, **kwargs):
         root_id = request.POST.get("root_id")
         return redirect(reverse('lineage', kwargs={"root_id":root_id}))
+
+
+#TODO: Move simple views to other file 
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "index.html")
+
+class AuthView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "auth_redirect.html")
+
+class TokenView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "token.html", context={'code': request.GET.get('code')})
