@@ -385,13 +385,14 @@ def apply_state_config(state:str, username:str):
     return json.dumps(cdict)
 
 def construct_synapse_state(root_id:str):
-    """Construct state for the lineage viewer.
+    """Construct state for the synapse viewer.
 
     Args:
         root_id (str): segment root id
 
     Returns:
         string: json-formatted state
+        dict: synapse stats
     """
     root_id = root_id.strip()
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
