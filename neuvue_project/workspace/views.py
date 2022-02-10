@@ -12,6 +12,7 @@ import json
 from .neuroglancer import (
     construct_proofreading_state, 
     construct_lineage_state_and_graph,
+    construct_synapse_state,
     get_from_state_server, 
     post_to_state_server, 
     get_from_json,
@@ -441,6 +442,37 @@ class LineageView(View):
     def post(self, request, *args, **kwargs):
         root_id = request.POST.get("root_id")
         return redirect(reverse('lineage', kwargs={"root_id":root_id}))
+
+
+class SynapseView(View):
+    def get(self, request, root_id=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
+        if root_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
+
+        context = {
+            "root_id": root_id,
+            "ng_state": None,
+            "synapse_stats": None,
+            "error": None
+        }
+
+        if root_id is None:
+            return render(request, "synapse.html", context)
+
+        try:
+            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "synapse.html", context)
+        return render(request, "synapse.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        root_id = request.POST.get("root_id")
+        return redirect(reverse('synapse', kwargs={"root_id":root_id}))
 
 
 #TODO: Move simple views to other file 
