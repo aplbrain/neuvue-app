@@ -39,7 +39,7 @@ class Namespace(models.Model):
     submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
-    
+    track_operation_ids = models.BooleanField(default=True)
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
