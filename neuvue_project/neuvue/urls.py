@@ -24,7 +24,8 @@ from workspace.views import (
     AuthView,
     InspectTaskView,
     LineageView,
-    TokenView
+    TokenView,
+    SynapseView
     )
 from preferences.views import PreferencesView
 from dashboard.views import DashboardView
@@ -44,7 +45,9 @@ urlpatterns = [
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
     path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect"),
     path('lineage/', LineageView.as_view(), name="lineage"), 
-    path('lineage/<str:root_id>', LineageView.as_view(), name="lineage")
+    path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
+    path('synapse/', SynapseView.as_view(), name="synapse"), 
+    path('synapse/<str:root_id>', SynapseView.as_view(), name="synapse")
 ]
 
 
