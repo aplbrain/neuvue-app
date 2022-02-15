@@ -318,8 +318,8 @@ class TaskView(View):
             closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
             closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
     
-        closed_tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
-        closed_tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
+        closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
+        closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
         return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
 
