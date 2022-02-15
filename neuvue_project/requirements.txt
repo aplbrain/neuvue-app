@@ -73,4 +73,5 @@ typing-extensions==3.10.0.2
 urllib3==1.26.7
 wcwidth==0.1.9
 websocket-client==0.59.0
+git+https://github.com/aplbrain/MeshParty-1.git@add-generic-mesh-kwargs
 ./deps/neuvue-client 

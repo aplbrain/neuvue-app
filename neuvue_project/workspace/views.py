@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
+from django.http import HttpResponseBadRequest
 from .models import Namespace
-
+from meshparty import trimesh_io
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
@@ -17,7 +18,7 @@ from .neuroglancer import (
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json
+from .utils import download_multiple_file_zip_response, download_single_file_response, utc_to_eastern, is_url, is_json
 
 # import the logging library
 import logging
@@ -431,3 +432,33 @@ class LineageView(View):
     def post(self, request, *args, **kwargs):
         root_id = request.POST.get("root_id")
         return redirect(reverse('lineage', kwargs={"root_id":root_id}))
+import os
+import time
+class DownloadView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        try:
+            seg_ids = request.GET.get('seg_ids').split(',')
+            
+        except (AttributeError,KeyError):
+            return HttpResponseBadRequest()
+        seg_ids = [int(seg_id) for seg_id in seg_ids]
+        source = request.GET.get('source',default="gs://iarpa_microns/minnie/minnie65/seg")
+        
+        fmt = request.GET.get('format',default="obj")
+        
+        logger.debug(f'Downloading: seg_ids {seg_ids} from {source} using format {fmt}')
+        
+        if len(seg_ids) == 1:
+            target_dir = "/tmp/"
+            trimesh_io.download_meshes(seg_ids, target_dir, source, fmt=fmt)
+            return download_single_file_response(content_type="model/{fmt}",filename=f"{seg_ids[0]}.{fmt}", dir=target_dir)
+        else:
+            tmpdir = str(hash(time.time()))
+            target_dir = os.path.join("/tmp/",tmpdir)
+            # Throw nice error here?
+            os.makedirs(target_dir, exist_ok=False)
+            trimesh_io.download_meshes(seg_ids, target_dir, source, fmt=fmt)
+            
+            return download_multiple_file_zip_response(dir=target_dir,download_filename='zipped_meshes.zip',globspec=f'*.{fmt}')
+        
+            
