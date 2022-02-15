@@ -267,7 +267,7 @@
                     {% elif submission_method == "forced_choice" %}
                         style="margin-left: 30%;"
                     {% elif skipable %}
-                        style="margin-left: 11%;"
+                        style="margin-left: 10%;"
                     {% else %}
                         style="margin-left: 20%;"
                     {% endif %}
@@ -279,13 +279,15 @@
                     <! Skip >
                     {% if skipable %}
                     <button
-                        id="btnSkip" 
+                        id="btnSkipSubmit" 
                         type="button" 
                         class="mainButton skip"
                         accesskey="k"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#skipModal">
-                        Skip Task
+                        onclick="loadingSpinner('skip_task_load')" 
+                    >
+                        <div id = 'skip_task_load'>
+                            Skip Task
+                        </div>
                     </button>
                     {% endif %}
 
@@ -353,32 +355,6 @@
         </div>
     </div>
 </div>
-
-<form id="skipForm" method="post">
-    {% csrf_token %} 
-    <!-- Skip Modal -->
-    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
-                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to skip? (Your progress WILL be saved!)
-                </div>
-                <div class="modal-footer">
-                    <form action="" method="post" role="form"></form>
-                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
-                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> 
-</form>
-
-
 
 <form id="flagForm" method="post">
     {% csrf_token %}
@@ -577,7 +553,7 @@
         }
 
         $('#btnSkipSubmit').click(function() {
-            submitForm('skip', '#skipForm')
+            submitForm('skip')
         })
         
         $('#btnFlagSubmit').click(function() {
