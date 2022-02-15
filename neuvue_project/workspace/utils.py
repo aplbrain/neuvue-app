@@ -54,8 +54,8 @@ def download_single_file_response(content_type:str, filename:str, dir:str='/tmp'
             response = HttpResponse(fp.read(), content_type=content_type)
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(download_filename)
     finally:
-        # clean_tmp_files(filename, dir)
-        pass
+        clean_tmp_files(filename, dir)
+        
     return response
 def download_multiple_file_zip_response(dir:str,download_filename, globspec="*"):
     # Downloads all files in dir in the form of a zip
@@ -75,10 +75,10 @@ def download_multiple_file_zip_response(dir:str,download_filename, globspec="*")
     try:
         return download_single_file_response(content_type='application/zip',filename=zip_filename, dir=dir, download_filename=download_filename)
     finally:
-        # clean_tmp_files("*.zip",dir=dir)
-        # clean_tmp_files(globspec,dir=dir)
-        # os.rmdir(dir)
-        pass
+        clean_tmp_files("*.zip",dir=dir)
+        clean_tmp_files(globspec,dir=dir)
+        os.rmdir(dir)
+        
        
 def clean_tmp_files(globspec,dir:str='/tmp'):
     for fn in glob.glob(os.path.join(dir, globspec)):
