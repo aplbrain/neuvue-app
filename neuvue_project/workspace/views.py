@@ -280,8 +280,7 @@ class TaskView(View):
         non_empty_namespace = 0
 
         for namespace in context.keys():
-            context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
-            context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
@@ -299,57 +298,30 @@ class TaskView(View):
 
         return render(request, "tasks.html", {'data':context})
 
-    def _generate_table(self, table, username, namespace):
-        if table == 'pending':
-            pending_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'pending'
-                }, return_metadata=False, return_states=False)
-            open_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'open'
-                }, return_metadata=False, return_states=False)
-            tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
-            
-            tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
-            
-
-        elif table == 'closed':
-            closed_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'closed'
-                }, return_metadata=False, return_states=False)
-            errored_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'errored'
-                }, return_metadata=False, return_states=False)
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed', ascending=False)
-            
-            # Check if there are any NaNs in opened column
-            # TODO: Fix this in the database side of things 
-            if tasks['opened'].isnull().values.any() or tasks['closed'].isnull().values.any():
-                default =  pd.to_datetime('1969-12-31')
-                tasks['opened'] = tasks['opened'].fillna(default)
-                tasks['closed'] = tasks['closed'].fillna(default)
-    
-            tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
-            tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
-
-        tasks.drop(columns=[
-                'active',
-                'points',
-                'assignee',
-                'namespace',
-                'instructions',
-                '__v'
-            ], inplace=True)
+    def _generate_tables(self, username, namespace):
+        tasks = self.client.get_tasks(sieve={
+            "assignee": username, 
+            "namespace": namespace,
+        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration'])
         
         tasks['task_id'] = tasks.index
-        return tasks.to_dict('records')
+        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+
+        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values('created')
+        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        
+            
+        # Check if there are any NaNs in opened column
+        # TODO: Fix this in the database side of things 
+        if closed_tasks['opened'].isnull().values.any() or closed_tasks['closed'].isnull().values.any():
+            default =  pd.to_datetime('1969-12-31')
+            closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
+            closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
+    
+        closed_tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
+        closed_tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
+
+        return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
 
 
 class InspectTaskView(View):
