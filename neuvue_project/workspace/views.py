@@ -146,7 +146,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata['operation_ids'] = task_metadata['operation_ids'] + new_operation_ids
             else:
                 metadata['operation_ids'] = new_operation_ids
-        print(metadata)
 
         if button == 'submit':
             logger.info('Submitting task')
