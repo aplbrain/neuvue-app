@@ -858,7 +858,7 @@ background: transparent;
   margin-top: 1vh;
   margin-bottom: 1vh;
   height: 100% !important;
-  width: 95%;
+  width: 95% !important;
   color: var(--primary-accent);
   overflow:auto;
   order: 1;
