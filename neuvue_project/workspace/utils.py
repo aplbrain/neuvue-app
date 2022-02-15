@@ -40,11 +40,17 @@ import os
 from django.http import HttpResponse
 from typing import Optional
 import glob
-def download_single_file_response(content_type:str, filename:str, dir:str='/tmp', download_filename:Optional[str]=None):
-    """Returns a httpReponse to download a single file
+def download_single_file_response(content_type:str, filename:str, dir:str='/tmp', download_filename:Optional[str]=None) -> HttpResponse:
+    """Returns a HttpReponse to download a single file
 
     Args:
+        content_type (str): The content type. See MIME types. Easy one is `application/force-download`
         filename (str): The filename to download
+        dir (str, optional): The directory in which to find the file. Defaults to '/tmp'.
+        download_filename (Optional[str], optional): The placeholder filename in the download dialogue. Defaults to using the actual name of the file.
+
+    Returns:
+        HttpResponse: _description_
     """
     download_filename = download_filename or filename
     # TODO: filter on binary MIME types
@@ -57,14 +63,24 @@ def download_single_file_response(content_type:str, filename:str, dir:str='/tmp'
         clean_tmp_files(filename, dir)
         
     return response
-def download_multiple_file_zip_response(dir:str,download_filename, globspec="*"):
+def download_multiple_file_zip_response(dir:str, download_filename:str, globspec:str="*") -> HttpResponse:
+    """Return a response to download multiple files as a zip object
+
+    Args:
+        dir (str): The directory in which to download the files
+        download_filename (str): The placeholder name of the file to download
+        globspec (str, optional): A glob spec for which files to download in the folder. Defaults to "*".
+
+    Returns:
+        HttpResponse: The download response
+    """
     # Downloads all files in dir in the form of a zip
-    # Do zipping
+    
     
     # throw nice error here if directory already exists for some reason
-    
     assert dir!='/tmp'
     zip_filename = os.path.join(dir,'tmp.zip')
+    # Do zipping
     files_to_zip = [fn for fn in glob.glob(os.path.join(dir,globspec))]
     with ZipFile(zip_filename,'w') as zipped:
         for fn in files_to_zip:
