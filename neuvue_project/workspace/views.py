@@ -116,6 +116,7 @@ class WorkspaceView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         
         namespace = kwargs.get('namespace')
+        namespace_obj = Namespace.objects.get(namespace = namespace)
 
         # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
@@ -126,6 +127,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
+        new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
     
         try:
             ng_state = post_to_state_server(ng_state)
@@ -134,6 +136,16 @@ class WorkspaceView(LoginRequiredMixin, View):
             
         tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
 
+        # Add operation ids to task metadata
+        # Only if track_operation_ids is set to true at the namespace level
+        # Make sure not to overwrite existing operation ids
+        metadata = {}
+        if new_operation_ids and namespace_obj.track_operation_ids:
+            task_metadata = task_df['metadata']
+            if 'operation_ids' in task_metadata: 
+                metadata['operation_ids'] = task_metadata['operation_ids'] + new_operation_ids
+            else:
+                metadata['operation_ids'] = new_operation_ids
 
         if button == 'submit':
             logger.info('Submitting task')
@@ -144,7 +156,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state,
-                tags=tags)
+                tags=tags,
+                metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
@@ -155,15 +168,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
+            metadata['decision'] = button
             # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state,
-                metadata={
-                    'decision': button
-                },
+                metadata=metadata,
                 tags=tags)
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -174,13 +186,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button == 'skip':
             logger.info('Skipping task')
+            metadata['skipped'] = True
             try:
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     priority=task_df['priority']-1, 
                     status="pending",
-                    metadata={'skipped': True},
+                    metadata=metadata,
                     ng_state=ng_state, 
                     tags=tags)
                 # Add new differ stack entry
@@ -192,11 +205,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
+                metadata['skipped'] = True
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     status="pending",
-                    metadata={'skipped': True},
+                    metadata=metadata,
                     ng_state=ng_state, 
                     tags=tags)
         
@@ -204,7 +218,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
-            metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
+            metadata['flag_reason'] = flag_reason if flag_reason else other_reason
             request.session['session_task_count'] = session_task_count +1
 
             # Update task data
@@ -238,7 +252,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                tags=tags)
+                tags=tags,
+                metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
