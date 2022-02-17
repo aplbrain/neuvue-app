@@ -718,8 +718,10 @@ a.fill-div {
   z-index: 1;
   right: 0;
   background-color: var(--transparent-background);
+  top: 4vh;
 }
 
+/*
 .sidemenu a {
   padding: 8px;
   text-decoration: none;
@@ -733,9 +735,8 @@ a.fill-div {
 
 .sidemenu .closebtn {
   position: absolute;
-  top: 20px;
-  left: 45px;
-}
+  
+}*/
 
 /* Container for all information in the sidebar */
 .sidecontent {
