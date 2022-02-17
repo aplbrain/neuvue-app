@@ -35,10 +35,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "inspect" %}">Inspect Task</a>
                 </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "tasks" %}">My Tasks</a>
-                </li>
+
                 {% if request.user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "dashboard" %}">Admin Dashboard</a>
@@ -47,13 +44,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a>
                 </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "synapse" %}">Synapse Viewer</a>
-                </li>
                 {% endif%}
                 
                 {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "synapse" %}">Synapse Viewer</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "tasks" %}">My Tasks</a>
+                </li>
+                
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <b> {{user.username}} </b>
