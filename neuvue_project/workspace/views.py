@@ -433,7 +433,7 @@ class LineageView(View):
 
 class SynapseView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        if not request.user.is_staff:
+        if not request.user.is_authenticated:
             return redirect(reverse('index'))
 
         if root_id in settings.STATIC_NG_FILES:
