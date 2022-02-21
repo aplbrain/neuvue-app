@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+
+{% if not root_id or error%}
+
+<div class="basic workspace">
+  <div class="inspect-container">
+    <form id="mainForm" action="" method="post" >
+      {% csrf_token %}
+      <div class="form-group">
+        <input class="form-control" id="rootIDInput" placeholder="Enter Root ID" name="root_id" required="true">
+        <br>
+        <input type="submit" class="btn btn-primary" value="Submit">
+        {% if error%}
+        <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+{% else %}
+
+<div id="neuVue-sidemenu" class="sidemenu">
+  <div id="neuVue-sidebar" class="sidebar">
+      <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+          <i class="glyphicon glyphicon-list"></i>
+      </a>  
+  </div>
+  <div id="neuVue-sidecontent" class="sidecontent">
+      
+      <! Task Information >
+      <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
+          <div class="sideContentTitle">
+              Segment Information
+          </div>
+          <div class="sideContentInfo">
+              Root ID <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root_id}}')"><i class="fa fa-copy"></i></button> {{root_id}} </span> <br>
+              Number of Presynaptic Connections <br> 
+              <span class ="code"> {{synapse_stats.num_pre}} </span> <br>
+              Number of Postsynaptic Connections <br> 
+              <span class ="code">  {{synapse_stats.num_post}} </span> <br>
+          </div>
+      </div>
+  </div>
+</div> 
+
+<div id="neuroglancer" class="leftFormatting">
+  <div class="left">    
+    <div id="neuroglancer-container" class="neuroglancer-container"></div>
+    <div class="bottomBar">
+      <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'synapse' %}'">
+          Exit
+      </button>
+    </div>
+  </div>
+</div>
+{% endif%}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
+<script type="text/javascript">
+  // Side Bar Interaction
+  openSideMenu();
+
+  // Neuroglancer State Load 
+  $(document).ready(function() {
+    var received_data = {{ ng_state|safe }};
+    viewer.state.restoreState(received_data);
+  })
+  </script>
+{% endblock %}

@@ -22,6 +22,7 @@ class NeuroglancerLinkType(models.TextChoices):
 class SubmissionMethod(models.TextChoices):
     SUBMIT = 'submit', _('Submit Button')
     FORCED_CHOICE = 'forced_choice', _('Yes/No/Maybe Button')
+    DECIDE_AND_SUBMIT = 'decide_and_submit', _('Decide and Submit Button')
 
 class PcgChoices(models.TextChoices):
     MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')
@@ -32,13 +33,14 @@ class ImageChoices(models.TextChoices):
     PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
 class Namespace(models.Model):
+    namespace_enabled = models.BooleanField(default=True)
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.PREGENERATED)
     submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
-    
+    track_operation_ids = models.BooleanField(default=True)
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""

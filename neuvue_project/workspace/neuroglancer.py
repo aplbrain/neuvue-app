@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.apps import apps
 import pandas as pd 
 import numpy as np 
 from caveclient import CAVEclient
@@ -26,6 +27,8 @@ from .models import Namespace, NeuroglancerLinkType
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+Config = apps.get_model('preferences', 'Config')
 
 def create_base_state(seg_ids, coordinate, namespace):
     """Generates a base state containing imagery and segemntation layers. 
@@ -139,25 +142,21 @@ def create_path_state():
     return StateBuilder(layers=[path, anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def create_point_state(use_description=False):
+def create_point_state(name='annotations', group=None, description=None, color=None):
     """Create the annotation state for points.
     Dontt tuse linemapper, just creates a neuroglancer link that is just Points
     nglui statebuilder
     Returns:
         StateBuilder: Annotation State
     """
-    if use_description:
-        anno = AnnotationLayerConfig("annotations",
-            mapping_rules=PointMapper(
-                "point_column_a", 
-                group_column="group", 
-                description_column="description",
-                set_position=False),
-        )
-    else:
-        anno = AnnotationLayerConfig("annotations",
-            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
-        )
+    anno = AnnotationLayerConfig(name,
+        mapping_rules=PointMapper(
+            "point_column_a", 
+            group_column=group, 
+            description_column=description,
+            set_position=False),
+        color=color
+    )
 
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
@@ -337,7 +336,6 @@ def construct_lineage_state_and_graph(root_id:str):
         string: json-formatted state
     """
     root_id = root_id.strip()
-    print("ROOTID", root_id)
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
     
     # Lineage graph gives you the nodes and edges of a root IDs history
@@ -361,3 +359,81 @@ def construct_lineage_state_and_graph(root_id:str):
             layer['hiddenSegments'] = root_ids[3:]
 
     return json.dumps(base_state_dict), graph_image
+
+def apply_state_config(state:str, username:str):
+    #make ng state preferences changes, json string to dict
+    try:
+        config = Config.objects.filter(user=username).order_by('-id')[0]
+    except Exception as e:
+        logging.error(e) 
+        return state
+
+    if not config.enabled:
+        return state
+    
+    alpha_selected = config.alpha_selected
+    alpha_3d = config.alpha_3d
+    layout = config.layout
+
+    cdict = json.loads(state)
+    cdict["layout"] = str(layout)
+    cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+    
+    if "objectAlpha" in cdict['layers'][1].keys():
+        cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
+
+    return json.dumps(cdict)
+
+def construct_synapse_state(root_id:str):
+    """Construct state for the synapse viewer.
+
+    Args:
+        root_id (str): segment root id
+
+    Returns:
+        string: json-formatted state
+        dict: synapse stats
+    """
+    root_id = root_id.strip()
+    cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    pre_synapses = cave_client.materialize.query_table(
+    "synapses_pni_2", 
+    filter_in_dict={"pre_pt_root_id": [root_id]},
+     select_columns=['ctr_pt_position']
+    )
+
+    post_synapses = cave_client.materialize.query_table(
+        "synapses_pni_2", 
+        filter_in_dict={"post_pt_root_id": [root_id]},
+        select_columns=['ctr_pt_position']
+    )
+    
+    pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+    post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+    
+    if len(pre_synapses['ctr_pt_position']) == 0 and len(post_synapses['ctr_pt_position']) == 0:
+        raise Exception('No pre or post synapses found for this root id.')
+    
+    position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
+
+    data_list = [None]
+    base_state = create_base_state([root_id], position, 'automatedSplit')
+
+    data_list.append( generate_point_df( pre_synapses['ctr_pt_position'].to_numpy()))
+    data_list.append( generate_point_df( post_synapses['ctr_pt_position'].to_numpy()))
+    
+    pre_synapses_state = create_point_state(name='pre_synapses', color='#309ec7')
+    post_synapses_state = create_point_state(name='post_synapses', color='#e96b15')
+    
+    chained_state = ChainedStateBuilder([base_state, pre_synapses_state, post_synapses_state])
+    
+    state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
+    state_dict['layout'] = '3d'
+    state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    
+    synapse_stats = {
+        "num_pre": len(pre_synapses),
+        "num_post": len(post_synapses)
+    }
+    return json.dumps(state_dict), synapse_stats

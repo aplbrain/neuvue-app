@@ -46,6 +46,10 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
+                    {% if was_skipped %}
+                    Skipped <br> 
+                    <span class ="code">{{was_skipped}}</span><br>
+                    {% endif %}
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
@@ -59,8 +63,8 @@
             </div>
             
             <! Shortcuts >
-            <div class="sideContentInfo">
-                <table class="analyticsTable" style="font-size: 1.2vh;">
+            <div class="sideContentBox" style="padding: 0 !important;">
+                <table class="analyticsTable mini">
                     <thead>
                         <tr>
                         <th scope="col">Shortcut</th>
@@ -97,6 +101,7 @@
                     </tbody>
                 </table>
             </div>
+            <br><br><br><br><br>
         </div>
     </div> 
     <! Neuroglancer >
@@ -165,6 +170,56 @@
                     </button>
                     
                 </form>
+                {% elif submission_method == "decide_and_submit" %}
+                    <div id="decide_and_submit_buttons" class="bottomBar" style="order: 0;">
+                        <button 
+                            id="yes" 
+                            type="button" 
+                            class="mainButton submit quad" 
+                            onclick="updateButtonSelected('yes')"
+                        >
+                            Confirm Split
+                        </button>
+
+                        <button 
+                            id="yesConditional" 
+                            type="button" 
+                            class="mainButton yesBut" 
+                            onclick="updateButtonSelected('yesConditional')"
+                        >
+                            Split Requires Refinement
+                        </button>
+
+                        <button 
+                        id="errorNearby" 
+                        type="button" 
+                        class="mainButton noBut" 
+                        onclick="updateButtonSelected('errorNearby')"
+                        
+                        >
+                            Reject Split but Error Nearby
+                        </button>
+
+                        <button 
+                            id="no" 
+                            type="button" 
+                            class="mainButton flag quad" 
+                            onclick="updateButtonSelected('no')"
+                        >
+                            Reject Split
+                        </button>
+
+                        <button 
+                            id="unsure" 
+                            type="button" 
+                            class="mainButton pause quad" 
+                            onclick="updateButtonSelected('unsure')"
+                        >
+                            Unsure
+                        </button>
+
+                    </div>
+                    
                 {% endif %}
 
                 
@@ -212,7 +267,7 @@
                     {% elif submission_method == "forced_choice" %}
                         style="margin-left: 30%;"
                     {% elif skipable %}
-                        style="margin-left: 11%;"
+                        style="margin-left: 10%;"
                     {% else %}
                         style="margin-left: 20%;"
                     {% endif %}
@@ -224,13 +279,15 @@
                     <! Skip >
                     {% if skipable %}
                     <button
-                        id="btnSkip" 
+                        id="btnSkipSubmit" 
                         type="button" 
                         class="mainButton skip"
                         accesskey="k"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#skipModal">
-                        Skip Task
+                        onclick="loadingSpinner('skip_task_load')" 
+                    >
+                        <div id = 'skip_task_load'>
+                            Skip Task
+                        </div>
                     </button>
                     {% endif %}
 
@@ -242,6 +299,17 @@
                         type="button" 
                         class="mainButton submit"
                         onclick="loadingSpinner('submit_task_load')" 
+                    >
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
+                    </button>
+                    {% elif submission_method == "decide_and_submit"%}
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit"
                     >
                         <div id = 'submit_task_load'>
                             Submit Task
@@ -266,9 +334,12 @@
                     <! In-between Tasks >
                     <div class="interTaskBox">
                         <div class="interTaskTitle">
-                            {{display_name}} Tasks Complete
+                            Tasks Complete <br> {{display_name}} 
                         </div>
-                        <button type="button" class="mainButton flag duo" onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                        <button 
+                            type="button" 
+                            class="mainButton return" 
+                            onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
                                 Return to Task page
                             </div>
@@ -285,30 +356,6 @@
     </div>
 </div>
 
-<form id="skipForm" method="post">
-    {% csrf_token %}
-    <!-- Skip Modal -->
-    <div id="skipModal" class="modal" name="skip" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Skipping Task #{{task_id}}</h5>
-                    <button type="button" class="btn-close" id="btnSkipClose" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to skip? (Your progress will NOT be saved!)
-                </div>
-                <div class="modal-footer">
-                    <form action="" method="post" role="form"></form>
-                        <button type="button" class="btn btn-primary" id="btnSkipSubmit" >Yes</button>
-                        <button type="button" class="btn btn-secondary" id="btnSkipClose" data-bs-dismiss="modal">No</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> 
-</form>
-
 <form id="flagForm" method="post">
     {% csrf_token %}
     <!-- Modal -->
@@ -316,14 +363,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Flagging Task #{{task_id}}</h5>
+                    <h5 class="modal-title" style="color: black;">Flagging Task #{{task_id}}</h5>
                     <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="" method="post" role="form">
                         <div class="form-group">
-                            <label class="custom-select-label" for="flag">Please select a reason for flagging this task:</label>
-                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox()>
+                            <label for="flag" style="color: black;">Please select a reason for flagging this task:</label>
+                            <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
                                 <option value="unknown">Select reason</option>
                                 <option value="artifact in the data">Artifact in the data</option>
                                 <option value="wrong location">Wrong location</option>
@@ -396,10 +443,17 @@
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
+        let new_operation_ids = '[]';
+        
+        if (typeof operation_ids !== 'undefined') {
+            new_operation_ids = JSON.stringify(operation_ids);
+        }
+
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
         $(form).submit();
     }
 
@@ -432,11 +486,25 @@
     function timerIncrement() {
         if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
             $('#timeoutModal').modal('show');
-            totalIdleTime += incrementAmount
+            totalIdleTime += incrementAmount;
         }
         idleTime += incrementAmount;
     }
-    
+
+    var current_button_selection = 'noneSelected'
+
+    function updateButtonSelected(button_title){
+        // deactivate the old button
+        if (current_button_selection != 'noneSelected'){
+            var previously_selecected_button = document.getElementById(current_button_selection);
+            previously_selecected_button.classList.toggle("active");
+        }
+        // activate the new one
+        current_button_selection = button_title;
+        var selected_button = document.getElementById(button_title);
+        selected_button.classList.toggle("active");
+    }
+
     // Button Submission
     $(document).ready(function() {
 
@@ -458,7 +526,6 @@
             $('#btnSubmit').click(function(){
                 submitForm('submit');
             });
-
         } else if ('{{submission_method}}' == "forced_choice") {
             $('#btnYes').click(function(){
                 submitForm('yes');
@@ -479,10 +546,19 @@
             $('#btnUnsure').click(function(){
                 submitForm('unsure');
             });
+        } else if ('{{submission_method}}' == "decide_and_submit"){
+            $('#btnSubmit').click(function(){
+                if (current_button_selection != 'noneSelected'){
+                    loadingSpinner('submit_task_load');
+                    submitForm(current_button_selection);
+                } else {
+                    alert("Please select a decision!");
+                }
+            });
         }
-        
+
         $('#btnSkipSubmit').click(function() {
-            submitForm('skip', '#skipForm')
+            submitForm('skip')
         })
         
         $('#btnFlagSubmit').click(function() {
