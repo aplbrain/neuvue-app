@@ -374,12 +374,16 @@ def apply_state_config(state:str, username:str):
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
+    sys_limit = config.sys_limit
+    chunk_requests = config.chunk_requests
     layout = config.layout
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
     cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
-    cdict["gpuMemoryLimit"] = round(float(gpu_limit) * 1E9)
+    cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
+    cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
+    cdict["concurrentDownloads"] = int(chunk_requests)
     
     if "objectAlpha" in cdict['layers'][1].keys():
         cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
