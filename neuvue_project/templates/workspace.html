@@ -363,14 +363,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Flagging Task #{{task_id}}</h5>
+                    <h5 class="modal-title" style="color: black;">Flagging Task #{{task_id}}</h5>
                     <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="" method="post" role="form">
                         <div class="form-group">
-                            <label class="custom-select-label" for="flag">Please select a reason for flagging this task:</label>
-                            <select class="custom-select" name="flag" id="select-flag" onchange=toggleTextbox()>
+                            <label for="flag" style="color: black;">Please select a reason for flagging this task:</label>
+                            <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
                                 <option value="unknown">Select reason</option>
                                 <option value="artifact in the data">Artifact in the data</option>
                                 <option value="wrong location">Wrong location</option>
