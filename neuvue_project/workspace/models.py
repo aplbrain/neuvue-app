@@ -33,6 +33,7 @@ class ImageChoices(models.TextChoices):
     PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
 class Namespace(models.Model):
+    namespace_enabled = models.BooleanField(default=True)
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.PREGENERATED)

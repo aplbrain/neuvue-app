@@ -273,8 +273,9 @@ class TaskView(View):
     def get(self, request, *args, **kwargs):
         context = {}
 
-        for i, n_s in enumerate(Namespace.objects.all()):
+        for i, n_s in enumerate(Namespace.objects.filter(namespace_enabled=True)):
             namespace = n_s.namespace
+            logging.debug(f"Loading data for namespace {namespace}.")
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
