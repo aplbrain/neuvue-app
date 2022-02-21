@@ -28,6 +28,7 @@ class PreferencesView(View):
             'enabled': config.enabled,
             'alphaSelected': config.alpha_selected,
             'alpha3D': config.alpha_3d,
+            'gpuLimit': config.gpu_limit,
             'layout': config.layout
         }
 
@@ -44,6 +45,7 @@ class PreferencesView(View):
 
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_3d = request.POST.get('alpha3D')
+        config.gpu_limit = request.POST.get('gpuLimit')
         config.layout = request.POST.get('layout')
         config.save()
         return redirect(reverse('preferences'))

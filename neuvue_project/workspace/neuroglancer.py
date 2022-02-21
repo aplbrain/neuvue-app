@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 Config = apps.get_model('preferences', 'Config')
 
 def create_base_state(seg_ids, coordinate, namespace):
-    """Generates a base state containing imagery and segemntation layers. 
+    """Generates a base state containing imagery and segmentation layers. 
 
     Args:
         seg_ids (list): seg_ids to select in the view
@@ -373,11 +373,13 @@ def apply_state_config(state:str, username:str):
     
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
+    gpu_limit = config.gpu_limit
     layout = config.layout
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
     cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+    cdict["gpuMemoryLimit"] = round(float(gpu_limit) * 1E9)
     
     if "objectAlpha" in cdict['layers'][1].keys():
         cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
