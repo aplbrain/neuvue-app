@@ -228,6 +228,7 @@
                         <thead>
                             <tr>
                             <th scope="col">Task ID</th>
+                            <th scope="col">Segment ID</th>
                             <th scope="col">Status</th>
                             <th scope="col">Priority</th>
                             <th scope="col">Created</th>
@@ -239,6 +240,7 @@
                             {% for taskrow in row.user_tasks %}
                             <tr>
                             <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
+                            <td>{{taskrow.seg_id}}</td>
                             <td>{{taskrow.status}}</td>
                             <td>{{taskrow.priority}}</td>
                             <td>{{taskrow.created}}</td>
