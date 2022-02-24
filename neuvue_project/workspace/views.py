@@ -75,11 +75,11 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         else:
             if task_df['status'] == 'pending':
-                overwrite_opened = bool(task_df.get('opened'))
+
                 self.client.patch_task(
                     task_df["_id"], 
                     status="open", 
-                    overwrite_opened=overwrite_opened
+                    overwrite_opened=not task_df.get('opened')
                     )
             
             # Update Context
