@@ -22,7 +22,7 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
-from .models import Namespace, NeuroglancerLinkType
+from .models import Namespace, NeuroglancerLinkType, PcgChoices
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -443,3 +443,27 @@ def construct_synapse_state(root_id:str):
         "num_post": len(post_synapses)
     }
     return json.dumps(state_dict), synapse_stats
+
+def refresh_ids(ng_state:str, namespace:str): 
+    namespace = Namespace.objects.get(namespace=namespace)
+    if not namespace.refresh_selected_root_ids:
+        return ng_state
+    
+    if namespace.pcg_source == PcgChoices.PINKY:
+        cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    else:
+        cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    state = json.loads(ng_state)
+    for layer in state['layers']:
+        if layer['type'] == "segmentation_with_graph":
+            latest_ids = set()
+            for root_id in layer['segments']:
+                try:
+                    roots = cave_client.chunkedgraph.get_latest_roots(root_id).tolist()
+                except Exception as e:
+                    logging.error(f"CaveClient Exception: {e}")
+                    roots = [root_id]
+                latest_ids.update(roots)
+            layer['segments'] = list(latest_ids)
+    return json.dumps(state)

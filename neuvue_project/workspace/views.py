@@ -16,7 +16,8 @@ from .neuroglancer import (
     get_from_state_server, 
     post_to_state_server, 
     get_from_json,
-    apply_state_config
+    apply_state_config,
+    refresh_ids
     )
 
 from .analytics import user_stats
@@ -114,6 +115,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             # Apply configuration options.
             context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
+            context['ng_state'] = refresh_ids(context['ng_state'], namespace)
 
         return render(request, "workspace.html", context)
 
