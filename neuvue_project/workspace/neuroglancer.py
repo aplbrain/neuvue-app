@@ -450,7 +450,7 @@ def refresh_ids(ng_state:str, namespace:str):
         return ng_state
     
     if namespace.pcg_source == PcgChoices.PINKY:
-        cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+        return ng_state
     else:
         cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
     
