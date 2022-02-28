@@ -37,7 +37,6 @@
         </div>
 
         <hr class="row-divider">
-
         <div class="row-container">
             <div> Panel Layout </div>
             <select name="layout" class="form-select" id="layoutSelect" >
@@ -47,6 +46,36 @@
                 <option>4panel</option>
                 <option>3d</option>
             </select> 
+        </div>
+        
+        <hr class="row-divider">
+        <div class="row-container">
+            <div> GPU Memory Limit (GB) </div>
+            
+            <input id="gpuLimit" type="range" class="form-range" min="0.5" 
+                max="4.0" step="0.1" value="{{gpuLimit}}" />
+
+            <div id="gpuLimitDisplay" class="form-label">"{{gpuLimit}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div> System Memory Limit (GB) </div>
+            
+            <input id="sysLimit" type="range" class="form-range" min="0.5" 
+                max="4.0" step="0.1" value="{{sysLimit}}" />
+
+            <div id="sysLimitDisplay" class="form-label">"{{sysLimit}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div> Concurrent Chunk Requests </div>
+            
+            <input id="chunkReq" type="range" class="form-range" min="8" 
+                max="64" step="1" value="{{chunkReq}}" />
+
+            <div id="chunkReqDisplay" class="form-label">"{{chunkReq}}"</div>
         </div>
 
         <hr class="row-divider">
@@ -66,10 +95,16 @@
         let enabled = $('#configSwitch').is(":checked");
         let alphaSelected = $('#alphaSelected').val();
         let alpha3D = $('#alpha3D').val();
+        let gpuLimit = $('#gpuLimit').val();
+        let sysLimit = $('#sysLimit').val();
+        let chunkReq = $('#chunkReq').val();
 
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', alphaSelected).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', alpha3D).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'gpuLimit').attr('value', gpuLimit).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'sysLimit').attr('value', sysLimit).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'chunkReq').attr('value', chunkReq).appendTo(form);
         $(form).submit();
     }
     $(document).ready(function() {
@@ -93,6 +128,9 @@
         // Display value on sliders
         $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
         $("#alpha3DDisplay").html($("#alpha3D").val() );
+        $("#gpuLimitDisplay").html($("#gpuLimit").val() );
+        $("#sysLimitDisplay").html($("#sysLimit").val() );
+        $("#chunkReqDisplay").html($("#chunkReq").val() );
 
         // Update value on sliders
         $("#alphaSelected").change(function( ){
@@ -101,6 +139,18 @@
         
         $("#alpha3D").change(function( ){
             $("#alpha3DDisplay").html($("#alpha3D").val());
+        });
+
+        $("#gpuLimit").change(function( ){
+            $("#gpuLimitDisplay").html($("#gpuLimit").val());
+        });
+
+        $("#sysLimit").change(function( ){
+            $("#sysLimitDisplay").html($("#sysLimit").val());
+        });
+
+        $("#chunkReq").change(function( ){
+            $("#chunkReqDisplay").html($("#chunkReq").val());
         });
 
         // Select correct layout 

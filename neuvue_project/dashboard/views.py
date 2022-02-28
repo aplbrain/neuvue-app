@@ -62,7 +62,7 @@ class DashboardView(View, LoginRequiredMixin):
             task_df['opened'] = task_df['opened'].apply(self._format_time)
             task_df['closed'] = task_df['closed'].apply(self._format_time)
             task_df['created'] = task_df['created'].apply(self._format_time)
-
+            task_df['duration'] = (task_df['duration']/60).round(1)
             # Append row info 
             row = {
                 'username': user,
