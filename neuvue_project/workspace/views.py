@@ -222,7 +222,11 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
-            metadata['flag_reason'] = flag_reason if flag_reason else other_reason
+            
+            metadata['flag_reason'] = flag_reason
+            if other_reason:
+                metadata['flag_other'] = other_reason
+    
             request.session['session_task_count'] = session_task_count +1
 
             # Update task data
