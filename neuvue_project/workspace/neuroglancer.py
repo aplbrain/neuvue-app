@@ -461,9 +461,11 @@ def refresh_ids(ng_state:str, namespace:str):
             for root_id in layer['segments']:
                 try:
                     roots = cave_client.chunkedgraph.get_latest_roots(root_id).tolist()
+                    roots = list(map(str, roots))
+                    latest_ids.update(roots)
                 except Exception as e:
                     logging.error(f"CaveClient Exception: {e}")
-                    roots = [root_id]
-                latest_ids.update(roots)
+                    return ng_state
+
             layer['segments'] = list(latest_ids)
     return json.dumps(state)
