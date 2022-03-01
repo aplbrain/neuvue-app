@@ -194,12 +194,14 @@
 
 
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <form id="taskPatchForm" action="" method="POST">{% csrf_token %}</form>
+    <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
+        <input type="hidden" name="namespace" value="{{display_name}}" />
+        <input type="hidden" name="group" value="{{group}}" />
+    </form>
     
     
     
-    <input type="hidden" name="namespace" value="{{display_name}}" />
-    <input type="hidden" name="group" value="{{group}}" />
+    
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
@@ -227,8 +229,9 @@
             <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" id="confirmReassignModalBody">
             Confirm you are reassigning the following tasks...
+
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
@@ -245,8 +248,9 @@
             <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" id="confirmDeleteModalBody">
             Confirm you are deleting the following tasks...
+
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
@@ -285,7 +289,7 @@
                         <tbody>
                             {% for taskrow in row.user_tasks %}
                             <tr>
-                            <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}}></th>
+                            <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}} class="taskCheckbox"></th>
                             <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
                             
                             <td>{{taskrow.status}}</td>
@@ -315,6 +319,29 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
+
+    function make_list_of_checked_elements(){
+        let ret = "";
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret += "<li>" + ele.value + "</li>"
+            };
+        });
+        return ret
+    };
+    document.getElementById("reassign_button").addEventListener('click', (e)=> {
+        const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
+        confirmReassignModalBody.innerHTML = "You are about to reassign the following tasks:";
+        confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
+        
+    });
+
+    document.getElementById("delete_button").addEventListener('click', (e)=> {
+        const confirmDeleteModalBody = document.getElementById("confirmDeleteModal");
+        confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
+        confirmDeleteModalBody.innerHTML += make_list_of_checked_elements();
+    });
+
 
     
 
