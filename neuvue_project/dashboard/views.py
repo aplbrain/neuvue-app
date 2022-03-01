@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.shortcuts import render, redirect, reverse
@@ -10,6 +11,11 @@ from django.apps import apps
 from neuvueclient import NeuvueQueue
 from typing import List
 
+# import the logging library
+import logging
+logging.basicConfig(level=logging.DEBUG)
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 class DashboardView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
@@ -94,7 +100,21 @@ class DashboardView(View, LoginRequiredMixin):
 
     def post(self, request, *args, **kwargs):
         Namespaces = apps.get_model('workspace', 'Namespace')
+        # Refresh request
         display_name = request.POST.get("namespace")
         group = request.POST.get("group")
-        namespace = Namespaces.objects.get(display_name = display_name).namespace 
+        namespace = Namespaces.objects.get(display_name = display_name).namespace
+
+        if "selected_tasks" in request.POST:
+            selected_action = request.POST.get("selected_action")
+            reassigned_user = request.POST.get("reassign_user")
+            selected_tasks = request.POST.getlist("selected_tasks")
+            
+            for task in selected_tasks:
+                if selected_action == 'delete':
+                    logging.debug(f"Delete task: {task}")
+                #     self.client.delete_task(task)
+                elif selected_action == "reassign":
+                #     self.client.patch_task(**task_obj)
+                    logging.debug(f"Resassigning task {task} to {reassigned_user}")
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
