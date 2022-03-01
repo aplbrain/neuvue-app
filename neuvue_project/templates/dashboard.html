@@ -337,7 +337,7 @@
     });
 
     document.getElementById("delete_button").addEventListener('click', (e)=> {
-        const confirmDeleteModalBody = document.getElementById("confirmDeleteModal");
+        const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
         confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
         confirmDeleteModalBody.innerHTML += make_list_of_checked_elements();
     });
