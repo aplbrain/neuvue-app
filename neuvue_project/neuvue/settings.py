@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -198,8 +198,11 @@ LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
-NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
-
+# NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
+NEUVUE_QUEUE_ADDR = "http://localhost:9005"
+NEUVUE_CLIENT_SETTINGS = {
+    "local" : True
+}
 # Task Timeout in Seconds
 TIMEOUT = 900
 

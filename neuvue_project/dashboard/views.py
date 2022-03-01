@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 class DashboardView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, group=None, *args, **kwargs):
@@ -113,8 +113,8 @@ class DashboardView(View, LoginRequiredMixin):
             for task in selected_tasks:
                 if selected_action == 'delete':
                     logging.debug(f"Delete task: {task}")
-                #     self.client.delete_task(task)
+                    self.client.delete_task(task)
                 elif selected_action == "reassign":
-                #     self.client.patch_task(**task_obj)
+                    self.client.patch_task(task,assignee=reassigned_user)
                     logging.debug(f"Resassigning task {task} to {reassigned_user}")
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
