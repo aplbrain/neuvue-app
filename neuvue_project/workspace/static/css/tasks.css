@@ -25,6 +25,10 @@
     overflow-x: hidden;
 }
 
+.neuvueRow {
+  display: flex
+}
+
 /* Clear floats after the columns */
 .neuvueRow:after {
   content: "";
@@ -40,7 +44,7 @@
   float: left;
   margin-top: 1%;
   left:0;
-  width: 87%;
+  flex-grow: 1;
   height: 3.2vh;
   margin: 1% 0 1% 0%;
   float: left;
@@ -55,11 +59,11 @@
   background-color: var(--complete-color-actived);
   color:var(--background);
 }
-/* Right half of the task category header: 'start proofreading' button */
+
+/* Task category header buttons */
 .launch_NG {
-  margin: 1% 0 1% 0%;
+  margin: 1% 0 1% 0.5%;
   background-color: transparent;
-  border-radius: 0 8px 8px 0;
   right:0;
   width: 12.5%;
   height: 3.2vh;
@@ -72,6 +76,10 @@
   cursor: pointer;
   z-index: 2; 
   
+}
+
+.rightBorderRounded {
+  border-radius: 0 8px 8px 0;
 }
 
 .launch_NG:hover{

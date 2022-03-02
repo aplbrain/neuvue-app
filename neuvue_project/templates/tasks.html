@@ -13,7 +13,15 @@
             {% for namespace, context in data.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
-                        <div class="launch_NG" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
+                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
+                        <div class="launch_NG">
+                            <div class ="launch_NG_text">
+                                <div id = '{{namespace}}SelfAssign'>
+                                    Add More Tasks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <div class ="launch_NG_text"
                                 onclick="loadingSpinner('{{namespace}}Spinner')">
                                 <div id = '{{namespace}}Spinner'>
@@ -21,7 +29,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
                     </div>
                     <div id="{{namespace}}Table" class ="bin" style="display:none;">
                         <div class="tab">
