@@ -35,3 +35,6 @@ def utc_to_eastern(time_value):
         return date_time.astimezone(eastern)
     except:
         return time_value
+
+def is_member(user, group):
+    return user.groups.filter(name=group).exists()

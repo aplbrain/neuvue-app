@@ -14,13 +14,15 @@
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
                         <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
-                        <div class="launch_NG">
-                            <div class ="launch_NG_text">
-                                <div id = '{{namespace}}SelfAssign'>
-                                    Add More Tasks
+                        {% if context.can_self_assign_tasks %}
+                            <div class="launch_NG">
+                                <div class ="launch_NG_text">
+                                    <div id = '{{namespace}}SelfAssign'>
+                                        Add More Tasks
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                         <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <div class ="launch_NG_text"
                                 onclick="loadingSpinner('{{namespace}}Spinner')">

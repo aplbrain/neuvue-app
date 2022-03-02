@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 
 from .models import Namespace
+from .utils import is_member
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
@@ -282,6 +283,7 @@ class TaskView(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
+        self_assign_group = "Can self assign tasks" 
 
         for i, n_s in enumerate(Namespace.objects.filter(namespace_enabled=True)):
             namespace = n_s.namespace
@@ -298,6 +300,7 @@ class TaskView(View):
             context[namespace]["total_tasks"] = 0
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
+            context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
