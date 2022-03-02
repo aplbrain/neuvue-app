@@ -42,6 +42,8 @@ class Namespace(models.Model):
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     track_operation_ids = models.BooleanField(default=True)
     refresh_selected_root_ids = models.BooleanField(default=False)
+    number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
+    max_number_of_tasks_per_user = models.IntegerField(default=200)
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
