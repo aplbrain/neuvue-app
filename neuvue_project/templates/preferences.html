@@ -18,14 +18,20 @@
     <div id="neuroglancerConfig">
         <hr class="row-divider">
         <div class="row-container">
+            <label for="annotationColor" class="form-label">Annotation Color</label>
+            <input id="annotationColor" class="form-control form-control-color" type="color" value="#563d7c">
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
             <div> 2D Segmentation Data Opacity </div>
             
             <input id="alphaSelected" type="range" class="form-range" min="0" 
                 max="1" step="0.01" value="{{ alphaSelected }}" />
             
             <div id="alphaSelectedDisplay" class="form-label">"{{ alphaSelected }}"</div>
-
         </div>
+
         <hr class="row-divider">
         <div class="row-container">
             <div> 3D Segmentation Data Opacity </div>
