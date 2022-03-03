@@ -212,10 +212,10 @@
           ...
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
           <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
-          <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-primary">Delete</button>
+          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
+          <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         
         </div>
       </div>
@@ -234,8 +234,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-            <button type="submit" class="btn btn-secondary" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
+            <button type="submit" class="btn btn-primary" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
+            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
           </div>
         </div>        
     </div>
@@ -253,8 +253,8 @@
 
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-            <button type="submit" class="btn btn-secondary" id="delete_button" form="taskPatchForm" name="selected_action" value="delete">Confirm</button>
+            <button type="submit" class="btn btn-primary" id="delete_button" form="taskPatchForm" name="selected_action" value="delete">Confirm</button>
+            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
           </div>
         </div>        
     </div>
@@ -350,7 +350,7 @@
             inputUser.style.backgroundColor = "indianred";
         } else {
             const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-            confirmReassignModalBody.innerHTML = "You are about to reassign the following tasks:";
+            confirmReassignModalBody.innerHTML = `You are about to reassign the following tasks to <b>${inputUser.value}</b> </b>:`;
             confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
             $('#userModal').modal('toggle')
             $('#confirmReassignModal').modal('toggle')
