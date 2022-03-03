@@ -195,33 +195,34 @@
 
 
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
-        <input type="hidden" name="namespace" value="{{display_name}}" />
-        <input type="hidden" name="group" value="{{group}}" />
-    </form>
-    
-    
-    
-    
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="userModalTitle">Username</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div id="userModalBody" class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
-          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
-          <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
-          <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
+    <input type="hidden" name="namespace" value="{{display_name}}" />
+    <input type="hidden" name="group" value="{{group}}" />
+  </form>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalTitle">Username</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div id="userModalBody" class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
+        <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
+        <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+        <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+  </div>  
     </div>
-    
-  </div>
+  </div>  
+    </div>
+  </div>  
+</div>
+
+
 <div class="modal fade" id="confirmReassignModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -241,6 +242,8 @@
     </div>
     
 </div>
+
+
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -274,6 +277,7 @@
                 let tableContents = `
                     <thead>
                         <tr>
+                        <th scope="col">Select</th>
                         <th scope="col">Task ID</th>
                         <th scope="col">Segment ID</th>
                         <th scope="col">Status</th>
@@ -287,6 +291,7 @@
                     <tbody>
                         {% for taskrow in row.user_tasks %}
                         <tr>
+                        <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}} class="taskCheckbox"></th>
                         <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
                         <td>{{taskrow.seg_id}}</td>
                         <td>{{taskrow.status}}</td>
@@ -341,10 +346,8 @@
         });
         return ret
     };
-    document.getElementById("reassign_button").addEventListener('click', (e)=> {
-        
-        
-        
+
+    document.getElementById("reassign_button").addEventListener('click', (e)=> {        
         const inputUser = document.getElementById("reassign_user")
         console.log(e)
         if (getSelectedTasks() == 0){
@@ -376,9 +379,6 @@
              $('#confirmDeleteModal').modal('toggle')
          }
     });
-
-
-    
 
     const exportButton_userTable = document.getElementById("exportBtn_userTable");
     exportButton_userTable.addEventListener('click', (e) => {
