@@ -314,13 +314,23 @@ def _get_soma_center(root_ids: List, cave_client):
     """
     try:
         soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
-            'pt_root_id': root_ids
+            'pt_root_id': root_ids[:3]
         })
+        if not len(soma_df):
+            soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            'pt_root_id': root_ids
+            })
+        if len(soma_df) > 3:
+            soma_df = soma_df.head(3)
+        pt_position = soma_df.iloc[0]['pt_position']
+        present_root_ids = list(soma_df['pt_root_id'])
+    except IndexError as e:
+        logging.error(e)
+        raise Exception('Unable to find Soma Center')
     except Exception as e:
         logging.error(e)
-        raise e
-
-    return soma_df.iloc[0]['pt_position']
+        raise Exception(e)
+    return pt_position, present_root_ids
 
 def _get_nx_graph_image(nx_graph):
     def networkx_to_graphViz(nx_graph):
@@ -353,9 +363,8 @@ def construct_lineage_state_and_graph(root_id:str):
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
     root_ids = [str(x) for x in lineage_graph]
-
-    position = _get_soma_center(root_ids, cave_client)
-    base_state = create_base_state(root_ids, position, 'automatedSplit')##root_ids[:3]
+    position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
+    base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as='dict')
