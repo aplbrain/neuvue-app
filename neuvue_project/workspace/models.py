@@ -41,6 +41,7 @@ class Namespace(models.Model):
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     track_operation_ids = models.BooleanField(default=True)
+    refresh_selected_root_ids = models.BooleanField(default=False)
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""

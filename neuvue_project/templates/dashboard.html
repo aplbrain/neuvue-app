@@ -188,7 +188,8 @@
         </div>
     </div>
     <!-- /.container-fluid -->
-
+    <div id="hiddenModalTable" style="visibility: hidden;"> 
+    </div>
     {% endif %}
 </div>
 
@@ -215,9 +216,8 @@
           <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
           <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
           <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+          <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        
-        </div>
       </div>
     </div>
     
@@ -271,37 +271,41 @@
 
         {% for row in table %}
             $("#userLink_{{row.username}}").click(function(){
-                console.log("Clicked {{row.username}}");
+                let tableContents = `
+                    <thead>
+                        <tr>
+                        <th scope="col">Task ID</th>
+                        <th scope="col">Segment ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Opened</th>
+                        <th scope="col">Closed</th>
+                        <th scope="col">Duration (min)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for taskrow in row.user_tasks %}
+                        <tr>
+                        <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
+                        <td>{{taskrow.seg_id}}</td>
+                        <td>{{taskrow.status}}</td>
+                        <td>{{taskrow.priority}}</td>
+                        <td>{{taskrow.created}}</td>
+                        <td>{{taskrow.opened}}</td>
+                        <td>{{taskrow.closed}}</td>
+                        <td>{{taskrow.duration}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>`
+
                 $('#userModalTitle').text("{{row.username}}")
+                $('#hiddenModalTable').html(`
+                    <table id='hiddenUserTable' class="table table-striped table-hover">${tableContents}</table>  
+                `);
                 $('#userModalBody').html(`
-                    <table id='userTable' class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                            <th scope="col">Select</th>
-                            <th scope="col">Task ID</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Priority</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Opened</th>
-                            <th scope="col">Closed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for taskrow in row.user_tasks %}
-                            <tr>
-                            <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}} class="taskCheckbox"></th>
-                            <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
-                            
-                            <td>{{taskrow.status}}</td>
-                            <td>{{taskrow.priority}}</td>
-                            <td>{{taskrow.created}}</td>
-                            <td>{{taskrow.opened}}</td>
-                            <td>{{taskrow.closed}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>  
-                `)
+                    <table id='userTable' class="table table-striped table-hover">${tableContents}</table>  
+                `);
                 $('#userTable').DataTable();
                 $('#userModal').modal('show');
             });
@@ -375,6 +379,18 @@
 
 
     
+
+    const exportButton_userTable = document.getElementById("exportBtn_userTable");
+    exportButton_userTable.addEventListener('click', (e) => {
+
+        // Construct filename
+        const username = document.getElementById("userModalTitle").textContent;
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
+
+        // Perform download
+        $('#hiddenUserTable').table2csv('download', {'filename': filename});
+
+    }); 
 
 
 </script>

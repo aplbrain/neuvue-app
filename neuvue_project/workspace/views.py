@@ -16,7 +16,8 @@ from .neuroglancer import (
     get_from_state_server, 
     post_to_state_server, 
     get_from_json,
-    apply_state_config
+    apply_state_config,
+    refresh_ids
     )
 
 from .analytics import user_stats
@@ -74,9 +75,13 @@ class WorkspaceView(LoginRequiredMixin, View):
             pass
 
         else:
-
             if task_df['status'] == 'pending':
-                self.client.patch_task(task_df["_id"], status="open")
+
+                self.client.patch_task(
+                    task_df["_id"], 
+                    status="open", 
+                    overwrite_opened=not task_df.get('opened')
+                    )
             
             # Update Context
             context['is_open'] = True
@@ -110,6 +115,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             # Apply configuration options.
             context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
+            context['ng_state'] = refresh_ids(context['ng_state'], namespace)
 
         return render(request, "workspace.html", context)
 
@@ -218,7 +224,11 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
-            metadata['flag_reason'] = flag_reason if flag_reason else other_reason
+            
+            metadata['flag_reason'] = flag_reason
+            if other_reason:
+                metadata['flag_other'] = other_reason
+    
             request.session['session_task_count'] = session_task_count +1
 
             # Update task data

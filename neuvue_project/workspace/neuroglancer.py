@@ -22,7 +22,7 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
-from .models import Namespace, NeuroglancerLinkType
+from .models import Namespace, NeuroglancerLinkType, PcgChoices
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 Config = apps.get_model('preferences', 'Config')
 
 def create_base_state(seg_ids, coordinate, namespace):
-    """Generates a base state containing imagery and segemntation layers. 
+    """Generates a base state containing imagery and segmentation layers. 
 
     Args:
         seg_ids (list): seg_ids to select in the view
@@ -373,11 +373,17 @@ def apply_state_config(state:str, username:str):
     
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
+    gpu_limit = config.gpu_limit
+    sys_limit = config.sys_limit
+    chunk_requests = config.chunk_requests
     layout = config.layout
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
     cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
+    cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
+    cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
+    cdict["concurrentDownloads"] = int(chunk_requests)
     
     if "objectAlpha" in cdict['layers'][1].keys():
         cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
@@ -437,3 +443,29 @@ def construct_synapse_state(root_id:str):
         "num_post": len(post_synapses)
     }
     return json.dumps(state_dict), synapse_stats
+
+def refresh_ids(ng_state:str, namespace:str): 
+    namespace = Namespace.objects.get(namespace=namespace)
+    if not namespace.refresh_selected_root_ids:
+        return ng_state
+    
+    if namespace.pcg_source == PcgChoices.PINKY:
+        return ng_state
+    else:
+        cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    state = json.loads(ng_state)
+    for layer in state['layers']:
+        if layer['type'] == "segmentation_with_graph":
+            latest_ids = set()
+            for root_id in layer['segments']:
+                try:
+                    roots = cave_client.chunkedgraph.get_latest_roots(root_id).tolist()
+                    roots = list(map(str, roots))
+                    latest_ids.update(roots)
+                except Exception as e:
+                    logging.error(f"CaveClient Exception: {e}")
+                    return ng_state
+
+            layer['segments'] = list(latest_ids)
+    return json.dumps(state)
