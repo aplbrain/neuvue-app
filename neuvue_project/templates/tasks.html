@@ -15,13 +15,17 @@
                     <div class="neuvueRow">
                         <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
                         {% if context.can_self_assign_tasks %}
-                            <div class="launch_NG">
-                                <div class ="launch_NG_text">
-                                    <div id = '{{namespace}}SelfAssign'>
-                                        Add More Tasks
+                            <form id="mainForm" action="" method="post">
+                                {% csrf_token %}
+                                <div class="launch_NG">
+                                    <div class ="launch_NG_text">
+                                        <input type="hidden" name="namespace" value="{{ namespace }}">
+                                        <input id='{{namespace}}SelfAssign' type="submit">
+                                            Add More Tasks
+                                        </input>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         {% endif %}
                         <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <div class ="launch_NG_text"
