@@ -68,7 +68,6 @@
   width: 12.5%;
   height: 3.2vh;
   border: 1.5px solid var(--complete-color);
-  color: var(--complete-color);
   padding: 0.2vh 0.2vw;
   float: right;
   font-family: var(--header-font);
@@ -78,15 +77,11 @@
   
 }
 
-.rightBorderRounded {
-  border-radius: 0 8px 8px 0;
-}
-
 .launch_NG:hover{
   background: var(--primary-accent);
   border-color: transparent;
-  color: var(--background);
 }
+
 .launch_NG_text{
   position: relative;
   width:100%;
@@ -95,6 +90,18 @@
   align-items: center;
   justify-content: center;
   z-index: 1;  
+  background: transparent;
+  outline: none;
+  border: none;
+  color: var(--complete-color);
+}
+
+.launch_NG_text:hover {
+  color: var(--background);
+}
+
+.rightBorderRounded {
+  border-radius: 0 8px 8px 0;
 }
 
 /* Tables for the content */

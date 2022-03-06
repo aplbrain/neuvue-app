@@ -374,7 +374,7 @@ class TaskView(View):
 
         # Get tasks currently assigned to user to make sure we don't exceed the limit
         assigned_tasks = self.client.get_tasks(
-            sieve={"assignee": username, "namespace": namespace}, 
+            sieve={"assignee": username, "namespace": namespace, "status": ["open", "pending"]}, 
             return_states=False, 
             return_metadata=False
         )

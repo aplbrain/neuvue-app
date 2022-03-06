@@ -15,25 +15,24 @@
                     <div class="neuvueRow">
                         <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
                         {% if context.can_self_assign_tasks %}
-                            <form id="mainForm" action="" method="post">
+                            <form id="mainForm" class="launch_NG" action="" method="post">
                                 {% csrf_token %}
-                                <div class="launch_NG">
-                                    <div class ="launch_NG_text">
-                                        <input type="hidden" name="namespace" value="{{ namespace }}">
-                                        <input id='{{namespace}}SelfAssign' type="submit">
-                                            Add More Tasks
-                                        </input>
+                                <button class ="launch_NG_text" type="submit"
+                                    onclick="loadingSpinner('{{namespace}}TasksSpinner')">
+                                    <div id='{{namespace}}TasksSpinner'>
+                                        Add More Tasks
                                     </div>
-                                </div>
+                                    <input type="hidden" name="namespace" value="{{ namespace }}">
+                                </button>
                             </form>
                         {% endif %}
                         <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
-                            <div class ="launch_NG_text"
-                                onclick="loadingSpinner('{{namespace}}Spinner')">
-                                <div id = '{{namespace}}Spinner'>
+                            <button class ="launch_NG_text"
+                                onclick="loadingSpinner('{{namespace}}NgSpinner')">
+                                <div id = '{{namespace}}NgSpinner'>
                                     Start Proofreading
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     </div>
                     <div id="{{namespace}}Table" class ="bin" style="display:none;">
@@ -183,11 +182,11 @@
         
       
     };
-    function loadingSpinner(parent_div_name) {
-         var parent_div = document.getElementById(parent_div_name);
+    function loadingSpinner(parent_elem_name) {
+         var parent_elem = document.getElementById(parent_elem_name);
          var spinner = document.getElementById('loading-spinner');
-         parent_div.innerHTML = '';
-         parent_div.append(spinner);
+         parent_elem.innerHTML = '';
+         parent_elem.append(spinner);
      }
     function tableHide(actionButton, hiddenContentId) {
 
