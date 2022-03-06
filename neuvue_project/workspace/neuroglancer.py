@@ -472,7 +472,7 @@ def refresh_ids(ng_state:str, namespace:str):
     
     state = json.loads(ng_state)
     for layer in state['layers']:
-        if layer['type'] == "segmentation_with_graph":
+        if layer['type'] == "segmentation_with_graph" and len(layer.get("segments", [])):
             latest_ids = set()
             for root_id in layer['segments']:
                 try:
