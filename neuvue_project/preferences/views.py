@@ -26,6 +26,7 @@ class PreferencesView(View):
         
         context = {
             'enabled': config.enabled,
+            'annotationColor': config.annotation_color,
             'alphaSelected': config.alpha_selected,
             'alpha3D': config.alpha_3d,
             'gpuLimit': config.gpu_limit,
@@ -45,6 +46,7 @@ class PreferencesView(View):
         else:
             config.enabled = False
 
+        config.annotation_color = request.POST.get('annotationColor')
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_3d = request.POST.get('alpha3D')
         config.gpu_limit = request.POST.get('gpuLimit')

@@ -371,6 +371,7 @@ def apply_state_config(state:str, username:str):
     if not config.enabled:
         return state
     
+    annotation_color = config.annotation_color
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
@@ -380,6 +381,7 @@ def apply_state_config(state:str, username:str):
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
+    cdict['layers'][3]['annotationColor'] = str(annotation_color)
     cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
     cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
     cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)

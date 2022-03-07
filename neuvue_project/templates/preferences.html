@@ -19,7 +19,7 @@
         <hr class="row-divider">
         <div class="row-container">
             <label for="annotationColor" class="form-label">Annotation Color</label>
-            <input id="annotationColor" class="form-control form-control-color" type="color" value="#563d7c">
+            <input id="annotationColor" class="form-control form-control-color" type="color" value="#ffff00">
         </div>
 
         <hr class="row-divider">
@@ -99,6 +99,7 @@
     function submitConfig() {
         let form = '#configForm'
         let enabled = $('#configSwitch').is(":checked");
+        let annotationColor = $('#annotationColor').val();
         let alphaSelected = $('#alphaSelected').val();
         let alpha3D = $('#alpha3D').val();
         let gpuLimit = $('#gpuLimit').val();
@@ -106,6 +107,7 @@
         let chunkReq = $('#chunkReq').val();
 
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'annotationColor').attr('value', annotationColor).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', alphaSelected).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', alpha3D).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'gpuLimit').attr('value', gpuLimit).appendTo(form);
