@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -277,7 +277,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -352,7 +352,7 @@ class TaskView(View):
 
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
