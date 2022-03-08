@@ -397,14 +397,19 @@ def apply_state_config(state:str, username:str):
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
-    cdict['layers'][3]['annotationColor'] = str(annotation_color)
-    cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
     cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
     cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     cdict["concurrentDownloads"] = int(chunk_requests)
     
-    if "objectAlpha" in cdict['layers'][1].keys():
-        cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
+    for layer in cdict['layers']:
+        if layer.get('selectedAlpha'):
+            layer['selectedAlpha'] = float(alpha_selected)
+        
+        if layer.get('annotationColor'):
+            layer['annotationColor'] = str(annotation_color)
+        
+        if layer.get('objectAlpha'):
+            layer['objectAlpha'] = float(alpha_3d)
 
     return json.dumps(cdict)
 
@@ -460,6 +465,15 @@ def construct_synapse_state(root_id:str):
         "num_pre": len(pre_synapses),
         "num_post": len(post_synapses)
     }
+
+    # Append clefts layers to state 
+    state_dict['layers'].append({
+        "type": "segmentation",
+        "source": "precomputed://s3://bossdb-open-data/iarpa_microns/minnie/minnie65/clefts-sharded",
+        "tab": "source",
+        "name": "clefts-sharded",
+        "visible": False
+    })
     return json.dumps(state_dict), synapse_stats
 
 def refresh_ids(ng_state:str, namespace:str): 
