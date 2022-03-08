@@ -1,9 +1,9 @@
 self["webpackChunk"](["draco"],{
 
-/***/ "./node_modules/url-loader/dist/cjs.js!./src/neuroglancer/mesh/draco/neuroglancer_draco.wasm":
-/*!***************************************************************************************************!*\
-  !*** ./node_modules/url-loader/dist/cjs.js!./src/neuroglancer/mesh/draco/neuroglancer_draco.wasm ***!
-  \***************************************************************************************************/
+/***/ "../../../../../../neuroglancer/node_modules/url-loader/dist/cjs.js!../../../../../../neuroglancer/src/neuroglancer/mesh/draco/neuroglancer_draco.wasm":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/url-loader/dist/cjs.js!/Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/draco/neuroglancer_draco.wasm ***!
+  \***********************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11,17 +11,17 @@ module.exports = "data:application/wasm;base64,bW9kdWxlLmV4cG9ydHMgPSBfX3dlYnBhY
 
 /***/ }),
 
-/***/ "./src/neuroglancer/mesh/draco/index.ts":
-/*!**********************************************!*\
-  !*** ./src/neuroglancer/mesh/draco/index.ts ***!
-  \**********************************************/
+/***/ "../../../../../../neuroglancer/src/neuroglancer/mesh/draco/index.ts":
+/*!********************************************************************************************************!*\
+  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/draco/index.ts ***!
+  \********************************************************************************************************/
 /*! exports provided: decodeDracoPartitioned */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeDracoPartitioned", function() { return decodeDracoPartitioned; });
-/* harmony import */ var url_loader_neuroglancer_draco_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! url-loader!./neuroglancer_draco.wasm */ "./node_modules/url-loader/dist/cjs.js!./src/neuroglancer/mesh/draco/neuroglancer_draco.wasm");
+/* harmony import */ var url_loader_neuroglancer_draco_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! url-loader!./neuroglancer_draco.wasm */ "../../../../../../neuroglancer/node_modules/url-loader/dist/cjs.js!../../../../../../neuroglancer/src/neuroglancer/mesh/draco/neuroglancer_draco.wasm");
 /* harmony import */ var url_loader_neuroglancer_draco_wasm__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(url_loader_neuroglancer_draco_wasm__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * @license
