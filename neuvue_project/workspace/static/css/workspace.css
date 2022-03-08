@@ -32,7 +32,8 @@
   --table-background:#120e149a;
   --transparent-task: #0a192fce;
   --transparent-shadow:#00000033;
-  --transparent-hover:#e6f1ff50;
+  --transparent-standard:#e6f1ff44;
+  --transparent-hover:#e6f1ff62;
   --transparent-analytics:#e6f1ff21;
 
   /* FONTS */
@@ -684,7 +685,7 @@ a.active,a:hover{
   float: left;
   text-align: center;
   align-items: center;
-  background-color: var(--transparent-shadow);
+  background-color: var(--transparent-standard);
   cursor: pointer;
 }
 
