@@ -5,13 +5,45 @@
 {% block content %}
 
 <div class="intro">
-  <div class="index-title-container">
-    <span class="index-title-text">Welcome to NeuVue</span>
-  {% if user.is_authenticated %}
-    <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
-  {% else %}
-    <a class="index-title-sub-text" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
-  {% endif %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="index-block  d-flex justify-content-center" style="margin-top: 50%;">
+          <div class="title-container">
+            <div class="index-title-text ">Welcome to NeuVue</div>
+          {% if user.is_authenticated %}
+            <div class="d-flex justify-content-center">
+              <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
+            </div>
+          {% else %}
+            <a class="index-title-sub-text d-flex justify-content-center" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="index-card-container d-flex justify-content-center">
+            <div class="card index-card" id="bootstrap-overrides">
+              <div class="index-card-header card-header text-center">
+                What's new?
+              </div>
+              <div class="index-card-items">
+                {% for update in recent_updates %}
+                <div class="index-card-item">
+                  <div class="index-card-item-title">{{update.update_name}}</div>
+                  <div class="index-card-item-date"><i>{{update.update_date}}</i></div>
+                  <div class="index-card-item-description">{{update.update_description}}</div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="index-card-column">        
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

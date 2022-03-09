@@ -22,6 +22,8 @@ from .neuroglancer import (
 
 from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json
+import json
+import os
 
 # import the logging library
 import logging
@@ -476,7 +478,20 @@ class SynapseView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+        module_dir = os.path.dirname(__file__)  # get current directory
+        file_path = os.path.join(module_dir, 'static/updates.json')
+
+        update_json_data = open(file_path)   
+        data1 = json.load(update_json_data) # deserialises it
+        data_dict = eval(json.dumps(data1)) # json formatted string
+
+        recent_updates = data_dict['recent_updates']
+
+        ## Get updates from local updates.json
+        context = {
+            "recent_updates": recent_updates
+        }
+        return render(request, "index.html", context)
 
 class AuthView(View):
     def get(self, request, *args, **kwargs):
@@ -485,3 +500,7 @@ class AuthView(View):
 class TokenView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "token.html", context={'code': request.GET.get('code')})
+
+class GettingStartedView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "getting-started.html")
