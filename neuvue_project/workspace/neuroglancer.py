@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.apps import apps
 import pandas as pd 
 import numpy as np 
 from caveclient import CAVEclient
@@ -21,14 +22,16 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
-from .models import Namespace, NeuroglancerLinkType
+from .models import Namespace, NeuroglancerLinkType, PcgChoices
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+Config = apps.get_model('preferences', 'Config')
+
 def create_base_state(seg_ids, coordinate, namespace):
-    """Generates a base state containing imagery and segemntation layers. 
+    """Generates a base state containing imagery and segmentation layers. 
 
     Args:
         seg_ids (list): seg_ids to select in the view
@@ -139,25 +142,21 @@ def create_path_state():
     return StateBuilder(layers=[path, anno], resolution=settings.VOXEL_RESOLUTION)
 
 
-def create_point_state(use_description=False):
+def create_point_state(name='annotations', group=None, description=None, color=None):
     """Create the annotation state for points.
     Dontt tuse linemapper, just creates a neuroglancer link that is just Points
     nglui statebuilder
     Returns:
         StateBuilder: Annotation State
     """
-    if use_description:
-        anno = AnnotationLayerConfig("annotations",
-            mapping_rules=PointMapper(
-                "point_column_a", 
-                group_column="group", 
-                description_column="description",
-                set_position=False),
-        )
-    else:
-        anno = AnnotationLayerConfig("annotations",
-            mapping_rules=PointMapper("point_column_a", group_column="group", set_position=False),
-        )
+    anno = AnnotationLayerConfig(name,
+        mapping_rules=PointMapper(
+            "point_column_a", 
+            group_column=group, 
+            description_column=description,
+            set_position=False),
+        color=color
+    )
 
     return StateBuilder(layers=[anno], resolution=settings.VOXEL_RESOLUTION)
 
@@ -315,17 +314,35 @@ def _get_soma_center(root_ids: List, cave_client):
     """
     try:
         soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
-            'pt_root_id': root_ids
+            'pt_root_id': root_ids[:3]
         })
+        if not len(soma_df):
+            soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            'pt_root_id': root_ids
+            })
+        if len(soma_df) > 3:
+            soma_df = soma_df.head(3)
+        pt_position = soma_df.iloc[0]['pt_position']
+        present_root_ids = list(soma_df['pt_root_id'])
+    except IndexError as e:
+        logging.error(e)
+        raise Exception('Unable to find Soma Center')
     except Exception as e:
         logging.error(e)
-        raise e
-    
-    return soma_df.iloc[0]['pt_position']
+        raise Exception(e)
+    return pt_position, present_root_ids
 
 def _get_nx_graph_image(nx_graph):
-    dot = nx.drawing.nx_pydot.to_pydot(nx_graph)
-    return dot.create_svg().decode()
+    def networkx_to_graphViz(nx_graph):
+        import graphviz
+        gv_graph = graphviz.Digraph('lineage',format = 'svg',graph_attr={'size':'6,{}','ratio':"compress",'ranksep':'0.5'},node_attr={'fontsize':'18','fontname':"Arial"}) # 'size':'6,3',
+        for node in nx_graph.nodes():
+            gv_graph.node(str(node),label=str(node))
+        for edge0, edge1 in nx_graph.edges():
+            gv_graph.edge(str(edge0), str(edge1))
+        gv_graph = gv_graph.unflatten(stagger=10) 
+        return gv_graph.pipe(encoding='utf-8')
+    return networkx_to_graphViz(nx_graph)
 
 def construct_lineage_state_and_graph(root_id:str):
     """Construct state for the lineage viewer.
@@ -337,20 +354,17 @@ def construct_lineage_state_and_graph(root_id:str):
         string: json-formatted state
     """
     root_id = root_id.strip()
-    print("ROOTID", root_id)
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
-    
+
     # Lineage graph gives you the nodes and edges of a root IDs history
     lineage_graph = _get_lineage_graph(root_id, cave_client)
     graph_image = _get_nx_graph_image(lineage_graph)
-
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
     root_ids = [str(x) for x in lineage_graph]
-
-    position = _get_soma_center(root_ids[:3], cave_client)
-    base_state = create_base_state(root_ids[:3], position, 'automatedSplit')
+    position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
+    base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as='dict')
@@ -361,3 +375,129 @@ def construct_lineage_state_and_graph(root_id:str):
             layer['hiddenSegments'] = root_ids[3:]
 
     return json.dumps(base_state_dict), graph_image
+
+def apply_state_config(state:str, username:str):
+    #make ng state preferences changes, json string to dict
+    try:
+        config = Config.objects.filter(user=username).order_by('-id')[0]
+    except Exception as e:
+        logging.error(e) 
+        return state
+
+    if not config.enabled:
+        return state
+    
+    annotation_color = config.annotation_color
+    alpha_selected = config.alpha_selected
+    alpha_3d = config.alpha_3d
+    gpu_limit = config.gpu_limit
+    sys_limit = config.sys_limit
+    chunk_requests = config.chunk_requests
+    layout = config.layout
+
+    cdict = json.loads(state)
+    cdict["layout"] = str(layout)
+    cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
+    cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
+    cdict["concurrentDownloads"] = int(chunk_requests)
+    
+    for layer in cdict['layers']:
+        if layer.get('selectedAlpha'):
+            layer['selectedAlpha'] = float(alpha_selected)
+        
+        if layer.get('annotationColor'):
+            layer['annotationColor'] = str(annotation_color)
+        
+        if layer.get('objectAlpha'):
+            layer['objectAlpha'] = float(alpha_3d)
+
+    return json.dumps(cdict)
+
+def construct_synapse_state(root_id:str):
+    """Construct state for the synapse viewer.
+
+    Args:
+        root_id (str): segment root id
+
+    Returns:
+        string: json-formatted state
+        dict: synapse stats
+    """
+    root_id = root_id.strip()
+    cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    pre_synapses = cave_client.materialize.query_table(
+    "synapses_pni_2", 
+    filter_in_dict={"pre_pt_root_id": [root_id]},
+     select_columns=['ctr_pt_position']
+    )
+
+    post_synapses = cave_client.materialize.query_table(
+        "synapses_pni_2", 
+        filter_in_dict={"post_pt_root_id": [root_id]},
+        select_columns=['ctr_pt_position']
+    )
+    
+    pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+    post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+    
+    if len(pre_synapses['ctr_pt_position']) == 0 and len(post_synapses['ctr_pt_position']) == 0:
+        raise Exception('No pre or post synapses found for this root id.')
+    
+    position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
+
+    data_list = [None]
+    base_state = create_base_state([root_id], position, 'automatedSplit')
+
+    data_list.append( generate_point_df( pre_synapses['ctr_pt_position'].to_numpy()))
+    data_list.append( generate_point_df( post_synapses['ctr_pt_position'].to_numpy()))
+    
+    pre_synapses_state = create_point_state(name='pre_synapses', color='#309ec7')
+    post_synapses_state = create_point_state(name='post_synapses', color='#e96b15')
+    
+    chained_state = ChainedStateBuilder([base_state, pre_synapses_state, post_synapses_state])
+    
+    state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
+    state_dict['layout'] = '3d'
+    state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    
+    synapse_stats = {
+        "num_pre": len(pre_synapses),
+        "num_post": len(post_synapses)
+    }
+
+    # Append clefts layers to state 
+    state_dict['layers'].append({
+        "type": "segmentation",
+        "source": "precomputed://s3://bossdb-open-data/iarpa_microns/minnie/minnie65/clefts-sharded",
+        "tab": "source",
+        "name": "clefts-sharded",
+        "visible": False
+    })
+    return json.dumps(state_dict), synapse_stats
+
+def refresh_ids(ng_state:str, namespace:str): 
+    namespace = Namespace.objects.get(namespace=namespace)
+    if not namespace.refresh_selected_root_ids:
+        return ng_state
+    
+    if namespace.pcg_source == PcgChoices.PINKY:
+        return ng_state
+    else:
+        cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
+    
+    state = json.loads(ng_state)
+    for layer in state['layers']:
+        if layer['type'] == "segmentation_with_graph" and len(layer.get("segments", [])):
+            latest_ids = set()
+            for root_id in layer['segments']:
+                try:
+                    roots = cave_client.chunkedgraph.get_latest_roots(root_id).tolist()
+                    roots = list(map(str, roots))
+                    latest_ids.update(roots)
+                except Exception as e:
+                    logging.error(f"CaveClient Exception: {e}")
+                    return ng_state
+
+            layer['segments'] = list(latest_ids)
+    return json.dumps(state)

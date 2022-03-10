@@ -4,17 +4,23 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.http import HttpResponseBadRequest
 from .models import Namespace
-from meshparty import trimesh_io
 from neuvueclient import NeuvueQueue
+from meshparty import trimesh_io
 import pandas as pd
 import json
+import os
+import time
+
 
 from .neuroglancer import (
     construct_proofreading_state, 
     construct_lineage_state_and_graph,
+    construct_synapse_state,
     get_from_state_server, 
     post_to_state_server, 
-    get_from_json
+    get_from_json,
+    apply_state_config,
+    refresh_ids
     )
 
 from .analytics import user_stats
@@ -26,10 +32,11 @@ logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -53,7 +60,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
             'timeout': settings.TIMEOUT,
-            'session_task_count' : session_task_count
+            'session_task_count' : session_task_count,
+            'was_skipped':False,
         }
 
         if namespace is None:
@@ -70,17 +78,23 @@ class WorkspaceView(LoginRequiredMixin, View):
             pass
 
         else:
-
             if task_df['status'] == 'pending':
-                self.client.patch_task(task_df["_id"], status="open")
+
+                self.client.patch_task(
+                    task_df["_id"], 
+                    status="open", 
+                    overwrite_opened=not task_df.get('opened')
+                    )
             
             # Update Context
             context['is_open'] = True
             context['task_id'] = task_df['_id']
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
+            context['was_skipped'] = task_df['metadata'].get('skipped')
             if task_df['priority'] < 2:
                 context['skipable'] = False
+                
  
             # Construct NG URL from points or existing state
             # Dev Note: We always load ng state if one is available, overriding 
@@ -101,11 +115,17 @@ class WorkspaceView(LoginRequiredMixin, View):
                 # Manually get the points for now, populate in client later.
                 points = [self.client.get_point(x)['coordinate'] for x in task_df['points']]
                 context['ng_state'] = construct_proofreading_state(task_df, points, return_as='json')
+
+            # Apply configuration options.
+            context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
+            context['ng_state'] = refresh_ids(context['ng_state'], namespace)
+
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
         
         namespace = kwargs.get('namespace')
+        namespace_obj = Namespace.objects.get(namespace = namespace)
 
         # Current task that is opened in this namespace.
         task_df = self.client.get_next_task(str(request.user), namespace)
@@ -116,6 +136,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
+        new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
     
         try:
             ng_state = post_to_state_server(ng_state)
@@ -124,6 +145,16 @@ class WorkspaceView(LoginRequiredMixin, View):
             
         tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
 
+        # Add operation ids to task metadata
+        # Only if track_operation_ids is set to true at the namespace level
+        # Make sure not to overwrite existing operation ids
+        metadata = {}
+        if new_operation_ids and namespace_obj.track_operation_ids:
+            task_metadata = task_df['metadata']
+            if 'operation_ids' in task_metadata: 
+                metadata['operation_ids'] = task_metadata['operation_ids'] + new_operation_ids
+            else:
+                metadata['operation_ids'] = new_operation_ids
 
         if button == 'submit':
             logger.info('Submitting task')
@@ -134,7 +165,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state,
-                tags=tags)
+                tags=tags,
+                metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
@@ -145,15 +177,14 @@ class WorkspaceView(LoginRequiredMixin, View):
         elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
+            metadata['decision'] = button
             # Update task data
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
                 ng_state=ng_state,
-                metadata={
-                    'decision': button
-                },
+                metadata=metadata,
                 tags=tags)
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -164,29 +195,43 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button == 'skip':
             logger.info('Skipping task')
+            metadata['skipped'] = True
             try:
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     priority=task_df['priority']-1, 
                     status="pending",
-                    metadata={'skipped': True},
+                    metadata=metadata,
+                    ng_state=ng_state, 
                     tags=tags)
+                # Add new differ stack entry
+                if ng_differ_stack != []:
+                    self.client.post_differ_stack(
+                        task_df["_id"],
+                        ng_differ_stack
+                    )
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
+                metadata['skipped'] = True
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     status="pending",
-                    metadata={'skipped': True},
+                    metadata=metadata,
+                    ng_state=ng_state, 
                     tags=tags)
         
         elif button == 'flag':
             logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
-            metadata = {'flag_reason': flag_reason if flag_reason else other_reason}
+            
+            metadata['flag_reason'] = flag_reason
+            if other_reason:
+                metadata['flag_other'] = other_reason
+    
             request.session['session_task_count'] = session_task_count +1
 
             # Update task data
@@ -220,7 +265,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                tags=tags)
+                tags=tags,
+                metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
@@ -234,14 +280,15 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         context = {}
 
-        for i, n_s in enumerate(Namespace.objects.all()):
+        for i, n_s in enumerate(Namespace.objects.filter(namespace_enabled=True)):
             namespace = n_s.namespace
+            logging.debug(f"Loading data for namespace {namespace}.")
             context[namespace] = {}
             context[namespace]["display_name"] = n_s.display_name
             context[namespace]["ng_link_type"] = n_s.ng_link_type
@@ -262,8 +309,7 @@ class TaskView(View):
         non_empty_namespace = 0
 
         for namespace in context.keys():
-            context[namespace]['pending'] = self._generate_table('pending', str(request.user), namespace)
-            context[namespace]['closed'] = self._generate_table('closed', str(request.user), namespace)
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
@@ -281,70 +327,35 @@ class TaskView(View):
 
         return render(request, "tasks.html", {'data':context})
 
-    def _generate_table(self, table, username, namespace):
-        if table == 'pending':
-            pending_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'pending'
-                }, return_metadata=False, return_states=False)
-            open_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'open'
-                }, return_metadata=False, return_states=False)
-            tasks = pd.concat([pending_tasks, open_tasks]).sort_values('created')
-            
-            tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
-            
-
-        elif table == 'closed':
-            closed_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'closed'
-                }, return_metadata=False, return_states=False)
-            errored_tasks = self.client.get_tasks(sieve={
-                "assignee": username, 
-                "namespace": namespace,
-                "status": 'errored'
-                }, return_metadata=False, return_states=False)
-            tasks = pd.concat([closed_tasks, errored_tasks]).sort_values('closed', ascending=False)
-            
-            # Check if there are any NaNs in opened column
-            # TODO: Fix this in the database side of things 
-            if tasks['opened'].isnull().values.any() or tasks['closed'].isnull().values.any():
-                default =  pd.to_datetime('1969-12-31')
-                tasks['opened'] = tasks['opened'].fillna(default)
-                tasks['closed'] = tasks['closed'].fillna(default)
-    
-            tasks['opened'] = tasks['opened'].apply(lambda x: utc_to_eastern(x))
-            tasks['closed'] = tasks['closed'].apply(lambda x: utc_to_eastern(x))
-
-        tasks.drop(columns=[
-                'active',
-                'points',
-                'assignee',
-                'namespace',
-                'instructions',
-                '__v'
-            ], inplace=True)
+    def _generate_tables(self, username, namespace):
+        tasks = self.client.get_tasks(sieve={
+            "assignee": username, 
+            "namespace": namespace,
+        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration'])
         
         tasks['task_id'] = tasks.index
-        return tasks.to_dict('records')
+        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
 
+        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values('created')
+        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        
+            
+        # Check if there are any NaNs in opened column
+        # TODO: Fix this in the database side of things 
+        if closed_tasks['opened'].isnull().values.any() or closed_tasks['closed'].isnull().values.any():
+            default =  pd.to_datetime('1969-12-31')
+            closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
+            closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
+    
+        closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
+        closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+        return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
 
-class AuthView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "auth_redirect.html")
 
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
@@ -432,8 +443,8 @@ class LineageView(View):
     def post(self, request, *args, **kwargs):
         root_id = request.POST.get("root_id")
         return redirect(reverse('lineage', kwargs={"root_id":root_id}))
-import os
-import time
+
+
 class DownloadView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         try:
@@ -462,4 +473,47 @@ class DownloadView(LoginRequiredMixin, View):
             # Download a zip of the files in that directory
             return download_multiple_file_zip_response(dir=target_dir,download_filename='zipped_meshes.zip',globspec=f'*.{fmt}')
         
-            
+
+class SynapseView(View):
+    def get(self, request, root_id=None, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse('index'))
+
+        if root_id in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
+
+        context = {
+            "root_id": root_id,
+            "ng_state": None,
+            "synapse_stats": None,
+            "error": None
+        }
+
+        if root_id is None:
+            return render(request, "synapse.html", context)
+
+        try:
+            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_id)
+        except Exception as e: 
+            context['error'] = e
+            return render(request, "synapse.html", context)
+        return render(request, "synapse.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        root_id = request.POST.get("root_id")
+        return redirect(reverse('synapse', kwargs={"root_id":root_id}))
+
+
+#TODO: Move simple views to other file 
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "index.html")
+
+class AuthView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "auth_redirect.html")
+
+class TokenView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "token.html", context={'code': request.GET.get('code')})

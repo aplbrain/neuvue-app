@@ -25,12 +25,15 @@ from workspace.views import (
     InspectTaskView,
     LineageView,
     DownloadView,
+    TokenView,
+    SynapseView
     )
-
+from preferences.views import PreferencesView
 from dashboard.views import DashboardView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
+    path('preferences/', PreferencesView.as_view(), name="preferences"),
     path('tasks/', TaskView.as_view(), name="tasks"),
     path('workspace/<str:namespace>', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
@@ -39,11 +42,14 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
     path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardView.as_view(), name="dashboard"),
     path('auth_redirect.html',AuthView.as_view(),name='auth_redirect'),
+    path('token/', TokenView.as_view(), name='token'),
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
     path('inspect/<str:task_id>', InspectTaskView.as_view(), name="inspect"),
     path('lineage/', LineageView.as_view(), name="lineage"), 
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
-    path('download/',DownloadView.as_view(), name="download")
+    path('download/',DownloadView.as_view(), name="download"),
+    path('synapse/', SynapseView.as_view(), name="synapse"), 
+    path('synapse/<str:root_id>', SynapseView.as_view(), name="synapse")
 ]
 
 
