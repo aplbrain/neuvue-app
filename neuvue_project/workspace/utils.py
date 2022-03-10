@@ -1,8 +1,13 @@
 from zipfile import ZipFile
-from django.core.validators import URLValidator
+from typing import Optional
 import json
-from pytz import timezone
 import pytz
+import os
+import glob
+
+from django.core.validators import URLValidator
+from django.http import HttpResponse
+from pytz import timezone
 
 def is_url(value):
     validate = URLValidator()
@@ -12,12 +17,14 @@ def is_url(value):
     except:
         return False
 
+
 def is_json(value):
     try:
         json.loads(value)
         return True
     except:
         return False
+
 
 def utc_to_eastern(time_value):
     """Converts a pandas datetime object to a US/Easten datetime.
@@ -30,17 +37,20 @@ def utc_to_eastern(time_value):
     """
     try:
         utc = pytz.UTC
-        eastern = timezone('US/Eastern')
+        eastern = timezone("US/Eastern")
         date_time = time_value.to_pydatetime()
         date_time = utc.localize(time_value)
         return date_time.astimezone(eastern)
     except:
         return time_value
-import os
-from django.http import HttpResponse
-from typing import Optional
-import glob
-def download_single_file_response(content_type:str, filename:str, dir:str='/tmp', download_filename:Optional[str]=None) -> HttpResponse:
+
+
+def download_single_file_response(
+    content_type: str,
+    filename: str,
+    dir: str = "/tmp",
+    download_filename: Optional[str] = None,
+) -> HttpResponse:
     """Returns a HttpReponse to download a single file
 
     Args:
@@ -54,16 +64,22 @@ def download_single_file_response(content_type:str, filename:str, dir:str='/tmp'
     """
     download_filename = download_filename or filename
     # TODO: filter on binary MIME types
-    rwmode = 'r' if content_type != 'application/zip' else 'rb'
+    rwmode = "r" if content_type != "application/zip" else "rb"
     try:
-        with open(os.path.join(dir,filename),rwmode) as fp:
+        with open(os.path.join(dir, filename), rwmode) as fp:
             response = HttpResponse(fp.read(), content_type=content_type)
-            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(download_filename)
+            response["Content-Disposition"] = "inline; filename=" + os.path.basename(
+                download_filename
+            )
     finally:
         clean_tmp_files(filename, dir)
-        
+
     return response
-def download_multiple_file_zip_response(dir:str, download_filename:str, globspec:str="*") -> HttpResponse:
+
+
+def download_multiple_file_zip_response(
+    dir: str, download_filename: str, globspec: str = "*"
+) -> HttpResponse:
     """Return a response to download multiple files as a zip object
 
     Args:
@@ -75,27 +91,29 @@ def download_multiple_file_zip_response(dir:str, download_filename:str, globspec
         HttpResponse: The download response
     """
     # Downloads all files in dir in the form of a zip
-    
-    
-    # throw nice error here if directory already exists for some reason
-    assert dir!='/tmp'
-    zip_filename = os.path.join(dir,'tmp.zip')
-    # Do zipping
-    files_to_zip = [fn for fn in glob.glob(os.path.join(dir,globspec))]
-    with ZipFile(zip_filename,'w') as zipped:
-        for fn in files_to_zip:
-            zipped.write(fn,arcname=os.path.basename(fn))
-    
 
-        
+    # throw nice error here if directory already exists for some reason
+    assert dir != "/tmp"
+    zip_filename = os.path.join(dir, "tmp.zip")
+    # Do zipping
+    files_to_zip = [fn for fn in glob.glob(os.path.join(dir, globspec))]
+    with ZipFile(zip_filename, "w") as zipped:
+        for fn in files_to_zip:
+            zipped.write(fn, arcname=os.path.basename(fn))
+
     try:
-        return download_single_file_response(content_type='application/zip',filename=zip_filename, dir=dir, download_filename=download_filename)
+        return download_single_file_response(
+            content_type="application/zip",
+            filename=zip_filename,
+            dir=dir,
+            download_filename=download_filename,
+        )
     finally:
-        clean_tmp_files("*.zip",dir=dir)
-        clean_tmp_files(globspec,dir=dir)
+        clean_tmp_files("*.zip", dir=dir)
+        clean_tmp_files(globspec, dir=dir)
         os.rmdir(dir)
-        
-       
-def clean_tmp_files(globspec,dir:str='/tmp'):
+
+
+def clean_tmp_files(globspec, dir: str = "/tmp"):
     for fn in glob.glob(os.path.join(dir, globspec)):
         os.remove(fn)
