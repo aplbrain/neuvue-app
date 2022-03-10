@@ -47,7 +47,7 @@
 /******/ 		promises.push(Promise.resolve().then(function() {
 /******/ 			// "1" is the signal for "already loaded"
 /******/ 			if(!installedChunks[chunkId]) {
-/******/ 				importScripts(__webpack_require__.p + "" + ({"draco":"draco"}[chunkId]||chunkId) + ".bundle.js");
+/******/ 				importScripts("" + ({"draco":"draco"}[chunkId]||chunkId) + ".bundle.js");
 /******/ 			}
 /******/ 		}));
 /******/ 		return Promise.all(promises);
@@ -112,10 +112,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js":
-/*!********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/common.js ***!
-  \********************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/common.js":
+/*!**********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/common.js ***!
+  \**********************************************/
 /*! exports provided: EPSILON, ARRAY_TYPE, RANDOM, setMatrixArrayType, toRadian, equals */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -170,34 +170,34 @@ function equals(a, b) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/index.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/index.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/index.js ***!
+  \*********************************************/
 /*! exports provided: glMatrix, mat2, mat2d, mat3, mat4, quat, quat2, vec2, vec3, vec4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "glMatrix", function() { return _common_js__WEBPACK_IMPORTED_MODULE_0__; });
-/* harmony import */ var _mat2_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mat2.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat2.js");
+/* harmony import */ var _mat2_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mat2.js */ "./node_modules/gl-matrix/esm/mat2.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat2", function() { return _mat2_js__WEBPACK_IMPORTED_MODULE_1__; });
-/* harmony import */ var _mat2d_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mat2d.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat2d.js");
+/* harmony import */ var _mat2d_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mat2d.js */ "./node_modules/gl-matrix/esm/mat2d.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat2d", function() { return _mat2d_js__WEBPACK_IMPORTED_MODULE_2__; });
-/* harmony import */ var _mat3_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./mat3.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat3.js");
+/* harmony import */ var _mat3_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./mat3.js */ "./node_modules/gl-matrix/esm/mat3.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat3", function() { return _mat3_js__WEBPACK_IMPORTED_MODULE_3__; });
-/* harmony import */ var _mat4_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mat4.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat4.js");
+/* harmony import */ var _mat4_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mat4.js */ "./node_modules/gl-matrix/esm/mat4.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat4", function() { return _mat4_js__WEBPACK_IMPORTED_MODULE_4__; });
-/* harmony import */ var _quat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./quat.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/quat.js");
+/* harmony import */ var _quat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./quat.js */ "./node_modules/gl-matrix/esm/quat.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "quat", function() { return _quat_js__WEBPACK_IMPORTED_MODULE_5__; });
-/* harmony import */ var _quat2_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./quat2.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/quat2.js");
+/* harmony import */ var _quat2_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./quat2.js */ "./node_modules/gl-matrix/esm/quat2.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "quat2", function() { return _quat2_js__WEBPACK_IMPORTED_MODULE_6__; });
-/* harmony import */ var _vec2_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./vec2.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec2.js");
+/* harmony import */ var _vec2_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./vec2.js */ "./node_modules/gl-matrix/esm/vec2.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vec2", function() { return _vec2_js__WEBPACK_IMPORTED_MODULE_7__; });
-/* harmony import */ var _vec3_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./vec3.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec3.js");
+/* harmony import */ var _vec3_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./vec3.js */ "./node_modules/gl-matrix/esm/vec3.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vec3", function() { return _vec3_js__WEBPACK_IMPORTED_MODULE_8__; });
-/* harmony import */ var _vec4_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./vec4.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec4.js");
+/* harmony import */ var _vec4_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./vec4.js */ "./node_modules/gl-matrix/esm/vec4.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vec4", function() { return _vec4_js__WEBPACK_IMPORTED_MODULE_9__; });
 
 
@@ -213,10 +213,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat2.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/mat2.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/mat2.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/mat2.js ***!
+  \********************************************/
 /*! exports provided: create, clone, copy, identity, fromValues, set, transpose, invert, adjoint, determinant, multiply, rotate, scale, fromRotation, fromScaling, str, frob, LDU, add, subtract, exactEquals, equals, multiplyScalar, multiplyScalarAndAdd, mul, sub */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -248,7 +248,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "multiplyScalarAndAdd", function() { return multiplyScalarAndAdd; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mul", function() { return mul; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 2x2 Matrix
@@ -684,10 +684,10 @@ var sub = subtract;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat2d.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/mat2d.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/mat2d.js":
+/*!*********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/mat2d.js ***!
+  \*********************************************/
 /*! exports provided: create, clone, copy, identity, fromValues, set, invert, determinant, multiply, rotate, scale, translate, fromRotation, fromScaling, fromTranslation, str, frob, add, subtract, multiplyScalar, multiplyScalarAndAdd, exactEquals, equals, mul, sub */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -718,7 +718,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "equals", function() { return equals; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mul", function() { return mul; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 2x3 Matrix
@@ -1208,10 +1208,10 @@ var sub = subtract;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat3.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/mat3.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/mat3.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/mat3.js ***!
+  \********************************************/
 /*! exports provided: create, fromMat4, clone, copy, fromValues, set, identity, transpose, invert, adjoint, determinant, multiply, translate, rotate, scale, fromTranslation, fromRotation, fromScaling, fromMat2d, fromQuat, normalFromMat4, projection, str, frob, add, subtract, multiplyScalar, multiplyScalarAndAdd, exactEquals, equals, mul, sub */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1249,7 +1249,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "equals", function() { return equals; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mul", function() { return mul; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 3x3 Matrix
@@ -2032,10 +2032,10 @@ var sub = subtract;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat4.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/mat4.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/mat4.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/mat4.js ***!
+  \********************************************/
 /*! exports provided: create, clone, copy, fromValues, set, identity, transpose, invert, adjoint, determinant, multiply, translate, scale, rotate, rotateX, rotateY, rotateZ, fromTranslation, fromScaling, fromRotation, fromXRotation, fromYRotation, fromZRotation, fromRotationTranslation, fromQuat2, getTranslation, getScaling, getRotation, fromRotationTranslationScale, fromRotationTranslationScaleOrigin, fromQuat, frustum, perspective, perspectiveFromFieldOfView, ortho, lookAt, targetTo, str, frob, add, subtract, multiplyScalar, multiplyScalarAndAdd, exactEquals, equals, mul, sub */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2088,7 +2088,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "equals", function() { return equals; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mul", function() { return mul; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sub", function() { return sub; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
@@ -3894,10 +3894,10 @@ var sub = subtract;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/quat.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/quat.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/quat.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/quat.js ***!
+  \********************************************/
 /*! exports provided: create, identity, setAxisAngle, getAxisAngle, multiply, rotateX, rotateY, rotateZ, calculateW, slerp, random, invert, conjugate, fromMat3, fromEuler, str, clone, fromValues, copy, set, add, mul, scale, dot, lerp, length, len, squaredLength, sqrLen, normalize, exactEquals, equals, rotationTo, sqlerp, setAxes */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3938,10 +3938,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rotationTo", function() { return rotationTo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sqlerp", function() { return sqlerp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAxes", function() { return setAxes; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
-/* harmony import */ var _mat3_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mat3.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat3.js");
-/* harmony import */ var _vec3_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vec3.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec3.js");
-/* harmony import */ var _vec4_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vec4.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec4.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _mat3_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mat3.js */ "./node_modules/gl-matrix/esm/mat3.js");
+/* harmony import */ var _vec3_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vec3.js */ "./node_modules/gl-matrix/esm/vec3.js");
+/* harmony import */ var _vec4_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vec4.js */ "./node_modules/gl-matrix/esm/vec4.js");
 
 
 
@@ -4585,10 +4585,10 @@ var setAxes = function () {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/quat2.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/quat2.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/quat2.js":
+/*!*********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/quat2.js ***!
+  \*********************************************/
 /*! exports provided: create, clone, fromValues, fromRotationTranslationValues, fromRotationTranslation, fromTranslation, fromRotation, fromMat4, copy, identity, set, getReal, getDual, setReal, setDual, getTranslation, translate, rotateX, rotateY, rotateZ, rotateByQuatAppend, rotateByQuatPrepend, rotateAroundAxis, add, multiply, mul, scale, dot, lerp, invert, conjugate, length, len, squaredLength, sqrLen, normalize, str, exactEquals, equals */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4633,9 +4633,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "str", function() { return str; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exactEquals", function() { return exactEquals; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "equals", function() { return equals; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
-/* harmony import */ var _quat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./quat.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/quat.js");
-/* harmony import */ var _mat4_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mat4.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/mat4.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _quat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./quat.js */ "./node_modules/gl-matrix/esm/quat.js");
+/* harmony import */ var _mat4_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mat4.js */ "./node_modules/gl-matrix/esm/mat4.js");
 
 
 
@@ -5474,10 +5474,10 @@ function equals(a, b) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec2.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/vec2.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/vec2.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/vec2.js ***!
+  \********************************************/
 /*! exports provided: create, clone, fromValues, copy, set, add, subtract, multiply, divide, ceil, floor, min, max, round, scale, scaleAndAdd, distance, squaredDistance, length, squaredLength, negate, inverse, normalize, dot, cross, lerp, random, transformMat2, transformMat2d, transformMat3, transformMat4, rotate, angle, zero, str, exactEquals, equals, len, sub, mul, div, dist, sqrDist, sqrLen, forEach */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5528,7 +5528,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sqrDist", function() { return sqrDist; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sqrLen", function() { return sqrLen; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forEach", function() { return forEach; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 2 Dimensional Vector
@@ -6173,10 +6173,10 @@ var forEach = function () {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec3.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/vec3.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/vec3.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/vec3.js ***!
+  \********************************************/
 /*! exports provided: create, clone, length, fromValues, copy, set, add, subtract, multiply, divide, ceil, floor, min, max, round, scale, scaleAndAdd, distance, squaredDistance, squaredLength, negate, inverse, normalize, dot, cross, lerp, hermite, bezier, random, transformMat4, transformMat3, transformQuat, rotateX, rotateY, rotateZ, angle, zero, str, exactEquals, equals, sub, mul, div, dist, sqrDist, len, sqrLen, forEach */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -6230,7 +6230,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "len", function() { return len; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sqrLen", function() { return sqrLen; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forEach", function() { return forEach; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 3 Dimensional Vector
@@ -7023,10 +7023,10 @@ var forEach = function () {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/vec4.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/gl-matrix/esm/vec4.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/gl-matrix/esm/vec4.js":
+/*!********************************************!*\
+  !*** ./node_modules/gl-matrix/esm/vec4.js ***!
+  \********************************************/
 /*! exports provided: create, clone, fromValues, copy, set, add, subtract, multiply, divide, ceil, floor, min, max, round, scale, scaleAndAdd, distance, squaredDistance, length, squaredLength, negate, inverse, normalize, dot, cross, lerp, random, transformMat4, transformQuat, zero, str, exactEquals, equals, sub, mul, div, dist, sqrDist, len, sqrLen, forEach */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7073,7 +7073,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "len", function() { return len; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sqrLen", function() { return sqrLen; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forEach", function() { return forEach; });
-/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/common.js");
+/* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common.js */ "./node_modules/gl-matrix/esm/common.js");
 
 /**
  * 4 Dimensional Vector
@@ -7741,14 +7741,14 @@ var forEach = function () {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_Symbol.js":
-/*!**************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_Symbol.js ***!
-  \**************************************************************************************************/
+/***/ "./node_modules/lodash/_Symbol.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_Symbol.js ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(/*! ./_root */ "../../../../../../neuroglancer/node_modules/lodash/_root.js");
+var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
 
 /** Built-in value references. */
 var Symbol = root.Symbol;
@@ -7758,16 +7758,16 @@ module.exports = Symbol;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_baseGetTag.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_baseGetTag.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/lodash/_baseGetTag.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseGetTag.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(/*! ./_Symbol */ "../../../../../../neuroglancer/node_modules/lodash/_Symbol.js"),
-    getRawTag = __webpack_require__(/*! ./_getRawTag */ "../../../../../../neuroglancer/node_modules/lodash/_getRawTag.js"),
-    objectToString = __webpack_require__(/*! ./_objectToString */ "../../../../../../neuroglancer/node_modules/lodash/_objectToString.js");
+var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js"),
+    getRawTag = __webpack_require__(/*! ./_getRawTag */ "./node_modules/lodash/_getRawTag.js"),
+    objectToString = __webpack_require__(/*! ./_objectToString */ "./node_modules/lodash/_objectToString.js");
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -7797,10 +7797,10 @@ module.exports = baseGetTag;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_freeGlobal.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_freeGlobal.js ***!
-  \******************************************************************************************************/
+/***/ "./node_modules/lodash/_freeGlobal.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_freeGlobal.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7809,18 +7809,18 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../neuvue-app/neuvue_project/workspace/static/ts/wrapper/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_getRawTag.js":
-/*!*****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_getRawTag.js ***!
-  \*****************************************************************************************************/
+/***/ "./node_modules/lodash/_getRawTag.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_getRawTag.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(/*! ./_Symbol */ "../../../../../../neuroglancer/node_modules/lodash/_Symbol.js");
+var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js");
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7870,10 +7870,10 @@ module.exports = getRawTag;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_objectToString.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_objectToString.js ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/lodash/_objectToString.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_objectToString.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7903,14 +7903,14 @@ module.exports = objectToString;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/_root.js":
-/*!************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/_root.js ***!
-  \************************************************************************************************/
+/***/ "./node_modules/lodash/_root.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/_root.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ "../../../../../../neuroglancer/node_modules/lodash/_freeGlobal.js");
+var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ "./node_modules/lodash/_freeGlobal.js");
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -7923,16 +7923,16 @@ module.exports = root;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/debounce.js":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/debounce.js ***!
-  \***************************************************************************************************/
+/***/ "./node_modules/lodash/debounce.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/debounce.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(/*! ./isObject */ "../../../../../../neuroglancer/node_modules/lodash/isObject.js"),
-    now = __webpack_require__(/*! ./now */ "../../../../../../neuroglancer/node_modules/lodash/now.js"),
-    toNumber = __webpack_require__(/*! ./toNumber */ "../../../../../../neuroglancer/node_modules/lodash/toNumber.js");
+var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    now = __webpack_require__(/*! ./now */ "./node_modules/lodash/now.js"),
+    toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
 
 /** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -8125,10 +8125,10 @@ module.exports = debounce;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/isObject.js":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/isObject.js ***!
-  \***************************************************************************************************/
+/***/ "./node_modules/lodash/isObject.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isObject.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8167,10 +8167,10 @@ module.exports = isObject;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/isObjectLike.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/isObjectLike.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/lodash/isObjectLike.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/isObjectLike.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8207,15 +8207,15 @@ module.exports = isObjectLike;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/isSymbol.js":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/isSymbol.js ***!
-  \***************************************************************************************************/
+/***/ "./node_modules/lodash/isSymbol.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isSymbol.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "../../../../../../neuroglancer/node_modules/lodash/_baseGetTag.js"),
-    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "../../../../../../neuroglancer/node_modules/lodash/isObjectLike.js");
+var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
@@ -8247,14 +8247,14 @@ module.exports = isSymbol;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/now.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/now.js ***!
-  \**********************************************************************************************/
+/***/ "./node_modules/lodash/now.js":
+/*!************************************!*\
+  !*** ./node_modules/lodash/now.js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(/*! ./_root */ "../../../../../../neuroglancer/node_modules/lodash/_root.js");
+var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
 
 /**
  * Gets the timestamp of the number of milliseconds that have elapsed since
@@ -8281,15 +8281,15 @@ module.exports = now;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/lodash/toNumber.js":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/lodash/toNumber.js ***!
-  \***************************************************************************************************/
+/***/ "./node_modules/lodash/toNumber.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/toNumber.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(/*! ./isObject */ "../../../../../../neuroglancer/node_modules/lodash/isObject.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "../../../../../../neuroglancer/node_modules/lodash/isSymbol.js");
+var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
 
 /** Used as references for various `Number` constants. */
 var NAN = 0 / 0;
@@ -8358,10 +8358,10 @@ module.exports = toNumber;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti.js":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/nifti-reader-js/src/nifti.js ***!
-  \*************************************************************************************************************/
+/***/ "./node_modules/nifti-reader-js/src/nifti.js":
+/*!***************************************************!*\
+  !*** ./node_modules/nifti-reader-js/src/nifti.js ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8379,11 +8379,11 @@ module.exports = toNumber;
  * @type {*|{}}
  */
 var nifti = nifti || {};
-nifti.NIFTI1 = nifti.NIFTI1 || (( true) ? __webpack_require__(/*! ./nifti1.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti1.js") : undefined);
-nifti.NIFTI2 = nifti.NIFTI2 || (( true) ? __webpack_require__(/*! ./nifti2.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti2.js") : undefined);
-nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/utilities.js") : undefined);
+nifti.NIFTI1 = nifti.NIFTI1 || (( true) ? __webpack_require__(/*! ./nifti1.js */ "./node_modules/nifti-reader-js/src/nifti1.js") : undefined);
+nifti.NIFTI2 = nifti.NIFTI2 || (( true) ? __webpack_require__(/*! ./nifti2.js */ "./node_modules/nifti-reader-js/src/nifti2.js") : undefined);
+nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "./node_modules/nifti-reader-js/src/utilities.js") : undefined);
 
-var pako = pako || (( true) ? __webpack_require__(/*! pako */ "../../../../../../neuroglancer/node_modules/pako/index.js") : undefined);
+var pako = pako || (( true) ? __webpack_require__(/*! pako */ "./node_modules/pako/index.js") : undefined);
 
 
 
@@ -8591,10 +8591,10 @@ if ((moduleType !== 'undefined') && module.exports) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti1.js":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/nifti-reader-js/src/nifti1.js ***!
-  \**************************************************************************************************************/
+/***/ "./node_modules/nifti-reader-js/src/nifti1.js":
+/*!****************************************************!*\
+  !*** ./node_modules/nifti-reader-js/src/nifti1.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8608,7 +8608,7 @@ if ((moduleType !== 'undefined') && module.exports) {
 /*** Imports ***/
 
 var nifti = nifti || {};
-nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/utilities.js") : undefined);
+nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "./node_modules/nifti-reader-js/src/utilities.js") : undefined);
 
 
 
@@ -9469,10 +9469,10 @@ if ((moduleType !== 'undefined') && module.exports) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti2.js":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/nifti-reader-js/src/nifti2.js ***!
-  \**************************************************************************************************************/
+/***/ "./node_modules/nifti-reader-js/src/nifti2.js":
+/*!****************************************************!*\
+  !*** ./node_modules/nifti-reader-js/src/nifti2.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9486,8 +9486,8 @@ if ((moduleType !== 'undefined') && module.exports) {
 /*** Imports ***/
 
 var nifti = nifti || {};
-nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/utilities.js") : undefined);
-nifti.NIFTI1 = nifti.NIFTI1 || (( true) ? __webpack_require__(/*! ./nifti1.js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti1.js") : undefined);
+nifti.Utils = nifti.Utils || (( true) ? __webpack_require__(/*! ./utilities.js */ "./node_modules/nifti-reader-js/src/utilities.js") : undefined);
+nifti.NIFTI1 = nifti.NIFTI1 || (( true) ? __webpack_require__(/*! ./nifti1.js */ "./node_modules/nifti-reader-js/src/nifti1.js") : undefined);
 
 
 /*** Constructor ***/
@@ -9877,10 +9877,10 @@ if ((moduleType !== 'undefined') && module.exports) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/utilities.js":
-/*!*****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/nifti-reader-js/src/utilities.js ***!
-  \*****************************************************************************************************************/
+/***/ "./node_modules/nifti-reader-js/src/utilities.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/nifti-reader-js/src/utilities.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10047,10 +10047,21 @@ if ((moduleType !== 'undefined') && module.exports) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/index.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/index.js ***!
-  \**********************************************************************************************/
+/***/ "./node_modules/node-libs-browser/mock/empty.js":
+/*!******************************************************!*\
+  !*** ./node_modules/node-libs-browser/mock/empty.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./node_modules/pako/index.js":
+/*!************************************!*\
+  !*** ./node_modules/pako/index.js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10058,11 +10069,11 @@ if ((moduleType !== 'undefined') && module.exports) {
 // Top level file is just a mixin of submodules & constants
 
 
-var assign    = __webpack_require__(/*! ./lib/utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js").assign;
+var assign    = __webpack_require__(/*! ./lib/utils/common */ "./node_modules/pako/lib/utils/common.js").assign;
 
-var deflate   = __webpack_require__(/*! ./lib/deflate */ "../../../../../../neuroglancer/node_modules/pako/lib/deflate.js");
-var inflate   = __webpack_require__(/*! ./lib/inflate */ "../../../../../../neuroglancer/node_modules/pako/lib/inflate.js");
-var constants = __webpack_require__(/*! ./lib/zlib/constants */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/constants.js");
+var deflate   = __webpack_require__(/*! ./lib/deflate */ "./node_modules/pako/lib/deflate.js");
+var inflate   = __webpack_require__(/*! ./lib/inflate */ "./node_modules/pako/lib/inflate.js");
+var constants = __webpack_require__(/*! ./lib/zlib/constants */ "./node_modules/pako/lib/zlib/constants.js");
 
 var pako = {};
 
@@ -10073,10 +10084,10 @@ module.exports = pako;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/deflate.js":
-/*!****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/deflate.js ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/pako/lib/deflate.js":
+/*!******************************************!*\
+  !*** ./node_modules/pako/lib/deflate.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10084,11 +10095,11 @@ module.exports = pako;
 
 
 
-var zlib_deflate = __webpack_require__(/*! ./zlib/deflate */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/deflate.js");
-var utils        = __webpack_require__(/*! ./utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
-var strings      = __webpack_require__(/*! ./utils/strings */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/strings.js");
-var msg          = __webpack_require__(/*! ./zlib/messages */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/messages.js");
-var ZStream      = __webpack_require__(/*! ./zlib/zstream */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/zstream.js");
+var zlib_deflate = __webpack_require__(/*! ./zlib/deflate */ "./node_modules/pako/lib/zlib/deflate.js");
+var utils        = __webpack_require__(/*! ./utils/common */ "./node_modules/pako/lib/utils/common.js");
+var strings      = __webpack_require__(/*! ./utils/strings */ "./node_modules/pako/lib/utils/strings.js");
+var msg          = __webpack_require__(/*! ./zlib/messages */ "./node_modules/pako/lib/zlib/messages.js");
+var ZStream      = __webpack_require__(/*! ./zlib/zstream */ "./node_modules/pako/lib/zlib/zstream.js");
 
 var toString = Object.prototype.toString;
 
@@ -10485,10 +10496,10 @@ exports.gzip = gzip;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/inflate.js":
-/*!****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/inflate.js ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/pako/lib/inflate.js":
+/*!******************************************!*\
+  !*** ./node_modules/pako/lib/inflate.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10496,13 +10507,13 @@ exports.gzip = gzip;
 
 
 
-var zlib_inflate = __webpack_require__(/*! ./zlib/inflate */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inflate.js");
-var utils        = __webpack_require__(/*! ./utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
-var strings      = __webpack_require__(/*! ./utils/strings */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/strings.js");
-var c            = __webpack_require__(/*! ./zlib/constants */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/constants.js");
-var msg          = __webpack_require__(/*! ./zlib/messages */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/messages.js");
-var ZStream      = __webpack_require__(/*! ./zlib/zstream */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/zstream.js");
-var GZheader     = __webpack_require__(/*! ./zlib/gzheader */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/gzheader.js");
+var zlib_inflate = __webpack_require__(/*! ./zlib/inflate */ "./node_modules/pako/lib/zlib/inflate.js");
+var utils        = __webpack_require__(/*! ./utils/common */ "./node_modules/pako/lib/utils/common.js");
+var strings      = __webpack_require__(/*! ./utils/strings */ "./node_modules/pako/lib/utils/strings.js");
+var c            = __webpack_require__(/*! ./zlib/constants */ "./node_modules/pako/lib/zlib/constants.js");
+var msg          = __webpack_require__(/*! ./zlib/messages */ "./node_modules/pako/lib/zlib/messages.js");
+var ZStream      = __webpack_require__(/*! ./zlib/zstream */ "./node_modules/pako/lib/zlib/zstream.js");
+var GZheader     = __webpack_require__(/*! ./zlib/gzheader */ "./node_modules/pako/lib/zlib/gzheader.js");
 
 var toString = Object.prototype.toString;
 
@@ -10920,10 +10931,10 @@ exports.ungzip  = inflate;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/utils/common.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/utils/common.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/utils/common.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11037,10 +11048,10 @@ exports.setTyped(TYPED_OK);
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/utils/strings.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/utils/strings.js ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/pako/lib/utils/strings.js":
+/*!************************************************!*\
+  !*** ./node_modules/pako/lib/utils/strings.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11049,7 +11060,7 @@ exports.setTyped(TYPED_OK);
 
 
 
-var utils = __webpack_require__(/*! ./common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
+var utils = __webpack_require__(/*! ./common */ "./node_modules/pako/lib/utils/common.js");
 
 
 // Quick check if we can use fast array to bin string conversion
@@ -11236,10 +11247,10 @@ exports.utf8border = function (buf, max) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/adler32.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/adler32.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/adler32.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/adler32.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11299,10 +11310,10 @@ module.exports = adler32;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/constants.js":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/constants.js ***!
-  \***********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/constants.js":
+/*!*************************************************!*\
+  !*** ./node_modules/pako/lib/zlib/constants.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11379,10 +11390,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/crc32.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/crc32.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/crc32.js":
+/*!*********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/crc32.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11450,10 +11461,10 @@ module.exports = crc32;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/deflate.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/deflate.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/deflate.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/deflate.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11479,11 +11490,11 @@ module.exports = crc32;
 //   misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-var utils   = __webpack_require__(/*! ../utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
-var trees   = __webpack_require__(/*! ./trees */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/trees.js");
-var adler32 = __webpack_require__(/*! ./adler32 */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/adler32.js");
-var crc32   = __webpack_require__(/*! ./crc32 */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/crc32.js");
-var msg     = __webpack_require__(/*! ./messages */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/messages.js");
+var utils   = __webpack_require__(/*! ../utils/common */ "./node_modules/pako/lib/utils/common.js");
+var trees   = __webpack_require__(/*! ./trees */ "./node_modules/pako/lib/zlib/trees.js");
+var adler32 = __webpack_require__(/*! ./adler32 */ "./node_modules/pako/lib/zlib/adler32.js");
+var crc32   = __webpack_require__(/*! ./crc32 */ "./node_modules/pako/lib/zlib/crc32.js");
+var msg     = __webpack_require__(/*! ./messages */ "./node_modules/pako/lib/zlib/messages.js");
 
 /* Public constants ==========================================================*/
 /* ===========================================================================*/
@@ -13336,10 +13347,10 @@ exports.deflateTune = deflateTune;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/gzheader.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/gzheader.js ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/gzheader.js":
+/*!************************************************!*\
+  !*** ./node_modules/pako/lib/zlib/gzheader.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13406,10 +13417,10 @@ module.exports = GZheader;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inffast.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/inffast.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/inffast.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/inffast.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13763,10 +13774,10 @@ module.exports = function inflate_fast(strm, start) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inflate.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/inflate.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/inflate.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/inflate.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13792,11 +13803,11 @@ module.exports = function inflate_fast(strm, start) {
 //   misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-var utils         = __webpack_require__(/*! ../utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
-var adler32       = __webpack_require__(/*! ./adler32 */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/adler32.js");
-var crc32         = __webpack_require__(/*! ./crc32 */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/crc32.js");
-var inflate_fast  = __webpack_require__(/*! ./inffast */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inffast.js");
-var inflate_table = __webpack_require__(/*! ./inftrees */ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inftrees.js");
+var utils         = __webpack_require__(/*! ../utils/common */ "./node_modules/pako/lib/utils/common.js");
+var adler32       = __webpack_require__(/*! ./adler32 */ "./node_modules/pako/lib/zlib/adler32.js");
+var crc32         = __webpack_require__(/*! ./crc32 */ "./node_modules/pako/lib/zlib/crc32.js");
+var inflate_fast  = __webpack_require__(/*! ./inffast */ "./node_modules/pako/lib/zlib/inffast.js");
+var inflate_table = __webpack_require__(/*! ./inftrees */ "./node_modules/pako/lib/zlib/inftrees.js");
 
 var CODES = 0;
 var LENS = 1;
@@ -15331,10 +15342,10 @@ exports.inflateUndermine = inflateUndermine;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/inftrees.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/inftrees.js ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/inftrees.js":
+/*!************************************************!*\
+  !*** ./node_modules/pako/lib/zlib/inftrees.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15360,7 +15371,7 @@ exports.inflateUndermine = inflateUndermine;
 //   misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-var utils = __webpack_require__(/*! ../utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
+var utils = __webpack_require__(/*! ../utils/common */ "./node_modules/pako/lib/utils/common.js");
 
 var MAXBITS = 15;
 var ENOUGH_LENS = 852;
@@ -15686,10 +15697,10 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/messages.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/messages.js ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/messages.js":
+/*!************************************************!*\
+  !*** ./node_modules/pako/lib/zlib/messages.js ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15730,10 +15741,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/trees.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/trees.js ***!
-  \*******************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/trees.js":
+/*!*********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/trees.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15761,7 +15772,7 @@ module.exports = {
 
 /* eslint-disable space-unary-ops */
 
-var utils = __webpack_require__(/*! ../utils/common */ "../../../../../../neuroglancer/node_modules/pako/lib/utils/common.js");
+var utils = __webpack_require__(/*! ../utils/common */ "./node_modules/pako/lib/utils/common.js");
 
 /* Public constants ==========================================================*/
 /* ===========================================================================*/
@@ -16964,10 +16975,10 @@ exports._tr_align = _tr_align;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/node_modules/pako/lib/zlib/zstream.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/node_modules/pako/lib/zlib/zstream.js ***!
-  \*********************************************************************************************************/
+/***/ "./node_modules/pako/lib/zlib/zstream.js":
+/*!***********************************************!*\
+  !*** ./node_modules/pako/lib/zlib/zstream.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17023,10 +17034,472 @@ module.exports = ZStream;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/annotation/backend.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/annotation/backend.ts ***!
-  \**********************************************************************************************************/
+/***/ "./node_modules/path-browserify/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/path-browserify/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/process/browser.js":
+/*!*****************************************!*\
+  !*** ./node_modules/process/browser.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ "./src/neuroglancer/annotation/backend.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/annotation/backend.ts ***!
+  \************************************************/
 /*! exports provided: AnnotationMetadataChunk, AnnotationGeometryData, AnnotationGeometryChunk, AnnotationSubsetGeometryChunk, AnnotationSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -17037,17 +17510,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnnotationGeometryChunk", function() { return AnnotationGeometryChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnnotationSubsetGeometryChunk", function() { return AnnotationSubsetGeometryChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnnotationSource", function() { return AnnotationSource; });
-/* harmony import */ var neuroglancer_annotation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/annotation */ "../../../../../../neuroglancer/src/neuroglancer/annotation/index.ts");
-/* harmony import */ var neuroglancer_annotation_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/annotation/base */ "../../../../../../neuroglancer/src/neuroglancer/annotation/base.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_perspective_view_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/perspective_view/backend */ "../../../../../../neuroglancer/src/neuroglancer/perspective_view/backend.ts");
-/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/base.ts");
-/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts");
-/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/trackable_value */ "../../../../../../neuroglancer/src/neuroglancer/trackable_value.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_annotation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/annotation */ "./src/neuroglancer/annotation/index.ts");
+/* harmony import */ var neuroglancer_annotation_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/annotation/base */ "./src/neuroglancer/annotation/base.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_perspective_view_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/perspective_view/backend */ "./src/neuroglancer/perspective_view/backend.ts");
+/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "./src/neuroglancer/segmentation_display_state/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "./src/neuroglancer/sliceview/backend.ts");
+/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/trackable_value */ "./src/neuroglancer/trackable_value.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -17357,10 +17830,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__["registerRPC"])(neu
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/annotation/base.ts":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/annotation/base.ts ***!
-  \*******************************************************************************************************/
+/***/ "./src/neuroglancer/annotation/base.ts":
+/*!*********************************************!*\
+  !*** ./src/neuroglancer/annotation/base.ts ***!
+  \*********************************************/
 /*! exports provided: ANNOTATION_METADATA_CHUNK_SOURCE_RPC_ID, ANNOTATION_GEOMETRY_CHUNK_SOURCE_RPC_ID, ANNOTATION_SUBSET_GEOMETRY_CHUNK_SOURCE_RPC_ID, ANNOTATION_REFERENCE_ADD_RPC_ID, ANNOTATION_REFERENCE_DELETE_RPC_ID, ANNOTATION_COMMIT_UPDATE_RPC_ID, ANNOTATION_COMMIT_UPDATE_RESULT_RPC_ID, AnnotationGeometryChunkSpecification, ANNOTATION_PERSPECTIVE_RENDER_LAYER_RPC_ID, ANNOTATION_RENDER_LAYER_RPC_ID, ANNOTATION_RENDER_LAYER_UPDATE_SEGMENTATION_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -17377,7 +17850,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ANNOTATION_PERSPECTIVE_RENDER_LAYER_RPC_ID", function() { return ANNOTATION_PERSPECTIVE_RENDER_LAYER_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ANNOTATION_RENDER_LAYER_RPC_ID", function() { return ANNOTATION_RENDER_LAYER_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ANNOTATION_RENDER_LAYER_UPDATE_SEGMENTATION_RPC_ID", function() { return ANNOTATION_RENDER_LAYER_UPDATE_SEGMENTATION_RPC_ID; });
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -17410,10 +17883,10 @@ const ANNOTATION_RENDER_LAYER_UPDATE_SEGMENTATION_RPC_ID = 'annotation/RenderLay
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/annotation/index.ts":
-/*!********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/annotation/index.ts ***!
-  \********************************************************************************************************/
+/***/ "./src/neuroglancer/annotation/index.ts":
+/*!**********************************************!*\
+  !*** ./src/neuroglancer/annotation/index.ts ***!
+  \**********************************************/
 /*! exports provided: AnnotationReference, AnnotationType, annotationTypes, getAnnotationTypeHandler, annotationToJson, restoreAnnotation, AnnotationSource, LocalAnnotationSource, DATA_BOUNDS_DESCRIPTION, makeAnnotationId, makeDataBoundsBoundingBox, serializeAnnotations, AnnotationSerializer, deserializeAnnotation */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -17433,13 +17906,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "serializeAnnotations", function() { return serializeAnnotations; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnnotationSerializer", function() { return AnnotationSerializer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deserializeAnnotation", function() { return deserializeAnnotation; });
-/* harmony import */ var neuroglancer_trackable_boolean__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/trackable_boolean */ "../../../../../../neuroglancer/src/neuroglancer/trackable_boolean.ts");
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_random__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/random */ "../../../../../../neuroglancer/src/neuroglancer/util/random.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_trackable_boolean__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/trackable_boolean */ "./src/neuroglancer/trackable_boolean.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_random__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/random */ "./src/neuroglancer/util/random.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -18256,17 +18729,17 @@ function deserializeAnnotation(obj) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/csv_vertex_attributes_request.ts":
-/*!***************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/csv_vertex_attributes_request.ts ***!
-  \***************************************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/csv_vertex_attributes_request.ts":
+/*!*****************************************************************************!*\
+  !*** ./src/neuroglancer/async_computation/csv_vertex_attributes_request.ts ***!
+  \*****************************************************************************/
 /*! exports provided: parseCSVFromArrayBuffer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseCSVFromArrayBuffer", function() { return parseCSVFromArrayBuffer; });
-/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts");
+/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "./src/neuroglancer/async_computation/index.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18288,17 +18761,17 @@ const parseCSVFromArrayBuffer = Object(neuroglancer_async_computation__WEBPACK_I
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts":
-/*!*****************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts ***!
-  \*****************************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/decode_gzip_request.ts":
+/*!*******************************************************************!*\
+  !*** ./src/neuroglancer/async_computation/decode_gzip_request.ts ***!
+  \*******************************************************************/
 /*! exports provided: decodeGzip */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeGzip", function() { return decodeGzip; });
-/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts");
+/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "./src/neuroglancer/async_computation/index.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18320,17 +18793,17 @@ const decodeGzip = Object(neuroglancer_async_computation__WEBPACK_IMPORTED_MODUL
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_jpeg_request.ts":
-/*!*****************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/decode_jpeg_request.ts ***!
-  \*****************************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/decode_jpeg_request.ts":
+/*!*******************************************************************!*\
+  !*** ./src/neuroglancer/async_computation/decode_jpeg_request.ts ***!
+  \*******************************************************************/
 /*! exports provided: decodeJpeg */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeJpeg", function() { return decodeJpeg; });
-/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts");
+/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "./src/neuroglancer/async_computation/index.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18352,10 +18825,10 @@ const decodeJpeg = Object(neuroglancer_async_computation__WEBPACK_IMPORTED_MODUL
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts":
-/*!************************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts ***!
-  \************************************************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts":
+/*!**************************************************************************************!*\
+  !*** ./src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts ***!
+  \**************************************************************************************/
 /*! exports provided: encodeCompressedSegmentationUint32, encodeCompressedSegmentationUint64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18363,7 +18836,7 @@ const decodeJpeg = Object(neuroglancer_async_computation__WEBPACK_IMPORTED_MODUL
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encodeCompressedSegmentationUint32", function() { return encodeCompressedSegmentationUint32; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encodeCompressedSegmentationUint64", function() { return encodeCompressedSegmentationUint64; });
-/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts");
+/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "./src/neuroglancer/async_computation/index.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18386,10 +18859,10 @@ const encodeCompressedSegmentationUint64 = Object(neuroglancer_async_computation
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts":
-/*!***************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/index.ts ***!
-  \***************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/index.ts":
+/*!*****************************************************!*\
+  !*** ./src/neuroglancer/async_computation/index.ts ***!
+  \*****************************************************/
 /*! exports provided: asyncComputation */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18421,17 +18894,17 @@ function asyncComputation(id) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts":
-/*!*****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/request.ts ***!
-  \*****************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/request.ts":
+/*!*******************************************************!*\
+  !*** ./src/neuroglancer/async_computation/request.ts ***!
+  \*******************************************************/
 /*! exports provided: requestAsyncComputation */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "requestAsyncComputation", function() { return requestAsyncComputation; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18507,17 +18980,17 @@ function requestAsyncComputation(request, cancellationToken, transfer, ...args) 
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/async_computation/vtk_mesh_request.ts":
-/*!**************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/async_computation/vtk_mesh_request.ts ***!
-  \**************************************************************************************************************************/
+/***/ "./src/neuroglancer/async_computation/vtk_mesh_request.ts":
+/*!****************************************************************!*\
+  !*** ./src/neuroglancer/async_computation/vtk_mesh_request.ts ***!
+  \****************************************************************/
 /*! exports provided: parseVTKFromArrayBuffer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseVTKFromArrayBuffer", function() { return parseVTKFromArrayBuffer; });
-/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/index.ts");
+/* harmony import */ var neuroglancer_async_computation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation */ "./src/neuroglancer/async_computation/index.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -18539,10 +19012,10 @@ const parseVTKFromArrayBuffer = Object(neuroglancer_async_computation__WEBPACK_I
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/authentication/backend.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/authentication/backend.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/authentication/backend.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/authentication/backend.ts ***!
+  \****************************************************/
 /*! exports provided: responseIdentity, authFetch */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18550,9 +19023,9 @@ const parseVTKFromArrayBuffer = Object(neuroglancer_async_computation__WEBPACK_I
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "responseIdentity", function() { return responseIdentity; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authFetch", function() { return authFetch; });
-/* harmony import */ var neuroglancer_authentication_base_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/authentication/base.ts */ "../../../../../../neuroglancer/src/neuroglancer/authentication/base.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_worker_rpc_context_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc_context.ts */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc_context.ts");
+/* harmony import */ var neuroglancer_authentication_base_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/authentication/base.ts */ "./src/neuroglancer/authentication/base.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_worker_rpc_context_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc_context.ts */ "./src/neuroglancer/worker_rpc_context.ts");
 /**
  * @license
  * Copyright 2019 The Neuroglancer Authors
@@ -18618,10 +19091,10 @@ async function authFetch(input, init = {}, transformResponse, cancellationToken 
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/authentication/base.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/authentication/base.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/authentication/base.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/authentication/base.ts ***!
+  \*************************************************/
 /*! exports provided: AUTHENTICATION_GET_SHARED_TOKEN_RPC_ID, AUTHENTICATION_REAUTHENTICATE_RPC_ID, AUTHENTICATION_SHOW_TOS_RPC_ID, parseWWWAuthHeader, AuthenticationError, TosError, authFetchWithSharedValue */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18634,8 +19107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthenticationError", function() { return AuthenticationError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TosError", function() { return TosError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authFetchWithSharedValue", function() { return authFetchWithSharedValue; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
 /**
  * @license
  * Copyright 2019 The Neuroglancer Authors
@@ -18769,10 +19242,10 @@ async function authFetchWithSharedValue(reauthenticate, showTosForm, authTokenSh
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/chunk_manager/backend.ts ***!
-  \*************************************************************************************************************/
+/***/ "./src/neuroglancer/chunk_manager/backend.ts":
+/*!***************************************************!*\
+  !*** ./src/neuroglancer/chunk_manager/backend.ts ***!
+  \***************************************************/
 /*! exports provided: Chunk, ChunkSourceBase, ChunkSource, startChunkDownload, cancelChunkDownload, ChunkQueueManager, ChunkManager, WithParameters, withChunkManager */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18787,16 +19260,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChunkManager", function() { return ChunkManager; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WithParameters", function() { return WithParameters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withChunkManager", function() { return withChunkManager; });
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_linked_list_0__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/linked_list.0 */ "../../../../../../neuroglancer/src/neuroglancer/util/linked_list.0.ts");
-/* harmony import */ var neuroglancer_util_linked_list_1__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/linked_list.1 */ "../../../../../../neuroglancer/src/neuroglancer/util/linked_list.1.ts");
-/* harmony import */ var neuroglancer_util_memoize__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/memoize */ "../../../../../../neuroglancer/src/neuroglancer/util/memoize.ts");
-/* harmony import */ var neuroglancer_util_pairing_heap_0__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/pairing_heap.0 */ "../../../../../../neuroglancer/src/neuroglancer/util/pairing_heap.0.ts");
-/* harmony import */ var neuroglancer_util_pairing_heap_1__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/pairing_heap.1 */ "../../../../../../neuroglancer/src/neuroglancer/util/pairing_heap.1.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_linked_list_0__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/linked_list.0 */ "./src/neuroglancer/util/linked_list.0.ts");
+/* harmony import */ var neuroglancer_util_linked_list_1__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/linked_list.1 */ "./src/neuroglancer/util/linked_list.1.ts");
+/* harmony import */ var neuroglancer_util_memoize__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/memoize */ "./src/neuroglancer/util/memoize.ts");
+/* harmony import */ var neuroglancer_util_pairing_heap_0__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/pairing_heap.0 */ "./src/neuroglancer/util/pairing_heap.0.ts");
+/* harmony import */ var neuroglancer_util_pairing_heap_1__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/pairing_heap.1 */ "./src/neuroglancer/util/pairing_heap.1.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -19713,10 +20186,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_9__["registerPromiseRPC"
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/chunk_manager/base.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/chunk_manager/base.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/chunk_manager/base.ts ***!
+  \************************************************/
 /*! exports provided: ChunkState, numChunkStates, ChunkPriorityTier, numChunkPriorityTiers, ChunkDownloadStatistics, ChunkMemoryStatistics, numChunkMemoryStatistics, numChunkDownloadStatistics, numChunkStatistics, getChunkStateStatisticIndex, getChunkDownloadStatisticIndex, PREFETCH_PRIORITY_MULTIPLIER, CHUNK_QUEUE_MANAGER_RPC_ID, CHUNK_MANAGER_RPC_ID, CHUNK_SOURCE_INVALIDATE_RPC_ID, REQUEST_CHUNK_STATISTICS_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -19813,22 +20286,22 @@ const REQUEST_CHUNK_STATISTICS_RPC_ID = 'ChunkQueueManager.requestChunkStatistic
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts":
-/*!*************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts ***!
-  \*************************************************************************************************************************/
+/***/ "./src/neuroglancer/chunk_manager/generic_file_source.ts":
+/*!***************************************************************!*\
+  !*** ./src/neuroglancer/chunk_manager/generic_file_source.ts ***!
+  \***************************************************************/
 /*! exports provided: GenericSharedDataSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GenericSharedDataSource", function() { return GenericSharedDataSource; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_object_id__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/object_id */ "../../../../../../neuroglancer/src/neuroglancer/util/object_id.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_object_id__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/object_id */ "./src/neuroglancer/util/object_id.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -19972,10 +20445,10 @@ class GenericSharedDataSource extends neuroglancer_chunk_manager_backend__WEBPAC
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/coordinate_transform.ts":
-/*!************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/coordinate_transform.ts ***!
-  \************************************************************************************************************/
+/***/ "./src/neuroglancer/coordinate_transform.ts":
+/*!**************************************************!*\
+  !*** ./src/neuroglancer/coordinate_transform.ts ***!
+  \**************************************************/
 /*! exports provided: CoordinateTransform, makeDerivedCoordinateTransform */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -19983,9 +20456,9 @@ class GenericSharedDataSource extends neuroglancer_chunk_manager_backend__WEBPAC
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CoordinateTransform", function() { return CoordinateTransform; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeDerivedCoordinateTransform", function() { return makeDerivedCoordinateTransform; });
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -20125,18 +20598,18 @@ function makeDerivedCoordinateTransform(derivedTransform, baseTransform, update)
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/http_request.ts":
-/*!*************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/credentials_provider/http_request.ts ***!
-  \*************************************************************************************************************************/
+/***/ "./src/neuroglancer/credentials_provider/http_request.ts":
+/*!***************************************************************!*\
+  !*** ./src/neuroglancer/credentials_provider/http_request.ts ***!
+  \***************************************************************/
 /*! exports provided: fetchWithCredentials */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchWithCredentials", function() { return fetchWithCredentials; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -20177,10 +20650,10 @@ async function fetchWithCredentials(credentialsProvider, input, init, transformR
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/index.ts":
-/*!******************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/credentials_provider/index.ts ***!
-  \******************************************************************************************************************/
+/***/ "./src/neuroglancer/credentials_provider/index.ts":
+/*!********************************************************!*\
+  !*** ./src/neuroglancer/credentials_provider/index.ts ***!
+  \********************************************************/
 /*! exports provided: CredentialsProvider, makeCachedCredentialsGetter, makeCredentialsGetter, MapBasedCredentialsManager, CachingCredentialsManager, CachingMapBasedCredentialsManager */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20192,9 +20665,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MapBasedCredentialsManager", function() { return MapBasedCredentialsManager; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CachingCredentialsManager", function() { return CachingCredentialsManager; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CachingMapBasedCredentialsManager", function() { return CachingMapBasedCredentialsManager; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_memoize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/memoize */ "../../../../../../neuroglancer/src/neuroglancer/util/memoize.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_memoize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/memoize */ "./src/neuroglancer/util/memoize.ts");
 /**
  * @license
  * Copyright 2017 Google Inc.
@@ -20296,10 +20769,10 @@ class CachingMapBasedCredentialsManager extends CachingCredentialsManager {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/shared_common.ts":
-/*!**************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/credentials_provider/shared_common.ts ***!
-  \**************************************************************************************************************************/
+/***/ "./src/neuroglancer/credentials_provider/shared_common.ts":
+/*!****************************************************************!*\
+  !*** ./src/neuroglancer/credentials_provider/shared_common.ts ***!
+  \****************************************************************/
 /*! exports provided: CREDENTIALS_PROVIDER_RPC_ID, CREDENTIALS_PROVIDER_GET_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20328,10 +20801,10 @@ const CREDENTIALS_PROVIDER_GET_RPC_ID = 'CredentialsProvider.get';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/shared_counterpart.ts":
-/*!*******************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/credentials_provider/shared_counterpart.ts ***!
-  \*******************************************************************************************************************************/
+/***/ "./src/neuroglancer/credentials_provider/shared_counterpart.ts":
+/*!*********************************************************************!*\
+  !*** ./src/neuroglancer/credentials_provider/shared_counterpart.ts ***!
+  \*********************************************************************/
 /*! exports provided: SharedCredentialsProviderCounterpart, WithSharedCredentialsProviderCounterpart */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20339,9 +20812,9 @@ const CREDENTIALS_PROVIDER_GET_RPC_ID = 'CredentialsProvider.get';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedCredentialsProviderCounterpart", function() { return SharedCredentialsProviderCounterpart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WithSharedCredentialsProviderCounterpart", function() { return WithSharedCredentialsProviderCounterpart; });
-/* harmony import */ var neuroglancer_credentials_provider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/index.ts");
-/* harmony import */ var neuroglancer_credentials_provider_shared_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_common */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/shared_common.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_credentials_provider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider */ "./src/neuroglancer/credentials_provider/index.ts");
+/* harmony import */ var neuroglancer_credentials_provider_shared_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_common */ "./src/neuroglancer/credentials_provider/shared_common.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2017 Google Inc.
@@ -20396,10 +20869,10 @@ function WithSharedCredentialsProviderCounterpart() {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/boss/api.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/boss/api.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/boss/api.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/datasource/boss/api.ts ***!
+  \*************************************************/
 /*! exports provided: credentialsKey, fetchWithBossCredentials */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20407,8 +20880,8 @@ function WithSharedCredentialsProviderCounterpart() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "credentialsKey", function() { return credentialsKey; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchWithBossCredentials", function() { return fetchWithBossCredentials; });
-/* harmony import */ var neuroglancer_credentials_provider_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider/http_request */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/http_request.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_credentials_provider_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider/http_request */ "./src/neuroglancer/credentials_provider/http_request.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
 /**
  * @license
  * Copyright 2017 Google Inc.
@@ -20452,10 +20925,10 @@ function fetchWithBossCredentials(credentialsProvider, input, init, transformRes
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/boss/backend.ts":
-/*!***************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/boss/backend.ts ***!
-  \***************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/boss/backend.ts":
+/*!*****************************************************!*\
+  !*** ./src/neuroglancer/datasource/boss/backend.ts ***!
+  \*****************************************************/
 /*! exports provided: BossVolumeChunkSource, BossMeshSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20463,17 +20936,17 @@ function fetchWithBossCredentials(credentialsProvider, input, init, transformRes
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BossVolumeChunkSource", function() { return BossVolumeChunkSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BossMeshSource", function() { return BossMeshSource; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_credentials_provider_shared_counterpart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_counterpart */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/shared_counterpart.ts");
-/* harmony import */ var neuroglancer_datasource_boss_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/boss/api */ "../../../../../../neuroglancer/src/neuroglancer/datasource/boss/api.ts");
-/* harmony import */ var neuroglancer_datasource_boss_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/datasource/boss/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/boss/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_bossNpz__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/bossNpz */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_credentials_provider_shared_counterpart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_counterpart */ "./src/neuroglancer/credentials_provider/shared_counterpart.ts");
+/* harmony import */ var neuroglancer_datasource_boss_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/boss/api */ "./src/neuroglancer/datasource/boss/api.ts");
+/* harmony import */ var neuroglancer_datasource_boss_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/datasource/boss/base */ "./src/neuroglancer/datasource/boss/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_bossNpz__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/bossNpz */ "./src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2017 Google Inc.
@@ -20572,10 +21045,10 @@ BossMeshSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/boss/base.ts":
-/*!************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/boss/base.ts ***!
-  \************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/boss/base.ts":
+/*!**************************************************!*\
+  !*** ./src/neuroglancer/datasource/boss/base.ts ***!
+  \**************************************************/
 /*! exports provided: BossSourceParameters, VolumeChunkSourceParameters, MeshSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20617,10 +21090,10 @@ MeshSourceParameters.RPC_ID = 'boss/MeshChunkSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/api.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/brainmaps/api.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/brainmaps/api.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/datasource/brainmaps/api.ts ***!
+  \******************************************************/
 /*! exports provided: credentialsKey, makeRequest */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20628,9 +21101,9 @@ MeshSourceParameters.RPC_ID = 'boss/MeshChunkSource';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "credentialsKey", function() { return credentialsKey; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeRequest", function() { return makeRequest; });
-/* harmony import */ var neuroglancer_credentials_provider_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider/http_request */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/http_request.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_credentials_provider_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/credentials_provider/http_request */ "./src/neuroglancer/credentials_provider/http_request.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -20676,10 +21149,10 @@ function makeRequest(instance, credentialsProvider, httpCall, cancellationToken 
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/backend.ts":
-/*!********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/brainmaps/backend.ts ***!
-  \********************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/brainmaps/backend.ts":
+/*!**********************************************************!*\
+  !*** ./src/neuroglancer/datasource/brainmaps/backend.ts ***!
+  \**********************************************************/
 /*! exports provided: BrainmapsVolumeChunkSource, BrainmapsMultiscaleMeshSource, BrainmapsMeshSource, BrainmapsSkeletonSource, BrainmapsAnnotationSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20690,25 +21163,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrainmapsMeshSource", function() { return BrainmapsMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrainmapsSkeletonSource", function() { return BrainmapsSkeletonSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrainmapsAnnotationSource", function() { return BrainmapsAnnotationSource; });
-/* harmony import */ var neuroglancer_annotation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/annotation */ "../../../../../../neuroglancer/src/neuroglancer/annotation/index.ts");
-/* harmony import */ var neuroglancer_annotation_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/annotation/backend */ "../../../../../../neuroglancer/src/neuroglancer/annotation/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_credentials_provider_shared_counterpart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_counterpart */ "../../../../../../neuroglancer/src/neuroglancer/credentials_provider/shared_counterpart.ts");
-/* harmony import */ var neuroglancer_datasource_brainmaps_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/datasource/brainmaps/api */ "../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/api.ts");
-/* harmony import */ var neuroglancer_datasource_brainmaps_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/brainmaps/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_mesh_base__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/mesh/base */ "../../../../../../neuroglancer/src/neuroglancer/mesh/base.ts");
-/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/zorder */ "../../../../../../neuroglancer/src/neuroglancer/util/zorder.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_annotation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/annotation */ "./src/neuroglancer/annotation/index.ts");
+/* harmony import */ var neuroglancer_annotation_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/annotation/backend */ "./src/neuroglancer/annotation/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_credentials_provider_shared_counterpart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/credentials_provider/shared_counterpart */ "./src/neuroglancer/credentials_provider/shared_counterpart.ts");
+/* harmony import */ var neuroglancer_datasource_brainmaps_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/datasource/brainmaps/api */ "./src/neuroglancer/datasource/brainmaps/api.ts");
+/* harmony import */ var neuroglancer_datasource_brainmaps_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/brainmaps/base */ "./src/neuroglancer/datasource/brainmaps/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_mesh_base__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/mesh/base */ "./src/neuroglancer/mesh/base.ts");
+/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "./src/neuroglancer/skeleton/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/zorder */ "./src/neuroglancer/util/zorder.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -21520,10 +21993,10 @@ BrainmapsAnnotationSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/base.ts":
-/*!*****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/brainmaps/base.ts ***!
-  \*****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/brainmaps/base.ts":
+/*!*******************************************************!*\
+  !*** ./src/neuroglancer/datasource/brainmaps/base.ts ***!
+  \*******************************************************/
 /*! exports provided: VolumeChunkEncoding, ChangeSpec, VolumeSourceParameters, MultiscaleMeshSourceParameters, MeshSourceParameters, SkeletonSourceParameters, AnnotationSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -21578,10 +22051,10 @@ AnnotationSourceParameters.RPC_ID = 'brainmaps/Annotation';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/backend.ts":
-/*!*******************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/backend.ts ***!
-  \*******************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/backend.ts":
+/*!*********************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/backend.ts ***!
+  \*********************************************************/
 /*! exports provided: VolumeComputationBackend, copyBufferOverlap, ComputedVolumeChunk, ComputedVolumeChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -21591,17 +22064,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "copyBufferOverlap", function() { return copyBufferOverlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComputedVolumeChunk", function() { return ComputedVolumeChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComputedVolumeChunkSource", function() { return ComputedVolumeChunkSource; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_uint32__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_uint32 */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts");
-/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_uint64__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_uint64 */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "./src/neuroglancer/datasource/computed/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_uint32__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_uint32 */ "./src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts");
+/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_uint64__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_uint64 */ "./src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -22100,10 +22573,10 @@ ComputedVolumeChunkSource.prototype.chunkConstructor = ComputedVolumeChunk;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/base.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/base.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/base.ts ***!
+  \******************************************************/
 /*! exports provided: ComputedVolumeChunkSourceParameters, ComputationParameters, getArrayView */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22112,7 +22585,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComputedVolumeChunkSourceParameters", function() { return ComputedVolumeChunkSourceParameters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComputationParameters", function() { return ComputationParameters; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getArrayView", function() { return getArrayView; });
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -22156,22 +22629,22 @@ function getArrayView(buffer, type) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/example/backend.ts":
-/*!***************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/example/backend.ts ***!
-  \***************************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/example/backend.ts":
+/*!*****************************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/example/backend.ts ***!
+  \*****************************************************************/
 /*! exports provided: ExampleComputation */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExampleComputation", function() { return ExampleComputation; });
-/* harmony import */ var neuroglancer_datasource_computed_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/backend */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/backend.ts");
-/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts");
-/* harmony import */ var neuroglancer_datasource_computed_example_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/example/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/example/base.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_datasource_computed_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/backend */ "./src/neuroglancer/datasource/computed/backend.ts");
+/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "./src/neuroglancer/datasource/computed/base.ts");
+/* harmony import */ var neuroglancer_datasource_computed_example_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/example/base */ "./src/neuroglancer/datasource/computed/example/base.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -22226,10 +22699,10 @@ ExampleComputation = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/example/base.ts":
-/*!************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/example/base.ts ***!
-  \************************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/example/base.ts":
+/*!**************************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/example/base.ts ***!
+  \**************************************************************/
 /*! exports provided: EXAMPLE_COMPUTATION_RPC_ID, ExampleComputationParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22237,7 +22710,7 @@ ExampleComputation = __decorate([
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXAMPLE_COMPUTATION_RPC_ID", function() { return EXAMPLE_COMPUTATION_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExampleComputationParameters", function() { return ExampleComputationParameters; });
-/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts");
+/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "./src/neuroglancer/datasource/computed/base.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -22261,20 +22734,20 @@ class ExampleComputationParameters extends neuroglancer_datasource_computed_base
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/tensorflow/backend.ts":
-/*!******************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/tensorflow/backend.ts ***!
-  \******************************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/tensorflow/backend.ts":
+/*!********************************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/tensorflow/backend.ts ***!
+  \********************************************************************/
 /*! exports provided: TensorflowComputation */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TensorflowComputation", function() { return TensorflowComputation; });
-/* harmony import */ var neuroglancer_datasource_computed_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/backend */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/backend.ts");
-/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts");
-/* harmony import */ var neuroglancer_datasource_computed_tensorflow_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/tensorflow/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/tensorflow/base.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_datasource_computed_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/backend */ "./src/neuroglancer/datasource/computed/backend.ts");
+/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "./src/neuroglancer/datasource/computed/base.ts");
+/* harmony import */ var neuroglancer_datasource_computed_tensorflow_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/datasource/computed/tensorflow/base */ "./src/neuroglancer/datasource/computed/tensorflow/base.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -22363,10 +22836,10 @@ TensorflowComputation = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/tensorflow/base.ts":
-/*!***************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/computed/tensorflow/base.ts ***!
-  \***************************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/computed/tensorflow/base.ts":
+/*!*****************************************************************!*\
+  !*** ./src/neuroglancer/datasource/computed/tensorflow/base.ts ***!
+  \*****************************************************************/
 /*! exports provided: TENSORFLOW_COMPUTATION_RPC_ID, TENSORFLOW_INFERENCE_RPC_ID, TensorflowComputationParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22375,7 +22848,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TENSORFLOW_COMPUTATION_RPC_ID", function() { return TENSORFLOW_COMPUTATION_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TENSORFLOW_INFERENCE_RPC_ID", function() { return TENSORFLOW_INFERENCE_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TensorflowComputationParameters", function() { return TensorflowComputationParameters; });
-/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/computed/base.ts");
+/* harmony import */ var neuroglancer_datasource_computed_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/datasource/computed/base */ "./src/neuroglancer/datasource/computed/base.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -22400,19 +22873,19 @@ class TensorflowComputationParameters extends neuroglancer_datasource_computed_b
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/csv/backend.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/csv/backend.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/csv/backend.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/datasource/csv/backend.ts ***!
+  \****************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var neuroglancer_async_computation_csv_vertex_attributes_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/csv_vertex_attributes_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/csv_vertex_attributes_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts");
-/* harmony import */ var neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/single_mesh/backend.ts");
+/* harmony import */ var neuroglancer_async_computation_csv_vertex_attributes_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/csv_vertex_attributes_request */ "./src/neuroglancer/async_computation/csv_vertex_attributes_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "./src/neuroglancer/chunk_manager/generic_file_source.ts");
+/* harmony import */ var neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/backend */ "./src/neuroglancer/single_mesh/backend.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -22447,10 +22920,10 @@ Object(neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__["registerSi
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/dvid/backend.ts":
-/*!***************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/dvid/backend.ts ***!
-  \***************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/dvid/backend.ts":
+/*!*****************************************************!*\
+  !*** ./src/neuroglancer/datasource/dvid/backend.ts ***!
+  \*****************************************************/
 /*! exports provided: DVIDSkeletonSource, decodeFragmentChunk, DVIDMeshSource, DVIDVolumeChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22460,17 +22933,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeFragmentChunk", function() { return decodeFragmentChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DVIDMeshSource", function() { return DVIDMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DVIDVolumeChunkSource", function() { return DVIDVolumeChunkSource; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_datasource_dvid_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/dvid/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/dvid/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_decode_swc_skeleton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/skeleton/decode_swc_skeleton */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/decode_swc_skeleton.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_datasource_dvid_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/dvid/base */ "./src/neuroglancer/datasource/dvid/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "./src/neuroglancer/skeleton/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_decode_swc_skeleton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/skeleton/decode_swc_skeleton */ "./src/neuroglancer/skeleton/decode_swc_skeleton.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -22603,10 +23076,10 @@ DVIDVolumeChunkSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/dvid/base.ts":
-/*!************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/dvid/base.ts ***!
-  \************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/dvid/base.ts":
+/*!**************************************************!*\
+  !*** ./src/neuroglancer/datasource/dvid/base.ts ***!
+  \**************************************************/
 /*! exports provided: VolumeChunkEncoding, DVIDSourceParameters, VolumeChunkSourceParameters, SkeletonSourceParameters, MeshSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22654,10 +23127,10 @@ MeshSourceParameters.RPC_ID = 'dvid/MeshSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/graphene/backend.ts":
-/*!*******************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/graphene/backend.ts ***!
-  \*******************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/graphene/backend.ts":
+/*!*********************************************************!*\
+  !*** ./src/neuroglancer/datasource/graphene/backend.ts ***!
+  \*********************************************************/
 /*! exports provided: GrapheneVolumeChunkSource, decodeChunkedGraphChunk, GrapheneChunkedGraphChunkSource, decodeManifestChunk, decodeFragmentChunk, decodeDracoFragmentChunk, GrapheneMeshSource, GrapheneSkeletonSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -22671,26 +23144,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeDracoFragmentChunk", function() { return decodeDracoFragmentChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GrapheneMeshSource", function() { return GrapheneMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GrapheneSkeletonSource", function() { return GrapheneSkeletonSource; });
-/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_authentication_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/authentication/backend */ "../../../../../../neuroglancer/src/neuroglancer/authentication/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts");
-/* harmony import */ var neuroglancer_datasource_graphene_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/graphene/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/graphene/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_decode_precomputed_skeleton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/skeleton/decode_precomputed_skeleton */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/decode_precomputed_skeleton.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_chunked_graph_backend__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/sliceview/chunked_graph/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunked_graph/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_byte_range_http_requests__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/byte_range_http_requests */ "../../../../../../neuroglancer/src/neuroglancer/util/byte_range_http_requests.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "./src/neuroglancer/async_computation/decode_gzip_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_authentication_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/authentication/backend */ "./src/neuroglancer/authentication/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "./src/neuroglancer/chunk_manager/generic_file_source.ts");
+/* harmony import */ var neuroglancer_datasource_graphene_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/graphene/base */ "./src/neuroglancer/datasource/graphene/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "./src/neuroglancer/skeleton/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_decode_precomputed_skeleton__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/skeleton/decode_precomputed_skeleton */ "./src/neuroglancer/skeleton/decode_precomputed_skeleton.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_chunked_graph_backend__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/sliceview/chunked_graph/backend */ "./src/neuroglancer/sliceview/chunked_graph/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_byte_range_http_requests__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/byte_range_http_requests */ "./src/neuroglancer/util/byte_range_http_requests.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2019 The Neuroglancer Authors
@@ -22733,7 +23206,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-const DracoLoader = __webpack_require__(/*! dracoloader */ "../../../../../../neuroglancer/third_party/draco/draco_loader.js");
+const DracoLoader = __webpack_require__(/*! dracoloader */ "./third_party/draco/draco_loader.js");
 function getMinishardIndexDataSource(chunkManager, parameters) {
     const { url, sharding, layer } = parameters;
     if (sharding === undefined)
@@ -23071,10 +23544,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_19__["registerPromiseRPC
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/graphene/base.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/graphene/base.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/graphene/base.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/datasource/graphene/base.ts ***!
+  \******************************************************/
 /*! exports provided: PYCG_APP_VERSION, GRAPHENE_MANIFEST_SHARDED, GRAPHENE_MANIFEST_REFRESH_PROMISE, VolumeChunkEncoding, VolumeChunkSourceParameters, ChunkedGraphSourceParameters, MeshSourceParameters, DataEncoding, ShardingHashFunction, MultiscaleMeshMetadata, MultiscaleMeshSourceParameters, SkeletonSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -23147,26 +23620,26 @@ SkeletonSourceParameters.RPC_ID = 'graphene/SkeletonSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/n5/backend.ts":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/n5/backend.ts ***!
-  \*************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/n5/backend.ts":
+/*!***************************************************!*\
+  !*** ./src/neuroglancer/datasource/n5/backend.ts ***!
+  \***************************************************/
 /*! exports provided: PrecomputedVolumeChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PrecomputedVolumeChunkSource", function() { return PrecomputedVolumeChunkSource; });
-/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_datasource_n5_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/datasource/n5/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/n5/base.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "./src/neuroglancer/async_computation/decode_gzip_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_datasource_n5_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/datasource/n5/base */ "./src/neuroglancer/datasource/n5/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -23238,10 +23711,10 @@ PrecomputedVolumeChunkSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/n5/base.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/n5/base.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/n5/base.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/datasource/n5/base.ts ***!
+  \************************************************/
 /*! exports provided: VolumeChunkEncoding, VolumeChunkSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -23276,10 +23749,10 @@ VolumeChunkSourceParameters.RPC_ID = 'n5/VolumeChunkSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/nifti/backend.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/nifti/backend.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/nifti/backend.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/datasource/nifti/backend.ts ***!
+  \******************************************************/
 /*! exports provided: NiftiFileData, NiftiVolumeChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -23287,19 +23760,19 @@ VolumeChunkSourceParameters.RPC_ID = 'n5/VolumeChunkSource';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NiftiFileData", function() { return NiftiFileData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NiftiVolumeChunkSource", function() { return NiftiVolumeChunkSource; });
-/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts");
-/* harmony import */ var neuroglancer_datasource_nifti_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/nifti/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/nifti/base.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_base__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/sliceview/volume/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/base.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
-/* harmony import */ var nifti_reader_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! nifti-reader-js */ "../../../../../../neuroglancer/node_modules/nifti-reader-js/src/nifti.js");
+/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "./src/neuroglancer/async_computation/decode_gzip_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "./src/neuroglancer/chunk_manager/generic_file_source.ts");
+/* harmony import */ var neuroglancer_datasource_nifti_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/datasource/nifti/base */ "./src/neuroglancer/datasource/nifti/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_base__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/sliceview/volume/base */ "./src/neuroglancer/sliceview/volume/base.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var nifti_reader_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! nifti-reader-js */ "./node_modules/nifti-reader-js/src/nifti.js");
 /* harmony import */ var nifti_reader_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(nifti_reader_js__WEBPACK_IMPORTED_MODULE_12__);
 /**
  * @license
@@ -23435,10 +23908,10 @@ NiftiVolumeChunkSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/nifti/base.ts":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/nifti/base.ts ***!
-  \*************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/nifti/base.ts":
+/*!***************************************************!*\
+  !*** ./src/neuroglancer/datasource/nifti/base.ts ***!
+  \***************************************************/
 /*! exports provided: GET_NIFTI_VOLUME_INFO_RPC_ID, NiftiDataType, VolumeSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -23490,10 +23963,10 @@ VolumeSourceParameters.RPC_ID = 'nifti/VolumeChunkSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/precomputed/backend.ts":
-/*!**********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/precomputed/backend.ts ***!
-  \**********************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/precomputed/backend.ts":
+/*!************************************************************!*\
+  !*** ./src/neuroglancer/datasource/precomputed/backend.ts ***!
+  \************************************************************/
 /*! exports provided: PrecomputedVolumeChunkSource, decodeManifestChunk, decodeFragmentChunk, decodeDracoFragmentChunk, PrecomputedMeshSource, PrecomputedMultiscaleMeshSource, PrecomputedSkeletonSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -23506,27 +23979,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PrecomputedMeshSource", function() { return PrecomputedMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PrecomputedMultiscaleMeshSource", function() { return PrecomputedMultiscaleMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PrecomputedSkeletonSource", function() { return PrecomputedSkeletonSource; });
-/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts");
-/* harmony import */ var neuroglancer_datasource_precomputed_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/datasource/precomputed/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/precomputed/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts");
-/* harmony import */ var neuroglancer_skeleton_decode_precomputed_skeleton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/skeleton/decode_precomputed_skeleton */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/decode_precomputed_skeleton.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_byte_range_http_requests__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/util/byte_range_http_requests */ "../../../../../../neuroglancer/src/neuroglancer/util/byte_range_http_requests.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_hash__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/hash */ "../../../../../../neuroglancer/src/neuroglancer/util/hash.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! neuroglancer/util/zorder */ "../../../../../../neuroglancer/src/neuroglancer/util/zorder.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "./src/neuroglancer/async_computation/decode_gzip_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "./src/neuroglancer/chunk_manager/generic_file_source.ts");
+/* harmony import */ var neuroglancer_datasource_precomputed_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/datasource/precomputed/base */ "./src/neuroglancer/datasource/precomputed/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "./src/neuroglancer/skeleton/backend.ts");
+/* harmony import */ var neuroglancer_skeleton_decode_precomputed_skeleton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/skeleton/decode_precomputed_skeleton */ "./src/neuroglancer/skeleton/decode_precomputed_skeleton.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_compressed_segmentation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation */ "./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_byte_range_http_requests__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/util/byte_range_http_requests */ "./src/neuroglancer/util/byte_range_http_requests.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_hash__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/util/hash */ "./src/neuroglancer/util/hash.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! neuroglancer/util/zorder */ "./src/neuroglancer/util/zorder.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2018 The Neuroglancer Authors
@@ -23569,7 +24042,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-const DracoLoader = __webpack_require__(/*! dracoloader */ "../../../../../../neuroglancer/third_party/draco/draco_loader.js");
+const DracoLoader = __webpack_require__(/*! dracoloader */ "./third_party/draco/draco_loader.js");
 const shardingHashFunctions = new Map([
     [
         neuroglancer_datasource_precomputed_base__WEBPACK_IMPORTED_MODULE_4__["ShardingHashFunction"].MURMURHASH3_X86_128,
@@ -23926,7 +24399,7 @@ function decodeMultiscaleManifestChunk(chunk, response) {
 async function decodeMultiscaleFragmentChunk(chunk, response) {
     const { lod } = chunk;
     const source = chunk.manifestChunk.source;
-    const m = await __webpack_require__.e(/*! import() | draco */ "draco").then(__webpack_require__.bind(null, /*! neuroglancer/mesh/draco */ "../../../../../../neuroglancer/src/neuroglancer/mesh/draco/index.ts"));
+    const m = await __webpack_require__.e(/*! import() | draco */ "draco").then(__webpack_require__.bind(null, /*! neuroglancer/mesh/draco */ "./src/neuroglancer/mesh/draco/index.ts"));
     const rawMesh = await m.decodeDracoPartitioned(new Uint8Array(response), source.parameters.metadata.vertexQuantizationBits, lod !== 0);
     Object(neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_5__["assignMultiscaleMeshFragmentData"])(chunk, rawMesh, source.format.vertexPositionFormat);
 }
@@ -24018,10 +24491,10 @@ PrecomputedSkeletonSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/precomputed/base.ts":
-/*!*******************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/precomputed/base.ts ***!
-  \*******************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/precomputed/base.ts":
+/*!*********************************************************!*\
+  !*** ./src/neuroglancer/datasource/precomputed/base.ts ***!
+  \*********************************************************/
 /*! exports provided: VolumeChunkEncoding, VolumeChunkSourceParameters, MeshSourceParameters, DataEncoding, ShardingHashFunction, MultiscaleMeshMetadata, MultiscaleMeshSourceParameters, SkeletonSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24084,10 +24557,10 @@ SkeletonSourceParameters.RPC_ID = 'precomputed/SkeletonSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/render/backend.ts":
-/*!*****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/render/backend.ts ***!
-  \*****************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/render/backend.ts":
+/*!*******************************************************!*\
+  !*** ./src/neuroglancer/datasource/render/backend.ts ***!
+  \*******************************************************/
 /*! exports provided: TileChunkSource, PointMatchSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24095,18 +24568,18 @@ SkeletonSourceParameters.RPC_ID = 'precomputed/SkeletonSource';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TileChunkSource", function() { return TileChunkSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PointMatchSource", function() { return PointMatchSource; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_datasource_render_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/render/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/render/base.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
-/* harmony import */ var neuroglancer_sliceview_vector_graphics_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/vector_graphics/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/vector_graphics/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts");
-/* harmony import */ var neuroglancer_util_float32array_builder__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/float32array_builder */ "../../../../../../neuroglancer/src/neuroglancer/util/float32array_builder.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_datasource_render_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/datasource/render/base */ "./src/neuroglancer/datasource/render/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_jpeg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/jpeg */ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_raw__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/raw */ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts");
+/* harmony import */ var neuroglancer_sliceview_vector_graphics_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/vector_graphics/backend */ "./src/neuroglancer/sliceview/vector_graphics/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/volume/backend */ "./src/neuroglancer/sliceview/volume/backend.ts");
+/* harmony import */ var neuroglancer_util_float32array_builder__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/util/float32array_builder */ "./src/neuroglancer/util/float32array_builder.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -24292,10 +24765,10 @@ PointMatchSource = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/render/base.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/render/base.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/render/base.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/datasource/render/base.ts ***!
+  \****************************************************/
 /*! exports provided: RenderBaseSourceParameters, RenderSourceParameters, TileChunkSourceParameters, PointMatchChunkSourceParameters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24334,20 +24807,20 @@ PointMatchChunkSourceParameters.RPC_ID = 'render/PointMatchSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/datasource/vtk/backend.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/datasource/vtk/backend.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/datasource/vtk/backend.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/datasource/vtk/backend.ts ***!
+  \****************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_async_computation_vtk_mesh_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/vtk_mesh_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/vtk_mesh_request.ts");
-/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/generic_file_source.ts");
-/* harmony import */ var neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/single_mesh/backend.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_async_computation_vtk_mesh_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/vtk_mesh_request */ "./src/neuroglancer/async_computation/vtk_mesh_request.ts");
+/* harmony import */ var neuroglancer_chunk_manager_generic_file_source__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/generic_file_source */ "./src/neuroglancer/chunk_manager/generic_file_source.ts");
+/* harmony import */ var neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/backend */ "./src/neuroglancer/single_mesh/backend.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -24404,10 +24877,10 @@ Object(neuroglancer_single_mesh_backend__WEBPACK_IMPORTED_MODULE_3__["registerSi
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_function.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/gpu_hash/hash_function.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/gpu_hash/hash_function.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/gpu_hash/hash_function.ts ***!
+  \****************************************************/
 /*! exports provided: hashCombine */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24447,10 +24920,10 @@ function hashCombine(state, value) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_table.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/gpu_hash/hash_table.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/gpu_hash/hash_table.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/gpu_hash/hash_table.ts ***!
+  \*************************************************/
 /*! exports provided: NUM_ALTERNATIVES, HashTableBase, HashSetUint64, HashMapUint64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24460,9 +24933,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HashTableBase", function() { return HashTableBase; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HashSetUint64", function() { return HashSetUint64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HashMapUint64", function() { return HashMapUint64; });
-/* harmony import */ var neuroglancer_gpu_hash_hash_function__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_function */ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_function.ts");
-/* harmony import */ var neuroglancer_util_random__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/random */ "../../../../../../neuroglancer/src/neuroglancer/util/random.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_gpu_hash_hash_function__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_function */ "./src/neuroglancer/gpu_hash/hash_function.ts");
+/* harmony import */ var neuroglancer_util_random__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/random */ "./src/neuroglancer/util/random.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -24905,10 +25378,10 @@ HashMapUint64.prototype.entryStride = 4;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts":
-/*!****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/backend.ts ***!
-  \****************************************************************************************************/
+/***/ "./src/neuroglancer/mesh/backend.ts":
+/*!******************************************!*\
+  !*** ./src/neuroglancer/mesh/backend.ts ***!
+  \******************************************/
 /*! exports provided: ManifestChunk, FragmentChunk, decodeJsonManifestChunk, computeVertexNormals, encodeNormals32fx3ToOctahedron8x2, decodeVertexPositionsAndIndices, decodeTriangleVertexPositionsAndIndices, decodeTriangleVertexPositionsAndIndicesDraco, MeshSource, FragmentSource, MeshLayer, MultiscaleManifestChunk, MultiscaleFragmentChunk, MultiscaleMeshSource, MultiscaleFragmentSource, MultiscaleMeshLayer, assignMeshFragmentData, assignMultiscaleMeshFragmentData, generateHigherOctreeLevel, computeOctreeChildOffsets */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24934,22 +25407,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assignMultiscaleMeshFragmentData", function() { return assignMultiscaleMeshFragmentData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateHigherOctreeLevel", function() { return generateHigherOctreeLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeOctreeChildOffsets", function() { return computeOctreeChildOffsets; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_mesh_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/base */ "../../../../../../neuroglancer/src/neuroglancer/mesh/base.ts");
-/* harmony import */ var neuroglancer_mesh_multiscale__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/mesh/multiscale */ "../../../../../../neuroglancer/src/neuroglancer/mesh/multiscale.ts");
-/* harmony import */ var neuroglancer_mesh_triangle_strips__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/mesh/triangle_strips */ "../../../../../../neuroglancer/src/neuroglancer/mesh/triangle_strips.ts");
-/* harmony import */ var neuroglancer_segmentation_display_state_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/backend */ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/backend.ts");
-/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/base.ts");
-/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/trackable_value */ "../../../../../../neuroglancer/src/neuroglancer/trackable_value.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/util/zorder */ "../../../../../../neuroglancer/src/neuroglancer/util/zorder.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
-/* harmony import */ var neuroglancer_datasource_graphene_base__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/datasource/graphene/base */ "../../../../../../neuroglancer/src/neuroglancer/datasource/graphene/base.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_mesh_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/base */ "./src/neuroglancer/mesh/base.ts");
+/* harmony import */ var neuroglancer_mesh_multiscale__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/mesh/multiscale */ "./src/neuroglancer/mesh/multiscale.ts");
+/* harmony import */ var neuroglancer_mesh_triangle_strips__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/mesh/triangle_strips */ "./src/neuroglancer/mesh/triangle_strips.ts");
+/* harmony import */ var neuroglancer_segmentation_display_state_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/backend */ "./src/neuroglancer/segmentation_display_state/backend.ts");
+/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "./src/neuroglancer/segmentation_display_state/base.ts");
+/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/trackable_value */ "./src/neuroglancer/trackable_value.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! neuroglancer/util/zorder */ "./src/neuroglancer/util/zorder.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_datasource_graphene_base__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! neuroglancer/datasource/graphene/base */ "./src/neuroglancer/datasource/graphene/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -25677,10 +26150,10 @@ function computeOctreeChildOffsets(octree, childStart, childEnd, parentEnd) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/mesh/base.ts":
-/*!*************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/base.ts ***!
-  \*************************************************************************************************/
+/***/ "./src/neuroglancer/mesh/base.ts":
+/*!***************************************!*\
+  !*** ./src/neuroglancer/mesh/base.ts ***!
+  \***************************************/
 /*! exports provided: MESH_LAYER_RPC_ID, MULTISCALE_MESH_LAYER_RPC_ID, FRAGMENT_SOURCE_RPC_ID, MULTISCALE_FRAGMENT_SOURCE_RPC_ID, VertexPositionFormat */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -25720,10 +26193,10 @@ var VertexPositionFormat;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/mesh/multiscale.ts":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/multiscale.ts ***!
-  \*******************************************************************************************************/
+/***/ "./src/neuroglancer/mesh/multiscale.ts":
+/*!*********************************************!*\
+  !*** ./src/neuroglancer/mesh/multiscale.ts ***!
+  \*********************************************/
 /*! exports provided: getDesiredMultiscaleMeshChunks, getMultiscaleChunksToDraw, validateOctree, getMultiscaleFragmentKey */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -25733,8 +26206,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMultiscaleChunksToDraw", function() { return getMultiscaleChunksToDraw; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateOctree", function() { return validateOctree; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMultiscaleFragmentKey", function() { return getMultiscaleFragmentKey; });
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/zorder */ "../../../../../../neuroglancer/src/neuroglancer/util/zorder.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_zorder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/zorder */ "./src/neuroglancer/util/zorder.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -25914,10 +26387,10 @@ function getMultiscaleFragmentKey(objectKey, lod, chunkIndex) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/mesh/triangle_strips.ts":
-/*!************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/mesh/triangle_strips.ts ***!
-  \************************************************************************************************************/
+/***/ "./src/neuroglancer/mesh/triangle_strips.ts":
+/*!**************************************************!*\
+  !*** ./src/neuroglancer/mesh/triangle_strips.ts ***!
+  \**************************************************/
 /*! exports provided: getNextEdge, getBaseIndex, getEdgeIndex, vertexAIndex, vertexBIndex, vertexCIndex, getEdgeMapSize, computeTriangleStrips */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -25931,7 +26404,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "vertexCIndex", function() { return vertexCIndex; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEdgeMapSize", function() { return getEdgeMapSize; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeTriangleStrips", function() { return computeTriangleStrips; });
-/* harmony import */ var neuroglancer_gpu_hash_hash_function__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_function */ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_function.ts");
+/* harmony import */ var neuroglancer_gpu_hash_hash_function__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_function */ "./src/neuroglancer/gpu_hash/hash_function.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -26212,10 +26685,10 @@ function computeTriangleStrips(indices, subChunkOffsets) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/perspective_view/backend.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/perspective_view/backend.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/perspective_view/backend.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/perspective_view/backend.ts ***!
+  \******************************************************/
 /*! exports provided: PerspectiveViewState, PerspectiveViewRenderLayer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -26223,10 +26696,10 @@ function computeTriangleStrips(indices, subChunkOffsets) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PerspectiveViewState", function() { return PerspectiveViewState; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PerspectiveViewRenderLayer", function() { return PerspectiveViewRenderLayer; });
-/* harmony import */ var neuroglancer_perspective_view_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/perspective_view/base */ "../../../../../../neuroglancer/src/neuroglancer/perspective_view/base.ts");
-/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/trackable_value */ "../../../../../../neuroglancer/src/neuroglancer/trackable_value.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_perspective_view_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/perspective_view/base */ "./src/neuroglancer/perspective_view/base.ts");
+/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/trackable_value */ "./src/neuroglancer/trackable_value.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2018 Google Inc.
@@ -26299,10 +26772,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_3__["registerRPC"])(neur
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/perspective_view/base.ts":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/perspective_view/base.ts ***!
-  \*************************************************************************************************************/
+/***/ "./src/neuroglancer/perspective_view/base.ts":
+/*!***************************************************!*\
+  !*** ./src/neuroglancer/perspective_view/base.ts ***!
+  \***************************************************/
 /*! exports provided: PERSPECTIVE_VIEW_RPC_ID, PERSPECTIVE_VIEW_ADD_LAYER_RPC_ID, PERSPECTIVE_VIEW_REMOVE_LAYER_RPC_ID, PERSPECTIVE_VIEW_UPDATE_VIEWPORT_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -26335,22 +26808,22 @@ const PERSPECTIVE_VIEW_UPDATE_VIEWPORT_RPC_ID = 'perspective_view/updateViewport
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/backend.ts":
-/*!**************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/segmentation_display_state/backend.ts ***!
-  \**************************************************************************************************************************/
+/***/ "./src/neuroglancer/segmentation_display_state/backend.ts":
+/*!****************************************************************!*\
+  !*** ./src/neuroglancer/segmentation_display_state/backend.ts ***!
+  \****************************************************************/
 /*! exports provided: SegmentationLayerSharedObjectCounterpart */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SegmentationLayerSharedObjectCounterpart", function() { return SegmentationLayerSharedObjectCounterpart; });
-/* harmony import */ var neuroglancer_shared_disjoint_sets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/shared_disjoint_sets */ "../../../../../../neuroglancer/src/neuroglancer/shared_disjoint_sets.ts");
-/* harmony import */ var neuroglancer_uint64_set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/uint64_set */ "../../../../../../neuroglancer/src/neuroglancer/uint64_set.ts");
-/* harmony import */ var neuroglancer_uint64_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/uint64_map */ "../../../../../../neuroglancer/src/neuroglancer/uint64_map.ts");
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_shared_disjoint_sets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/shared_disjoint_sets */ "./src/neuroglancer/shared_disjoint_sets.ts");
+/* harmony import */ var neuroglancer_uint64_set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/uint64_set */ "./src/neuroglancer/uint64_set.ts");
+/* harmony import */ var neuroglancer_uint64_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/uint64_map */ "./src/neuroglancer/uint64_map.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -26399,10 +26872,10 @@ class SegmentationLayerSharedObjectCounterpart extends Base {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/base.ts":
-/*!***********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/segmentation_display_state/base.ts ***!
-  \***********************************************************************************************************************/
+/***/ "./src/neuroglancer/segmentation_display_state/base.ts":
+/*!*************************************************************!*\
+  !*** ./src/neuroglancer/segmentation_display_state/base.ts ***!
+  \*************************************************************/
 /*! exports provided: getObjectKey, forEachRootSegment, forEachVisibleSegment3D */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -26450,21 +26923,21 @@ function forEachVisibleSegment3D(state, callback) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/shared_disjoint_sets.ts":
-/*!************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/shared_disjoint_sets.ts ***!
-  \************************************************************************************************************/
+/***/ "./src/neuroglancer/shared_disjoint_sets.ts":
+/*!**************************************************!*\
+  !*** ./src/neuroglancer/shared_disjoint_sets.ts ***!
+  \**************************************************/
 /*! exports provided: SharedDisjointUint64Sets */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedDisjointUint64Sets", function() { return SharedDisjointUint64Sets; });
-/* harmony import */ var neuroglancer_util_disjoint_sets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/disjoint_sets */ "../../../../../../neuroglancer/src/neuroglancer/util/disjoint_sets.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_util_disjoint_sets__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/disjoint_sets */ "./src/neuroglancer/util/disjoint_sets.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -26613,18 +27086,18 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_4__["registerRPC"])(DELE
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/shared_watchable_value.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/shared_watchable_value.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/shared_watchable_value.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/shared_watchable_value.ts ***!
+  \****************************************************/
 /*! exports provided: SharedWatchableValue */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedWatchableValue", function() { return SharedWatchableValue; });
-/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/trackable_value */ "../../../../../../neuroglancer/src/neuroglancer/trackable_value.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_trackable_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/trackable_value */ "./src/neuroglancer/trackable_value.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -26717,10 +27190,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_1__["registerRPC"])(CHAN
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/single_mesh/backend.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/single_mesh/backend.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/single_mesh/backend.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/single_mesh/backend.ts ***!
+  \*************************************************/
 /*! exports provided: SingleMeshChunk, registerSingleMeshFactory, registerSingleMeshVertexAttributesFactory, getMesh, getMeshVertexAttributes, getMinMax, getCombinedMesh, SingleMeshSource, SingleMeshLayer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -26735,13 +27208,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCombinedMesh", function() { return getCombinedMesh; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SingleMeshSource", function() { return SingleMeshSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SingleMeshLayer", function() { return SingleMeshLayer; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_single_mesh_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/base */ "../../../../../../neuroglancer/src/neuroglancer/single_mesh/base.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_single_mesh_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/single_mesh/base */ "./src/neuroglancer/single_mesh/base.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -26966,10 +27439,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__["registerPromiseRPC"
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/single_mesh/base.ts":
-/*!********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/single_mesh/base.ts ***!
-  \********************************************************************************************************/
+/***/ "./src/neuroglancer/single_mesh/base.ts":
+/*!**********************************************!*\
+  !*** ./src/neuroglancer/single_mesh/base.ts ***!
+  \**********************************************/
 /*! exports provided: SINGLE_MESH_LAYER_RPC_ID, GET_SINGLE_MESH_INFO_RPC_ID, SINGLE_MESH_CHUNK_KEY, SingleMeshSourceParameters, SingleMeshSourceParametersWithInfo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27007,10 +27480,10 @@ SingleMeshSourceParametersWithInfo.RPC_ID = 'single_mesh/SingleMeshSource';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts":
-/*!********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/skeleton/backend.ts ***!
-  \********************************************************************************************************/
+/***/ "./src/neuroglancer/skeleton/backend.ts":
+/*!**********************************************!*\
+  !*** ./src/neuroglancer/skeleton/backend.ts ***!
+  \**********************************************/
 /*! exports provided: SkeletonChunk, SkeletonSource, SkeletonLayer, decodeSkeletonVertexPositionsAndIndices */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27020,14 +27493,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SkeletonSource", function() { return SkeletonSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SkeletonLayer", function() { return SkeletonLayer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeSkeletonVertexPositionsAndIndices", function() { return decodeSkeletonVertexPositionsAndIndices; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "../../../../../../neuroglancer/src/neuroglancer/mesh/backend.ts");
-/* harmony import */ var neuroglancer_segmentation_display_state_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/backend */ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/backend.ts");
-/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "../../../../../../neuroglancer/src/neuroglancer/segmentation_display_state/base.ts");
-/* harmony import */ var neuroglancer_skeleton_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/skeleton/base */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/base.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_mesh_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/mesh/backend */ "./src/neuroglancer/mesh/backend.ts");
+/* harmony import */ var neuroglancer_segmentation_display_state_backend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/backend */ "./src/neuroglancer/segmentation_display_state/backend.ts");
+/* harmony import */ var neuroglancer_segmentation_display_state_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/segmentation_display_state/base */ "./src/neuroglancer/segmentation_display_state/base.ts");
+/* harmony import */ var neuroglancer_skeleton_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/skeleton/base */ "./src/neuroglancer/skeleton/base.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27175,10 +27648,10 @@ function decodeSkeletonVertexPositionsAndIndices(chunk, data, endianness, vertex
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/skeleton/base.ts":
-/*!*****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/skeleton/base.ts ***!
-  \*****************************************************************************************************/
+/***/ "./src/neuroglancer/skeleton/base.ts":
+/*!*******************************************!*\
+  !*** ./src/neuroglancer/skeleton/base.ts ***!
+  \*******************************************/
 /*! exports provided: SKELETON_LAYER_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27205,19 +27678,19 @@ const SKELETON_LAYER_RPC_ID = 'skeleton/SkeletonLayer';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/skeleton/decode_precomputed_skeleton.ts":
-/*!****************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/skeleton/decode_precomputed_skeleton.ts ***!
-  \****************************************************************************************************************************/
+/***/ "./src/neuroglancer/skeleton/decode_precomputed_skeleton.ts":
+/*!******************************************************************!*\
+  !*** ./src/neuroglancer/skeleton/decode_precomputed_skeleton.ts ***!
+  \******************************************************************/
 /*! exports provided: decodeSkeletonChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeSkeletonChunk", function() { return decodeSkeletonChunk; });
-/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "../../../../../../neuroglancer/src/neuroglancer/skeleton/backend.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/skeleton/backend */ "./src/neuroglancer/skeleton/backend.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27268,10 +27741,10 @@ function decodeSkeletonChunk(chunk, response, vertexAttributes) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/skeleton/decode_swc_skeleton.ts":
-/*!********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/skeleton/decode_swc_skeleton.ts ***!
-  \********************************************************************************************************************/
+/***/ "./src/neuroglancer/skeleton/decode_swc_skeleton.ts":
+/*!**********************************************************!*\
+  !*** ./src/neuroglancer/skeleton/decode_swc_skeleton.ts ***!
+  \**********************************************************/
 /*! exports provided: decodeSwcSkeletonChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27338,10 +27811,10 @@ class PointObj {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend.ts ***!
-  \*********************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend.ts":
+/*!***********************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend.ts ***!
+  \***********************************************/
 /*! exports provided: SliceView, SliceViewChunk, SliceViewChunkSource, RenderLayer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27351,13 +27824,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SliceViewChunk", function() { return SliceViewChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SliceViewChunkSource", function() { return SliceViewChunkSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RenderLayer", function() { return RenderLayer; });
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_coordinate_transform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/coordinate_transform */ "../../../../../../neuroglancer/src/neuroglancer/coordinate_transform.ts");
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_coordinate_transform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/coordinate_transform */ "./src/neuroglancer/coordinate_transform.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_visibility_priority_backend__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/visibility_priority/backend */ "./src/neuroglancer/visibility_priority/backend.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27684,22 +28157,22 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_6__["registerRPC"])(neur
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts":
-/*!********************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts ***!
-  \********************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts":
+/*!**********************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend_chunk_decoders/bossNpz.ts ***!
+  \**********************************************************************/
 /*! exports provided: decodeBossNpzChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeBossNpzChunk", function() { return decodeBossNpzChunk; });
-/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_gzip_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_npy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/npy */ "../../../../../../neuroglancer/src/neuroglancer/util/npy.ts");
+/* harmony import */ var neuroglancer_async_computation_decode_gzip_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/decode_gzip_request */ "./src/neuroglancer/async_computation/decode_gzip_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "./src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_npy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/util/npy */ "./src/neuroglancer/util/npy.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27748,10 +28221,10 @@ async function decodeBossNpzChunk(chunk, cancellationToken, response) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts":
-/*!************************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts ***!
-  \************************************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts":
+/*!**************************************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend_chunk_decoders/compressed_segmentation.ts ***!
+  \**************************************************************************************/
 /*! exports provided: decodeCompressedSegmentationChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27781,19 +28254,19 @@ async function decodeCompressedSegmentationChunk(chunk, cancellationToken, respo
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts":
-/*!*****************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts ***!
-  \*****************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts":
+/*!*******************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend_chunk_decoders/jpeg.ts ***!
+  \*******************************************************************/
 /*! exports provided: decodeJpegChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeJpegChunk", function() { return decodeJpegChunk; });
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
-/* harmony import */ var neuroglancer_async_computation_decode_jpeg_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/decode_jpeg_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/decode_jpeg_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "./src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
+/* harmony import */ var neuroglancer_async_computation_decode_jpeg_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/decode_jpeg_request */ "./src/neuroglancer/async_computation/decode_jpeg_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27821,19 +28294,19 @@ async function decodeJpegChunk(chunk, cancellationToken, response) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts":
-/*!************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts ***!
-  \************************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts":
+/*!**************************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts ***!
+  \**************************************************************************/
 /*! exports provided: postProcessRawData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "postProcessRawData", function() { return postProcessRawData; });
-/* harmony import */ var neuroglancer_async_computation_encode_compressed_segmentation_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/encode_compressed_segmentation_request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts");
-/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "../../../../../../neuroglancer/src/neuroglancer/async_computation/request.ts");
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_async_computation_encode_compressed_segmentation_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/async_computation/encode_compressed_segmentation_request */ "./src/neuroglancer/async_computation/encode_compressed_segmentation_request.ts");
+/* harmony import */ var neuroglancer_async_computation_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/async_computation/request */ "./src/neuroglancer/async_computation/request.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27881,20 +28354,20 @@ async function postProcessRawData(chunk, cancellationToken, data) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts":
-/*!****************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts ***!
-  \****************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts":
+/*!******************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/backend_chunk_decoders/raw.ts ***!
+  \******************************************************************/
 /*! exports provided: decodeRawChunk */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeRawChunk", function() { return decodeRawChunk; });
-/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_sliceview_backend_chunk_decoders_postprocess__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend_chunk_decoders/postprocess */ "./src/neuroglancer/sliceview/backend_chunk_decoders/postprocess.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -27952,10 +28425,10 @@ async function decodeRawChunk(chunk, cancellationToken, response, endianness = n
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/base.ts ***!
-  \******************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/base.ts":
+/*!********************************************!*\
+  !*** ./src/neuroglancer/sliceview/base.ts ***!
+  \********************************************/
 /*! exports provided: DATA_TYPE_BYTES, DataType, getTransformedSources, SliceViewBase, DEFAULT_MAX_VOXELS_PER_CHUNK_LOG2, getNearIsotropicBlockSize, getTwoDimensionalBlockSize, getTwoDimensionalBlockSizes, ChunkLayoutPreference, getCombinedTransform, getChunkDataSizes, SliceViewChunkSpecification, SLICEVIEW_RPC_ID, SLICEVIEW_RENDERLAYER_RPC_ID, SLICEVIEW_ADD_VISIBLE_LAYER_RPC_ID, SLICEVIEW_REMOVE_VISIBLE_LAYER_RPC_ID, SLICEVIEW_UPDATE_PREFETCHING_RPC_ID, SLICEVIEW_UPDATE_VIEW_RPC_ID, SLICEVIEW_RENDERLAYER_UPDATE_TRANSFORM_RPC_ID, SLICEVIEW_RENDERLAYER_UPDATE_MIP_LEVEL_CONSTRAINTS_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27979,16 +28452,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SLICEVIEW_UPDATE_VIEW_RPC_ID", function() { return SLICEVIEW_UPDATE_VIEW_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SLICEVIEW_RENDERLAYER_UPDATE_TRANSFORM_RPC_ID", function() { return SLICEVIEW_RENDERLAYER_UPDATE_TRANSFORM_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SLICEVIEW_RENDERLAYER_UPDATE_MIP_LEVEL_CONSTRAINTS_RPC_ID", function() { return SLICEVIEW_RENDERLAYER_UPDATE_MIP_LEVEL_CONSTRAINTS_RPC_ID; });
-/* harmony import */ var neuroglancer_sliceview_chunk_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/chunk_layout */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunk_layout.ts");
-/* harmony import */ var neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/array */ "../../../../../../neuroglancer/src/neuroglancer/util/array.ts");
-/* harmony import */ var neuroglancer_util_compare__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/compare */ "../../../../../../neuroglancer/src/neuroglancer/util/compare.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_sliceview_chunk_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/chunk_layout */ "./src/neuroglancer/sliceview/chunk_layout.ts");
+/* harmony import */ var neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/array */ "./src/neuroglancer/util/array.ts");
+/* harmony import */ var neuroglancer_util_compare__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/compare */ "./src/neuroglancer/util/compare.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DATA_TYPE_BYTES", function() { return neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__["DATA_TYPE_BYTES"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataType", function() { return neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_3__["DataType"]; });
 
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -28768,17 +29241,17 @@ const SLICEVIEW_RENDERLAYER_UPDATE_MIP_LEVEL_CONSTRAINTS_RPC_ID = 'SliceView.upd
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunk_layout.ts":
-/*!**************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/chunk_layout.ts ***!
-  \**************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/chunk_layout.ts":
+/*!****************************************************!*\
+  !*** ./src/neuroglancer/sliceview/chunk_layout.ts ***!
+  \****************************************************/
 /*! exports provided: ChunkLayout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChunkLayout", function() { return ChunkLayout; });
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -28850,10 +29323,10 @@ ChunkLayout.cache = new Map();
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunked_graph/backend.ts":
-/*!***********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/chunked_graph/backend.ts ***!
-  \***********************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/chunked_graph/backend.ts":
+/*!*************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/chunked_graph/backend.ts ***!
+  \*************************************************************/
 /*! exports provided: ChunkedGraphChunk, decodeSupervoxelArray, ChunkedGraphChunkSource, ChunkedGraphLayer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28863,18 +29336,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeSupervoxelArray", function() { return decodeSupervoxelArray; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChunkedGraphChunkSource", function() { return ChunkedGraphChunkSource; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChunkedGraphLayer", function() { return ChunkedGraphLayer; });
-/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "../../../../../../neuroglancer/node_modules/lodash/debounce.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
 /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
-/* harmony import */ var neuroglancer_coordinate_transform__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/coordinate_transform */ "../../../../../../neuroglancer/src/neuroglancer/coordinate_transform.ts");
-/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_chunked_graph_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/chunked_graph/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunked_graph/base.ts");
-/* harmony import */ var neuroglancer_uint64_set__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/uint64_set */ "../../../../../../neuroglancer/src/neuroglancer/uint64_set.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_chunk_manager_backend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/backend */ "./src/neuroglancer/chunk_manager/backend.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_coordinate_transform__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! neuroglancer/coordinate_transform */ "./src/neuroglancer/coordinate_transform.ts");
+/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "./src/neuroglancer/sliceview/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_chunked_graph_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! neuroglancer/sliceview/chunked_graph/base */ "./src/neuroglancer/sliceview/chunked_graph/base.ts");
+/* harmony import */ var neuroglancer_uint64_set__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! neuroglancer/uint64_set */ "./src/neuroglancer/uint64_set.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2018 The Neuroglancer Authors
@@ -29133,10 +29606,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_10__["registerRPC"])(neu
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/chunked_graph/base.ts":
-/*!********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/chunked_graph/base.ts ***!
-  \********************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/chunked_graph/base.ts":
+/*!**********************************************************!*\
+  !*** ./src/neuroglancer/sliceview/chunked_graph/base.ts ***!
+  \**********************************************************/
 /*! exports provided: CHUNKED_GRAPH_LAYER_RPC_ID, CHUNKED_GRAPH_SOURCE_UPDATE_ROOT_SEGMENTS_RPC_ID, RENDER_RATIO_LIMIT, ChunkedGraphChunkSpecification */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29146,8 +29619,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CHUNKED_GRAPH_SOURCE_UPDATE_ROOT_SEGMENTS_RPC_ID", function() { return CHUNKED_GRAPH_SOURCE_UPDATE_ROOT_SEGMENTS_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RENDER_RATIO_LIMIT", function() { return RENDER_RATIO_LIMIT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChunkedGraphChunkSpecification", function() { return ChunkedGraphChunkSpecification; });
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2018 The Neuroglancer Authors
@@ -29211,10 +29684,10 @@ class ChunkedGraphChunkSpecification extends neuroglancer_sliceview_base__WEBPAC
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts":
-/*!***************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts ***!
-  \***************************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts":
+/*!*****************************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts ***!
+  \*****************************************************************************/
 /*! exports provided: decodeValueOffset */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29283,10 +29756,10 @@ function decodeValueOffset(data, baseOffset, chunkDataSize, blockSize, dataPosit
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts":
-/*!***************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts ***!
-  \***************************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts":
+/*!*****************************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/compressed_segmentation/decode_uint32.ts ***!
+  \*****************************************************************************/
 /*! exports provided: readSingleChannelValue, readValue, decodeChannel, decodeChannels */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29296,7 +29769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "readValue", function() { return readValue; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeChannel", function() { return decodeChannel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeChannels", function() { return decodeChannels; });
-/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_common */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts");
+/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_common */ "./src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts");
 // DO NOT EDIT.  Generated from
 // templates/neuroglancer/sliceview/compressed_segmentation/decode.template.ts.
 /**
@@ -29394,10 +29867,10 @@ function decodeChannels(out, data, baseOffset, chunkDataSize, blockSize) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts":
-/*!***************************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts ***!
-  \***************************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts":
+/*!*****************************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/compressed_segmentation/decode_uint64.ts ***!
+  \*****************************************************************************/
 /*! exports provided: readSingleChannelValue, readValue, decodeChannel, decodeChannels */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29407,7 +29880,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "readValue", function() { return readValue; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeChannel", function() { return decodeChannel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decodeChannels", function() { return decodeChannels; });
-/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_common */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts");
+/* harmony import */ var neuroglancer_sliceview_compressed_segmentation_decode_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/compressed_segmentation/decode_common */ "./src/neuroglancer/sliceview/compressed_segmentation/decode_common.ts");
 // DO NOT EDIT.  Generated from
 // templates/neuroglancer/sliceview/compressed_segmentation/decode.template.ts.
 /**
@@ -29508,10 +29981,10 @@ function decodeChannels(out, data, baseOffset, chunkDataSize, blockSize) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/vector_graphics/backend.ts":
-/*!*************************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/vector_graphics/backend.ts ***!
-  \*************************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/vector_graphics/backend.ts":
+/*!***************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/vector_graphics/backend.ts ***!
+  \***************************************************************/
 /*! exports provided: VectorGraphicsChunk, VectorGraphicsChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29519,8 +29992,8 @@ function decodeChannels(out, data, baseOffset, chunkDataSize, blockSize) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VectorGraphicsChunk", function() { return VectorGraphicsChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VectorGraphicsChunkSource", function() { return VectorGraphicsChunkSource; });
-/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_vector_graphics_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/sliceview/vector_graphics/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/vector_graphics/base.ts");
+/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "./src/neuroglancer/sliceview/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_vector_graphics_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/sliceview/vector_graphics/base */ "./src/neuroglancer/sliceview/vector_graphics/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -29592,10 +30065,10 @@ VectorGraphicsChunkSource.prototype.chunkConstructor = VectorGraphicsChunk;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/vector_graphics/base.ts":
-/*!**********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/vector_graphics/base.ts ***!
-  \**********************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/vector_graphics/base.ts":
+/*!************************************************************!*\
+  !*** ./src/neuroglancer/sliceview/vector_graphics/base.ts ***!
+  \************************************************************/
 /*! exports provided: VectorGraphicsType, VectorGraphicsChunkSpecification, VECTOR_GRAPHICS_RPC_ID, VECTOR_GRAPHICS_RENDERLAYER_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29605,7 +30078,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VectorGraphicsChunkSpecification", function() { return VectorGraphicsChunkSpecification; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VECTOR_GRAPHICS_RPC_ID", function() { return VECTOR_GRAPHICS_RPC_ID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VECTOR_GRAPHICS_RENDERLAYER_RPC_ID", function() { return VECTOR_GRAPHICS_RENDERLAYER_RPC_ID; });
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -29651,10 +30124,10 @@ const VECTOR_GRAPHICS_RENDERLAYER_RPC_ID = 'vectorgraphics/RenderLayer';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/backend.ts":
-/*!****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/volume/backend.ts ***!
-  \****************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/volume/backend.ts":
+/*!******************************************************!*\
+  !*** ./src/neuroglancer/sliceview/volume/backend.ts ***!
+  \******************************************************/
 /*! exports provided: VolumeChunk, VolumeChunkSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29662,9 +30135,9 @@ const VECTOR_GRAPHICS_RENDERLAYER_RPC_ID = 'vectorgraphics/RenderLayer';
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VolumeChunk", function() { return VolumeChunk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VolumeChunkSource", function() { return VolumeChunkSource; });
-/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts");
-/* harmony import */ var neuroglancer_sliceview_volume_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/sliceview/volume/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/base.ts");
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_sliceview_backend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/backend */ "./src/neuroglancer/sliceview/backend.ts");
+/* harmony import */ var neuroglancer_sliceview_volume_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/sliceview/volume/base */ "./src/neuroglancer/sliceview/volume/base.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -29770,10 +30243,10 @@ VolumeChunkSource.prototype.chunkConstructor = VolumeChunk;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/sliceview/volume/base.ts":
-/*!*************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/sliceview/volume/base.ts ***!
-  \*************************************************************************************************************/
+/***/ "./src/neuroglancer/sliceview/volume/base.ts":
+/*!***************************************************!*\
+  !*** ./src/neuroglancer/sliceview/volume/base.ts ***!
+  \***************************************************/
 /*! exports provided: DATA_TYPE_BYTES, DataType, VolumeType, DEFAULT_MAX_VOXELS_PER_CHUNK_LOG2, VolumeChunkSpecification, VOLUME_RPC_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29783,13 +30256,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_MAX_VOXELS_PER_CHUNK_LOG2", function() { return DEFAULT_MAX_VOXELS_PER_CHUNK_LOG2; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VolumeChunkSpecification", function() { return VolumeChunkSpecification; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VOLUME_RPC_ID", function() { return VOLUME_RPC_ID; });
-/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "../../../../../../neuroglancer/src/neuroglancer/sliceview/base.ts");
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_sliceview_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/sliceview/base */ "./src/neuroglancer/sliceview/base.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DATA_TYPE_BYTES", function() { return neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__["DATA_TYPE_BYTES"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataType", function() { return neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_1__["DataType"]; });
 
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -29892,10 +30365,10 @@ const VOLUME_RPC_ID = 'volume';
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/trackable_boolean.ts":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/trackable_boolean.ts ***!
-  \*********************************************************************************************************/
+/***/ "./src/neuroglancer/trackable_boolean.ts":
+/*!***********************************************!*\
+  !*** ./src/neuroglancer/trackable_boolean.ts ***!
+  \***********************************************/
 /*! exports provided: TrackableBoolean, TrackableBooleanCheckbox, ElementVisibilityFromTrackableBoolean */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29904,10 +30377,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrackableBoolean", function() { return TrackableBoolean; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrackableBooleanCheckbox", function() { return TrackableBooleanCheckbox; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElementVisibilityFromTrackableBoolean", function() { return ElementVisibilityFromTrackableBoolean; });
-/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "../../../../../../neuroglancer/node_modules/lodash/debounce.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
 /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -30025,10 +30498,10 @@ class ElementVisibilityFromTrackableBoolean extends neuroglancer_util_disposable
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/trackable_value.ts":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/trackable_value.ts ***!
-  \*******************************************************************************************************/
+/***/ "./src/neuroglancer/trackable_value.ts":
+/*!*********************************************!*\
+  !*** ./src/neuroglancer/trackable_value.ts ***!
+  \*********************************************/
 /*! exports provided: WatchableValue, TrackableValue, LockableValue, makeDerivedWatchableValue, ComputedWatchableValue, WatchableRefCounted, TrackableRefCounted, WatchableSet, registerNested */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30043,10 +30516,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrackableRefCounted", function() { return TrackableRefCounted; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WatchableSet", function() { return WatchableSet; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerNested", function() { return registerNested; });
-/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "../../../../../../neuroglancer/node_modules/lodash/debounce.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
 /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -30271,19 +30744,19 @@ function registerNested(baseState, f) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/uint64_map.ts":
-/*!**************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/uint64_map.ts ***!
-  \**************************************************************************************************/
+/***/ "./src/neuroglancer/uint64_map.ts":
+/*!****************************************!*\
+  !*** ./src/neuroglancer/uint64_map.ts ***!
+  \****************************************/
 /*! exports provided: Uint64Map */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Uint64Map", function() { return Uint64Map; });
-/* harmony import */ var neuroglancer_gpu_hash_hash_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_table */ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_table.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_gpu_hash_hash_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_table */ "./src/neuroglancer/gpu_hash/hash_table.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * This work is a derivative of the Google Neuroglancer project,
@@ -30408,19 +30881,19 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__["registerRPC"])('Uin
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/uint64_set.ts":
-/*!**************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/uint64_set.ts ***!
-  \**************************************************************************************************/
+/***/ "./src/neuroglancer/uint64_set.ts":
+/*!****************************************!*\
+  !*** ./src/neuroglancer/uint64_set.ts ***!
+  \****************************************/
 /*! exports provided: Uint64Set */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Uint64Set", function() { return Uint64Set; });
-/* harmony import */ var neuroglancer_gpu_hash_hash_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_table */ "../../../../../../neuroglancer/src/neuroglancer/gpu_hash/hash_table.ts");
-/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/signal */ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts");
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_gpu_hash_hash_table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/gpu_hash/hash_table */ "./src/neuroglancer/gpu_hash/hash_table.ts");
+/* harmony import */ var neuroglancer_util_signal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/signal */ "./src/neuroglancer/util/signal.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -30567,10 +31040,10 @@ Object(neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_2__["registerRPC"])('Uin
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/array.ts":
-/*!**************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/array.ts ***!
-  \**************************************************************************************************/
+/***/ "./src/neuroglancer/util/array.ts":
+/*!****************************************!*\
+  !*** ./src/neuroglancer/util/array.ts ***!
+  \****************************************/
 /*! exports provided: partitionArray, maybePadArray, getFortranOrderStrides, transposeArray2d, tile2dArray, binarySearch, binarySearchLowerBound */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30720,17 +31193,17 @@ function binarySearchLowerBound(begin, end, predicate) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/byte_range_http_requests.ts":
-/*!*********************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/byte_range_http_requests.ts ***!
-  \*********************************************************************************************************************/
+/***/ "./src/neuroglancer/util/byte_range_http_requests.ts":
+/*!***********************************************************!*\
+  !*** ./src/neuroglancer/util/byte_range_http_requests.ts ***!
+  \***********************************************************/
 /*! exports provided: fetchHttpByteRange */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchHttpByteRange", function() { return fetchHttpByteRange; });
-/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/http_request */ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts");
+/* harmony import */ var neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/http_request */ "./src/neuroglancer/util/http_request.ts");
 /**
  * @license
  * Copyright 2019 Google Inc.
@@ -30764,10 +31237,10 @@ function fetchHttpByteRange(url, startOffset, endOffset, cancellationToken) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/cancellation.ts ***!
-  \*********************************************************************************************************/
+/***/ "./src/neuroglancer/util/cancellation.ts":
+/*!***********************************************!*\
+  !*** ./src/neuroglancer/util/cancellation.ts ***!
+  \***********************************************/
 /*! exports provided: CANCELED, throwIfCanceled, uncancelableToken, CancellationTokenSource, MultipleConsumerCancellationTokenSource, makeCancelablePromise */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30930,10 +31403,10 @@ function makeCancelablePromise(cancellationToken, executor) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/compare.ts":
-/*!****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/compare.ts ***!
-  \****************************************************************************************************/
+/***/ "./src/neuroglancer/util/compare.ts":
+/*!******************************************!*\
+  !*** ./src/neuroglancer/util/compare.ts ***!
+  \******************************************/
 /*! exports provided: approxEqual */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30965,10 +31438,10 @@ function approxEqual(a, b) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/data_type.ts ***!
-  \******************************************************************************************************/
+/***/ "./src/neuroglancer/util/data_type.ts":
+/*!********************************************!*\
+  !*** ./src/neuroglancer/util/data_type.ts ***!
+  \********************************************/
 /*! exports provided: DataType, DATA_TYPE_BYTES */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31012,17 +31485,17 @@ DATA_TYPE_BYTES[DataType.FLOAT32] = 4;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/disjoint_sets.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/disjoint_sets.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/util/disjoint_sets.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/util/disjoint_sets.ts ***!
+  \************************************************/
 /*! exports provided: DisjointUint64Sets */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DisjointUint64Sets", function() { return DisjointUint64Sets; });
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -31224,10 +31697,10 @@ class DisjointUint64Sets {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts":
-/*!*******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/disposable.ts ***!
-  \*******************************************************************************************************/
+/***/ "./src/neuroglancer/util/disposable.ts":
+/*!*********************************************!*\
+  !*** ./src/neuroglancer/util/disposable.ts ***!
+  \*********************************************/
 /*! exports provided: invokeDisposer, invokeDisposers, registerEventListener, RefCounted, RefCountedValue */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31334,10 +31807,10 @@ class RefCountedValue extends RefCounted {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/endian.ts ***!
-  \***************************************************************************************************/
+/***/ "./src/neuroglancer/util/endian.ts":
+/*!*****************************************!*\
+  !*** ./src/neuroglancer/util/endian.ts ***!
+  \*****************************************/
 /*! exports provided: Endianness, determineEndianness, ENDIANNESS, swapEndian16, swapEndian32, convertEndian16, nativeToLittle16, convertEndian32, nativeToLittle32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31455,10 +31928,10 @@ function nativeToLittle32(array) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/float32array_builder.ts":
-/*!*****************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/float32array_builder.ts ***!
-  \*****************************************************************************************************************/
+/***/ "./src/neuroglancer/util/float32array_builder.ts":
+/*!*******************************************************!*\
+  !*** ./src/neuroglancer/util/float32array_builder.ts ***!
+  \*******************************************************/
 /*! exports provided: Float32ArrayBuilder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31519,10 +31992,10 @@ class Float32ArrayBuilder {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts":
-/*!*************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/geom.ts ***!
-  \*************************************************************************************************/
+/***/ "./src/neuroglancer/util/geom.ts":
+/*!***************************************!*\
+  !*** ./src/neuroglancer/util/geom.ts ***!
+  \***************************************/
 /*! exports provided: mat2, mat3, mat4, quat, vec2, vec3, vec4, identityMat4, AXES_NAMES, BoundingBox, kAxes, kZeroVec, kOneVec, kInfinityVec, kIdentityQuat, prod3, prod4, vec3Key, rectifyVec3IfAxisAligned, rectifyTransformMatrixIfAxisAligned, quatRotateX180, quatRotateY180, quatRotateZ180, transformVectorByMat4, effectiveScalingFactorFromMat4, translationRotationScaleZReflectionToMat4, findClosestParameterizedLinePosition, projectPointToLineSegment, mat3FromMat4, getFrustrumPlanes, isAABBVisible */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31552,7 +32025,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mat3FromMat4", function() { return mat3FromMat4; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFrustrumPlanes", function() { return getFrustrumPlanes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAABBVisible", function() { return isAABBVisible; });
-/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! gl-matrix */ "../../../../../../neuroglancer/node_modules/gl-matrix/esm/index.js");
+/* harmony import */ var gl_matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! gl-matrix */ "./node_modules/gl-matrix/esm/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mat2", function() { return gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat2"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mat3", function() { return gl_matrix__WEBPACK_IMPORTED_MODULE_0__["mat3"]; });
@@ -31801,10 +32274,10 @@ function isAABBVisible(xLower, yLower, zLower, xUpper, yUpper, zUpper, clippingP
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/hash.ts":
-/*!*************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/hash.ts ***!
-  \*************************************************************************************************/
+/***/ "./src/neuroglancer/util/hash.ts":
+/*!***************************************!*\
+  !*** ./src/neuroglancer/util/hash.ts ***!
+  \***************************************/
 /*! exports provided: simpleStringHash, murmurHash3_x86_32Mix, murmurHash3_x86_32Finalize, murmurHash3_x86_32Hash64Bits, murmurHash3_x86_128Hash64Bits */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31934,10 +32407,10 @@ function murmurHash3_x86_128Hash64Bits(out, seed, low, high) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/http_request.ts":
-/*!*********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/http_request.ts ***!
-  \*********************************************************************************************************/
+/***/ "./src/neuroglancer/util/http_request.ts":
+/*!***********************************************!*\
+  !*** ./src/neuroglancer/util/http_request.ts ***!
+  \***********************************************/
 /*! exports provided: HttpError, fetchOk, responseArrayBuffer, responseJson, cancellableFetchOk, getByteRangeHeader, parseSpecialUrl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31950,8 +32423,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cancellableFetchOk", function() { return cancellableFetchOk; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getByteRangeHeader", function() { return getByteRangeHeader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseSpecialUrl", function() { return parseSpecialUrl; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/uint64 */ "./src/neuroglancer/util/uint64.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -32091,10 +32564,10 @@ function parseSpecialUrl(url) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts":
-/*!*************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/json.ts ***!
-  \*************************************************************************************************/
+/***/ "./src/neuroglancer/util/json.ts":
+/*!***************************************!*\
+  !*** ./src/neuroglancer/util/json.ts ***!
+  \***************************************/
 /*! exports provided: verifyFloat, verifyFiniteFloat, verifyFinitePositiveFloat, parseXYZ, parseFiniteVec, parseIntVec, stableStringify, urlSafeStringifyString, urlSafeStringify, normalizeStringLiteral, urlSafeToJSON, jsonToUrlSafe, urlSafeParse, pythonLiteralToJSON, pythonLiteralParse, parseArray, parseFixedLengthArray, verifyObject, verifyArray, verifyInt, verifyPositiveInt, verifyNonnegativeInt, verifyMapKey, verifyString, verifyOptionalString, verifyOptionalInt, verifyOptionalNonnegativeInt, verifyOptionalPositiveInt, verifyOptionalBoolean, valueOr, verifyObjectProperty, verifyObjectAsMap, verifyFloat01, parseQueryStringParameters, verifyEnumString, verify3dVec, verify3dScale, verify3dDimensions, verifyStringArray, verifyBoolean */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32140,7 +32613,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verify3dDimensions", function() { return verify3dDimensions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyStringArray", function() { return verifyStringArray; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyBoolean", function() { return verifyBoolean; });
-/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "../../../../../../neuroglancer/src/neuroglancer/util/geom.ts");
+/* harmony import */ var neuroglancer_util_geom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/geom */ "./src/neuroglancer/util/geom.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -32675,10 +33148,10 @@ function verifyBoolean(x) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/linked_list.0.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/linked_list.0.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/util/linked_list.0.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/util/linked_list.0.ts ***!
+  \************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32756,10 +33229,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/linked_list.1.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/linked_list.1.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/util/linked_list.1.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/util/linked_list.1.ts ***!
+  \************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32837,10 +33310,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/memoize.ts":
-/*!****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/memoize.ts ***!
-  \****************************************************************************************************/
+/***/ "./src/neuroglancer/util/memoize.ts":
+/*!******************************************!*\
+  !*** ./src/neuroglancer/util/memoize.ts ***!
+  \******************************************/
 /*! exports provided: Memoize, StringMemoize */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32848,8 +33321,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Memoize", function() { return Memoize; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StringMemoize", function() { return StringMemoize; });
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -32905,10 +33378,10 @@ class StringMemoize extends Memoize {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/npy.ts":
-/*!************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/npy.ts ***!
-  \************************************************************************************************/
+/***/ "./src/neuroglancer/util/npy.ts":
+/*!**************************************!*\
+  !*** ./src/neuroglancer/util/npy.ts ***!
+  \**************************************/
 /*! exports provided: NumpyArray, parseNpy */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -32916,9 +33389,9 @@ class StringMemoize extends Memoize {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NumpyArray", function() { return NumpyArray; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseNpy", function() { return parseNpy; });
-/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/data_type */ "../../../../../../neuroglancer/src/neuroglancer/util/data_type.ts");
-/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/endian */ "../../../../../../neuroglancer/src/neuroglancer/util/endian.ts");
-/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/json */ "../../../../../../neuroglancer/src/neuroglancer/util/json.ts");
+/* harmony import */ var neuroglancer_util_data_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/data_type */ "./src/neuroglancer/util/data_type.ts");
+/* harmony import */ var neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/endian */ "./src/neuroglancer/util/endian.ts");
+/* harmony import */ var neuroglancer_util_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! neuroglancer/util/json */ "./src/neuroglancer/util/json.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -33054,10 +33527,10 @@ function parseNpy(x) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/object_id.ts":
-/*!******************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/object_id.ts ***!
-  \******************************************************************************************************/
+/***/ "./src/neuroglancer/util/object_id.ts":
+/*!********************************************!*\
+  !*** ./src/neuroglancer/util/object_id.ts ***!
+  \********************************************/
 /*! exports provided: getObjectId */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33100,10 +33573,10 @@ function getObjectId(x) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/pairing_heap.0.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/pairing_heap.0.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/util/pairing_heap.0.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/util/pairing_heap.0.ts ***!
+  \*************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33271,10 +33744,10 @@ class Implementation {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/pairing_heap.1.ts":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/pairing_heap.1.ts ***!
-  \***********************************************************************************************************/
+/***/ "./src/neuroglancer/util/pairing_heap.1.ts":
+/*!*************************************************!*\
+  !*** ./src/neuroglancer/util/pairing_heap.1.ts ***!
+  \*************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33442,10 +33915,10 @@ class Implementation {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/random.ts":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/random.ts ***!
-  \***************************************************************************************************/
+/***/ "./src/neuroglancer/util/random.ts":
+/*!*****************************************!*\
+  !*** ./src/neuroglancer/util/random.ts ***!
+  \*****************************************/
 /*! exports provided: getRandomHexString, getRandomValues, getRandomUint32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33499,10 +33972,10 @@ function getRandomUint32() {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/signal.ts":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/signal.ts ***!
-  \***************************************************************************************************/
+/***/ "./src/neuroglancer/util/signal.ts":
+/*!*****************************************!*\
+  !*** ./src/neuroglancer/util/signal.ts ***!
+  \*****************************************/
 /*! exports provided: Signal, NullarySignal */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33592,10 +34065,10 @@ class NullarySignal extends Signal {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/uint64.ts":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/uint64.ts ***!
-  \***************************************************************************************************/
+/***/ "./src/neuroglancer/util/uint64.ts":
+/*!*****************************************!*\
+  !*** ./src/neuroglancer/util/uint64.ts ***!
+  \*****************************************/
 /*! exports provided: Uint64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33876,10 +34349,10 @@ Uint64.ONE = new Uint64(1, 0);
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/util/zorder.ts":
-/*!***************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/util/zorder.ts ***!
-  \***************************************************************************************************/
+/***/ "./src/neuroglancer/util/zorder.ts":
+/*!*****************************************!*\
+  !*** ./src/neuroglancer/util/zorder.ts ***!
+  \*****************************************/
 /*! exports provided: getOctreeChildIndex, decodeZIndexCompressed, encodeZIndexCompressed, zorder3LessThan */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34012,10 +34485,10 @@ function zorder3LessThan(x0, y0, z0, x1, y1, z1) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/visibility_priority/backend.ts":
-/*!*******************************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/visibility_priority/backend.ts ***!
-  \*******************************************************************************************************************/
+/***/ "./src/neuroglancer/visibility_priority/backend.ts":
+/*!*********************************************************!*\
+  !*** ./src/neuroglancer/visibility_priority/backend.ts ***!
+  \*********************************************************/
 /*! exports provided: withSharedVisibility, getPriorityTier, getBasePriority */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34024,8 +34497,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withSharedVisibility", function() { return withSharedVisibility; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPriorityTier", function() { return getPriorityTier; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBasePriority", function() { return getBasePriority; });
-/* harmony import */ var neuroglancer_shared_watchable_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/shared_watchable_value */ "../../../../../../neuroglancer/src/neuroglancer/shared_watchable_value.ts");
-/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "../../../../../../neuroglancer/src/neuroglancer/chunk_manager/base.ts");
+/* harmony import */ var neuroglancer_shared_watchable_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/shared_watchable_value */ "./src/neuroglancer/shared_watchable_value.ts");
+/* harmony import */ var neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/chunk_manager/base */ "./src/neuroglancer/chunk_manager/base.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -34080,10 +34553,10 @@ function getBasePriority(visibility) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts":
-/*!**************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/worker_rpc.ts ***!
-  \**************************************************************************************************/
+/***/ "./src/neuroglancer/worker_rpc.ts":
+/*!****************************************!*\
+  !*** ./src/neuroglancer/worker_rpc.ts ***!
+  \****************************************/
 /*! exports provided: registerRPC, RPCError, registerPromiseRPC, RPC, SharedObject, initializeSharedObjectCounterpart, SharedObjectCounterpart, registerSharedObjectOwner, registerSharedObject */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34098,8 +34571,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedObjectCounterpart", function() { return SharedObjectCounterpart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerSharedObjectOwner", function() { return registerSharedObjectOwner; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerSharedObject", function() { return registerSharedObject; });
-/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "../../../../../../neuroglancer/src/neuroglancer/util/cancellation.ts");
-/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "../../../../../../neuroglancer/src/neuroglancer/util/disposable.ts");
+/* harmony import */ var neuroglancer_util_cancellation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/util/cancellation */ "./src/neuroglancer/util/cancellation.ts");
+/* harmony import */ var neuroglancer_util_disposable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! neuroglancer/util/disposable */ "./src/neuroglancer/util/disposable.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -34371,17 +34844,17 @@ registerRPC('SharedObject.new', function (x) {
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc_context.ts":
-/*!**********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/src/neuroglancer/worker_rpc_context.ts ***!
-  \**********************************************************************************************************/
+/***/ "./src/neuroglancer/worker_rpc_context.ts":
+/*!************************************************!*\
+  !*** ./src/neuroglancer/worker_rpc_context.ts ***!
+  \************************************************/
 /*! exports provided: rpc */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rpc", function() { return rpc; });
-/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "../../../../../../neuroglancer/src/neuroglancer/worker_rpc.ts");
+/* harmony import */ var neuroglancer_worker_rpc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! neuroglancer/worker_rpc */ "./src/neuroglancer/worker_rpc.ts");
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -34404,10 +34877,10 @@ self.rpc = rpc;
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/third_party/draco/draco_decoder.wasm":
-/*!********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/third_party/draco/draco_decoder.wasm ***!
-  \********************************************************************************************************/
+/***/ "./third_party/draco/draco_decoder.wasm":
+/*!**********************************************!*\
+  !*** ./third_party/draco/draco_decoder.wasm ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -34415,21 +34888,21 @@ module.exports = __webpack_require__.p + "draco_decoder.wasm";
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/third_party/draco/draco_loader.js":
-/*!*****************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/third_party/draco/draco_loader.js ***!
-  \*****************************************************************************************************/
+/***/ "./third_party/draco/draco_loader.js":
+/*!*******************************************!*\
+  !*** ./third_party/draco/draco_loader.js ***!
+  \*******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var draco_wasm_wrapper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! draco_wasm_wrapper.js */ "../../../../../../neuroglancer/third_party/draco/draco_wasm_wrapper.js");
+/* harmony import */ var draco_wasm_wrapper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! draco_wasm_wrapper.js */ "./third_party/draco/draco_wasm_wrapper.js");
 /* harmony import */ var draco_wasm_wrapper_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(draco_wasm_wrapper_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
 
-__webpack_require__(/*! draco_decoder.wasm */ "../../../../../../neuroglancer/third_party/draco/draco_decoder.wasm");
+__webpack_require__(/*! draco_decoder.wasm */ "./third_party/draco/draco_decoder.wasm");
 
 function loadWebAssemblyDecoder() {
   return new Promise((resolve, reject) => {
@@ -34471,10 +34944,10 @@ const dracoModulePromise = loadWebAssemblyDecoder();
 
 /***/ }),
 
-/***/ "../../../../../../neuroglancer/third_party/draco/draco_wasm_wrapper.js":
-/*!***********************************************************************************************************!*\
-  !*** /Users/roseva1/Desktop/Dashbaord/BossDB/Neuvue/neuroglancer/third_party/draco/draco_wasm_wrapper.js ***!
-  \***********************************************************************************************************/
+/***/ "./third_party/draco/draco_wasm_wrapper.js":
+/*!*************************************************!*\
+  !*** ./third_party/draco/draco_wasm_wrapper.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -34596,558 +35069,7 @@ N;N.__cache__={};a.DracoInt32Array=N;N.prototype.GetValue=N.prototype.GetValue=f
 pd();a.ERROR=md();a.IO_ERROR=od();a.INVALID_PARAMETER=nd();a.UNSUPPORTED_VERSION=rd();a.UNKNOWN_VERSION=qd();a.INVALID_GEOMETRY_TYPE=dd();a.POINT_CLOUD=ed();a.TRIANGULAR_MESH=fd();a.ATTRIBUTE_INVALID_TRANSFORM=$c();a.ATTRIBUTE_NO_TRANSFORM=ad();a.ATTRIBUTE_QUANTIZATION_TRANSFORM=cd();a.ATTRIBUTE_OCTAHEDRON_TRANSFORM=bd();a.INVALID=id();a.POSITION=kd();a.NORMAL=jd();a.COLOR=gd();a.TEX_COORD=ld();a.GENERIC=hd()}a.calledRun?b():Na.unshift(b)})();if("function"===typeof a.onModuleParsed)a.onModuleParsed();
 return d}; true?module.exports=DracoDecoderModule:undefined;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../neuvue-app/neuvue_project/workspace/static/ts/wrapper/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../../neuvue-app/neuvue_project/workspace/static/ts/wrapper/node_modules/process/browser.js */ "./node_modules/process/browser.js")))
-
-/***/ }),
-
-/***/ "./node_modules/node-libs-browser/mock/empty.js":
-/*!******************************************************!*\
-  !*** ./node_modules/node-libs-browser/mock/empty.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
-/***/ "./node_modules/path-browserify/index.js":
-/*!***********************************************!*\
-  !*** ./node_modules/path-browserify/index.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {// .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
-// backported and transplited with Babel, with backwards-compat fixes
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  if (path.length === 0) return '.';
-  var code = path.charCodeAt(0);
-  var hasRoot = code === 47 /*/*/;
-  var end = -1;
-  var matchedSlash = true;
-  for (var i = path.length - 1; i >= 1; --i) {
-    code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        if (!matchedSlash) {
-          end = i;
-          break;
-        }
-      } else {
-      // We saw the first non-path separator
-      matchedSlash = false;
-    }
-  }
-
-  if (end === -1) return hasRoot ? '/' : '.';
-  if (hasRoot && end === 1) {
-    // return '//';
-    // Backwards-compat fix:
-    return '/';
-  }
-  return path.slice(0, end);
-};
-
-function basename(path) {
-  if (typeof path !== 'string') path = path + '';
-
-  var start = 0;
-  var end = -1;
-  var matchedSlash = true;
-  var i;
-
-  for (i = path.length - 1; i >= 0; --i) {
-    if (path.charCodeAt(i) === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          start = i + 1;
-          break;
-        }
-      } else if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // path component
-      matchedSlash = false;
-      end = i + 1;
-    }
-  }
-
-  if (end === -1) return '';
-  return path.slice(start, end);
-}
-
-// Uses a mixed approach for backwards-compatibility, as ext behavior changed
-// in new Node.js versions, so only basename() above is backported here
-exports.basename = function (path, ext) {
-  var f = basename(path);
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-exports.extname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  var startDot = -1;
-  var startPart = 0;
-  var end = -1;
-  var matchedSlash = true;
-  // Track the state of characters (if any) we see before our first dot and
-  // after any path separator we find
-  var preDotState = 0;
-  for (var i = path.length - 1; i >= 0; --i) {
-    var code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          startPart = i + 1;
-          break;
-        }
-        continue;
-      }
-    if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // extension
-      matchedSlash = false;
-      end = i + 1;
-    }
-    if (code === 46 /*.*/) {
-        // If this is our first dot, mark it as the start of our extension
-        if (startDot === -1)
-          startDot = i;
-        else if (preDotState !== 1)
-          preDotState = 1;
-    } else if (startDot !== -1) {
-      // We saw a non-dot and non-path separator before our dot, so we should
-      // have a good chance at having a non-empty extension
-      preDotState = -1;
-    }
-  }
-
-  if (startDot === -1 || end === -1 ||
-      // We saw a non-dot character immediately before the dot
-      preDotState === 0 ||
-      // The (right-most) trimmed path component is exactly '..'
-      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
-    return '';
-  }
-  return path.slice(startDot, end);
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
-
-/***/ }),
-
-/***/ "./node_modules/process/browser.js":
-/*!*****************************************!*\
-  !*** ./node_modules/process/browser.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-
-/***/ "./node_modules/webpack/buildin/global.js":
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -35158,24 +35080,24 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! neuroglancer/worker_rpc_context */"../../../../../../neuroglancer/src/neuroglancer/worker_rpc_context.ts");
-__webpack_require__(/*! neuroglancer/chunk_manager/backend */"../../../../../../neuroglancer/src/neuroglancer/chunk_manager/backend.ts");
-__webpack_require__(/*! neuroglancer/sliceview/backend */"../../../../../../neuroglancer/src/neuroglancer/sliceview/backend.ts");
-__webpack_require__(/*! neuroglancer/perspective_view/backend */"../../../../../../neuroglancer/src/neuroglancer/perspective_view/backend.ts");
-__webpack_require__(/*! neuroglancer/annotation/backend */"../../../../../../neuroglancer/src/neuroglancer/annotation/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/brainmaps/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/brainmaps/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/boss/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/boss/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/dvid/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/dvid/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/render/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/render/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/precomputed/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/precomputed/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/graphene/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/graphene/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/nifti/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/nifti/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/n5/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/n5/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/computed/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/computed/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/computed/example/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/computed/example/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/computed/tensorflow/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/computed/tensorflow/backend.ts");
-__webpack_require__(/*! neuroglancer/datasource/vtk/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/vtk/backend.ts");
-module.exports = __webpack_require__(/*! neuroglancer/datasource/csv/backend */"../../../../../../neuroglancer/src/neuroglancer/datasource/csv/backend.ts");
+__webpack_require__(/*! neuroglancer/worker_rpc_context */"./src/neuroglancer/worker_rpc_context.ts");
+__webpack_require__(/*! neuroglancer/chunk_manager/backend */"./src/neuroglancer/chunk_manager/backend.ts");
+__webpack_require__(/*! neuroglancer/sliceview/backend */"./src/neuroglancer/sliceview/backend.ts");
+__webpack_require__(/*! neuroglancer/perspective_view/backend */"./src/neuroglancer/perspective_view/backend.ts");
+__webpack_require__(/*! neuroglancer/annotation/backend */"./src/neuroglancer/annotation/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/brainmaps/backend */"./src/neuroglancer/datasource/brainmaps/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/boss/backend */"./src/neuroglancer/datasource/boss/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/dvid/backend */"./src/neuroglancer/datasource/dvid/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/render/backend */"./src/neuroglancer/datasource/render/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/precomputed/backend */"./src/neuroglancer/datasource/precomputed/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/graphene/backend */"./src/neuroglancer/datasource/graphene/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/nifti/backend */"./src/neuroglancer/datasource/nifti/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/n5/backend */"./src/neuroglancer/datasource/n5/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/computed/backend */"./src/neuroglancer/datasource/computed/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/computed/example/backend */"./src/neuroglancer/datasource/computed/example/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/computed/tensorflow/backend */"./src/neuroglancer/datasource/computed/tensorflow/backend.ts");
+__webpack_require__(/*! neuroglancer/datasource/vtk/backend */"./src/neuroglancer/datasource/vtk/backend.ts");
+module.exports = __webpack_require__(/*! neuroglancer/datasource/csv/backend */"./src/neuroglancer/datasource/csv/backend.ts");
 
 
 /***/ })
