@@ -24,6 +24,7 @@ from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json
 import json
 import os
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 # import the logging library
 import logging
@@ -478,14 +479,16 @@ class SynapseView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        module_dir = os.path.dirname(__file__)  # get current directory
-        file_path = os.path.join(module_dir, 'static/updates.json')
 
-        update_json_data = open(file_path)   
-        data1 = json.load(update_json_data) # deserialises it
-        data_dict = eval(json.dumps(data1)) # json formatted string
-
-        recent_updates = data_dict['recent_updates']
+        recent_updates = True
+        try:
+            p = staticfiles_storage.path('updates.json')
+            with open(p) as update_json:
+                updates = json.load(update_json)
+                data_dict = eval(json.dumps(data1)) # json formatted string
+                recent_updates = data_dict['recent_updates']
+        except:
+            recent_updates = False
 
         ## Get updates from local updates.json
         context = {

@@ -29,13 +29,17 @@
                 What's new?
               </div>
               <div class="index-card-items">
-                {% for update in recent_updates %}
-                <div class="index-card-item">
-                  <div class="index-card-item-title">{{update.update_name}}</div>
-                  <div class="index-card-item-date"><i>{{update.update_date}}</i></div>
-                  <div class="index-card-item-description">{{update.update_description}}</div>
-                </div>
-                {% endfor %}
+                {% if recent_updates %}
+                  {% for update in recent_updates %}
+                  <div class="index-card-item">
+                    <div class="index-card-item-title">{{update.update_name}}</div>
+                    <div class="index-card-item-date"><i>{{update.update_date}}</i></div>
+                    <div class="index-card-item-description">{{update.update_description}}</div>
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="index-card-no-updates">There are no new updates to show</div>
+                {% endif %}
               </div>
             </div>
           </div>

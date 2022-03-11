@@ -435,6 +435,13 @@ font-size: 1.5vh;
 color: rgb(155, 153, 153);
 }
 
+.index-card-no-updates {
+font-size: 3vh;
+color: var(--primary-accent);
+padding: 50px;
+text-align: center;
+}
+
 
 
 /* PROGRESS BAR */
