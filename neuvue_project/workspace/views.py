@@ -485,8 +485,7 @@ class IndexView(View):
             p = staticfiles_storage.path('updates.json')
             with open(p) as update_json:
                 updates = json.load(update_json)
-                data_dict = eval(json.dumps(data1)) # json formatted string
-                recent_updates = data_dict['recent_updates']
+                recent_updates = updates['recent_updates']
         except:
             recent_updates = False
 
