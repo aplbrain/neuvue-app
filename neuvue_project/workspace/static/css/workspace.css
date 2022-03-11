@@ -396,9 +396,14 @@ order: 1;
 border: 2px solid var(--secondary-accent) !important;
 background-color: var(--transparent-card-background) !important;
 border-radius: 8pt !important;
-width: 50rem; 
-height: 50rem; 
-margin-top: 150px;
+width: 86%; 
+height: 60%; 
+margin-top: 25%;
+margin-right: 7%;
+}
+
+.index-card-container {
+  height: 100vh;
 }
 
 .index-card-items {
