@@ -21,7 +21,7 @@ from .neuroglancer import (
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json
+from .utils import utc_to_eastern, is_url, is_json, is_authorized
 
 # import the logging library
 import logging
@@ -60,6 +60,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
         }
+
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -299,9 +303,9 @@ class TaskView(View):
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
 
-        if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
-            return render(request, "workspace.html", context)
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         non_empty_namespace = 0
 
@@ -364,6 +368,10 @@ class InspectTaskView(View):
             "ng_state": None,
             "error": None
         }
+        
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if task_id is None:
             return render(request, "inspect.html", context)
@@ -444,7 +452,8 @@ class LineageView(View):
 
 class SynapseView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
         if root_id in settings.STATIC_NG_FILES:
