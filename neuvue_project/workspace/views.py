@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -22,6 +22,10 @@ from .neuroglancer import (
 
 from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json, is_authorized
+import json
+import os
+
+
 
 # import the logging library
 import logging
@@ -485,7 +489,21 @@ class SynapseView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+
+        recent_updates = True
+        try:
+            p = staticfiles_storage.path('updates.json')
+            with open(p) as update_json:
+                updates = json.load(update_json)
+                recent_updates = updates['recent_updates']
+        except:
+            recent_updates = False
+
+        ## Get updates from local updates.json
+        context = {
+            "recent_updates": recent_updates
+        }
+        return render(request, "index.html", context)
 
 class AuthView(View):
     def get(self, request, *args, **kwargs):
@@ -494,3 +512,7 @@ class AuthView(View):
 class TokenView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "token.html", context={'code': request.GET.get('code')})
+
+class GettingStartedView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "getting-started.html")

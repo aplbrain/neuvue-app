@@ -141,4 +141,5 @@ neuvue_project/workspace/static/ts/wrapper/webpack-stats-*
 neuvue_project/workspace/static/ts/wrapper/third_party
 neuvue_project/workspace/static/ts/wrapper/node_modules
 old_migrations/
+neuvue_project/static/
 scratch/

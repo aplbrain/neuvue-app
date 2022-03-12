@@ -35,6 +35,9 @@
   --transparent-standard:#e6f1ff44;
   --transparent-hover:#e6f1ff62;
   --transparent-analytics:#e6f1ff21;
+  --transparent-card-background: #120e14dc;
+  --transparent-card-header-background: #120e14e8;
+  --transparent-card-items-background: #29202ece;
 
   /* FONTS */
   --header-font: "Lato", sans-serif;
@@ -79,7 +82,7 @@ ul li {
 }
 
 .intro {
-  background-image: url('/static/images/xrayneuron01-min.png'); 
+  background-image: url('/static/images/xrayneuron01-compressed.png'); 
   background-size: cover;
   background-repeat: no-repeat;
   -webkit-background-size: cover;
@@ -88,6 +91,8 @@ ul li {
   height: 95vh;
   width: 100vw;
 }
+
+
 
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
 
@@ -368,13 +373,13 @@ flex-direction: column;
 margin-left: 100;
 width: 50%;
 position: absolute;
-top: 42%;
+top: 45%;
 }
 
 .index-title-text {
 color: rgb(255, 255, 255);
 font-family: var(--header-font);
-font-size: 5vh;
+font-size: 6vh;
 text-align: center;
 order: 1;
 }
@@ -386,6 +391,65 @@ font-size: 2vh;
 text-align: center;
 order: 1;
 }
+
+/* INDEX CARD */
+.index-card {
+border: 2px solid var(--secondary-accent) !important;
+background-color: var(--transparent-card-background) !important;
+border-radius: 8pt !important;
+width: 86%; 
+height: 60%; 
+margin-top: 25%;
+margin-right: 7%;
+}
+
+.index-card-container {
+  height: 100vh;
+}
+
+.index-card-items {
+  overflow:scroll;
+}
+
+.index-card-header {
+color: var(--primary-accent);
+font-family: var(--header-font); 
+font-size: 3vh;
+background-color: var(--header-background) !important;
+}
+
+.index-card-item {
+background-color: transparent;
+padding: 20px;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
+
+.index-card-item-title {
+font-size: 2.15vh;
+color: var(--primary-accent);
+}
+
+.index-card-item-date {
+font-size: 1.65vh;
+color: var(--secondary-accent);
+}
+
+.index-card-item-description {
+font-size: 1.5vh;
+color: rgb(155, 153, 153);
+}
+
+.index-card-no-updates {
+font-size: 3vh;
+color: var(--primary-accent);
+padding: 50px;
+text-align: center;
+}
+
+
+
 /* PROGRESS BAR */
 
 .progress {
