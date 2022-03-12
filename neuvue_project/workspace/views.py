@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -21,10 +21,11 @@ from .neuroglancer import (
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json
+from .utils import utc_to_eastern, is_url, is_json, is_authorized
 import json
 import os
-from django.contrib.staticfiles.storage import staticfiles_storage
+
+
 
 # import the logging library
 import logging
@@ -36,7 +37,7 @@ logger = logging.getLogger(__name__)
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -63,6 +64,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
         }
+
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -280,7 +285,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -302,9 +307,9 @@ class TaskView(View):
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
 
-        if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
-            return render(request, "workspace.html", context)
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         non_empty_namespace = 0
 
@@ -355,7 +360,7 @@ class TaskView(View):
 
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
@@ -367,6 +372,10 @@ class InspectTaskView(View):
             "ng_state": None,
             "error": None
         }
+        
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if task_id is None:
             return render(request, "inspect.html", context)
@@ -447,7 +456,8 @@ class LineageView(View):
 
 class SynapseView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
         if root_id in settings.STATIC_NG_FILES:

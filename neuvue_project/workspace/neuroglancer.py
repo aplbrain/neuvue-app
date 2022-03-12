@@ -314,17 +314,35 @@ def _get_soma_center(root_ids: List, cave_client):
     """
     try:
         soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
-            'pt_root_id': root_ids
+            'pt_root_id': root_ids[:3]
         })
+        if not len(soma_df):
+            soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            'pt_root_id': root_ids
+            })
+        if len(soma_df) > 3:
+            soma_df = soma_df.head(3)
+        pt_position = soma_df.iloc[0]['pt_position']
+        present_root_ids = list(soma_df['pt_root_id'])
+    except IndexError as e:
+        logging.error(e)
+        raise Exception('Unable to find Soma Center')
     except Exception as e:
         logging.error(e)
-        raise e
-    
-    return soma_df.iloc[0]['pt_position']
+        raise Exception(e)
+    return pt_position, present_root_ids
 
 def _get_nx_graph_image(nx_graph):
-    dot = nx.drawing.nx_pydot.to_pydot(nx_graph)
-    return dot.create_svg().decode()
+    def networkx_to_graphViz(nx_graph):
+        import graphviz
+        gv_graph = graphviz.Digraph('lineage',format = 'svg',graph_attr={'size':'6,{}','ratio':"compress",'ranksep':'0.5'},node_attr={'fontsize':'18','fontname':"Arial"}) # 'size':'6,3',
+        for node in nx_graph.nodes():
+            gv_graph.node(str(node),label=str(node))
+        for edge0, edge1 in nx_graph.edges():
+            gv_graph.edge(str(edge0), str(edge1))
+        gv_graph = gv_graph.unflatten(stagger=10) 
+        return gv_graph.pipe(encoding='utf-8')
+    return networkx_to_graphViz(nx_graph)
 
 def construct_lineage_state_and_graph(root_id:str):
     """Construct state for the lineage viewer.
@@ -337,18 +355,16 @@ def construct_lineage_state_and_graph(root_id:str):
     """
     root_id = root_id.strip()
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
-    
+
     # Lineage graph gives you the nodes and edges of a root IDs history
     lineage_graph = _get_lineage_graph(root_id, cave_client)
     graph_image = _get_nx_graph_image(lineage_graph)
-
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
     root_ids = [str(x) for x in lineage_graph]
-
-    position = _get_soma_center(root_ids[:3], cave_client)
-    base_state = create_base_state(root_ids[:3], position, 'automatedSplit')
+    position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
+    base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as='dict')
@@ -371,6 +387,7 @@ def apply_state_config(state:str, username:str):
     if not config.enabled:
         return state
     
+    annotation_color = config.annotation_color
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
@@ -380,13 +397,19 @@ def apply_state_config(state:str, username:str):
 
     cdict = json.loads(state)
     cdict["layout"] = str(layout)
-    cdict['layers'][1]['selectedAlpha'] = float(alpha_selected)
     cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
     cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     cdict["concurrentDownloads"] = int(chunk_requests)
     
-    if "objectAlpha" in cdict['layers'][1].keys():
-        cdict['layers'][1]['objectAlpha'] = float(alpha_3d)
+    for layer in cdict['layers']:
+        if layer.get('selectedAlpha'):
+            layer['selectedAlpha'] = float(alpha_selected)
+        
+        if layer.get('annotationColor'):
+            layer['annotationColor'] = str(annotation_color)
+        
+        if layer.get('objectAlpha'):
+            layer['objectAlpha'] = float(alpha_3d)
 
     return json.dumps(cdict)
 
@@ -442,6 +465,15 @@ def construct_synapse_state(root_id:str):
         "num_pre": len(pre_synapses),
         "num_post": len(post_synapses)
     }
+
+    # Append clefts layers to state 
+    state_dict['layers'].append({
+        "type": "segmentation",
+        "source": "precomputed://s3://bossdb-open-data/iarpa_microns/minnie/minnie65/clefts-sharded",
+        "tab": "source",
+        "name": "clefts-sharded",
+        "visible": False
+    })
     return json.dumps(state_dict), synapse_stats
 
 def refresh_ids(ng_state:str, namespace:str): 
@@ -456,7 +488,7 @@ def refresh_ids(ng_state:str, namespace:str):
     
     state = json.loads(ng_state)
     for layer in state['layers']:
-        if layer['type'] == "segmentation_with_graph":
+        if layer['type'] == "segmentation_with_graph" and len(layer.get("segments", [])):
             latest_ids = set()
             for root_id in layer['segments']:
                 try:

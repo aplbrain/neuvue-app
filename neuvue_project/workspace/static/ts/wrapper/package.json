@@ -5,10 +5,9 @@
     "build": "webpack --config ./config/webpack.config.js --env=workspace"
   },
   "dependencies": {
-  
+    "webpack-cli": "^3.3.12"
   },
   "devDependencies": {
     "webpack-bundle-tracker": "^1.4.0"
-
   }
 }
