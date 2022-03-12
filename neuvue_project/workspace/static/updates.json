@@ -1,47 +1,7 @@
 {
     "recent_updates" : [
-        {"update_name": "update 1",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application! I did something to update the application! I did something to update the application!I did something to update the application!I did something to update the application!"}, 
-
-        {"update_name": "update 2",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 3",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-        
-        {"update_name": "update 4",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 5",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 1",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 2",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 3",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-        
-        {"update_name": "update 4",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 5",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}, 
-
-        {"update_name": "update 6",
-        "update_date": "March 7th, 2022",
-        "update_description": "I did something to update the application!"}
+        {"update_name": "v1.4.6",
+        "update_date": "March 12th, 2022",
+        "update_description": "Increased sidebar contrast. \n Retain source and target paths for path finding. \n Adds ability to customize annotation color in preferences. \n Minor bug fixes and performance improvements."}
     ]
 }
