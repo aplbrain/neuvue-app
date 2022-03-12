@@ -64,11 +64,20 @@ For development purposes, there is a included neuvueDB.sqlite3 database file con
 
 	`python manage.py createsuperuser`
 
-5. Run the app with the `runserver` command to start a development instance. Run on the localhost:8000 address and port to allow OAuth client to properly authenticate user. 
+5. Collect all static files into `/static`
+
+	`python manage.py collectstatic --no-input`
+
+6. Run the app with the `runserver` command to start a development instance. Run on the localhost:8000 address and port to allow OAuth client to properly authenticate user. 
 
 	`python manage.py runserver localhost:8000`
 
-6. Open your app on http://localhost:8000 
+7. Open your app on http://localhost:8000 
+
+
+Alternatively, you can run the convienence script `run-dev-server.py` to do all the steps above for you. 
+
+	`./run-dev-server.py`
 
 ## Deploying to production
 
