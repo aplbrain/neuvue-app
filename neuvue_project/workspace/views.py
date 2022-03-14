@@ -379,7 +379,7 @@ class TaskView(View):
             return_metadata=False
         )
         if len(unassigned_tasks) == 0:
-            # TODO: Should we warn the user that no tasks are left in the queue?
+            # Warn the user that no tasks are left in the queue
             return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
 
         # Get tasks currently assigned to user to make sure we don't exceed the limit

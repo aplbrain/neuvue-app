@@ -17,8 +17,8 @@
                             {{context.display_name}} ({{context.total_pending}})
                         </div>
                         {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
-                            <div id="mainForm" class="launch_NG">
-                                <button class ="launch_NG_text" onclick="triggerLoadingSpinner('{{namespace}}TasksSpinner'); addTasks('{{namespace}}')">
+                            <div id="mainForm" class="header-button">
+                                <button class="header-button-text" onclick="triggerLoadingSpinner('{{namespace}}TasksSpinner'); addTasks('{{namespace}}')">
                                     <div id='{{namespace}}TasksSpinner'>
                                         Add More Tasks
                                     </div>
@@ -26,10 +26,10 @@
                                 </button>
                             </div>
                         {% endif %}
-                        <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
-                            <button class ="launch_NG_text"
+                        <div class="header-button rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                            <button class="header-button-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
-                                <div id = '{{namespace}}NgSpinner'>
+                                <div id='{{namespace}}NgSpinner'>
                                     Start Proofreading
                                 </div>
                             </button>
@@ -202,7 +202,7 @@
         const parent_elem = document.getElementById(parent_elem_name);
         const original_container = document.getElementById("loading-spinner-container");
         original_container.appendChild(parent_elem.firstChild);
-        parent_elem.innerHTML = "Add More Tasks";
+        parent_elem.innerHTML = "Add More Tasks";      // May need to generalize this if we add more buttons
     }
 
     function tableHide(actionButton, hiddenContentId) {
@@ -225,9 +225,9 @@
     };
 
     function triggerToast(toastText) {
-        const toastDiv = document.getElementById('toast');
         const toastBody = document.getElementById('toast-body');
         toastBody.textContent = toastText;
+        const toastDiv = document.getElementById('toast');
         const toast = new bootstrap.Toast(toastDiv);
         toast.show();
     }
