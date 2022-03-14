@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -22,7 +22,11 @@ from .neuroglancer import (
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json, is_member
+from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
+import json
+import os
+
+
 
 # import the logging library
 import logging
@@ -61,6 +65,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
         }
+
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -303,9 +311,9 @@ class TaskView(View):
             context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
             context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
-        if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
-            return render(request, "workspace.html", context)
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         non_empty_namespace = 0
 
@@ -405,6 +413,10 @@ class InspectTaskView(View):
             "ng_state": None,
             "error": None
         }
+        
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if task_id is None:
             return render(request, "inspect.html", context)
@@ -485,7 +497,8 @@ class LineageView(View):
 
 class SynapseView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
         if root_id in settings.STATIC_NG_FILES:
@@ -517,7 +530,21 @@ class SynapseView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+
+        recent_updates = True
+        try:
+            p = staticfiles_storage.path('updates.json')
+            with open(p) as update_json:
+                updates = json.load(update_json)
+                recent_updates = updates['recent_updates']
+        except:
+            recent_updates = False
+
+        ## Get updates from local updates.json
+        context = {
+            "recent_updates": recent_updates
+        }
+        return render(request, "index.html", context)
 
 class AuthView(View):
     def get(self, request, *args, **kwargs):
@@ -526,3 +553,7 @@ class AuthView(View):
 class TokenView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "token.html", context={'code': request.GET.get('code')})
+
+class GettingStartedView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "getting-started.html")

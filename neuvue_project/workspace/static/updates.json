@@ -1,0 +1,7 @@
+{
+    "recent_updates" : [
+        {"update_name": "v1.4.6",
+        "update_date": "March 12th, 2022",
+        "update_description": "Increased sidebar contrast. \n Retain source and target paths for path finding. \n Adds ability to customize annotation color in preferences. \n Minor bug fixes and performance improvements."}
+    ]
+}

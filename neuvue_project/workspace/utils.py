@@ -18,6 +18,10 @@ def is_json(value):
     except:
         return False
 
+def is_authorized(user):
+    return user.is_authenticated and user.groups.filter(name='AuthorizedUsers').exists()
+
+
 def utc_to_eastern(time_value):
     """Converts a pandas datetime object to a US/Easten datetime.
 
