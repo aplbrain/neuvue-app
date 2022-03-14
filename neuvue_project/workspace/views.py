@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
@@ -300,7 +301,7 @@ class TaskView(View):
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
             context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
-            # TODO: hide Add More Tasks button if there are none available or if they have been assigned the max amount
+            context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
         if not request.user.is_authenticated:
             #TODO: Create Modal that lets the user know to log in first. 
@@ -352,14 +353,15 @@ class TaskView(View):
 
         return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
     
+    # This post endpoint does not redirect to another webpage, it returns a response that the view must handle.
+    # Sorry for breaking form, but forcing django to be dynamic for this feature was the best solution
     def post(self, request, *args, **kwargs):
-        # TODO: add if statement for button id to make it scalable
         # Pull information we need
         namespace = request.POST.get("namespace", "")
         namespace_obj = Namespace.objects.get(namespace = namespace)
         username = request.user.username
         num_tasks = namespace_obj.number_of_tasks_users_can_self_assign
-        max_tasks = namespace_obj.max_number_of_tasks_per_user
+        max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
 
         # Get x unassigned tasks to assign. Return if none
         unassigned_tasks = self.client.get_tasks(
@@ -370,11 +372,11 @@ class TaskView(View):
         )
         if len(unassigned_tasks) == 0:
             # TODO: Should we warn the user that no tasks are left in the queue?
-            return redirect(reverse('tasks'))
+            return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
 
         # Get tasks currently assigned to user to make sure we don't exceed the limit
         assigned_tasks = self.client.get_tasks(
-            sieve={"assignee": username, "namespace": namespace, "status": ["open", "pending"]}, 
+            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]}, 
             return_states=False, 
             return_metadata=False
         )
@@ -386,8 +388,7 @@ class TaskView(View):
         for id in ids:
             self.client.patch_task(id, assignee=username)
 
-        # TODO: add loading spinner while this request is processing
-        return redirect(reverse('tasks'))
+        return HttpResponse()
 
 
 class InspectTaskView(View):

@@ -73,8 +73,6 @@
   font-family: var(--header-font);
   font-size: 1.5vh;
   cursor: pointer;
-  z-index: 2; 
-  
 }
 
 .launch_NG:hover{
@@ -89,7 +87,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;  
   background: transparent;
   outline: none;
   border: none;
@@ -102,6 +99,11 @@
 
 .rightBorderRounded {
   border-radius: 0 8px 8px 0;
+}
+
+/* Override toast transparency */
+#toast {
+  background-color: white;
 }
 
 /* Tables for the content */
@@ -222,4 +224,3 @@ tbody.pending >:nth-child(2) {
   margin: 5% 5%;
   background-color: var(--transparent-hover);
 }
-

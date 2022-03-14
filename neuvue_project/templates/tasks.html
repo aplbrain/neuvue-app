@@ -13,22 +13,22 @@
             {% for namespace, context in data.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
-                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">{{context.display_name}} ({{context.total_pending}})</div>
-                        {% if context.can_self_assign_tasks %}
-                            <form id="mainForm" class="launch_NG" action="" method="post">
-                                {% csrf_token %}
-                                <button class ="launch_NG_text" type="submit"
-                                    onclick="loadingSpinner('{{namespace}}TasksSpinner')">
+                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
+                            {{context.display_name}} ({{context.total_pending}})
+                        </div>
+                        {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
+                            <div id="mainForm" class="launch_NG">
+                                <button class ="launch_NG_text" onclick="triggerLoadingSpinner('{{namespace}}TasksSpinner'); addTasks('{{namespace}}')">
                                     <div id='{{namespace}}TasksSpinner'>
                                         Add More Tasks
                                     </div>
                                     <input type="hidden" name="namespace" value="{{ namespace }}">
                                 </button>
-                            </form>
+                            </div>
                         {% endif %}
                         <div class="launch_NG rightBorderRounded" onclick= "document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <button class ="launch_NG_text"
-                                onclick="loadingSpinner('{{namespace}}NgSpinner')">
+                                onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                 <div id = '{{namespace}}NgSpinner'>
                                     Start Proofreading
                                 </div>
@@ -134,9 +134,22 @@
             {% endfor %}
         </div>
     </div>
-    <div style="display:none;">
+    <!-- Triggerable elements -->
+
+    <!-- Loading spinner -->
+    <div id="loading-spinner-container" style="display:none;">
         <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
             <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-5">
+        <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-body" class="toast-body"> <!-- triggerToast will fill in text here--> </div>
+                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
         </div>
     </div>
 </div>
@@ -159,11 +172,8 @@
         {% endfor %}
     };
     
-                
-    
     function tabToggle(evt, timeframe,start,end,buttonid) {
         
-
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = start; i < end; i++) {
@@ -179,15 +189,22 @@
         var tab_button = document.getElementById(buttonid);
         tab_button.classList.toggle("active");
 
-        
-      
     };
-    function loadingSpinner(parent_elem_name) {
-         var parent_elem = document.getElementById(parent_elem_name);
-         var spinner = document.getElementById('loading-spinner');
-         parent_elem.innerHTML = '';
-         parent_elem.append(spinner);
-     }
+
+    function triggerLoadingSpinner(parent_elem_name) {
+        const parent_elem = document.getElementById(parent_elem_name);
+        const spinner = document.getElementById('loading-spinner');
+        parent_elem.innerHTML = '';
+        parent_elem.append(spinner);
+    }
+
+    function removeLoadingSpinner(parent_elem_name) {
+        const parent_elem = document.getElementById(parent_elem_name);
+        const original_container = document.getElementById("loading-spinner-container");
+        original_container.appendChild(parent_elem.firstChild);
+        parent_elem.innerHTML = "Add More Tasks";
+    }
+
     function tableHide(actionButton, hiddenContentId) {
 
         var acc = document.getElementById(actionButton);
@@ -204,9 +221,65 @@
             panel.style.display = "block";
             }
         };
-
    
     };
+
+    function triggerToast(toastText) {
+        const toastDiv = document.getElementById('toast');
+        const toastBody = document.getElementById('toast-body');
+        toastBody.textContent = toastText;
+        const toast = new bootstrap.Toast(toastDiv);
+        toast.show();
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function addTasks(namespace) {
+
+        const csrftoken = getCookie('csrftoken');
+        const formData = new FormData();
+        formData.append('namespace', namespace);
+
+        const request = {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: formData,
+            credentials: 'same-origin',
+        };
+        // Call the post request defined for this view
+        fetch('', request).then(function (response) {
+            if (response.ok) {
+                response.text().then(function(text) {
+                    if(text) {
+                        triggerToast(text);
+                        removeLoadingSpinner(namespace + "TasksSpinner");
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                triggerToast("Unable to reach server. Please try again.");
+                removeLoadingSpinner(namespace + "TasksSpinner");
+            }
+        });
+
+    }
 
 </script>
 {% endblock %}
