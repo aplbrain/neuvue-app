@@ -375,8 +375,7 @@ class TaskView(View):
         unassigned_tasks = self.client.get_tasks(
             sieve={"assignee": "unassigned", "namespace": namespace}, 
             limit=num_tasks, 
-            return_states=False, 
-            return_metadata=False
+            select=["_id"]
         )
         if len(unassigned_tasks) == 0:
             # Warn the user that no tasks are left in the queue
@@ -384,9 +383,8 @@ class TaskView(View):
 
         # Get tasks currently assigned to user to make sure we don't exceed the limit
         assigned_tasks = self.client.get_tasks(
-            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]}, 
-            return_states=False, 
-            return_metadata=False
+            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
+            select=["_id"]
         )
         while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
             unassigned_tasks = unassigned_tasks.iloc[:-1 , :]

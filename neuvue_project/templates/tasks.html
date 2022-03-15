@@ -17,7 +17,7 @@
                             {{context.display_name}} ({{context.total_pending}})
                         </div>
                         {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
-                            <div id="mainForm" class="header-button">
+                            <div class="header-button">
                                 <button class="header-button-text" onclick="triggerLoadingSpinner('{{namespace}}TasksSpinner'); addTasks('{{namespace}}')">
                                     <div id='{{namespace}}TasksSpinner'>
                                         Add More Tasks
