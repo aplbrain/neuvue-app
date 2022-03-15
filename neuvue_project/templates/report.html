@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="basic dashboard">
+    <div class="inspect-container">
+        <form id="mainForm" action="" method="post" >
+          {% csrf_token %}
+          <h3 style="color: white"> Generate Task Report</h3>
+          <div style="margin: 20px"class="form-group">
+            
+            <label style="color: white" for="namespaceSelect">Namespace</label>
+            <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
+                <option value="" selected disabled>Please select</option>
+                {% for namespace_opt in all_namespaces %}
+                <option>{{namespace_opt}} </option>
+                {% endfor %}
+            </select>
+
+        </div>
+        
+        <div style="margin: 20px" class="form-group">
+            <label style="color: white" for="groupSelect">Group</label>
+            <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
+                <option value="" selected disabled>Please select</option>
+                {% for group_opt in all_groups %}
+                <option>{{group_opt}} </option>
+                {% endfor %}
+            </select> 
+        </div>
+
+        {% comment %} Need to add datepicker {% endcomment %}
+        <div style="margin: 20px"  class="form-group">
+            <input type="submit" class="btn btn-primary" value="Submit">
+            
+            {% if error %}
+            <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+            {% endif %}
+          
+        </div>
+        </form>
+      </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        console.log("Hi!");
+    })
+
+</script>
+{% endblock %}
+

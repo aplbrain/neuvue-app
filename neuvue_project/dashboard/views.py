@@ -16,6 +16,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
 class DashboardView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
@@ -118,3 +119,23 @@ class DashboardView(View, LoginRequiredMixin):
                     self.client.patch_task(task,assignee=reassigned_user)
                     logging.debug(f"Resassigning task {task} to {reassigned_user}")
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+
+
+class ReportView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+        
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        context = {}
+        context['all_groups'] = [x.name for x in Group.objects.all()]
+        context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
+        return render(request, "report.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        return redirect(reverse('report'))
