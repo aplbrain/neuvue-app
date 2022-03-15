@@ -396,19 +396,24 @@ def apply_state_config(state:str, username:str):
     layout = config.layout
 
     cdict = json.loads(state)
-    cdict["layout"] = str(layout)
-    cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
-    cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
-    cdict["concurrentDownloads"] = int(chunk_requests)
+
+    if config.layout_switch:
+        cdict["layout"] = str(layout)
+    if config.gpu_limit_switch:
+        cdict["gpuMemoryLimit"] = int(float(gpu_limit) * 1E9)
+    if config.sys_limit_switch:
+        cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
+    if config.chunk_requests_switch:
+        cdict["concurrentDownloads"] = int(chunk_requests)
     
     for layer in cdict['layers']:
-        if layer.get('selectedAlpha'):
+        if 'segmentation' in layer.get('type', '') and config.alpha_selected_switch:
             layer['selectedAlpha'] = float(alpha_selected)
         
-        if layer.get('annotationColor'):
+        if layer.get('type', '') == 'annotation' and config.annotation_color_switch:
             layer['annotationColor'] = str(annotation_color)
         
-        if layer.get('objectAlpha'):
+        if 'segmentation' in layer.get('type', '') and config.alpha_3d_switch:
             layer['objectAlpha'] = float(alpha_3d)
 
     return json.dumps(cdict)

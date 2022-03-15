@@ -5,13 +5,34 @@ from django.utils.translation import gettext_lazy as _
 class Config(models.Model):
     user = models.CharField(max_length=50, default = None)
     enabled = models.BooleanField(default=False)
+    
+    # Annotation Color (TODO: Update for multiple. Default is yellow.)
     annotation_color=models.CharField(max_length=10, default="#ffff00")
+    annotation_color_switch = models.BooleanField(default=False)
+
+    # 2D Segmentation Opacity 
     alpha_selected= models.CharField(max_length=10, default="0.85")
+    alpha_selected_switch = models.BooleanField(default=False)
+
+    # 3D Segmentation Opacity 
     alpha_3d= models.CharField(max_length=10, default="0.5")
+    alpha_3d_switch = models.BooleanField(default=False)
+
+    # GPU Memory Limit
     gpu_limit=models.CharField(max_length=10, default="1.0")
+    gpu_limit_switch = models.BooleanField(default=False)
+
+    # CPU Memory Limit
     sys_limit=models.CharField(max_length=10, default="2.0")
+    sys_limit_switch = models.BooleanField(default=False)
+
+    # Concurrent Chunk Requests
     chunk_requests=models.CharField(max_length=10, default="32")
+    chunk_requests_switch = models.BooleanField(default=False)
+
+    # NG Layout
     layout = models.CharField(max_length=10, default="xy-3d")
+    layout_switch = models.BooleanField(default=False)
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
