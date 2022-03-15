@@ -3,12 +3,13 @@
 
 
 {% block content %}
-<div class="basic workspace">
+<div class="basic pref">
 <div class="pref_main_container">
     <form id="configForm" action="" method="post" >
     {% csrf_token %}
     <div class="navbar-text" style='font-size:1vw;'> <h2> Neuroglancer Preferences </h2>
-        Neuroglancer preferences will overwrite all task states to the specified configuration.
+        Neuroglancer preferences will overwrite all task states to the specified configuration. Only settings that are enabled 
+        (checked) are actually used. 
         <hr class="row-divider">
         <div class="form-check form-switch">
             <label class="form-check-label" for="configSwitch"> Enable/Disable Preferences </label>
@@ -18,14 +19,15 @@
     <div id="neuroglancerConfig">
         <hr class="row-divider">
         <div class="row-container">
-            <label for="annotationColor" class="form-label">Annotation Color</label>
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
+            <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
         </div>
 
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
             <div> 2D Segmentation Data Opacity </div>
-            
             <input id="alphaSelected" type="range" class="form-range" min="0" 
                 max="1" step="0.01" value="{{ alphaSelected }}" />
             
@@ -34,6 +36,7 @@
 
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alpha3DSwitch"> </div>
             <div> 3D Segmentation Data Opacity </div>
             
             <input id="alpha3D" type="range" class="form-range" min="0" 
@@ -44,6 +47,7 @@
 
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="layoutSwitch"> </div>
             <div> Panel Layout </div>
             <select name="layout" class="form-select" id="layoutSelect" >
                 <option>xy-3d</option>
@@ -56,6 +60,7 @@
         
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="gpuLimitSwitch"> </div>
             <div> GPU Memory Limit (GB) </div>
             
             <input id="gpuLimit" type="range" class="form-range" min="0.5" 
@@ -66,6 +71,7 @@
 
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="sysLimitSwitch"> </div>
             <div> System Memory Limit (GB) </div>
             
             <input id="sysLimit" type="range" class="form-range" min="0.5" 
@@ -76,6 +82,7 @@
 
         <hr class="row-divider">
         <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="chunkReqSwitch"> </div>
             <div> Concurrent Chunk Requests </div>
             
             <input id="chunkReq" type="range" class="form-range" min="8" 
@@ -91,28 +98,34 @@
         <button id="resetConfig" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
     </div>
     </form>
+</br>
 </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script>
+    const preferenceFields = {
+        "annotationColor": "{{annotationColorSwitch}}", 
+        "alphaSelected": "{{alphaSelectedSwitch}}", 
+        "alpha3D": "{{alpha3DSwitch}}", 
+        "gpuLimit": "{{gpuLimitSwitch}}", 
+        "sysLimit": "{{sysLimitSwitch}}", 
+        "chunkReq": "{{chunkReqSwitch}}",
+        "layout": "{{layoutSwitch}}"
+    };
     function submitConfig() {
         let form = '#configForm'
         let enabled = $('#configSwitch').is(":checked");
-        let annotationColor = $('#annotationColor').val();
-        let alphaSelected = $('#alphaSelected').val();
-        let alpha3D = $('#alpha3D').val();
-        let gpuLimit = $('#gpuLimit').val();
-        let sysLimit = $('#sysLimit').val();
-        let chunkReq = $('#chunkReq').val();
-
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'annotationColor').attr('value', annotationColor).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'alphaSelected').attr('value', alphaSelected).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'alpha3D').attr('value', alpha3D).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'gpuLimit').attr('value', gpuLimit).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'sysLimit').attr('value', sysLimit).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'chunkReq').attr('value', chunkReq).appendTo(form);
+
+        for (field in preferenceFields){
+            let fieldSwitch = $(`#${field}Switch`).is(":checked");
+            let fieldValue = $(`#${field}`).val();
+            if (field != "layout") {
+                $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
+            }
+            $('<input>').attr('type', 'hidden').attr('name', `${field}Switch`).attr('value', fieldSwitch).appendTo(form);
+        }
         $(form).submit();
     }
     $(document).ready(function() {
@@ -131,6 +144,15 @@
         } else {
             $("#neuroglancerConfig").hide();
             $("#configSwitch").prop( "checked", false );
+        }
+
+        // Update switches 
+        for (field in preferenceFields){
+            if (preferenceFields[field] == "True") {
+                $(`#${field}Switch`).prop( "checked", true );
+            } else {
+                $(`#${field}Switch`).prop( "checked", false );
+            }
         }
 
         // Display value on sliders
