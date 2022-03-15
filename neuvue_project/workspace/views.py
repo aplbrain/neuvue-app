@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
@@ -21,7 +22,7 @@ from .neuroglancer import (
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json, is_authorized
+from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
 import json
 import os
 
@@ -290,6 +291,7 @@ class TaskView(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
+        self_assign_group = "Can self assign tasks" 
 
         for i, n_s in enumerate(Namespace.objects.filter(namespace_enabled=True)):
             namespace = n_s.namespace
@@ -306,6 +308,8 @@ class TaskView(View):
             context[namespace]["total_tasks"] = 0
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
+            context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
+            context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
@@ -356,6 +360,41 @@ class TaskView(View):
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
         return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
+    
+    # This post endpoint does not redirect to another webpage, it returns a response that the view must handle.
+    # Sorry for breaking form, but forcing django to be dynamic for this feature was the best solution
+    def post(self, request, *args, **kwargs):
+        # Pull information we need
+        namespace = request.POST.get("namespace", "")
+        namespace_obj = Namespace.objects.get(namespace = namespace)
+        username = request.user.username
+        num_tasks = namespace_obj.number_of_tasks_users_can_self_assign
+        max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
+
+        # Get x unassigned tasks to assign. Return if none
+        unassigned_tasks = self.client.get_tasks(
+            sieve={"assignee": "unassigned", "namespace": namespace}, 
+            limit=num_tasks, 
+            select=["_id"]
+        )
+        if len(unassigned_tasks) == 0:
+            # Warn the user that no tasks are left in the queue
+            return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
+
+        # Get tasks currently assigned to user to make sure we don't exceed the limit
+        assigned_tasks = self.client.get_tasks(
+            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
+            select=["_id"]
+        )
+        while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
+            unassigned_tasks = unassigned_tasks.iloc[:-1 , :]
+
+        # Assign the tasks
+        ids = unassigned_tasks.index.tolist()
+        for id in ids:
+            self.client.patch_task(id, assignee=username)
+
+        return HttpResponse()
 
 
 class InspectTaskView(View):
