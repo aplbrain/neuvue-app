@@ -345,7 +345,7 @@ class TaskView(View):
         tasks['task_id'] = tasks.index
         tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
 
-        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values('created')
+        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
         closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
         
             
