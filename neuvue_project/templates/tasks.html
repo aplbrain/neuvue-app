@@ -78,8 +78,7 @@
                                         <th>Opened Time</th>
                                         <th>Closed Time</th>
                                         <th>Status</th>
-                                        {% comment %} <th>Flag Reason</th>
-                                        <th>Notes</th> {% endcomment %}
+                                        <th>Tags</th>
                                     </tr>
                                     {% for row in  context.closed %}
                                     <tr>
@@ -88,6 +87,20 @@
                                         <td> {{ row.opened }} </td>
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
+                                        {% if row.tags %}
+                                        <td> 
+                                        <span 
+                                          data-bs-toggle="tooltip" 
+                                          data-bs-placement="right" 
+                                          data-bs-html="true"
+                                          title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" 
+                                          class="tags">
+                                          {{ row.tags.0 }} 
+                                        </span>
+                                        </td>
+                                        {% else %}
+                                        <td> N/A </td>
+                                        {% endif %}
                                     </tr>
                                     {% endfor %}
 
@@ -178,142 +191,151 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
-    start();
-    function start() {
-        {% for namespace, context in data.items %}
-            if ({{context.total_tasks}}) {
-                tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
-                document.getElementById("pending{{namespace}}Tab").click();
-                tableHide("{{namespace}}Header","{{namespace}}Table");
-                // {% if not context.total_pending %}
-                //    document.getElementById("{{namespace}}Header").click();
-                // {% endif %}   
-            }
-        {% endfor %}
-    };
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
 
-    // Add event listener to modal
-    const exampleModal = document.getElementById('confirmAddTasksModal');
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-        // Extract info from data-bs-* attributes
-        const addMoreTasksButton = event.relatedTarget
-        const namespace = addMoreTasksButton.getAttribute('data-bs-namespace');
-        const displayName = addMoreTasksButton.getAttribute('data-bs-display-name');
-        // Customize the modal
-        const modalTitle = exampleModal.querySelector('.modal-title');
-        modalTitle.textContent = 'Add more ' + displayName + ' tasks?';
-        const yesButton = document.getElementById("modalYes");
-        yesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinner'); addTasks('" + namespace + "')");
-    })
-    
-    function tabToggle(evt, timeframe,start,end,buttonid) {
-        
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = start; i < end; i++) {
-            tabcontent[i].style.display = "none";
-        }
+  start();
+  function start() {
+      {% for namespace, context in data.items %}
+          if ({{context.total_tasks}}) {
+              tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
+              document.getElementById("pending{{namespace}}Tab").click();
+              tableHide("{{namespace}}Header","{{namespace}}Table");
+              // {% if not context.total_pending %}
+              //    document.getElementById("{{namespace}}Header").click();
+              // {% endif %}   
+          }
+      {% endfor %}
+  };
 
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = start; i < end; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(timeframe).style.display = "block";
+  // Add event listener to modal
+  const exampleModal = document.getElementById('confirmAddTasksModal');
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+      // Extract info from data-bs-* attributes
+      const addMoreTasksButton = event.relatedTarget
+      const namespace = addMoreTasksButton.getAttribute('data-bs-namespace');
+      const displayName = addMoreTasksButton.getAttribute('data-bs-display-name');
+      // Customize the modal
+      const modalTitle = exampleModal.querySelector('.modal-title');
+      modalTitle.textContent = 'Add more ' + displayName + ' tasks?';
+      const yesButton = document.getElementById("modalYes");
+      yesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinner'); addTasks('" + namespace + "')");
+  })
+  
+  function tabToggle(evt, timeframe,start,end,buttonid) {
+      
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = start; i < end; i++) {
+          tabcontent[i].style.display = "none";
+      }
 
-        var tab_button = document.getElementById(buttonid);
-        tab_button.classList.toggle("active");
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = start; i < end; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(timeframe).style.display = "block";
 
-    };
+      var tab_button = document.getElementById(buttonid);
+      tab_button.classList.toggle("active");
 
-    function triggerLoadingSpinner(parent_elem_name) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const spinner = document.getElementById('loading-spinner');
-        parent_elem.innerHTML = '';
-        parent_elem.append(spinner);
-    }
+  };
 
-    function removeLoadingSpinner(parent_elem_name) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const original_container = document.getElementById("loading-spinner-container");
-        original_container.appendChild(parent_elem.firstChild);
-        parent_elem.innerHTML = "Add More Tasks";      // May need to generalize this if we add more buttons
-    }
+  function triggerLoadingSpinner(parent_elem_name) {
+      const parent_elem = document.getElementById(parent_elem_name);
+      const spinner = document.getElementById('loading-spinner');
+      parent_elem.innerHTML = '';
+      parent_elem.append(spinner);
+  }
 
-    function tableHide(actionButton, hiddenContentId) {
+  function removeLoadingSpinner(parent_elem_name) {
+      const parent_elem = document.getElementById(parent_elem_name);
+      const original_container = document.getElementById("loading-spinner-container");
+      original_container.appendChild(parent_elem.firstChild);
+      parent_elem.innerHTML = "Add More Tasks";      // May need to generalize this if we add more buttons
+  }
 
-        var acc = document.getElementById(actionButton);
-        acc.onclick=function() {
-            /* Toggle between adding and removing the "active" class,
-            to highlight the button that controls the panel */
-            this.classList.toggle("active");
+  function tableHide(actionButton, hiddenContentId) {
 
-            /* Toggle between hiding and showing the active panel */
-            var panel = document.getElementById(hiddenContentId);
-            if (panel.style.display === "block") {
-            panel.style.display = "none";
-            } else {
-            panel.style.display = "block";
-            }
-        };
-   
-    };
+      var acc = document.getElementById(actionButton);
+      acc.onclick=function() {
+          /* Toggle between adding and removing the "active" class,
+          to highlight the button that controls the panel */
+          this.classList.toggle("active");
 
-    function triggerToast(toastText) {
-        const toastBody = document.getElementById('toast-body');
-        toastBody.textContent = toastText;
-        const toastDiv = document.getElementById('toast');
-        const toast = new bootstrap.Toast(toastDiv);
-        toast.show();
-    }
+          /* Toggle between hiding and showing the active panel */
+          var panel = document.getElementById(hiddenContentId);
+          if (panel.style.display === "block") {
+          panel.style.display = "none";
+          } else {
+          panel.style.display = "block";
+          }
+      };
+  
+  };
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+  function triggerToast(toastText) {
+      const toastBody = document.getElementById('toast-body');
+      toastBody.textContent = toastText;
+      const toastDiv = document.getElementById('toast');
+      const toast = new bootstrap.Toast(toastDiv);
+      toast.show();
+  }
 
-    function addTasks(namespace) {
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
 
-        const csrftoken = getCookie('csrftoken');
-        const formData = new FormData();
-        formData.append('namespace', namespace);
+  function addTasks(namespace) {
 
-        const request = {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-            },
-            body: formData,
-            credentials: 'same-origin',
-        };
-        // Call the post request defined for this view
-        fetch('', request).then(function (response) {
-            if (response.ok) {
-                response.text().then(function(text) {
-                    if(text) {
-                        triggerToast(text);
-                        removeLoadingSpinner(namespace + "TasksSpinner");
-                    } else {
-                        location.reload();
-                    }
-                });
-            } else {
-                triggerToast("Unable to reach server. Please try again.");
-                removeLoadingSpinner(namespace + "TasksSpinner");
-            }
-        });
+      const csrftoken = getCookie('csrftoken');
+      const formData = new FormData();
+      formData.append('namespace', namespace);
 
-    }
+      const request = {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': csrftoken,
+          },
+          body: formData,
+          credentials: 'same-origin',
+      };
+      // Call the post request defined for this view
+      fetch('', request).then(function (response) {
+          if (response.ok) {
+              response.text().then(function(text) {
+                  if(text) {
+                      triggerToast(text);
+                      removeLoadingSpinner(namespace + "TasksSpinner");
+                  } else {
+                      location.reload();
+                  }
+              });
+          } else {
+              triggerToast("Unable to reach server. Please try again.");
+              removeLoadingSpinner(namespace + "TasksSpinner");
+          }
+      });
+
+  }
+
+  function showTags (tags){
+      console.log(tags);
+  } 
 
 </script>
 {% endblock %}
