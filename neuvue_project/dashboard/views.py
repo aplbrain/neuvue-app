@@ -10,12 +10,18 @@ from django.apps import apps
 
 from neuvueclient import NeuvueQueue
 from typing import List
+from datetime import datetime 
 
 # import the logging library
 import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+# Convienence function
+def _get_users_from_group(group:str): 
+    users = Group.objects.get(name=group).user_set.all() 
+    return [x.username for x in users]
 
 class DashboardView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -35,7 +41,7 @@ class DashboardView(View, LoginRequiredMixin):
         if not group or not namespace: 
             return render(request, "dashboard.html", context)
         
-        users = self._get_users_from_group(group)
+        users = _get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
         
         context['group'] = group
@@ -49,10 +55,6 @@ class DashboardView(View, LoginRequiredMixin):
 
 
         return render(request, "dashboard.html", context)
-
-    def _get_users_from_group(self, group:str): 
-        users = Group.objects.get(name=group).user_set.all() 
-        return [x.username for x in users]
     
     def _generate_table_and_counts(self, namespace: str, users: List):
         table_rows = []
@@ -138,4 +140,36 @@ class ReportView(View, LoginRequiredMixin):
     
     def post(self, request, *args, **kwargs):
         print(request.POST)
+        
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        
+        # Access POST fields
+        display_name = request.POST.get('namespace')
+        group = request.POST.get('group')
+        start_field = request.POST.get('start_field')
+        start_date = request.POST.get('start_date')
+        end_field = request.POST.get('end_field')
+        end_date = request.POST.get('end_date')
+        
+        # Convert to datetime Objects
+        start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+        end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+
+        # Retrieve valid tasks
+        namespace = Namespaces.objects.get(display_name = display_name).namespace
+        users = _get_users_from_group(group)
+        task_df = self.client.get_tasks(sieve={
+            'assignee': users,
+            'namespace': namespace,
+            start_field: {
+                "$gt": start_dt
+            }, 
+            end_field: {
+                '$lt': end_dt
+            }
+        }, select=['assignee', 'status', 'duration'])
+        
+        # TODO: Calculate analytics
+        # TODO: Send file to another view to download from the user. 
+
         return redirect(reverse('report'))

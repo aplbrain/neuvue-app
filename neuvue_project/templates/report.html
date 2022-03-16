@@ -17,10 +17,9 @@
                 <option>{{namespace_opt}} </option>
                 {% endfor %}
             </select>
-
-        </div>
+            </br>
         
-        <div style="margin: 20px" class="form-group">
+
             <label style="color: white" for="groupSelect">Group</label>
             <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
                 <option value="" selected disabled>Please select</option>
@@ -28,17 +27,35 @@
                 <option>{{group_opt}} </option>
                 {% endfor %}
             </select> 
-        </div>
+            </br>
 
-        {% comment %} Need to add datepicker {% endcomment %}
-        <div style="margin: 20px"  class="form-group">
-            <input type="submit" class="btn btn-primary" value="Submit">
+            <label style="color: white" for="startSelect">From</label>
+            <select name="start_field" class="form-select" id="startSelect" required="true">
+              <option value="created">Created By</option>
+              <option value="opened">Opened By</option>
+              <option value="closed">Closed By</option>
+            </select> 
+
+            <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true">
+            </br>
             
+            <label style="color: white" for="endSelect">To</label>
+            <select name="end_field" class="form-select" id="endSelect" required="true">
+              <option value="created">Created By</option>
+              <option value="opened">Opened By</option>
+              <option value="closed">Closed By</option>
+            </select> 
+
+            
+            <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+            </br>
+
+            <input type="submit" class="btn btn-primary" value="Generate Report">
             {% if error %}
             <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
             {% endif %}
-          
-        </div>
+            
+          </div>
         </form>
       </div>
 
