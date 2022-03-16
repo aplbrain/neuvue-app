@@ -25,7 +25,8 @@ from workspace.views import (
     InspectTaskView,
     LineageView,
     TokenView,
-    SynapseView
+    SynapseView,
+    GettingStartedView
     )
 from preferences.views import PreferencesView
 from dashboard.views import DashboardView
@@ -34,8 +35,10 @@ urlpatterns = [
     path('', IndexView.as_view(), name="index"),
     path('preferences/', PreferencesView.as_view(), name="preferences"),
     path('tasks/', TaskView.as_view(), name="tasks"),
+    path('getting-started/', GettingStartedView.as_view(), name="getting-started"),
     path('workspace/<str:namespace>', WorkspaceView.as_view(), name="workspace"),
     path('admin/', admin.site.urls),
+    path('__debug__/', include('debug_toolbar.urls')),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('dashboard/', DashboardView.as_view(), name="dashboard"),

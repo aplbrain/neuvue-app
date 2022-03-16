@@ -20,6 +20,7 @@ decorator==5.1.0
 defusedxml==0.7.1
 Django==3.2.7
 django-allauth==0.45.0
+django-debug-toolbar==3.2.4
 django-webpack-loader==1.4.1
 djangorestframework==3.12.4
 docker==4.4.4
@@ -27,6 +28,7 @@ docker-compose==1.25.5
 dockerpty==0.4.1
 docopt==0.6.2
 future==0.16.0
+graphviz==0.19.1
 idna==3.2
 ipython==7.28.0
 jedi==0.18.0

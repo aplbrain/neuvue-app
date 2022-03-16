@@ -1,8 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace
 
 from neuvueclient import NeuvueQueue
@@ -16,11 +17,16 @@ from .neuroglancer import (
     get_from_state_server, 
     post_to_state_server, 
     get_from_json,
-    apply_state_config
+    apply_state_config,
+    refresh_ids
     )
 
 from .analytics import user_stats
-from .utils import utc_to_eastern, is_url, is_json
+from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
+import json
+import os
+
+
 
 # import the logging library
 import logging
@@ -32,7 +38,7 @@ logger = logging.getLogger(__name__)
 class WorkspaceView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
@@ -60,6 +66,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             'was_skipped':False,
         }
 
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
+
         if namespace is None:
             logging.debug("No namespace query provided.")
             # TODO: Redirect to task page for now, something went wrong...
@@ -74,9 +84,13 @@ class WorkspaceView(LoginRequiredMixin, View):
             pass
 
         else:
-
             if task_df['status'] == 'pending':
-                self.client.patch_task(task_df["_id"], status="open")
+
+                self.client.patch_task(
+                    task_df["_id"], 
+                    status="open", 
+                    overwrite_opened=not task_df.get('opened')
+                    )
             
             # Update Context
             context['is_open'] = True
@@ -110,6 +124,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             # Apply configuration options.
             context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
+            context['ng_state'] = refresh_ids(context['ng_state'], namespace)
 
         return render(request, "workspace.html", context)
 
@@ -218,7 +233,11 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info('Flagging task')
             flag_reason = request.POST.get('flag')
             other_reason = request.POST.get('flag-other')
-            metadata['flag_reason'] = flag_reason if flag_reason else other_reason
+            
+            metadata['flag_reason'] = flag_reason
+            if other_reason:
+                metadata['flag_other'] = other_reason
+    
             request.session['session_task_count'] = session_task_count +1
 
             # Update task data
@@ -267,11 +286,12 @@ class WorkspaceView(LoginRequiredMixin, View):
 
 class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         context = {}
+        self_assign_group = "Can self assign tasks" 
 
         for i, n_s in enumerate(Namespace.objects.filter(namespace_enabled=True)):
             namespace = n_s.namespace
@@ -288,10 +308,12 @@ class TaskView(View):
             context[namespace]["total_tasks"] = 0
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
+            context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
+            context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
-        if not request.user.is_authenticated:
-            #TODO: Create Modal that lets the user know to log in first. 
-            return render(request, "workspace.html", context)
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         non_empty_namespace = 0
 
@@ -338,11 +360,46 @@ class TaskView(View):
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
         return pending_tasks.to_dict('records'), closed_tasks.to_dict('records')
+    
+    # This post endpoint does not redirect to another webpage, it returns a response that the view must handle.
+    # Sorry for breaking form, but forcing django to be dynamic for this feature was the best solution
+    def post(self, request, *args, **kwargs):
+        # Pull information we need
+        namespace = request.POST.get("namespace", "")
+        namespace_obj = Namespace.objects.get(namespace = namespace)
+        username = request.user.username
+        num_tasks = namespace_obj.number_of_tasks_users_can_self_assign
+        max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
+
+        # Get x unassigned tasks to assign. Return if none
+        unassigned_tasks = self.client.get_tasks(
+            sieve={"assignee": "unassigned", "namespace": namespace}, 
+            limit=num_tasks, 
+            select=["_id"]
+        )
+        if len(unassigned_tasks) == 0:
+            # Warn the user that no tasks are left in the queue
+            return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
+
+        # Get tasks currently assigned to user to make sure we don't exceed the limit
+        assigned_tasks = self.client.get_tasks(
+            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
+            select=["_id"]
+        )
+        while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
+            unassigned_tasks = unassigned_tasks.iloc[:-1 , :]
+
+        # Assign the tasks
+        ids = unassigned_tasks.index.tolist()
+        for id in ids:
+            self.client.patch_task(id, assignee=username)
+
+        return HttpResponse()
 
 
 class InspectTaskView(View):
     def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR)
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
@@ -354,6 +411,10 @@ class InspectTaskView(View):
             "ng_state": None,
             "error": None
         }
+        
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
 
         if task_id is None:
             return render(request, "inspect.html", context)
@@ -434,7 +495,8 @@ class LineageView(View):
 
 class SynapseView(View):
     def get(self, request, root_id=None, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
         if root_id in settings.STATIC_NG_FILES:
@@ -466,7 +528,21 @@ class SynapseView(View):
 #TODO: Move simple views to other file 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "index.html")
+
+        recent_updates = True
+        try:
+            p = staticfiles_storage.path('updates.json')
+            with open(p) as update_json:
+                updates = json.load(update_json)
+                recent_updates = updates['recent_updates']
+        except:
+            recent_updates = False
+
+        ## Get updates from local updates.json
+        context = {
+            "recent_updates": recent_updates
+        }
+        return render(request, "index.html", context)
 
 class AuthView(View):
     def get(self, request, *args, **kwargs):
@@ -475,3 +551,7 @@ class AuthView(View):
 class TokenView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "token.html", context={'code': request.GET.get('code')})
+
+class GettingStartedView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "getting-started.html")

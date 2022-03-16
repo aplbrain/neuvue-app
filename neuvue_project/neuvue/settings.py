@@ -33,6 +33,11 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
+INTERNAL_IPS = [
+    'localhost',
+    '127.0.0.1'
+]
+
 if DEBUG is False:
     # Fix Health Check issues 
     import requests
@@ -61,7 +66,8 @@ INSTALLED_APPS = [
     'workspace', 
     'dashboard',
     'webpack_loader',
-    'preferences'
+    'preferences',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -72,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'neuvue.urls'
@@ -161,9 +168,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if not DEBUG: 
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'workspace/static')
@@ -199,7 +204,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
-
+# NEUVUE_QUEUE_ADDR = "http://localhost:9005"
+NEUVUE_CLIENT_SETTINGS = {
+    # "local" : True
+}
 # Task Timeout in Seconds
 TIMEOUT = 900
 

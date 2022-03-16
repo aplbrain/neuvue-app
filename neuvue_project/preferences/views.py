@@ -26,9 +26,20 @@ class PreferencesView(View):
         
         context = {
             'enabled': config.enabled,
+            'annotationColor': config.annotation_color,
+            'annotationColorSwitch': config.annotation_color_switch,
             'alphaSelected': config.alpha_selected,
+            'alphaSelectedSwitch': config.alpha_selected_switch,
             'alpha3D': config.alpha_3d,
-            'layout': config.layout
+            'alpha3DSwitch': config.alpha_3d_switch,
+            'gpuLimit': config.gpu_limit,
+            'gpuLimitSwitch': config.gpu_limit_switch,
+            'sysLimit': config.sys_limit,
+            'sysLimitSwitch': config.sys_limit_switch,
+            'chunkReq': config.chunk_requests,
+            'chunkReqSwitch': config.chunk_requests_switch,
+            'layout': config.layout,
+            'layoutSwitch': config.layout_switch
         }
 
         return render(request, "preferences.html", context)
@@ -37,13 +48,28 @@ class PreferencesView(View):
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
 
-        if request.POST.get('enabled') == 'true':
-            config.enabled = True
-        else:
-            config.enabled = False
+        config.enabled = request.POST.get('enabled') == 'true'
+
+        config.annotation_color = request.POST.get('annotationColor')
+        config.annotation_color_switch = request.POST.get('annotationColorSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
+        config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'
+
         config.alpha_3d = request.POST.get('alpha3D')
+        config.alpha_3d_switch = request.POST.get('alpha3DSwitch') == 'true'
+
+        config.gpu_limit = request.POST.get('gpuLimit')
+        config.gpu_limit_switch = request.POST.get('gpuLimitSwitch') == 'true'
+
+        config.sys_limit = request.POST.get('sysLimit')
+        config.sys_limit_switch = request.POST.get('sysLimitSwitch') == 'true'
+
+        config.chunk_requests = request.POST.get('chunkReq')
+        config.chunk_requests_switch = request.POST.get('chunkReqSwitch') == 'true'
+
         config.layout = request.POST.get('layout')
+        config.layout_switch = request.POST.get('layoutSwitch') == 'true'
+
         config.save()
         return redirect(reverse('preferences'))
