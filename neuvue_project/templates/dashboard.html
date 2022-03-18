@@ -286,6 +286,7 @@
                         <th scope="col">Opened</th>
                         <th scope="col">Closed</th>
                         <th scope="col">Duration (min)</th>
+                        <th scope="col">Tags (min)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -300,6 +301,11 @@
                         <td>{{taskrow.opened}}</td>
                         <td>{{taskrow.closed}}</td>
                         <td>{{taskrow.duration}}</td>
+                        {% if taskrow.tags %}
+                        <td style="max-width:3vw; overflow:hidden; text-overflow: ellipsis;">{{taskrow.tags.0}}...</td>
+                        {% else %}
+                        <td>None</td>
+                        {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>`

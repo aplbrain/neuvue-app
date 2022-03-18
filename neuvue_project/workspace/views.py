@@ -452,6 +452,8 @@ class InspectTaskView(View):
         metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
+        if task_df.get('tags'):
+            context['tags'] = ','.join(task_df['tags'])
         return render(request, "inspect.html", context)
 
 
