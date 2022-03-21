@@ -1030,3 +1030,9 @@ background: transparent;
   border-color: transparent;
   font-size: 1.2vh;
 }
+
+.userTags{
+  max-width:3vw; 
+  overflow:hidden; 
+  text-overflow: ellipsis;
+}

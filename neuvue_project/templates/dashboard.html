@@ -302,7 +302,7 @@
                         <td>{{taskrow.closed}}</td>
                         <td>{{taskrow.duration}}</td>
                         {% if taskrow.tags %}
-                        <td style="max-width:3vw; overflow:hidden; text-overflow: ellipsis;">{{taskrow.tags.0}}...</td>
+                        <td class="userTags">{{taskrow.tags.0}}</td>
                         {% else %}
                         <td>None</td>
                         {% endif %}
