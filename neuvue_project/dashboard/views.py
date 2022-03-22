@@ -14,6 +14,7 @@ from datetime import datetime
 
 # import the logging library
 import logging
+import pandas as pd
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -137,7 +138,16 @@ class ReportView(View, LoginRequiredMixin):
         context['all_groups'] = [x.name for x in Group.objects.all()]
         context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
         return render(request, "report.html", context)
-    
+
+    def _format_time(self, x):
+        try:
+            return x.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            return 'N/A'
+
+    def _get_status_count(self, task_df, status):
+        return task_df['status'].value_counts().get(status, 0)
+
     def post(self, request, *args, **kwargs):
         print(request.POST)
         
@@ -158,18 +168,85 @@ class ReportView(View, LoginRequiredMixin):
         # Retrieve valid tasks
         namespace = Namespaces.objects.get(display_name = display_name).namespace
         users = _get_users_from_group(group)
-        task_df = self.client.get_tasks(sieve={
-            'assignee': users,
-            'namespace': namespace,
-            start_field: {
-                "$gt": start_dt
-            }, 
-            end_field: {
-                '$lt': end_dt
-            }
-        }, select=['assignee', 'status', 'duration'])
-        
-        # TODO: Calculate analytics
-        # TODO: Send file to another view to download from the user. 
 
-        return redirect(reverse('report'))
+        # add bar chart
+        decision_namespaces = [x.display_name for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
+        if namespace in decision_namespaces:
+            import plotly.graph_objects as go
+            task_df = self.client.get_tasks(sieve={
+                'assignee': users,
+                'namespace': namespace,
+                start_field: {
+                    "$gt": start_dt
+                }, 
+                end_field: {
+                    '$lt': end_dt
+                }
+            }, select=['assignee', 'status', 'duration','metadata'])
+            task_df['decision'] = task_df['metadata'].apply(lambda x: x.get('decision'))
+                        
+            users=task_df['assignee'].unique()
+            bar_groups = []
+            for decision_type in task_df['decision'].unique():
+                decision_counts = dict(task_df[task_df['decision']==decision_type].value_counts('assignee'))
+                x = list(decision_counts.keys())
+                y = list(decision_counts.values())
+                decision_bar = go.Bar(name=decision_type, x=x, y=y)
+                bar_groups.append(decision_bar)
+            print(len(bar_groups))
+            fig = go.Figure(data=bar_groups)
+            fig.update_layout(barmode='group')
+            fig.update_layout(
+                title="Decisions for " + namespace + " by " + group,
+                xaxis_title="assignees",
+                yaxis_title="# of responses",
+                legend_title="Decision Type",
+            )
+        else:
+            task_df = self.client.get_tasks(sieve={
+                'assignee': users,
+                'namespace': namespace,
+                start_field: {
+                    "$gt": start_dt
+                }, 
+                end_field: {
+                    '$lt': end_dt
+                }
+            }, select=['assignee', 'status', 'duration'])
+
+        columns = ['Username', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
+        status_states = task_df.sort_values('status')['status'].unique()
+        columns.extend(status_states)
+        table_rows = []
+
+        for assignee, assignee_df in task_df.groupby('assignee'):
+            total_duration = str(round(assignee_df['duration'].sum()/3600,2))
+            avg_closed_duration = str(round(assignee_df[assignee_df['status']=='closed']['duration'].mean()/60,2))
+            avg_duration = str(round(assignee_df['duration'].mean()/60,2))
+            user_metrics = [assignee, total_duration, avg_closed_duration, avg_duration]
+            for status in status_states:
+                number_of_tasks = len(assignee_df[assignee_df['status']==status])
+                user_metrics.append(number_of_tasks)
+            table_rows.append(user_metrics)
+
+        fields = {"created":"Created By",
+                    "opened": "Opened By",
+                    "closed": "Closed By"}
+
+        context = {"display_name":display_name,
+                    "namespace":namespace,
+                    "group":group,
+                    "start_field":start_field,
+                    "start_date":start_date,
+                    "end_field":end_field,
+                    "end_date":end_date,
+                    "table_columns":columns,
+                    "table_rows":table_rows,
+                    "fields":fields,
+                    "all_groups": [x.name for x in Group.objects.all()],
+                    "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
+                }
+        if namespace in decision_namespaces:
+            context["fig"] = fig.to_html()
+
+        return render(request,'report.html',context)
