@@ -1035,4 +1035,5 @@ background: transparent;
   max-width:3vw; 
   overflow:hidden; 
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
