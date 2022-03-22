@@ -78,8 +78,7 @@
                                         <th>Opened Time</th>
                                         <th>Closed Time</th>
                                         <th>Status</th>
-                                        {% comment %} <th>Flag Reason</th>
-                                        <th>Notes</th> {% endcomment %}
+                                        <th>Tags</th>
                                     </tr>
                                     {% for row in  context.closed %}
                                     <tr>
@@ -88,6 +87,20 @@
                                         <td> {{ row.opened }} </td>
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
+                                        {% if row.tags %}
+                                        <td> 
+                                        <span 
+                                          data-bs-toggle="tooltip" 
+                                          data-bs-placement="right" 
+                                          data-bs-html="true"
+                                          title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" 
+                                          class="tags">
+                                          {{ row.tags.0 }} 
+                                        </span>
+                                        </td>
+                                        {% else %}
+                                        <td> None </td>
+                                        {% endif %}
                                     </tr>
                                     {% endfor %}
 
@@ -178,6 +191,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script>
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     start();
     function start() {
         {% for namespace, context in data.items %}
@@ -205,7 +223,7 @@
         const yesButton = document.getElementById("modalYes");
         yesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinner'); addTasks('" + namespace + "')");
     })
-    
+
     function tabToggle(evt, timeframe,start,end,buttonid) {
         
         var i, tabcontent, tablinks;
@@ -255,7 +273,7 @@
             panel.style.display = "block";
             }
         };
-   
+
     };
 
     function triggerToast(toastText) {

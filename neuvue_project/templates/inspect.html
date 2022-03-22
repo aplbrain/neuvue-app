@@ -60,15 +60,24 @@
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{assignee}}')"><i class="fa fa-copy"></i></button> {{assignee}}  </span>  <br>
               Status  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{status}}')"><i class="fa fa-copy"></i></button> {{status}}  </span>  <br>
+              
               {% if flag_reason %}
               Flag Reason  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{flag_reason}}')"><i class="fa fa-copy"></i></button> {{flag_reason}}  </span>  <br> 
               {% endif %}
+              
               {% if decision %}
               Decision  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br> 
               {% endif %}
+              
+              {% if tags %}
+              Tags  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{tags}}')"><i class="fa fa-copy"></i></button> {{tags}}  </span>  <br> 
+              {% endif %}
+              
               Neuroglancer Link <br> 
+              
               <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
           </div>
       </div>

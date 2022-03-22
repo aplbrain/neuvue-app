@@ -209,8 +209,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state, 
-                    tags=tags)
+                    ng_state=ng_state)
                 # Add new differ stack entry
                 if ng_differ_stack != []:
                     self.client.post_differ_stack(
@@ -226,8 +225,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state, 
-                    tags=tags)
+                    ng_state=ng_state)
         
         elif button == 'flag':
             logger.info('Flagging task')
@@ -271,7 +269,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                tags=tags,
                 metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -340,7 +337,7 @@ class TaskView(View):
         tasks = self.client.get_tasks(sieve={
             "assignee": username, 
             "namespace": namespace,
-        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration'])
+        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags'])
         
         tasks['task_id'] = tasks.index
         tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -455,6 +452,8 @@ class InspectTaskView(View):
         metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
+        if task_df.get('tags'):
+            context['tags'] = ','.join(task_df['tags'])
         return render(request, "inspect.html", context)
 
 

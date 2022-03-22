@@ -286,6 +286,7 @@
                         <th scope="col">Opened</th>
                         <th scope="col">Closed</th>
                         <th scope="col">Duration (min)</th>
+                        <th scope="col">Tags</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -300,10 +301,14 @@
                         <td>{{taskrow.opened}}</td>
                         <td>{{taskrow.closed}}</td>
                         <td>{{taskrow.duration}}</td>
+                        {% if taskrow.tags %}
+                        <td class="userTags">{{taskrow.tags|join:", "}}</td>
+                        {% else %}
+                        <td>None</td>
+                        {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>`
-
                 $('#userModalTitle').text("{{row.username}}")
                 $('#hiddenModalTable').html(`
                     <table id='hiddenUserTable' class="table table-striped table-hover">${tableContents}</table>  
@@ -391,7 +396,6 @@
         $('#hiddenUserTable').table2csv('download', {'filename': filename});
 
     }); 
-
 
 </script>
 {% endblock %}
