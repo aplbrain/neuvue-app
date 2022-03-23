@@ -306,6 +306,40 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
+    function getSelectedTasks(){
+        let ret = [];
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret.push(ele)
+            };
+        });
+        return ret
+    }
+
+    function make_list_of_checked_elements(){
+        let ret = "";
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret += "<li>" + ele.value + "</li>"
+            };
+        });
+        return ret
+    }
+
+    function showReassign() {
+      document.getElementById("reassign_user").classList.remove("d-none");
+      document.getElementById("reassign_button").classList.remove("d-none");
+      document.getElementById("reprioritize_priority").classList.add("d-none");
+      document.getElementById("reprioritize_button").classList.add("d-none");
+    }
+
+    function showReprioritize() {
+      document.getElementById("reassign_user").classList.add("d-none");
+      document.getElementById("reassign_button").classList.add("d-none");
+      document.getElementById("reprioritize_priority").classList.remove("d-none");
+      document.getElementById("reprioritize_button").classList.remove("d-none");
+    }
+
     $(document).ready(function() {
 
         {% for row in table %}
@@ -313,7 +347,7 @@
                 let tableContents = `
                     <thead>
                         <tr>
-                        <th scope="col">Select</th>
+                        <th scope="col" style="padding-left: 10px"> <input type="checkbox" name="selectAll" class="taskCheckbox"></th>
                         <th scope="col">Task ID</th>
                         <th scope="col">Segment ID</th>
                         <th scope="col">Status</th>
@@ -352,7 +386,29 @@
                 $('#userModalBody').html(`
                     <table id='userTable' class="table table-striped table-hover">${tableContents}</table>  
                 `);
-                $('#userTable').DataTable();
+                $('#userTable').DataTable({
+                    "columnDefs":[{
+                        "targets": 0,
+                        "orderable": false
+                    }]
+                });
+
+                $('input[name=selectAll]').change(function(){
+                    if ($(this).is(':checked')) {
+                        $('#userTable input[name=selected_tasks]').each(function(){
+                            if ($(this).is(':checkbox') && !$(this).is(":checked")) {
+                                $(this).prop( "checked", true );
+                            } 
+                        })
+                    } else {
+                        $('#userTable input[name=selected_tasks]').each(function(ele){
+                            if ($(this).is(':checkbox') && $(this).is(":checked")) {
+                                $(this).prop( "checked", false );
+                            } 
+                        })
+                    }
+                });
+
                 $('#userModal').modal('show');
             });
         {% endfor %}
@@ -369,38 +425,6 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
-    function getSelectedTasks(){
-        let ret = [];
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret.push(ele)
-            };
-        });
-        return ret
-    }
-    function make_list_of_checked_elements(){
-        let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret += "<li>" + ele.value + "</li>"
-            };
-        });
-        return ret
-    };
-
-    function showReassign() {
-      document.getElementById("reassign_user").classList.remove("d-none");
-      document.getElementById("reassign_button").classList.remove("d-none");
-      document.getElementById("reprioritize_priority").classList.add("d-none");
-      document.getElementById("reprioritize_button").classList.add("d-none");
-    }
-
-    function showReprioritize() {
-      document.getElementById("reassign_user").classList.add("d-none");
-      document.getElementById("reassign_button").classList.add("d-none");
-      document.getElementById("reprioritize_priority").classList.remove("d-none");
-      document.getElementById("reprioritize_button").classList.remove("d-none");
-    }
 
     document.getElementById("reassign_button").addEventListener('click', (e)=> {        
         const inputUser = document.getElementById("reassign_user")
