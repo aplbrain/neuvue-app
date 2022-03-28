@@ -581,5 +581,13 @@
     window.addEventListener('beforeunload', exitAlert);
     {% endif %}
 
+    // Disable ctrl + scroll zooming to deconflict with ngl keybinding
+    document.addEventListener("wheel", e => {
+        if(e.ctrlKey) {
+            e.preventDefault(); //prevent zoom
+        }
+    },
+    { passive: false });
+
 </script>
 {% endblock %}
