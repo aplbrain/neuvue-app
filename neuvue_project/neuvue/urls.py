@@ -29,7 +29,7 @@ from workspace.views import (
     GettingStartedView
     )
 from preferences.views import PreferencesView
-from dashboard.views import DashboardView
+from dashboard.views import DashboardView, ReportView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -50,7 +50,8 @@ urlpatterns = [
     path('lineage/', LineageView.as_view(), name="lineage"), 
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
     path('synapse/', SynapseView.as_view(), name="synapse"), 
-    path('synapse/<str:root_id>', SynapseView.as_view(), name="synapse")
+    path('synapse/<str:root_id>', SynapseView.as_view(), name="synapse"),
+    path('report/', ReportView.as_view(), name="report")
 ]
 
 
