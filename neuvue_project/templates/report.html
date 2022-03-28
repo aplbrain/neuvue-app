@@ -47,7 +47,6 @@
               <option value="closed">Closed By</option>
             </select> 
 
-            
             <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
             </br>
 
@@ -140,7 +139,11 @@
             <div class="col-lg-12" >
               <div class="card text-center">
                 <div class="card-header">
-                  Records for <b> {{display_name}} </b> in <b> {{group}} </b>
+                  {% if start_field == end_field %}
+                    Records for <b> {{display_name}} </b> in <b> {{group}} </b> (<b>{{start_field}}</b> from <b>{{start_date}}</b> to <b>{{end_date}}</b>)
+                  {% else %}
+                    Records for <b> {{display_name}} </b> in <b> {{group}} </b> (<b>{{start_field}}</b> by <b>{{start_date}}</b> and <b>{{end_field}}</b> by <b>{{end_date}}</b>)
+                  {% endif %}
                   <span style="float:right">
                     <button id="exportBtn" class="btn btn-primary">
                         Export to CSV
@@ -176,9 +179,20 @@
   {% endif %}
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript">
+      // Export as CSV Button
+    const exportButton = document.getElementById("exportBtn");
+    exportButton.addEventListener('click', (e) => {
 
+        // Construct filename
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
+
+        // Perform download
+        $('#summary-table').table2csv('download', {'filename': filename});
+
+    }); 
 
 </script>
 {% endblock %}

@@ -173,6 +173,8 @@ class ReportView(View, LoginRequiredMixin):
         decision_namespaces = [x.display_name for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
         if namespace in decision_namespaces:
             import plotly.graph_objects as go
+            import plotly.express as px
+            from plotly.subplots import make_subplots
             task_df = self.client.get_tasks(sieve={
                 'assignee': users,
                 'namespace': namespace,
@@ -186,14 +188,29 @@ class ReportView(View, LoginRequiredMixin):
             task_df['decision'] = task_df['metadata'].apply(lambda x: x.get('decision'))
                         
             users=task_df['assignee'].unique()
-            bar_groups = []
+            fig = make_subplots(rows=1, cols=2, column_widths=[0.12, 0.85], shared_yaxes=True,horizontal_spacing = 0.02)
+            color_count = 0
             for decision_type in task_df['decision'].unique():
-                decision_counts = dict(task_df[task_df['decision']==decision_type].value_counts('assignee'))
-                x = list(decision_counts.keys())
-                y = list(decision_counts.values())
-                decision_bar = go.Bar(name=decision_type, x=x, y=y)
-                bar_groups.append(decision_bar)
-            print(len(bar_groups))
+                if decision_type:
+                    decision_counts = dict(task_df[task_df['decision']==decision_type].value_counts('assignee'))
+                    x = list(decision_counts.keys())
+                    y = list(decision_counts.values())
+                    fig.add_trace(
+                        go.Bar(name=decision_type, x=x, y=y,marker_color=px.colors.qualitative.Plotly[color_count]),
+                        row=1, col=2
+                    )
+                    fig.add_trace(
+                        go.Bar(name=decision_type, x=['total'], y=[sum(y)],marker_color=px.colors.qualitative.Plotly[color_count],showlegend=False),
+                        row=1, col=1
+                    )
+                    color_count +=1
+            fig.update_layout(
+                title="Decisions for " + namespace + " by " + group,
+                yaxis_title="# of responses",
+                legend_title="Decision Type",
+            )
+            fig.update_xaxes(title_text="assignees", row=1, col=2)
+            """
             fig = go.Figure(data=bar_groups)
             fig.update_layout(barmode='group')
             fig.update_layout(
@@ -202,6 +219,7 @@ class ReportView(View, LoginRequiredMixin):
                 yaxis_title="# of responses",
                 legend_title="Decision Type",
             )
+            """
         else:
             task_df = self.client.get_tasks(sieve={
                 'assignee': users,
@@ -215,7 +233,7 @@ class ReportView(View, LoginRequiredMixin):
             }, select=['assignee', 'status', 'duration'])
 
         columns = ['Username', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
-        status_states = task_df.sort_values('status')['status'].unique()
+        status_states = ['pending','open','closed','errored']
         columns.extend(status_states)
         table_rows = []
 
