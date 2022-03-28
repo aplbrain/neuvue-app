@@ -209,17 +209,35 @@
         ...
       </div>
       <div class="modal-footer">
-        <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
-        <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
+        <div class="me-auto">
+          <div class="btn-group dropup">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Modify Selected Tasks
+          </button>
+          <ul class="dropdown-menu">
+            <li id="dropdown-reassign" class="dropdown-item" onclick="showReassign()">
+              Reassign
+            </li>
+            <li id="dropdown-reprioritize" class="dropdown-item" onclick="showReprioritize()">
+              Reprioritize
+            </li>
+          </ul>
+          </div> 
+          <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee" class="d-none">
+          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
+            Reassign
+          </button>
+          <input id="reprioritize_priority" form="taskPatchForm" name="reprioritize_priority" placeholder="New priority" class="d-none" type="number" min="0">
+          <button type="button" id="reprioritize_button" form="taskPatchForm" name="selected_action" value="reprioritize" class="btn btn-primary d-none">
+            Reprioritize
+          </button>
+        </div>
         <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
         <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
-  </div>  
     </div>
-  </div>  
-    </div>
-  </div>  
+  </div>
 </div>
 
 
@@ -235,7 +253,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
+            <button type="submit" class="btn btn-primary" id="reassign_modal_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
             <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
           </div>
         </div>        
@@ -243,6 +261,24 @@
     
 </div>
 
+<div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="confirmReprioritizeModalBody">
+            Confirm you are reprioritizing the following tasks...
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" id="reprioritize_modal_button" form="taskPatchForm" name="selected_action" value="reprioritize">Confirm</button>
+            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
+          </div>
+        </div>
+    </div>
+    
+</div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -270,6 +306,40 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
+    function getSelectedTasks(){
+        let ret = [];
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret.push(ele)
+            };
+        });
+        return ret
+    }
+
+    function make_list_of_checked_elements(){
+        let ret = "";
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret += "<li>" + ele.value + "</li>"
+            };
+        });
+        return ret
+    }
+
+    function showReassign() {
+      document.getElementById("reassign_user").classList.remove("d-none");
+      document.getElementById("reassign_button").classList.remove("d-none");
+      document.getElementById("reprioritize_priority").classList.add("d-none");
+      document.getElementById("reprioritize_button").classList.add("d-none");
+    }
+
+    function showReprioritize() {
+      document.getElementById("reassign_user").classList.add("d-none");
+      document.getElementById("reassign_button").classList.add("d-none");
+      document.getElementById("reprioritize_priority").classList.remove("d-none");
+      document.getElementById("reprioritize_button").classList.remove("d-none");
+    }
+
     $(document).ready(function() {
 
         {% for row in table %}
@@ -277,7 +347,7 @@
                 let tableContents = `
                     <thead>
                         <tr>
-                        <th scope="col">Select</th>
+                        <th scope="col" style="padding-left: 10px"> <input type="checkbox" name="selectAll" class="taskCheckbox"></th>
                         <th scope="col">Task ID</th>
                         <th scope="col">Segment ID</th>
                         <th scope="col">Status</th>
@@ -286,6 +356,7 @@
                         <th scope="col">Opened</th>
                         <th scope="col">Closed</th>
                         <th scope="col">Duration (min)</th>
+                        <th scope="col">Tags</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -300,10 +371,14 @@
                         <td>{{taskrow.opened}}</td>
                         <td>{{taskrow.closed}}</td>
                         <td>{{taskrow.duration}}</td>
+                        {% if taskrow.tags %}
+                        <td class="userTags">{{taskrow.tags|join:", "}}</td>
+                        {% else %}
+                        <td>None</td>
+                        {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>`
-
                 $('#userModalTitle').text("{{row.username}}")
                 $('#hiddenModalTable').html(`
                     <table id='hiddenUserTable' class="table table-striped table-hover">${tableContents}</table>  
@@ -311,7 +386,29 @@
                 $('#userModalBody').html(`
                     <table id='userTable' class="table table-striped table-hover">${tableContents}</table>  
                 `);
-                $('#userTable').DataTable();
+                $('#userTable').DataTable({
+                    "columnDefs":[{
+                        "targets": 0,
+                        "orderable": false
+                    }]
+                });
+
+                $('input[name=selectAll]').change(function(){
+                    if ($(this).is(':checked')) {
+                        $('#userTable input[name=selected_tasks]').each(function(){
+                            if ($(this).is(':checkbox') && !$(this).is(":checked")) {
+                                $(this).prop( "checked", true );
+                            } 
+                        })
+                    } else {
+                        $('#userTable input[name=selected_tasks]').each(function(ele){
+                            if ($(this).is(':checkbox') && $(this).is(":checked")) {
+                                $(this).prop( "checked", false );
+                            } 
+                        })
+                    }
+                });
+
                 $('#userModal').modal('show');
             });
         {% endfor %}
@@ -328,28 +425,9 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
-    function getSelectedTasks(){
-        let ret = [];
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret.push(ele)
-            };
-        });
-        return ret
-    }
-    function make_list_of_checked_elements(){
-        let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret += "<li>" + ele.value + "</li>"
-            };
-        });
-        return ret
-    };
 
     document.getElementById("reassign_button").addEventListener('click', (e)=> {        
         const inputUser = document.getElementById("reassign_user")
-        console.log(e)
         if (getSelectedTasks() == 0){
            // do something here?
         }
@@ -364,6 +442,22 @@
         }
     });
     
+    document.getElementById("reprioritize_button").addEventListener('click', (e)=> {        
+        const inputPriority = document.getElementById("reprioritize_priority")
+        if (getSelectedTasks() == 0){
+           // do something here?
+        }
+        else if (inputPriority.checkValidity() !== true){
+            // inputPriority.style.backgroundColor = "indianred";
+            inputPriority.reportValidity();
+        } else {
+            const confirmReprioritizeModalBody = document.getElementById("confirmReprioritizeModalBody");
+            confirmReprioritizeModalBody.innerHTML = `You are about to reprioritize the following tasks to <b>${inputPriority.value}</b> </b>:`;
+            confirmReprioritizeModalBody.innerHTML += make_list_of_checked_elements();
+            $('#userModal').modal('toggle')
+            $('#confirmReprioritizeModal').modal('toggle')
+        }
+    });
     
     document.getElementById("delete_button").addEventListener('click', (e)=> {
         const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
@@ -391,7 +485,6 @@
         $('#hiddenUserTable').table2csv('download', {'filename': filename});
 
     }); 
-
 
 </script>
 {% endblock %}
