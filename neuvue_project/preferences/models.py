@@ -10,6 +10,10 @@ class Config(models.Model):
     annotation_color=models.CharField(max_length=10, default="#ffff00")
     annotation_color_switch = models.BooleanField(default=False)
 
+    # 2D Show Slices
+    show_slices=models.BooleanField(default=False)
+    show_slices_switch = models.BooleanField(default=False)
+
     # 2D Segmentation Opacity 
     alpha_selected= models.CharField(max_length=10, default="0.85")
     alpha_selected_switch = models.BooleanField(default=False)

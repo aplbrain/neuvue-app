@@ -23,11 +23,17 @@
             <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
         </div>
+        <hr class="row-divider">
+        <div class="form-check form-switch">
+            <label class="form-check-label" for="showSlicesSwitch"> Show Slices </label>
+            <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlices}}>  
+        </div>
+        <hr class="row-divider">
 
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
-            <div> 2D Segmentation Data Opacity </div>
+            <div> Zoom Level </div>
             <input id="alphaSelected" type="range" class="form-range" min="0" 
                 max="1" step="0.01" value="{{ alphaSelected }}" />
             
@@ -106,6 +112,7 @@
 <script>
     const preferenceFields = {
         "annotationColor": "{{annotationColorSwitch}}", 
+        "showSlices": "{{showSlicesSwitch}}", 
         "alphaSelected": "{{alphaSelectedSwitch}}", 
         "alpha3D": "{{alpha3DSwitch}}", 
         "gpuLimit": "{{gpuLimitSwitch}}", 

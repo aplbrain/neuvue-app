@@ -28,6 +28,8 @@ class PreferencesView(View):
             'enabled': config.enabled,
             'annotationColor': config.annotation_color,
             'annotationColorSwitch': config.annotation_color_switch,
+            'showSlices':config.show_slices,
+            'showSlicesSwitch':config.show_slices_switch,
             'alphaSelected': config.alpha_selected,
             'alphaSelectedSwitch': config.alpha_selected_switch,
             'alpha3D': config.alpha_3d,
@@ -52,6 +54,9 @@ class PreferencesView(View):
 
         config.annotation_color = request.POST.get('annotationColor')
         config.annotation_color_switch = request.POST.get('annotationColorSwitch') == 'true'
+
+        config.show_slices = request.POST.get('showSlices')
+        config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'
