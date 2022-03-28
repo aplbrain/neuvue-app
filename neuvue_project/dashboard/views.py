@@ -157,7 +157,6 @@ class ReportView(View, LoginRequiredMixin):
         return task_df['status'].value_counts().get(status, 0)
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         
         Namespaces = apps.get_model('workspace', 'Namespace')
         
@@ -178,7 +177,7 @@ class ReportView(View, LoginRequiredMixin):
         users = _get_users_from_group(group)
 
         # add bar chart
-        decision_namespaces = [x.display_name for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
+        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
         if namespace in decision_namespaces:
             import plotly.graph_objects as go
             import plotly.express as px
