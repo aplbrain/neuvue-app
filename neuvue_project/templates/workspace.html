@@ -276,6 +276,21 @@
                         Flag Task
                     </button>
 
+                    {% if allowed_to_reassgin%}
+                    <! Remove >
+                    <button
+                        id="btnRemove" 
+                        type="button" 
+                        class="mainButton remove"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#removeModal"
+                    >
+                        <div id = 'remove_task_label' class="remove_task_label">
+                            Remove Task From Queue
+                        </div>
+                    </button>
+                    {% endif %}
+                    
                     <! Skip >
                     {% if skipable %}
                     <button
@@ -394,6 +409,22 @@
         </div>
     </div> 
 </form>
+
+<!-- Remove task Modal -->
+<div id="removeModal" class="modal" name="remove" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black; text-align: center;">Are you sure you want to remove this task from your queue?</h5>
+                <button type="button" class="btn-close" id="btnRemoveClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="btnRemoveSubmit">Yes</button>
+            </div>
+        </div>
+    </div>
+</div> 
 
 <div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
@@ -559,6 +590,10 @@
 
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
+        })
+
+        $('#btnRemoveSubmit').click(function() {
+            submitForm('remove')
         })
         
         $('#btnFlagSubmit').click(function() {
