@@ -1,3 +1,4 @@
+from cProfile import label
 import json
 from django.shortcuts import render
 from django.views.generic.base import View
@@ -11,6 +12,7 @@ from django.apps import apps
 from neuvueclient import NeuvueQueue
 from typing import List
 from datetime import datetime 
+import plotly.graph_objects as go
 
 # import the logging library
 import logging
@@ -179,7 +181,6 @@ class ReportView(View, LoginRequiredMixin):
         # add bar chart
         decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
         if namespace in decision_namespaces:
-            import plotly.graph_objects as go
             import plotly.express as px
             from plotly.subplots import make_subplots
             task_df = self.client.get_tasks(sieve={
@@ -191,42 +192,32 @@ class ReportView(View, LoginRequiredMixin):
                 end_field: {
                     '$lt': end_dt
                 }
-            }, select=['assignee', 'status', 'duration','metadata'])
+            }, select=['assignee', 'status', 'duration','metadata','closed','opened'])
             task_df['decision'] = task_df['metadata'].apply(lambda x: x.get('decision'))
                         
             users=task_df['assignee'].unique()
-            fig = make_subplots(rows=1, cols=2, column_widths=[0.12, 0.85], shared_yaxes=True,horizontal_spacing = 0.02)
+            fig_decision = make_subplots(rows=1, cols=2, column_widths=[0.12, 0.85], shared_yaxes=True,horizontal_spacing = 0.02)
             color_count = 0
             for decision_type in task_df['decision'].unique():
                 if decision_type:
                     decision_counts = dict(task_df[task_df['decision']==decision_type].value_counts('assignee'))
                     x = list(decision_counts.keys())
                     y = list(decision_counts.values())
-                    fig.add_trace(
+                    fig_decision.add_trace(
                         go.Bar(name=decision_type, x=x, y=y,marker_color=px.colors.qualitative.Plotly[color_count]),
                         row=1, col=2
                     )
-                    fig.add_trace(
+                    fig_decision.add_trace(
                         go.Bar(name=decision_type, x=['total'], y=[sum(y)],marker_color=px.colors.qualitative.Plotly[color_count],showlegend=False),
                         row=1, col=1
                     )
                     color_count +=1
-            fig.update_layout(
+            fig_decision.update_layout(
                 title="Decisions for " + namespace + " by " + group,
                 yaxis_title="# of responses",
                 legend_title="Decision Type",
             )
-            fig.update_xaxes(title_text="assignees", row=1, col=2)
-            """
-            fig = go.Figure(data=bar_groups)
-            fig.update_layout(barmode='group')
-            fig.update_layout(
-                title="Decisions for " + namespace + " by " + group,
-                xaxis_title="assignees",
-                yaxis_title="# of responses",
-                legend_title="Decision Type",
-            )
-            """
+            fig_decision.update_xaxes(title_text="assignees", row=1, col=2)
         else:
             task_df = self.client.get_tasks(sieve={
                 'assignee': users,
@@ -237,13 +228,13 @@ class ReportView(View, LoginRequiredMixin):
                 end_field: {
                     '$lt': end_dt
                 }
-            }, select=['assignee', 'status', 'duration'])
+            }, select=['assignee', 'status', 'duration','closed','opened'])
 
         columns = ['Username', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
         status_states = ['pending','open','closed','errored']
         columns.extend(status_states)
         table_rows = []
-
+        fig_time = go.Figure()
         for assignee, assignee_df in task_df.groupby('assignee'):
             total_duration = str(round(assignee_df['duration'].sum()/3600,2))
             avg_closed_duration = str(round(assignee_df[assignee_df['status']=='closed']['duration'].mean()/60,2))
@@ -253,6 +244,15 @@ class ReportView(View, LoginRequiredMixin):
                 number_of_tasks = len(assignee_df[assignee_df['status']==status])
                 user_metrics.append(number_of_tasks)
             table_rows.append(user_metrics)
+            assignee_df['last_interaction'] = assignee_df.apply(lambda x: max(x.opened, x.closed).floor('d'), axis=1)
+            daily_totals = assignee_df.groupby('last_interaction')['duration'].sum()/3600
+            x = daily_totals.index
+            y = daily_totals.values
+            fig_time.add_trace(go.Scatter(x=x,y=y,name=assignee))
+        fig_time.update_layout(showlegend=True,
+                                title="Platform Time per User Grouped by Date of Last Interaction",
+                                yaxis_title="Duration (h)",
+                                xaxis_title="Date of Last Interaction")
 
         fields = {"created":"Created By",
                     "opened": "Opened By",
@@ -270,8 +270,9 @@ class ReportView(View, LoginRequiredMixin):
                     "fields":fields,
                     "all_groups": [x.name for x in Group.objects.all()],
                     "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
+                    "fig_time":fig_time.to_html(),
                 }
         if namespace in decision_namespaces:
-            context["fig"] = fig.to_html()
+            context["fig_decision"] = fig_decision.to_html()
 
         return render(request,'report.html',context)

@@ -129,12 +129,14 @@
           </div>
         </form>
         <div class="d-flex flex-column" style="width:100%; margin-left: 1vw;">
-          {% if fig %}
+          {% if fig_decision %}
             <div style="width:600;height:500; margin-bottom: 2vh;">
-              {{ fig|safe }}
+              {{ fig_decision|safe }}
             </div>
           {% endif %}
-        
+          <div style="width:600;height:500; margin-bottom: 2vh;">
+            {{ fig_time |safe }}
+          </div>
           <div class="row" >
             <div class="col-lg-12" >
               <div class="card text-center">
