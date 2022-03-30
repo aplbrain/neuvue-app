@@ -425,8 +425,7 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
-
-    document.getElementById("reassign_button").addEventListener('click', (e)=> {        
+    function confirmReassignCallback(e){    
         const inputUser = document.getElementById("reassign_user")
         if (getSelectedTasks() == 0){
            // do something here?
@@ -440,25 +439,32 @@
             $('#userModal').modal('toggle')
             $('#confirmReassignModal').modal('toggle')
         }
-    });
-    
-    document.getElementById("reprioritize_button").addEventListener('click', (e)=> {        
-        const inputPriority = document.getElementById("reprioritize_priority")
-        if (getSelectedTasks() == 0){
-           // do something here?
-        }
-        else if (inputPriority.checkValidity() !== true){
-            // inputPriority.style.backgroundColor = "indianred";
-            inputPriority.reportValidity();
-        } else {
-            const confirmReprioritizeModalBody = document.getElementById("confirmReprioritizeModalBody");
-            confirmReprioritizeModalBody.innerHTML = `You are about to reprioritize the following tasks to <b>${inputPriority.value}</b> </b>:`;
-            confirmReprioritizeModalBody.innerHTML += make_list_of_checked_elements();
-            $('#userModal').modal('toggle')
-            $('#confirmReprioritizeModal').modal('toggle')
-        }
-    });
-    
+    }
+    document.getElementById("reassign_button").addEventListener('click', confirmReassignCallback);
+    document.getElementById("reassign_user").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmReassignCallback(e); e.preventDefault()}} );
+    function confirmReprioritizeCallback(e){
+        
+            const inputPriority = document.getElementById("reprioritize_priority")
+            if (getSelectedTasks() == 0){
+               // do something here?
+            }
+            else if (inputPriority.checkValidity() !== true){
+                // inputPriority.style.backgroundColor = "indianred";
+                inputPriority.reportValidity();
+            } else {
+                const confirmReprioritizeModalBody = document.getElementById("confirmReprioritizeModalBody");
+                confirmReprioritizeModalBody.innerHTML = `You are about to reprioritize the following tasks to <b>${inputPriority.value}</b> </b>:`;
+                confirmReprioritizeModalBody.innerHTML += make_list_of_checked_elements();
+                $('#userModal').modal('toggle')
+                $('#confirmReprioritizeModal').modal('toggle')
+            }
+            
+    }
+
+    document.getElementById("reprioritize_button").addEventListener('click', confirmReprioritizeCallback);
+    document.getElementById("reprioritize_priority").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmReprioritizeCallback(e); e.preventDefault()}});
+
+
     document.getElementById("delete_button").addEventListener('click', (e)=> {
         const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
         confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
