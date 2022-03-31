@@ -42,8 +42,9 @@
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root_id}}')"><i class="fa fa-copy"></i></button> {{root_id}} </span> <br>
           </div>
           <div class="sideContentInfo">
-            Lineage Graph <br> 
-            <div style="margin: auto;"> {{ graph|safe }}</div> 
+            
+            <span><button class="clipboard" id="downloadPNG" onclick="downloadSVGAsPNG()"><i class="fa fa-download"></i></button> Lineage Graph</span><br>
+            <div id='svg_graph' style="margin: auto; top:0; left:0; height: 90%; width:90%; position:relative;"> {{ graph|safe }}</div> 
         </div>
       </div>
   </div>
@@ -69,6 +70,36 @@
   // Side Bar Interaction
   openSideMenu();
 
+  function downloadSVGAsPNG(e){
+    const canvas = document.createElement("canvas");
+    const svg = document.querySelector('svg');
+    var box = svg.viewBox.baseVal; 
+    const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
+    const w = parseInt(box.width)*10;
+    const h = parseInt(box.height)*10;
+    const img_to_download = document.createElement('img');
+    img_to_download.src = 'data:image/svg+xml;base64,' + base64doc;
+    img_to_download.onload = function () {    
+      canvas.setAttribute('width', w);
+      canvas.setAttribute('height', h);
+      const context = canvas.getContext("2d");
+      context.drawImage(img_to_download,0,0,w,h);
+      const dataURL = canvas.toDataURL('image/png');
+      if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(canvas.msToBlob(), "download.png");
+        e.preventDefault();
+      } else {
+        const a = document.createElement('a');
+        const my_evt = new MouseEvent('click');
+        var options = {year: 'numeric', month: 'numeric', day: 'numeric' };
+        var today  = new Date();
+        var today_date = today.toLocaleDateString("en-US", options);
+        a.download = 'lineage_graph_{{root_id}}_'+today_date+'.png';
+        a.href = dataURL;
+        a.dispatchEvent(my_evt);
+      }
+    }  
+  }
   // Neuroglancer State Load 
   $(document).ready(function() {
     var received_data = {{ ng_state|safe }};
@@ -76,6 +107,7 @@
 
     $("svg").attr('width', '100%');
     $("svg").attr('height', '100%');
-  })
+  });
+ 
   </script>
 {% endblock %}
