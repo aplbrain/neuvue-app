@@ -4,6 +4,8 @@
 
 {% block content %}
 <div class="basic dashboard">
+
+    <!-- Landing page for user to choose namespace and group -->
     {% if not namespace or not group%}
     <div class="inspect-container">
         <form id="mainForm" action="" method="post" >
@@ -42,8 +44,11 @@
         </form>
       </div>
     {% else %}
-    <!-- Begin Page Content -->
+
+    <!-- Results page -->
     <div class="container-fluid" style="padding: 5vh 5vw;">
+
+        <!-- Reinput namespace and group if new results desired -->
         <div class="d-flex flex-row bd-highlight mb-3">
             <form id="mainForm" action="" method="post" >
                 {% csrf_token %}
@@ -81,10 +86,9 @@
               </form>
         </div>
 
-
+        <!-- Metrics cards -->
         <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -99,7 +103,6 @@
                 </div>
             </div>
             
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -114,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- Earnings (Annual) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -129,8 +131,6 @@
                 </div>
             </div>
 
-
-            <!-- Pending Requests Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
@@ -146,6 +146,7 @@
             </div>
         </div>
 
+        <!-- Results table -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="card text-center">
@@ -187,13 +188,13 @@
             </div>
         </div>
     </div>
-    <!-- /.container-fluid -->
+
     <div id="hiddenModalTable" style="visibility: hidden;"> 
     </div>
     {% endif %}
 </div>
 
-
+<!-- Modal for detailed information about a user's tasks -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
     <input type="hidden" name="namespace" value="{{display_name}}" />
@@ -241,6 +242,7 @@
 </div>
 
 
+<!-- Modal for confirming reassign -->
 <div class="modal fade" id="confirmReassignModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -261,6 +263,7 @@
     
 </div>
 
+<!-- Modal for confirming reprioritize -->
 <div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -280,6 +283,7 @@
     
 </div>
 
+<!-- Modal for confirming delete -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -306,6 +310,7 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
+    // Detailed results modal: collect selected tasks into an array
     function getSelectedTasks(){
         let ret = [];
         document.getElementsByName("selected_tasks").forEach((ele) => {
@@ -316,6 +321,7 @@
         return ret
     }
 
+    // Confirm modals: collect selected tasks into an html list
     function make_list_of_checked_elements(){
         let ret = "";
         document.getElementsByName("selected_tasks").forEach((ele) => {
@@ -326,6 +332,7 @@
         return ret
     }
 
+    // Detailed results modal: show action chosen from actions menu
     function showReassign() {
       document.getElementById("reassign_user").classList.remove("d-none");
       document.getElementById("reassign_button").classList.remove("d-none");
@@ -342,6 +349,7 @@
 
     $(document).ready(function() {
 
+        // Table content in detailed results modal
         {% for row in table %}
             $("#userLink_{{row.username}}").click(function(){
                 let tableContents = `
@@ -414,17 +422,7 @@
         {% endfor %}
     })
 
-    // Export as CSV Button
-    const exportButton = document.getElementById("exportBtn");
-    exportButton.addEventListener('click', (e) => {
-
-        // Construct filename
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
-
-        // Perform download
-        $('#summary-table').table2csv('download', {'filename': filename});
-
-    }); 
+    // Trigger confirm reassign modal
     function confirmReassignCallback(e){    
         const inputUser = document.getElementById("reassign_user")
         if (getSelectedTasks() == 0){
@@ -442,6 +440,8 @@
     }
     document.getElementById("reassign_button").addEventListener('click', confirmReassignCallback);
     document.getElementById("reassign_user").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmReassignCallback(e); e.preventDefault()}} );
+
+    // Trigger confirm reprioritize modal
     function confirmReprioritizeCallback(e){
         
             const inputPriority = document.getElementById("reprioritize_priority")
@@ -464,7 +464,7 @@
     document.getElementById("reprioritize_button").addEventListener('click', confirmReprioritizeCallback);
     document.getElementById("reprioritize_priority").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmReprioritizeCallback(e); e.preventDefault()}});
 
-
+    // Trigger confirm delete modal
     document.getElementById("delete_button").addEventListener('click', (e)=> {
         const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
         confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
@@ -480,6 +480,19 @@
          }
     });
 
+    // Export as CSV Button
+    const exportButton = document.getElementById("exportBtn");
+    exportButton.addEventListener('click', (e) => {
+
+        // Construct filename
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
+
+        // Perform download
+        $('#summary-table').table2csv('download', {'filename': filename});
+
+    }); 
+
+    // Export as CSV Button for detailed results
     const exportButton_userTable = document.getElementById("exportBtn_userTable");
     exportButton_userTable.addEventListener('click', (e) => {
 
