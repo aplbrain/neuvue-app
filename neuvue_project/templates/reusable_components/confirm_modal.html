@@ -1,0 +1,38 @@
+<!-- parameterize modal id, verb, button name and value-->
+<div class="modal fade" id="{{modal_id}}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalTitle">Confirm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="{{confirm_text_id}}" ></div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="{{button_id}}" form="taskPatchForm" name="selected_action" value="{{button_value}}">Confirm</button>
+                <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
+          </div>
+        </div>        
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+
+    // Trigger confirm modal
+    function confirmCallback(e){
+        const inputUser = document.getElementById("{{column}}_user")
+        if (getSelectedTasks() == 0){
+           // do something here?
+        }
+        else if (inputUser.value == ""){
+            inputUser.style.backgroundColor = "indianred";
+        } else {
+            const confirmModalBody = document.getElementById("{{confirm_text_id}}");
+            confirmModalBody.innerHTML = `Update the {{text}} for these tasks to <b>${inputUser.value}</b> </b>?`;
+            confirmModalBody.innerHTML += make_list_of_checked_elements();
+            $("#userModal").modal("toggle")
+            $("#{{modal_id}}").modal("toggle")
+        }
+    }
+
+</script>

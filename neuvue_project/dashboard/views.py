@@ -113,7 +113,7 @@ class DashboardView(View, LoginRequiredMixin):
 
         if "selected_tasks" in request.POST:
             selected_action = request.POST.get("selected_action")
-            reassigned_user = request.POST.get("reassign_user")
+            assignee_user = request.POST.get("assignee_user")
             selected_tasks = request.POST.getlist("selected_tasks")
             
             try:
@@ -125,9 +125,9 @@ class DashboardView(View, LoginRequiredMixin):
                 if selected_action == 'delete':
                     logging.debug(f"Delete task: {task}")
                     self.client.delete_task(task)
-                elif selected_action == "reassign":
-                    self.client.patch_task(task,assignee=reassigned_user)
-                    logging.debug(f"Resassigning task {task} to {reassigned_user}")
+                elif selected_action == "assignee":
+                    self.client.patch_task(task,assignee=assignee_user)
+                    logging.debug(f"Resassigning task {task} to {assignee_user}")
                 elif selected_action == "reprioritize":
                     self.client.patch_task(task, priority=reprioritized_priority)
                     logging.debug(f"Reprioritizing task {task} to {reprioritized_priority}")

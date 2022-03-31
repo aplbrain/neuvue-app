@@ -224,7 +224,7 @@
             </li>
           </ul>
           </div> 
-          <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee" class="d-none">
+          <input id="assignee_user" form="taskPatchForm" name="assignee_user" placeholder="New assignee" class="d-none">
           <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
             Reassign
           </button>
@@ -241,9 +241,11 @@
   </div>
 </div>
 
+{% load inclusion_tags %}
 
 <!-- Modal for confirming reassign -->
-<div class="modal fade" id="confirmReassignModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- will have to pass in modal id as a parameter -->
+{% comment %} <div id="confirmReassignModal" class="modal fade" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -261,7 +263,8 @@
         </div>        
     </div>
     
-</div>
+</div> {% endcomment %}
+{% show_modal "assignee" %}
 
 <!-- Modal for confirming reprioritize -->
 <div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -334,14 +337,14 @@
 
     // Detailed results modal: show action chosen from actions menu
     function showReassign() {
-      document.getElementById("reassign_user").classList.remove("d-none");
+      document.getElementById("assignee_user").classList.remove("d-none");
       document.getElementById("reassign_button").classList.remove("d-none");
       document.getElementById("reprioritize_priority").classList.add("d-none");
       document.getElementById("reprioritize_button").classList.add("d-none");
     }
 
     function showReprioritize() {
-      document.getElementById("reassign_user").classList.add("d-none");
+      document.getElementById("assignee_user").classList.add("d-none");
       document.getElementById("reassign_button").classList.add("d-none");
       document.getElementById("reprioritize_priority").classList.remove("d-none");
       document.getElementById("reprioritize_button").classList.remove("d-none");
@@ -421,7 +424,7 @@
             });
         {% endfor %}
     })
-
+{% comment %} 
     // Trigger confirm reassign modal
     function confirmReassignCallback(e){    
         const inputUser = document.getElementById("reassign_user")
@@ -431,15 +434,15 @@
         else if (inputUser.value == ""){
             inputUser.style.backgroundColor = "indianred";
         } else {
-            const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
+            const confirmReassignModalBody = document.getElementById("confirmUpdateAssigneeModalBody");
             confirmReassignModalBody.innerHTML = `You are about to reassign the following tasks to <b>${inputUser.value}</b> </b>:`;
             confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
             $('#userModal').modal('toggle')
-            $('#confirmReassignModal').modal('toggle')
+            $('#confirmUpdateAssigneeModal').modal('toggle')
         }
-    }
-    document.getElementById("reassign_button").addEventListener('click', confirmReassignCallback);
-    document.getElementById("reassign_user").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmReassignCallback(e); e.preventDefault()}} );
+    } {% endcomment %}
+    document.getElementById("reassign_button").addEventListener('click', confirmCallback);
+    document.getElementById("assignee_user").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmCallback(e); e.preventDefault()}} );
 
     // Trigger confirm reprioritize modal
     function confirmReprioritizeCallback(e){
