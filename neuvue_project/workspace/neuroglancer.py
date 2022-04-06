@@ -418,7 +418,7 @@ def apply_state_config(state:str, username:str):
 
     return json.dumps(cdict)
 
-def construct_synapse_state(root_id:str):
+def construct_synapse_state(root_ids:List):
     """Construct state for the synapse viewer.
 
     Args:
@@ -428,31 +428,30 @@ def construct_synapse_state(root_id:str):
         string: json-formatted state
         dict: synapse stats
     """
-    root_id = root_id.strip()
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
     
     pre_synapses = cave_client.materialize.query_table(
     "synapses_pni_2", 
-    filter_in_dict={"pre_pt_root_id": [root_id]},
-     select_columns=['ctr_pt_position']
+    filter_in_dict={"pre_pt_root_id": root_ids},
+     select_columns=['ctr_pt_position', 'pre_pt_root_id']
     )
 
     post_synapses = cave_client.materialize.query_table(
         "synapses_pni_2", 
-        filter_in_dict={"post_pt_root_id": [root_id]},
-        select_columns=['ctr_pt_position']
+        filter_in_dict={"post_pt_root_id": root_ids},
+        select_columns=['ctr_pt_position', 'post_pt_root_id']
     )
     
     pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
     post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
     
     if len(pre_synapses['ctr_pt_position']) == 0 and len(post_synapses['ctr_pt_position']) == 0:
-        raise Exception('No pre or post synapses found for this root id.')
+        raise Exception('No pre or post synapses found for root ids.')
     
     position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
 
     data_list = [None]
-    base_state = create_base_state([root_id], position, 'automatedSplit')
+    base_state = create_base_state(root_ids, position, 'automatedSplit')
 
     data_list.append( generate_point_df( pre_synapses['ctr_pt_position'].to_numpy()))
     data_list.append( generate_point_df( post_synapses['ctr_pt_position'].to_numpy()))
@@ -466,10 +465,13 @@ def construct_synapse_state(root_id:str):
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     
-    synapse_stats = {
-        "num_pre": len(pre_synapses),
-        "num_post": len(post_synapses)
-    }
+    synapse_stats = {}
+    
+    for root_id in root_ids:
+        synapse_stats[root_id] = {
+            "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id']==root_id]),
+            "num_post": len(post_synapses[post_synapses['post_pt_root_id']==root_id])
+        }
 
     # Append clefts layers to state 
     state_dict['layers'].append({

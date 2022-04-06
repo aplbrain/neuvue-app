@@ -11,7 +11,7 @@
     <form id="mainForm" action="" method="post" >
       {% csrf_token %}
       <div class="form-group">
-        <input class="form-control" id="rootIDInput" placeholder="Enter Root ID" name="root_id" required="true">
+        <input class="form-control" id="rootIDInput" placeholder="Enter Root ID (s) separated by commas" name="root_ids" required="true">
         <br>
         <input type="submit" class="btn btn-primary" value="Submit">
         {% if error%}
@@ -38,12 +38,14 @@
               Segment Information
           </div>
           <div class="sideContentInfo">
+              {% for id in root_ids %}
               Root ID <br> 
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root_id}}')"><i class="fa fa-copy"></i></button> {{root_id}} </span> <br>
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{id}}')"><i class="fa fa-copy"></i></button> {{id}} </span> <br>
               Number of Presynaptic Connections <br> 
-              <span class ="code"> {{synapse_stats.num_pre}} </span> <br>
+              <span class ="code"> {{synapse_stats.id.num_pre}} </span> <br>
               Number of Postsynaptic Connections <br> 
-              <span class ="code">  {{synapse_stats.num_post}} </span> <br>
+              <span class ="code">  {{synapse_stats.id.num_post}} </span> <br>
+              {% endfor %}
           </div>
       </div>
   </div>
