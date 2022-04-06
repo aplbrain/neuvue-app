@@ -18,7 +18,9 @@
 <script type="text/javascript">
 
     // Trigger confirm modal
+    // TODO: how can I pass inclusion tag context to this function?
     function confirmCallback(e){
+        console.log("{{input_value}}")
         const input = document.getElementById("{{column}}_input")
         if (getSelectedTasks() == 0){
            // do something here?

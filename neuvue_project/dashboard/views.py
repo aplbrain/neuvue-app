@@ -117,9 +117,9 @@ class DashboardView(View, LoginRequiredMixin):
             selected_tasks = request.POST.getlist("selected_tasks")
             
             try:
-                reprioritized_priority = int(request.POST.get("reprioritize_priority"))
+                new_priority = int(request.POST.get("priority_input"))
             except:
-                reprioritized_priority = 0
+                new_priority = 0
 
             for task in selected_tasks:
                 if selected_action == 'delete':
@@ -128,9 +128,9 @@ class DashboardView(View, LoginRequiredMixin):
                 elif selected_action == "assignee":
                     self.client.patch_task(task,assignee=new_assignee)
                     logging.debug(f"Resassigning task {task} to {new_assignee}")
-                elif selected_action == "reprioritize":
-                    self.client.patch_task(task, priority=reprioritized_priority)
-                    logging.debug(f"Reprioritizing task {task} to {reprioritized_priority}")
+                elif selected_action == "priority":
+                    self.client.patch_task(task, priority=new_priority)
+                    logging.debug(f"Reprioritizing task {task} to {new_priority}")
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
 
 

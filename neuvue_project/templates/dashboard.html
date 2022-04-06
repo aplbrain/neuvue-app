@@ -228,7 +228,7 @@
           <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
             Reassign
           </button>
-          <input id="reprioritize_priority" form="taskPatchForm" name="reprioritize_priority" placeholder="New priority" class="d-none" type="number" min="0">
+          <input id="priority_input" form="taskPatchForm" name="priority_input" placeholder="New priority" class="d-none" type="number" min="0">
           <button type="button" id="reprioritize_button" form="taskPatchForm" name="selected_action" value="reprioritize" class="btn btn-primary d-none">
             Reprioritize
           </button>
@@ -264,7 +264,7 @@
     </div>
     
 </div> {% endcomment %}
-{% show_modal "assignee" %}
+{% show_modal "assignee" document.getElementById("assignee_input").value %}
 
 <!-- Modal for confirming reprioritize -->
 <div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -285,6 +285,7 @@
     </div>
     
 </div>
+{% comment %} {% show_modal "priority" %} {% endcomment %}
 
 <!-- Modal for confirming delete -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -339,14 +340,14 @@
     function showReassign() {
       document.getElementById("assignee_input").classList.remove("d-none");
       document.getElementById("reassign_button").classList.remove("d-none");
-      document.getElementById("reprioritize_priority").classList.add("d-none");
+      document.getElementById("priority_input").classList.add("d-none");
       document.getElementById("reprioritize_button").classList.add("d-none");
     }
 
     function showReprioritize() {
       document.getElementById("assignee_input").classList.add("d-none");
       document.getElementById("reassign_button").classList.add("d-none");
-      document.getElementById("reprioritize_priority").classList.remove("d-none");
+      document.getElementById("priority_input").classList.remove("d-none");
       document.getElementById("reprioritize_button").classList.remove("d-none");
     }
 
@@ -446,7 +447,7 @@
 
     // Trigger confirm reprioritize modal
     function confirmReprioritizeCallback(e){
-        
+
             const inputPriority = document.getElementById("reprioritize_priority")
             if (getSelectedTasks() == 0){
                // do something here?
@@ -464,8 +465,8 @@
             
     }
 
-    document.getElementById("reprioritize_button").addEventListener('click', confirmReprioritizeCallback);
-    document.getElementById("reprioritize_priority").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmReprioritizeCallback(e); e.preventDefault()}});
+    document.getElementById("reprioritize_button").addEventListener('click', confirmCallback);
+    document.getElementById("priority_input").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmCallback(e); e.preventDefault()}});
 
     // Trigger confirm delete modal
     document.getElementById("delete_button").addEventListener('click', (e)=> {
