@@ -7,9 +7,51 @@
             </div>
             <div class="modal-body" id="{{confirm_text_id}}" ></div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="{{button_id}}" form="taskPatchForm" name="selected_action" value="{{button_value}}">Confirm</button>
+                <button type="submit" class="btn btn-primary" id="{{button_id}}" form="taskPatchForm" name="selected_action" value="{{column}}">Confirm</button>
                 <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
           </div>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+    // Collect selected tasks into an html list
+    function make_list_of_checked_elements(){
+        let ret = "";
+        document.getElementsByName("selected_tasks").forEach((ele) => {
+            if (ele.type == "checkbox" && ele.checked) {
+                ret += "<li>" + ele.value + "</li>"
+            };
+        });
+        return ret
+    }
+
+    // Trigger confirm modal
+    $("#{{button_id}}").click(function (){
+        const input = document.getElementById("{{column}}-input")
+        // const action = "{{column}}".toUpperCase()
+        if (getSelectedTasks() == 0){
+            // do something here?
+        }
+        else if (input == null){
+            const confirmModalBody = document.getElementById("{{confirm_text_id}}");
+            confirmModalBody.innerHTML = `{{capitalized_column}} these tasks?`;
+            confirmModalBody.innerHTML += make_list_of_checked_elements();
+            $("#userModal").modal("toggle")
+            $("#{{modal_id}}").modal("toggle")
+        } 
+        else if (input.value == "") {
+            input.style.backgroundColor = "indianred";
+        } 
+        else {
+            const confirmModalBody = document.getElementById("{{confirm_text_id}}");
+            confirmModalBody.innerHTML = `Update the {{column}} for these tasks to <b>${input.value}</b> </b>?`;
+            confirmModalBody.innerHTML += make_list_of_checked_elements();
+            $("#userModal").modal("toggle")
+            $("#{{modal_id}}").modal("toggle")
+        }
+});
+
+</script>

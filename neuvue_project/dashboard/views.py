@@ -113,11 +113,11 @@ class DashboardView(View, LoginRequiredMixin):
 
         if "selected_tasks" in request.POST:
             selected_action = request.POST.get("selected_action")
-            new_assignee = request.POST.get("assignee_input")
+            new_assignee = request.POST.get("assignee-input")
             selected_tasks = request.POST.getlist("selected_tasks")
             
             try:
-                new_priority = int(request.POST.get("priority_input"))
+                new_priority = int(request.POST.get("priority-input"))
             except:
                 new_priority = 0
 

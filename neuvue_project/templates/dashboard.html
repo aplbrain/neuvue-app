@@ -225,16 +225,18 @@
             </li>
           </ul>
           </div> 
-          <input id="reassign_input" form="taskPatchForm" name="reassign_input" placeholder="New assignee" class="d-none">
-          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
+          <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none">
+          <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none">
             Reassign
           </button>
-          <input id="reprioritize_input" form="taskPatchForm" name="reprioritize_input" placeholder="New priority" class="d-none" type="number" min="0">
-          <button type="button" id="reprioritize_button" form="taskPatchForm" name="selected_action" value="reprioritize" class="btn btn-primary d-none">
+          <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none" type="number" min="0">
+          <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none">
             Reprioritize
           </button>
         </div>
-        <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+        <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">
+            Delete
+        </button>
         <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -242,8 +244,8 @@
   </div>
 </div>
 
-{% create_modal "reassign" %}
-{% create_modal "reprioritize" %}
+{% create_modal "assignee" %}
+{% create_modal "priority" %}
 {% create_modal "delete" %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -263,30 +265,19 @@
         return ret
     }
 
-    // Confirm modals: collect selected tasks into an html list
-    function make_list_of_checked_elements(){
-        let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret += "<li>" + ele.value + "</li>"
-            };
-        });
-        return ret
-    }
-
     // Detailed results modal: show action chosen from actions menu
     function showReassign() {
-      document.getElementById("reassign_input").classList.remove("d-none");
-      document.getElementById("reassign_button").classList.remove("d-none");
-      document.getElementById("reprioritize_input").classList.add("d-none");
-      document.getElementById("reprioritize_button").classList.add("d-none");
+      document.getElementById("assignee-input").classList.remove("d-none");
+      document.getElementById("assignee-button").classList.remove("d-none");
+      document.getElementById("priority-input").classList.add("d-none");
+      document.getElementById("priority-button").classList.add("d-none");
     }
 
     function showReprioritize() {
-      document.getElementById("reassign_input").classList.add("d-none");
-      document.getElementById("reassign_button").classList.add("d-none");
-      document.getElementById("reprioritize_input").classList.remove("d-none");
-      document.getElementById("reprioritize_button").classList.remove("d-none");
+      document.getElementById("assignee-input").classList.add("d-none");
+      document.getElementById("assignee-button").classList.add("d-none");
+      document.getElementById("priority-input").classList.remove("d-none");
+      document.getElementById("priority-button").classList.remove("d-none");
     }
 
     $(document).ready(function() {
@@ -390,8 +381,5 @@
     }); 
 
 </script>
-{% trigger_modal "delete" %}
-{% trigger_modal "reprioritize" %}
-{% trigger_modal "reassign" %}
 {% endblock %}
 
