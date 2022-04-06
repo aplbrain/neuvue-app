@@ -49,7 +49,6 @@ function openSideMenu(){
   let sidecontent = document.getElementById("neuVue-sidecontent");
   let neuroglancer_window = document.getElementById("neuroglancer");
   
-  console.log(neuroglancer_window);
   sidemenu.style.width = "25%";
   sidebar.style.width = "8%";
   sidecontent.style.width = "85%";
