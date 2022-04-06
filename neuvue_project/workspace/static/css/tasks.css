@@ -234,3 +234,16 @@ tbody.pending >:nth-child(2) {
   text-overflow: ellipsis;
   vertical-align: top;
 }
+
+.getting-started-container {
+  background-color: transparent !important;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  padding: 10px 10px 10px 10px;
+  float: center;
+  height: 85vh;
+  width: 70%;
+  
+  overflow: auto;
+  overflow-x: hidden;
+}
