@@ -12,28 +12,4 @@
           </div>
         </div>
     </div>
-    
 </div>
-
-<script type="text/javascript">
-
-    // Trigger confirm modal
-    // TODO: how can I pass inclusion tag context to this function?
-    function confirmCallback(e){
-        console.log("{{input_value}}")
-        const input = document.getElementById("{{column}}_input")
-        if (getSelectedTasks() == 0){
-           // do something here?
-        }
-        else if (input.value == ""){
-            input.style.backgroundColor = "indianred";
-        } else {
-            const confirmModalBody = document.getElementById("{{confirm_text_id}}");
-            confirmModalBody.innerHTML = `Update the {{column}} for these tasks to <b>${input.value}</b> </b>?`;
-            confirmModalBody.innerHTML += make_list_of_checked_elements();
-            $("#userModal").modal("toggle")
-            $("#{{modal_id}}").modal("toggle")
-        }
-    }
-
-</script>

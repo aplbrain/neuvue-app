@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
+{% load inclusion_tags %}
 
 {% block content %}
 <div class="basic dashboard">
@@ -224,11 +225,11 @@
             </li>
           </ul>
           </div> 
-          <input id="assignee_input" form="taskPatchForm" name="assignee_input" placeholder="New assignee" class="d-none">
+          <input id="reassign_input" form="taskPatchForm" name="reassign_input" placeholder="New assignee" class="d-none">
           <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
             Reassign
           </button>
-          <input id="priority_input" form="taskPatchForm" name="priority_input" placeholder="New priority" class="d-none" type="number" min="0">
+          <input id="reprioritize_input" form="taskPatchForm" name="reprioritize_input" placeholder="New priority" class="d-none" type="number" min="0">
           <button type="button" id="reprioritize_button" form="taskPatchForm" name="selected_action" value="reprioritize" class="btn btn-primary d-none">
             Reprioritize
           </button>
@@ -241,72 +242,9 @@
   </div>
 </div>
 
-{% load inclusion_tags %}
-
-<!-- Modal for confirming reassign -->
-<!-- will have to pass in modal id as a parameter -->
-{% comment %} <div id="confirmReassignModal" class="modal fade" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmReassignModalBody">
-            Confirm you are reassigning the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reassign_modal_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div> {% endcomment %}
-{% show_modal "assignee" document.getElementById("assignee_input").value %}
-
-<!-- Modal for confirming reprioritize -->
-<div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmReprioritizeModalBody">
-            Confirm you are reprioritizing the following tasks...
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reprioritize_modal_button" form="taskPatchForm" name="selected_action" value="reprioritize">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>
-    </div>
-    
-</div>
-{% comment %} {% show_modal "priority" %} {% endcomment %}
-
-<!-- Modal for confirming delete -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmDeleteModalBody">
-            Confirm you are deleting the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="delete_button" form="taskPatchForm" name="selected_action" value="delete">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div>
+{% create_modal "reassign" %}
+{% create_modal "reprioritize" %}
+{% create_modal "delete" %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -338,16 +276,16 @@
 
     // Detailed results modal: show action chosen from actions menu
     function showReassign() {
-      document.getElementById("assignee_input").classList.remove("d-none");
+      document.getElementById("reassign_input").classList.remove("d-none");
       document.getElementById("reassign_button").classList.remove("d-none");
-      document.getElementById("priority_input").classList.add("d-none");
+      document.getElementById("reprioritize_input").classList.add("d-none");
       document.getElementById("reprioritize_button").classList.add("d-none");
     }
 
     function showReprioritize() {
-      document.getElementById("assignee_input").classList.add("d-none");
+      document.getElementById("reassign_input").classList.add("d-none");
       document.getElementById("reassign_button").classList.add("d-none");
-      document.getElementById("priority_input").classList.remove("d-none");
+      document.getElementById("reprioritize_input").classList.remove("d-none");
       document.getElementById("reprioritize_button").classList.remove("d-none");
     }
 
@@ -425,64 +363,6 @@
             });
         {% endfor %}
     })
-{% comment %} 
-    // Trigger confirm reassign modal
-    function confirmReassignCallback(e){    
-        const inputUser = document.getElementById("reassign_user")
-        if (getSelectedTasks() == 0){
-           // do something here?
-        }
-        else if (inputUser.value == ""){
-            inputUser.style.backgroundColor = "indianred";
-        } else {
-            const confirmReassignModalBody = document.getElementById("confirmUpdateAssigneeModalBody");
-            confirmReassignModalBody.innerHTML = `You are about to reassign the following tasks to <b>${inputUser.value}</b> </b>:`;
-            confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-            $('#userModal').modal('toggle')
-            $('#confirmUpdateAssigneeModal').modal('toggle')
-        }
-    } {% endcomment %}
-    document.getElementById("reassign_button").addEventListener('click', confirmCallback);
-    document.getElementById("assignee_input").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmCallback(e); e.preventDefault()}} );
-
-    // Trigger confirm reprioritize modal
-    function confirmReprioritizeCallback(e){
-
-            const inputPriority = document.getElementById("reprioritize_priority")
-            if (getSelectedTasks() == 0){
-               // do something here?
-            }
-            else if (inputPriority.checkValidity() !== true){
-                // inputPriority.style.backgroundColor = "indianred";
-                inputPriority.reportValidity();
-            } else {
-                const confirmReprioritizeModalBody = document.getElementById("confirmReprioritizeModalBody");
-                confirmReprioritizeModalBody.innerHTML = `You are about to reprioritize the following tasks to <b>${inputPriority.value}</b> </b>:`;
-                confirmReprioritizeModalBody.innerHTML += make_list_of_checked_elements();
-                $('#userModal').modal('toggle')
-                $('#confirmReprioritizeModal').modal('toggle')
-            }
-            
-    }
-
-    document.getElementById("reprioritize_button").addEventListener('click', confirmCallback);
-    document.getElementById("priority_input").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmCallback(e); e.preventDefault()}});
-
-    // Trigger confirm delete modal
-    document.getElementById("delete_button").addEventListener('click', (e)=> {
-        const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
-        confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
-        confirmDeleteModalBody.innerHTML += make_list_of_checked_elements();
-        if (getSelectedTasks() == 0){
-            // do something here?
-        } else {
-             const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-             confirmReassignModalBody.innerHTML = "You are about to reassign the following tasks:";
-             confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-             $('#userModal').modal('toggle')
-             $('#confirmDeleteModal').modal('toggle')
-         }
-    });
 
     // Export as CSV Button
     const exportButton = document.getElementById("exportBtn");
@@ -510,5 +390,8 @@
     }); 
 
 </script>
+{% trigger_modal "delete" %}
+{% trigger_modal "reprioritize" %}
+{% trigger_modal "reassign" %}
 {% endblock %}
 
