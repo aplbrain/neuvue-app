@@ -451,6 +451,22 @@ class TaskView(View):
         num_tasks = namespace_obj.number_of_tasks_users_can_self_assign
         max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
 
+        # Dev Note: Below is the logic for handling re-assignment of tasks. User levels default to novice and 
+        # can be overriden by the user profile in the admin page. How levels affect what group the namespace 
+        # belongs to depends on how the namespace configures the push to and pull from attributes. 
+        # By default, namespaces do not allow for reassignment. 
+
+        # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
+        if user_level == 'novice':
+            group_to_push_to = namespace_obj.novice_push_to
+            group_to_pull_from = namespace_obj.novice_pull_from
+        elif user_level == 'intermediate':
+            group_to_push_to = namespace_obj.intermediate_push_to
+            group_to_pull_from = namespace_obj.intermediate_pull_from
+        else:
+            group_to_push_to = namespace_obj.expert_push_to
+            group_to_pull_from = namespace_obj.expert_pull_from
+
         if 'reassignTasks' in request.POST.keys():
             # get user profile object
             userProfile = UserProfile.objects.get(user = request.user)
@@ -463,17 +479,6 @@ class TaskView(View):
             for ns in userProfile.expert_namespaces.all():
                 if namespace == ns.namespace:
                     user_level = 'expert'
-
-            # get namespace object of task namespace
-            namespace_obj = Namespace.objects.get(namespace = namespace)
-            group_to_push_to = ''
-            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
-            if user_level == 'novice':
-                group_to_push_to = namespace_obj.novice_push_to
-            elif user_level == 'intermediate':
-                group_to_push_to = namespace_obj.intermediate_push_to
-            else:
-                group_to_push_to = namespace_obj.expert_push_to
 
             # determine if the user's group is allowed to reassign in this namespace
             if group_to_push_to == 'Queue Tasks Not Allowed':
@@ -526,7 +531,7 @@ class TaskView(View):
 
             # Get tasks currently assigned to user to make sure we don't exceed the limit
             assigned_tasks = self.client.get_tasks(
-                sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
+                sieve={"assignee": group_to_pull_from, "namespace": namespace, "status": ["pending", "open"]},
                 select=["_id"]
             )
             while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
