@@ -20,7 +20,7 @@
     // Collect selected tasks into an html list
     function make_list_of_checked_elements(){
         let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
+        document.getElementsByName("selected_tasks").forEach((ele) => { // "selected_tasks" is found on dashboard.html
             if (ele.type == "checkbox" && ele.checked) {
                 ret += "<li>" + ele.value + "</li>"
             };
@@ -31,7 +31,6 @@
     // Trigger confirm modal
     $("#{{button_id}}").click(function (){
         const input = document.getElementById("{{column}}-input")
-        // const action = "{{column}}".toUpperCase()
         if (getSelectedTasks() == 0){
             // do something here?
         }
