@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.4.10",
+            "update_date":"April 7th, 2022",
+            "update_description": "Adds support for multiple root IDs in the synapse viewer. Removes NG Error logs. Adds hotkey to dismiss all NG messages (x). Minor bug fixes and improvements."
+        },
+        {
             "update_name": "v1.4.8",
             "update_date":"March 23rd, 2022",
             "update_description": "Adds ability to change point size in neuroglancer annotation side bar. Adds tags to inspect/tasks/admin pages. Adds priority patching on dashboard."
