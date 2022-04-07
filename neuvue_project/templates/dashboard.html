@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
+{% load inclusion_tags %}
+
+{% block header_includes %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="basic dashboard">
+
+    <!-- Landing page for user to choose namespace and group -->
     {% if not namespace or not group%}
     <div class="inspect-container">
         <form id="mainForm" action="" method="post" >
@@ -42,8 +49,11 @@
         </form>
       </div>
     {% else %}
-    <!-- Begin Page Content -->
+
+    <!-- Results page -->
     <div class="container-fluid" style="padding: 5vh 5vw;">
+
+        <!-- Reinput namespace and group if new results desired -->
         <div class="d-flex flex-row bd-highlight mb-3">
             <form id="mainForm" action="" method="post" >
                 {% csrf_token %}
@@ -81,10 +91,9 @@
               </form>
         </div>
 
-
+        <!-- Metrics cards -->
         <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -99,7 +108,6 @@
                 </div>
             </div>
             
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -114,7 +122,6 @@
                 </div>
             </div>
 
-            <!-- Earnings (Annual) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -129,8 +136,6 @@
                 </div>
             </div>
 
-
-            <!-- Pending Requests Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
@@ -146,6 +151,7 @@
             </div>
         </div>
 
+        <!-- Results table -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="card text-center">
@@ -187,13 +193,13 @@
             </div>
         </div>
     </div>
-    <!-- /.container-fluid -->
+
     <div id="hiddenModalTable" style="visibility: hidden;"> 
     </div>
     {% endif %}
 </div>
 
-
+<!-- Modal for detailed information about a user's tasks -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
     <input type="hidden" name="namespace" value="{{display_name}}" />
@@ -215,24 +221,39 @@
             Modify Selected Tasks
           </button>
           <ul class="dropdown-menu">
-            <li id="dropdown-reassign" class="dropdown-item" onclick="showReassign()">
-              Reassign
+            <li id="dropdown-assignee" class="dropdown-item" onclick="showMenuItem('assignee')">
+              Assignee
             </li>
-            <li id="dropdown-reprioritize" class="dropdown-item" onclick="showReprioritize()">
-              Reprioritize
+            <li id="dropdown-priority" class="dropdown-item" onclick="showMenuItem('priority')">
+              Priority
+            </li>
+            <li id="dropdown-status" class="dropdown-item" onclick="showMenuItem('status')">
+              Status
             </li>
           </ul>
           </div> 
-          <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee" class="d-none">
-          <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary d-none">
-            Reassign
+          <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none">
+          <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none">
+            Update Assignee
           </button>
-          <input id="reprioritize_priority" form="taskPatchForm" name="reprioritize_priority" placeholder="New priority" class="d-none" type="number" min="0">
-          <button type="button" id="reprioritize_button" form="taskPatchForm" name="selected_action" value="reprioritize" class="btn btn-primary d-none">
-            Reprioritize
+          <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none" type="number" min="0">
+          <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none">
+            Update Priority
+          </button>
+          <select id="status-input" form="taskPatchForm" name="status-input" class="form-select d-none">
+            <option value="" selected disabled>New status</option>
+            <option value="open">Open</option>
+            <option value="pending">Pending</option>
+            <option value="closed">Closed</option>
+            <option value="errored">Errored</option>
+          </select>
+          <button type="button" id="status-button" form="taskPatchForm" name="selected_action" value="status" class="btn btn-primary d-none">
+            Update Status
           </button>
         </div>
-        <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+        <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">
+          Delete
+        </button>
         <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -240,65 +261,11 @@
   </div>
 </div>
 
-
-<div class="modal fade" id="confirmReassignModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmReassignModalBody">
-            Confirm you are reassigning the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reassign_modal_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div>
-
-<div class="modal fade" id="confirmReprioritizeModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmReprioritizeModalBody">
-            Confirm you are reprioritizing the following tasks...
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reprioritize_modal_button" form="taskPatchForm" name="selected_action" value="reprioritize">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>
-    </div>
-    
-</div>
-
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmDeleteModalBody">
-            Confirm you are deleting the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="delete_button" form="taskPatchForm" name="selected_action" value="delete">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div>
+<!-- Confirm action modals -->
+{% confirm_modal "assignee" %}
+{% confirm_modal "priority" %}
+{% confirm_modal "status" %}
+{% confirm_modal "delete" %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -306,6 +273,7 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
+    // Detailed results modal: collect selected tasks into an array
     function getSelectedTasks(){
         let ret = [];
         document.getElementsByName("selected_tasks").forEach((ele) => {
@@ -316,32 +284,20 @@
         return ret
     }
 
-    function make_list_of_checked_elements(){
-        let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret += "<li>" + ele.value + "</li>"
-            };
-        });
-        return ret
-    }
-
-    function showReassign() {
-      document.getElementById("reassign_user").classList.remove("d-none");
-      document.getElementById("reassign_button").classList.remove("d-none");
-      document.getElementById("reprioritize_priority").classList.add("d-none");
-      document.getElementById("reprioritize_button").classList.add("d-none");
-    }
-
-    function showReprioritize() {
-      document.getElementById("reassign_user").classList.add("d-none");
-      document.getElementById("reassign_button").classList.add("d-none");
-      document.getElementById("reprioritize_priority").classList.remove("d-none");
-      document.getElementById("reprioritize_button").classList.remove("d-none");
+    // Detailed results modal: show action chosen from actions menu
+    function showMenuItem(selectedMenuItem) {
+        const menuItems = ["assignee", "priority", "status"];
+        for (let menuItem of menuItems) {
+            document.getElementById(menuItem + "-input").classList.add("d-none");
+            document.getElementById(menuItem + "-button").classList.add("d-none");
+        }
+        document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
+        document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
     }
 
     $(document).ready(function() {
 
+        // Table content in detailed results modal
         {% for row in table %}
             $("#userLink_{{row.username}}").click(function(){
                 let tableContents = `
@@ -425,61 +381,8 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
-    function confirmReassignCallback(e){    
-        const inputUser = document.getElementById("reassign_user")
-        if (getSelectedTasks() == 0){
-           // do something here?
-        }
-        else if (inputUser.value == ""){
-            inputUser.style.backgroundColor = "indianred";
-        } else {
-            const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-            confirmReassignModalBody.innerHTML = `You are about to reassign the following tasks to <b>${inputUser.value}</b> </b>:`;
-            confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-            $('#userModal').modal('toggle')
-            $('#confirmReassignModal').modal('toggle')
-        }
-    }
-    document.getElementById("reassign_button").addEventListener('click', confirmReassignCallback);
-    document.getElementById("reassign_user").addEventListener('keydown', (e)=>{if(e.code=='Enter'){confirmReassignCallback(e); e.preventDefault()}} );
-    function confirmReprioritizeCallback(e){
-        
-            const inputPriority = document.getElementById("reprioritize_priority")
-            if (getSelectedTasks() == 0){
-               // do something here?
-            }
-            else if (inputPriority.checkValidity() !== true){
-                // inputPriority.style.backgroundColor = "indianred";
-                inputPriority.reportValidity();
-            } else {
-                const confirmReprioritizeModalBody = document.getElementById("confirmReprioritizeModalBody");
-                confirmReprioritizeModalBody.innerHTML = `You are about to reprioritize the following tasks to <b>${inputPriority.value}</b> </b>:`;
-                confirmReprioritizeModalBody.innerHTML += make_list_of_checked_elements();
-                $('#userModal').modal('toggle')
-                $('#confirmReprioritizeModal').modal('toggle')
-            }
-            
-    }
 
-    document.getElementById("reprioritize_button").addEventListener('click', confirmReprioritizeCallback);
-    document.getElementById("reprioritize_priority").addEventListener('keydown', (e) => {if(e.code=="Enter"){confirmReprioritizeCallback(e); e.preventDefault()}});
-
-
-    document.getElementById("delete_button").addEventListener('click', (e)=> {
-        const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
-        confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
-        confirmDeleteModalBody.innerHTML += make_list_of_checked_elements();
-        if (getSelectedTasks() == 0){
-            // do something here?
-        } else {
-             const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-             confirmReassignModalBody.innerHTML = "You are about to reassign the following tasks:";
-             confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-             $('#userModal').modal('toggle')
-             $('#confirmDeleteModal').modal('toggle')
-         }
-    });
-
+    // Export as CSV Button for detailed results
     const exportButton_userTable = document.getElementById("exportBtn_userTable");
     exportButton_userTable.addEventListener('click', (e) => {
 
