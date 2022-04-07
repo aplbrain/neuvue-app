@@ -518,7 +518,7 @@ class SynapseView(View):
             context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_ids)
         except Exception as e: 
             context['error'] = e
-            return render(request, "synapse.html", context)
+
         return render(request, "synapse.html", context)
 
 

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-{% if not root_id or error%}
+{% if not root_ids or error%}
 
 <div class="basic workspace">
   <div class="inspect-container">
@@ -38,13 +38,13 @@
               Segment Information
           </div>
           <div class="sideContentInfo">
-              {% for id in root_ids %}
+              {% for root, stats in synapse_stats.items %}
               Root ID <br> 
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{id}}')"><i class="fa fa-copy"></i></button> {{id}} </span> <br>
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
               Number of Presynaptic Connections <br> 
-              <span class ="code"> {{synapse_stats.id.num_pre}} </span> <br>
+              <span class ="code"> {{stats.num_pre}} </span> <br>
               Number of Postsynaptic Connections <br> 
-              <span class ="code">  {{synapse_stats.id.num_post}} </span> <br>
+              <span class ="code">  {{stats.num_post}} </span> <br>
               {% endfor %}
           </div>
       </div>
