@@ -3,6 +3,10 @@
 {% load socialaccount %}
 {% load inclusion_tags %}
 
+{% block header_includes %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="basic dashboard">
 
@@ -217,25 +221,38 @@
             Modify Selected Tasks
           </button>
           <ul class="dropdown-menu">
-            <li id="dropdown-reassign" class="dropdown-item" onclick="showReassign()">
-              Reassign
+            <li id="dropdown-assignee" class="dropdown-item" onclick="showMenuItem('assignee')">
+              Assignee
             </li>
-            <li id="dropdown-reprioritize" class="dropdown-item" onclick="showReprioritize()">
-              Reprioritize
+            <li id="dropdown-priority" class="dropdown-item" onclick="showMenuItem('priority')">
+              Priority
+            </li>
+            <li id="dropdown-status" class="dropdown-item" onclick="showMenuItem('status')">
+              Status
             </li>
           </ul>
           </div> 
           <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none">
           <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none">
-            Reassign
+            Update Assignee
           </button>
           <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none" type="number" min="0">
           <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none">
-            Reprioritize
+            Update Priority
+          </button>
+          <select id="status-input" form="taskPatchForm" name="status-input" class="form-select d-none">
+            <option value="" selected disabled>New status</option>
+            <option value="open">Open</option>
+            <option value="pending">Pending</option>
+            <option value="closed">Closed</option>
+            <option value="errored">Errored</option>
+          </select>
+          <button type="button" id="status-button" form="taskPatchForm" name="selected_action" value="status" class="btn btn-primary d-none">
+            Update Status
           </button>
         </div>
         <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">
-            Delete
+          Delete
         </button>
         <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -244,9 +261,11 @@
   </div>
 </div>
 
-{% create_modal "assignee" %}
-{% create_modal "priority" %}
-{% create_modal "delete" %}
+<!-- Confirm action modals -->
+{% confirm_modal "assignee" %}
+{% confirm_modal "priority" %}
+{% confirm_modal "status" %}
+{% confirm_modal "delete" %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -266,18 +285,14 @@
     }
 
     // Detailed results modal: show action chosen from actions menu
-    function showReassign() {
-      document.getElementById("assignee-input").classList.remove("d-none");
-      document.getElementById("assignee-button").classList.remove("d-none");
-      document.getElementById("priority-input").classList.add("d-none");
-      document.getElementById("priority-button").classList.add("d-none");
-    }
-
-    function showReprioritize() {
-      document.getElementById("assignee-input").classList.add("d-none");
-      document.getElementById("assignee-button").classList.add("d-none");
-      document.getElementById("priority-input").classList.remove("d-none");
-      document.getElementById("priority-button").classList.remove("d-none");
+    function showMenuItem(selectedMenuItem) {
+        const menuItems = ["assignee", "priority", "status"];
+        for (let menuItem of menuItems) {
+            document.getElementById(menuItem + "-input").classList.add("d-none");
+            document.getElementById(menuItem + "-button").classList.add("d-none");
+        }
+        document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
+        document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
     }
 
     $(document).ready(function() {

@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 @register.inclusion_tag('reusable_components/confirm_modal.html')
-def create_modal(column):
+def confirm_modal(column):
     return {
         "column": column.lower(),
         "capitalized_column": column.capitalize(),

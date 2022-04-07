@@ -113,8 +113,9 @@ class DashboardView(View, LoginRequiredMixin):
 
         if "selected_tasks" in request.POST:
             selected_action = request.POST.get("selected_action")
-            new_assignee = request.POST.get("assignee-input")
             selected_tasks = request.POST.getlist("selected_tasks")
+            new_assignee = request.POST.get("assignee-input")
+            new_status = request.POST.get("status-input")
             
             try:
                 new_priority = int(request.POST.get("priority-input"))
@@ -131,6 +132,9 @@ class DashboardView(View, LoginRequiredMixin):
                 elif selected_action == "priority":
                     self.client.patch_task(task, priority=new_priority)
                     logging.debug(f"Reprioritizing task {task} to {new_priority}")
+                elif selected_action == "status":
+                    self.client.patch_task(task, status=new_status)
+                    logging.debug(f"Updating task {task} to {new_status}")
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
 
 
