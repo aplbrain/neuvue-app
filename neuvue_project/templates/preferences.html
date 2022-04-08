@@ -25,8 +25,10 @@
         </div>
         <hr class="row-divider">
         <div class="form-check form-switch">
-            <label class="form-check-label" for="showSlicesSwitch"> Show Slices </label>
-            <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlices}}>  
+            <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
+            <div>Show Slices</div>
+            <input id="showSlices" class="checkbox" type="checkbox" value={{showSlices}}>
+            <div id="showSlicesDisplay" class="form-label">"{{showSlices}}"</div>
         </div>
         <hr class="row-divider">
 
@@ -123,7 +125,9 @@
     function submitConfig() {
         let form = '#configForm'
         let enabled = $('#configSwitch').is(":checked");
+        let checkbox = $('#showSlicesSwitch').is(":checked");
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', checkbox).appendTo(form);
 
         for (field in preferenceFields){
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
@@ -144,13 +148,21 @@
                 $("#neuroglancerConfig").hide(100);
             }
         });
+        if ($("#showSlicesSwitch").is(':checked')) {
+
+            $("#showSlicesSwitch").prop( "checked", true );
+        } else {
+            $("#showSlicesSwitch").prop( "checked", false );
+        }
         
         if ("{{enabled}}" == "True") {
             $("#neuroglancerConfig").show();
             $("#configSwitch").prop( "checked", true );
+            $("#showSlicesSwitch").prop( "checked", true );
         } else {
             $("#neuroglancerConfig").hide();
             $("#configSwitch").prop( "checked", false );
+            $("#showSlicesSwitch").prop( "checked", false );
         }
 
         // Update switches 
@@ -164,6 +176,7 @@
 
         // Display value on sliders
         $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
+        $("#showSlicesDisplay").html($("#showSlices").val() );
         $("#alpha3DDisplay").html($("#alpha3D").val() );
         $("#gpuLimitDisplay").html($("#gpuLimit").val() );
         $("#sysLimitDisplay").html($("#sysLimit").val() );
@@ -174,6 +187,10 @@
             $("#alphaSelectedDisplay").html($("#alphaSelected").val());
         });
         
+        $("#showSlices").change(function( ){
+            $("#showSlicesDisplay").html($("#showSlices").val());
+        });
+
         $("#alpha3D").change(function( ){
             $("#alpha3DDisplay").html($("#alpha3D").val());
         });
