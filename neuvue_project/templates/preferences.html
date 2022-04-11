@@ -18,19 +18,21 @@
     </div>
     <div id="neuroglancerConfig">
         <hr class="row-divider">
+
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
             <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
         </div>
         <hr class="row-divider">
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
-            <div>Show Slices</div>
-            <input id="showSlices" class="checkbox" type="checkbox" value={{showSlices}}>
-            <div id="showSlicesDisplay" class="form-label">"{{showSlices}}"</div>
+        
+        <div class="row-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
+            </div>
+            <div> Show Slices</div>
+            <input id="showSlices" class="form-check-input" type="checkbox" value={{showSlices}}>
         </div>
-        <hr class="row-divider">
 
         <hr class="row-divider">
         <div class="row-container">
@@ -125,13 +127,16 @@
     function submitConfig() {
         let form = '#configForm'
         let enabled = $('#configSwitch').is(":checked");
-        let checkbox = $('#showSlicesSwitch').is(":checked");
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', checkbox).appendTo(form);
 
         for (field in preferenceFields){
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
             let fieldValue = $(`#${field}`).val();
+            
+            if ($(`#${field}`).is(':checked')){
+                fieldValue = "true";
+            }
+            
             if (field != "layout") {
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
             }
@@ -167,6 +172,10 @@
 
         // Update switches 
         for (field in preferenceFields){
+            if ($(`#${field}`).attr('type') == 'checkbox' && $(`#${field}`).val() == 'True' ){
+                $(`#${field}`).prop( "checked", true );
+            }
+
             if (preferenceFields[field] == "True") {
                 $(`#${field}Switch`).prop( "checked", true );
             } else {
@@ -185,10 +194,6 @@
         // Update value on sliders
         $("#alphaSelected").change(function( ){
             $("#alphaSelectedDisplay").html($("#alphaSelected").val());
-        });
-        
-        $("#showSlices").change(function( ){
-            $("#showSlicesDisplay").html($("#showSlices").val());
         });
 
         $("#alpha3D").change(function( ){

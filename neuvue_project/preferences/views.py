@@ -47,6 +47,7 @@ class PreferencesView(View):
         return render(request, "preferences.html", context)
 
     def post(self, request, *args, **kwargs):
+        print(request.POST)
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
 
@@ -55,7 +56,7 @@ class PreferencesView(View):
         config.annotation_color = request.POST.get('annotationColor')
         config.annotation_color_switch = request.POST.get('annotationColorSwitch') == 'true'
 
-        config.show_slices = request.POST.get('showSlices')
+        config.show_slices = request.POST.get('showSlices') == 'true'
         config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
