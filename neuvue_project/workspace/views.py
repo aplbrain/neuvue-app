@@ -263,7 +263,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
-                metadata['skipped'] = True
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,

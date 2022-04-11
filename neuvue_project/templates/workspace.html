@@ -403,7 +403,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnFlagSubmit">Submit</button>
+                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="loadingSpinner('btnFlagSubmit')">Submit</button>
                 </div>
             </div>
         </div>
@@ -420,7 +420,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="btnRemoveSubmit">Yes</button>
+                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="loadingSpinner('btnRemoveSubmit')" >Yes</button>
             </div>
         </div>
     </div>

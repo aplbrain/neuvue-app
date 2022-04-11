@@ -1034,3 +1034,11 @@ background: transparent;
 .remove_task_label {
   font-size: 1.15vh;
 }
+
+.remove-yes {
+  width: 50px;
+}
+
+.flag-submit {
+  width: 75px;
+}
