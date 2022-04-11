@@ -390,6 +390,34 @@ class TaskView(View):
             context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
             context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
+            # get user profile
+            userProfile = UserProfile.objects.get(user = request.user)
+            namespace_name = n_s.namespace
+
+            # get user level for each enabled namespace
+            user_level = 'novice'
+            for ns in userProfile.intermediate_namespaces.all():
+                if (ns.namespace == namespace_name):
+                    user_level = 'intermediate'
+            for ns in userProfile.expert_namespaces.all():
+                if (ns.namespace == namespace_name):
+                    user_level = 'expert'
+            
+            ## get if user can unassign tasks in this namespace
+            namespace_obj = Namespace.objects.get(namespace = namespace)
+            group_to_push_to = ''
+            if user_level == 'novice':
+                group_to_push_to = namespace_obj.novice_push_to
+            elif user_level == 'intermediate':
+                group_to_push_to = namespace_obj.intermediate_push_to
+            else:
+                group_to_push_to = namespace_obj.expert_push_to
+            
+            if group_to_push_to == 'Queue Tasks Not Allowed':
+                context[namespace]['can_unassign_tasks'] = False
+            else:
+                context[namespace]['can_unassign_tasks'] = True
+
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
@@ -407,7 +435,7 @@ class TaskView(View):
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-        
+
         
         # Reset session count when task page loads. This ensures session counts only increment
         # for one task type at a time
@@ -420,10 +448,20 @@ class TaskView(View):
         tasks = self.client.get_tasks(sieve={
             "assignee": username, 
             "namespace": namespace,
-        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration'])
+        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'metadata'])
         
         tasks['task_id'] = tasks.index
         tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+
+        metadata = tasks['metadata'].values
+        skipped = []
+        for data in metadata:
+            if 'skipped' in data.keys():
+                skipped.append(data['skipped'])
+            else:
+                skipped.append(0)
+
+        tasks['skipped'] = skipped
 
         pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
         closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
@@ -454,7 +492,17 @@ class TaskView(View):
         # Dev Note: Below is the logic for handling re-assignment of tasks. User levels default to novice and 
         # can be overriden by the user profile in the admin page. How levels affect what group the namespace 
         # belongs to depends on how the namespace configures the push to and pull from attributes. 
-        # By default, namespaces do not allow for reassignment. 
+        # By default, namespaces do not allow for reassignment.
+        
+        # determine if our user's highest level is novice, intermediate, or expert
+        userProfile = UserProfile.objects.get(user = request.user)
+        user_level = 'novice'
+        for ns in userProfile.intermediate_namespaces.all():
+            if namespace == ns.namespace:
+                user_level = 'intermediate'
+        for ns in userProfile.expert_namespaces.all():
+            if namespace == ns.namespace:
+                user_level = 'expert' 
 
         # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
         if user_level == 'novice':

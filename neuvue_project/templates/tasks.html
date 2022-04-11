@@ -30,6 +30,7 @@
                                 </button>
                             </div>
                         {% endif %}
+                        {% if context.can_unassign_tasks%}
                         <div class="header-button">
                             <button class="header-button-text" style="font-size: 1.15vh;"
                                 data-bs-toggle="modal"
@@ -37,11 +38,12 @@
                                 data-bs-display-name="{{context.display_name}}"
                                 data-bs-namespace="{{namespace}}">
                                 <div id='{{namespace}}TasksSpinnerReassign'>
-                                    Reassign Skipped Tasks
+                                    Remove Skipped Tasks
                                 </div>
                                 <input type="hidden" name="namespace" value="{{ namespace }}">
                             </button>
                         </div>
+                        {% endif %}
                         <div class="header-button rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <button class="header-button-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
@@ -65,6 +67,7 @@
                                         <th>Created</th>
                                         <th>Priority</th>
                                         <th>Status</th>
+                                        <th>Times Skipped</th>
                                         {% comment %} <th>Flag Reason</th>
                                         <th>Notes</th> {% endcomment %}
                                     </tr>
@@ -75,6 +78,7 @@
                                         <td> {{ row.created }} </td>
                                         <td> {{ row.priority }} </td>
                                         <td> {{ row.status }} </td>
+                                        <td> {{ row.skipped }}</td>
                                     </tr>
                                     {% endfor %}
 
