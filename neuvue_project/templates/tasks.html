@@ -106,12 +106,11 @@
                                         {% if row.tags %}
                                         <td> 
                                         <span 
-                                          style="max-width: 3vw;"
                                           data-bs-toggle="tooltip" 
                                           data-bs-placement="right" 
                                           data-bs-html="true"
                                           title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" 
-                                          class="tags">
+                                          class="userTags">
                                           {{ row.tags.0 }} 
                                         </span>
                                         </td>

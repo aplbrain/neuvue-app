@@ -131,8 +131,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             
             ############################# ALLOW TO REASSIGN ########################################
             # get user profile object
-            userProfile = UserProfile.objects.get(user = request.user)
-
+            userProfile, _ = UserProfile.objects.get_or_create(user = request.user)
+            
             # determine if our user's highest level is novice, intermediate, or expert
             user_level = 'novice'
             for ns in userProfile.intermediate_namespaces.all():
@@ -387,7 +387,7 @@ class TaskView(View):
             context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
             # get user profile
-            userProfile = UserProfile.objects.get(user = request.user)
+            userProfile, _ = UserProfile.objects.get_or_create(user = request.user)
             namespace_name = n_s.namespace
 
             # get user level for each enabled namespace
@@ -512,9 +512,6 @@ class TaskView(View):
             group_to_pull_from = namespace_obj.expert_pull_from
 
         if 'reassignTasks' in request.POST.keys():
-            # get user profile object
-            userProfile = UserProfile.objects.get(user = request.user)
-
             # determine if our user's highest level is novice, intermediate, or expert
             user_level = 'novice'
             for ns in userProfile.intermediate_namespaces.all():
