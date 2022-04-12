@@ -252,8 +252,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state, 
-                    tags=tags)
+                    ng_state=ng_state)
                 # Add new differ stack entry
                 if ng_differ_stack != []:
                     self.client.post_differ_stack(
@@ -268,8 +267,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state, 
-                    tags=tags)
+                    ng_state=ng_state)
         
         elif button == 'flag':
             logger.info('Flagging task')
@@ -349,7 +347,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                tags=tags,
                 metadata=metadata)
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -447,7 +444,7 @@ class TaskView(View):
         tasks = self.client.get_tasks(sieve={
             "assignee": username, 
             "namespace": namespace,
-        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'metadata'])
+        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
         
         tasks['task_id'] = tasks.index
         tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
@@ -647,6 +644,8 @@ class InspectTaskView(View):
         metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
+        if task_df.get('tags'):
+            context['tags'] = ','.join(task_df['tags'])
         return render(request, "inspect.html", context)
 
 
@@ -686,35 +685,38 @@ class LineageView(View):
 
 
 class SynapseView(View):
-    def get(self, request, root_id=None, *args, **kwargs):
+    def get(self, request, root_ids=None, *args, **kwargs):
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
-        if root_id in settings.STATIC_NG_FILES:
-            return redirect(f'/static/workspace/{root_id}', content_type='application/javascript')
+        if root_ids in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{root_ids}', content_type='application/javascript')
 
         context = {
-            "root_id": root_id,
+            "root_ids": None,
             "ng_state": None,
             "synapse_stats": None,
             "error": None
         }
 
-        if root_id is None:
+        if root_ids is None:
             return render(request, "synapse.html", context)
 
+        root_ids = [x.strip() for x in root_ids.split(',')]
+        
         try:
-            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_id)
+            context['root_ids'] = root_ids
+            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_ids)
         except Exception as e: 
             context['error'] = e
-            return render(request, "synapse.html", context)
+
         return render(request, "synapse.html", context)
 
 
     def post(self, request, *args, **kwargs):
-        root_id = request.POST.get("root_id")
-        return redirect(reverse('synapse', kwargs={"root_id":root_id}))
+        root_ids = request.POST.get("root_ids")
+        return redirect(reverse('synapse', kwargs={"root_ids":root_ids}))
 
 
 #TODO: Move simple views to other file 

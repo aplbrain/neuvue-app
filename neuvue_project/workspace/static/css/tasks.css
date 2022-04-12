@@ -224,3 +224,13 @@ tbody.pending >:nth-child(2) {
   margin: 5% 5%;
   background-color: var(--transparent-hover);
 }
+
+.tags {
+  display: inline-block;
+  position: relative;
+  width: 3vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}

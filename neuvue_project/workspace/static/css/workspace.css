@@ -492,7 +492,7 @@ font-size: 25px;
 .inspect-container {
   display: block;
   margin: auto;
-  padding-top: 20%;
+  padding-top: 10%;
   width: 40%;
   }
 
@@ -1037,4 +1037,12 @@ background: transparent;
 
 .flag-submit {
   width: 75px;
+
+}
+
+.userTags{
+  max-width:3vw; 
+  overflow:hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
