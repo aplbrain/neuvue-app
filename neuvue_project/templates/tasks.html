@@ -359,7 +359,7 @@
                     }
                 });
             } else {
-                triggerToast("Unable to reach server. Please try again.");
+                triggerToast("Unable to reach queue. Please try again.");
                 removeLoadingSpinner(namespace + "TasksSpinner");
             }
         });
@@ -394,7 +394,7 @@
                 }
             });
         } else {
-            triggerToast("Unable to reach server. Please try again.");
+            triggerToast("Unable to reach queue. Please try again.");
             removeLoadingSpinner(namespace + "TasksSpinnerReassign");
         }
     });

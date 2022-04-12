@@ -537,7 +537,7 @@ class TaskView(View):
                 tasks = self.client.get_tasks(sieve={
                                                 "assignee": username, 
                                                 "namespace": namespace,
-                                            })
+                                            }, select=['metadata', 'priority'])
                                             
                 tasks['task_id'] = tasks.index
 
@@ -547,9 +547,6 @@ class TaskView(View):
                     row = tasks.iloc[i]
                     metadata = row['metadata']
                     skipped_keyword = 'skipped'
-                    if 'num_skipped' in metadata.keys():
-                        skipped_keyword = 'num_skipped'
-                    
                     if (skipped_keyword in metadata.keys()) and (metadata[skipped_keyword] > 0):
                         original_priority = row['priority'] + metadata[skipped_keyword] 
                         self.client.patch_task(row["task_id"], 
@@ -568,7 +565,7 @@ class TaskView(View):
         else:
         # Get x unassigned tasks to assign. Return if none
             unassigned_tasks = self.client.get_tasks(
-                sieve={"assignee": "unassigned", "namespace": namespace}, 
+                sieve={"assignee": group_to_pull_from, "namespace": namespace}, 
                 limit=num_tasks, 
                 select=["_id"]
             )
@@ -578,7 +575,7 @@ class TaskView(View):
 
             # Get tasks currently assigned to user to make sure we don't exceed the limit
             assigned_tasks = self.client.get_tasks(
-                sieve={"assignee": group_to_pull_from, "namespace": namespace, "status": ["pending", "open"]},
+                sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
                 select=["_id"]
             )
             while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
