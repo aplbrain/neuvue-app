@@ -104,13 +104,12 @@
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
                                         {% if row.tags %}
-                                        <td> 
+                                        <td class='userTags'> 
                                         <span 
                                           data-bs-toggle="tooltip" 
                                           data-bs-placement="right" 
                                           data-bs-html="true"
-                                          title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" 
-                                          class="userTags">
+                                          title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" >
                                           {{ row.tags.0 }} 
                                         </span>
                                         </td>
