@@ -30,6 +30,20 @@
                                 </button>
                             </div>
                         {% endif %}
+                        {% if context.can_unassign_tasks%}
+                        <div class="header-button">
+                            <button class="header-button-text" style="font-size: 1.15vh;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmReassignTasksModal"
+                                data-bs-display-name="{{context.display_name}}"
+                                data-bs-namespace="{{namespace}}">
+                                <div id='{{namespace}}TasksSpinnerReassign'>
+                                    Remove Skipped Tasks
+                                </div>
+                                <input type="hidden" name="namespace" value="{{ namespace }}">
+                            </button>
+                        </div>
+                        {% endif %}
                         <div class="header-button rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
                             <button class="header-button-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
@@ -53,6 +67,7 @@
                                         <th>Created</th>
                                         <th>Priority</th>
                                         <th>Status</th>
+                                        <th>Times Skipped</th>
                                         {% comment %} <th>Flag Reason</th>
                                         <th>Notes</th> {% endcomment %}
                                     </tr>
@@ -63,6 +78,7 @@
                                         <td> {{ row.created }} </td>
                                         <td> {{ row.priority }} </td>
                                         <td> {{ row.status }} </td>
+                                        <td> {{ row.skipped }}</td>
                                     </tr>
                                     {% endfor %}
 
@@ -188,6 +204,22 @@
     </div>
 </div> 
 
+<div id="confirmReassignTasksModal" class="modal" name="reassign" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black;"> <!-- modal function will fill in text here --> </h5>
+                <button type="button" class="btn-close" id="btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="modalNo" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="reassignModalYes" data-bs-dismiss="modal">Yes</button>
+                <!-- Modal function will add POST request to yes button -->
+            </div>
+        </div>
+    </div>
+</div> 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
@@ -225,6 +257,21 @@
         yesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinner'); addTasks('" + namespace + "')");
     })
 
+    // Add event listener to reassign modal
+    const reassignModal = document.getElementById('confirmReassignTasksModal');
+    reassignModal.addEventListener('show.bs.modal', function (event) {
+        // Extract info from data-bs-* attributes
+        const reassignTasksButton = event.relatedTarget
+        const namespace = reassignTasksButton.getAttribute('data-bs-namespace');
+        const displayName = reassignTasksButton.getAttribute('data-bs-display-name');
+
+        // Customize the modal
+        const modalTitle = reassignModal.querySelector('.modal-title');
+        modalTitle.textContent = 'Reassign all skipped ' + displayName + ' tasks?';
+        const reassignYesButton = document.getElementById("reassignModalYes");
+        reassignYesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinnerReassign'); reassignTasks('" + namespace + "')");
+    })
+    
     function tabToggle(evt, timeframe,start,end,buttonid) {
         
         var i, tabcontent, tablinks;
@@ -255,7 +302,11 @@
         const parent_elem = document.getElementById(parent_elem_name);
         const original_container = document.getElementById("loading-spinner-container");
         original_container.appendChild(parent_elem.firstChild);
-        parent_elem.innerHTML = "Add More Tasks";      // May need to generalize this if we add more buttons
+        if (parent_elem_name.toLowerCase().includes("reassign")) {
+            parent_elem.innerHTML = "Reassign More Tasks"
+        } else {
+            parent_elem.innerHTML = "Add More Tasks";    
+        };
     }
 
     function tableHide(actionButton, hiddenContentId) {
@@ -327,10 +378,45 @@
                     }
                 });
             } else {
-                triggerToast("Unable to reach server. Please try again.");
+                triggerToast("Unable to reach queue. Please try again.");
                 removeLoadingSpinner(namespace + "TasksSpinner");
             }
         });
+
+    }
+
+    function reassignTasks(namespace) {
+
+    const csrftoken = getCookie('csrftoken');
+    const formData = new FormData();
+    formData.append('namespace', namespace);
+    formData.append('reassignTasks', 'True');
+
+    const request = {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+        body: formData,
+        credentials: 'same-origin',
+    };
+    // Call the post request defined for this view
+    fetch('', request).then(function (response) {
+        if (response.ok) {
+            response.text().then(function(text) {
+                if(text) {
+                    triggerToast(text);
+                    removeLoadingSpinner(namespace + "TasksSpinnerReassign");
+                    location.reload();
+                } else {
+                    location.reload();
+                }
+            });
+        } else {
+            triggerToast("Unable to reach queue. Please try again.");
+            removeLoadingSpinner(namespace + "TasksSpinnerReassign");
+        }
+    });
 
     }
 

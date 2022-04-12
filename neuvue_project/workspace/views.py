@@ -4,7 +4,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.staticfiles.storage import staticfiles_storage
-from .models import Namespace
+from .models import Namespace, UserProfile
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
@@ -48,6 +48,8 @@ class WorkspaceView(LoginRequiredMixin, View):
         # This hacky solution works.
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
+
+
 
         session_task_count = request.session.get('session_task_count', 0)
         context = {
@@ -125,6 +127,39 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Apply configuration options.
             context['ng_state'] = apply_state_config(context['ng_state'], str(request.user))
             context['ng_state'] = refresh_ids(context['ng_state'], namespace)
+            
+            
+            ############################# ALLOW TO REASSIGN ########################################
+            # get user profile object
+            userProfile = UserProfile.objects.get(user = request.user)
+
+            # determine if our user's highest level is novice, intermediate, or expert
+            user_level = 'novice'
+            for ns in userProfile.intermediate_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'intermediate'
+            for ns in userProfile.expert_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'expert'
+
+            # get namespace object of task namespace
+            namespace_obj = Namespace.objects.get(namespace = namespace)
+            group_to_push_to = ''
+            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
+            if user_level == 'novice':
+                group_to_push_to = namespace_obj.novice_push_to
+            elif user_level == 'intermediate':
+                group_to_push_to = namespace_obj.intermediate_push_to
+            else:
+                group_to_push_to = namespace_obj.expert_push_to
+
+            # determine if the user's group is allowed to reassign in this namespace
+            if group_to_push_to == 'Queue Tasks Not Allowed':
+                context['allowed_to_reassign'] = False
+            else:
+                context['allowed_to_reassgin'] = True
+
+            #######################################################################################
 
         return render(request, "workspace.html", context)
 
@@ -201,7 +236,15 @@ class WorkspaceView(LoginRequiredMixin, View):
         
         elif button == 'skip':
             logger.info('Skipping task')
-            metadata['skipped'] = True
+
+            # keep track of the number of times a user skipped a task
+            task_metadata = task_df['metadata']
+            if 'skipped' in task_metadata.keys():
+                num_skipped = task_metadata['skipped']
+                metadata['skipped'] =  num_skipped + 1
+            else:
+                metadata['skipped'] = 1
+
             try:
                 self.client.patch_task(
                     task_df["_id"],
@@ -219,7 +262,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             except Exception:
                 logging.warning(f'Unable to lower priority for current task: {task_df["_id"]}')
                 logging.warning(f'This task has reached the maximum number of skips.')
-                metadata['skipped'] = True
                 self.client.patch_task(
                     task_df["_id"],
                     duration=duration,
@@ -253,6 +295,42 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df["_id"],
                     ng_differ_stack
                 )
+        elif button == 'remove':
+            # get user profile object
+            userProfile = UserProfile.objects.get(user = request.user)
+
+            # determine if our user's highest level is novice, intermediate, or expert
+            user_level = 'novice'
+            for ns in userProfile.intermediate_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'intermediate'
+            for ns in userProfile.expert_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'expert'
+
+            # patch task to the correct group
+            new_assignee = 'novice_unassigned'
+            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
+            if user_level == 'novice':
+                new_assignee = namespace_obj.novice_push_to
+            elif user_level == 'intermediate':
+                new_assignee = namespace_obj.intermediate_push_to
+            else:
+                new_assignee = namespace_obj.expert_push_to
+
+            # patch task to the new assignee
+            current_priority = task_df['priority']
+            task_metadata = task_df['metadata']
+            num_skipped = 0
+            if 'skipped' in task_metadata.keys():
+                num_skipped = task_metadata['skipped']
+
+            self.client.patch_task(task_df["_id"], 
+                                    assignee = new_assignee,
+                                    status = "pending",
+                                    priority = current_priority + num_skipped,
+                                    metadata = {'skipped': 0})
+
         
         elif button == 'start':
             logger.info('Starting new task')
@@ -308,6 +386,34 @@ class TaskView(View):
             context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
             context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
 
+            # get user profile
+            userProfile = UserProfile.objects.get(user = request.user)
+            namespace_name = n_s.namespace
+
+            # get user level for each enabled namespace
+            user_level = 'novice'
+            for ns in userProfile.intermediate_namespaces.all():
+                if (ns.namespace == namespace_name):
+                    user_level = 'intermediate'
+            for ns in userProfile.expert_namespaces.all():
+                if (ns.namespace == namespace_name):
+                    user_level = 'expert'
+            
+            ## get if user can unassign tasks in this namespace
+            namespace_obj = Namespace.objects.get(namespace = namespace)
+            group_to_push_to = ''
+            if user_level == 'novice':
+                group_to_push_to = namespace_obj.novice_push_to
+            elif user_level == 'intermediate':
+                group_to_push_to = namespace_obj.intermediate_push_to
+            else:
+                group_to_push_to = namespace_obj.expert_push_to
+            
+            if group_to_push_to == 'Queue Tasks Not Allowed':
+                context[namespace]['can_unassign_tasks'] = False
+            else:
+                context[namespace]['can_unassign_tasks'] = True
+
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
@@ -325,11 +431,12 @@ class TaskView(View):
                 non_empty_namespace += 1
 
             context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-        
+
         
         # Reset session count when task page loads. This ensures session counts only increment
         # for one task type at a time
         request.session['session_task_count'] = 0
+
 
         return render(request, "tasks.html", {'data':context})
 
@@ -337,10 +444,20 @@ class TaskView(View):
         tasks = self.client.get_tasks(sieve={
             "assignee": username, 
             "namespace": namespace,
-        }, select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags'])
+        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
         
         tasks['task_id'] = tasks.index
         tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+
+        metadata = tasks['metadata'].values
+        skipped = []
+        for data in metadata:
+            if 'skipped' in data.keys():
+                skipped.append(data['skipped'])
+            else:
+                skipped.append(0)
+
+        tasks['skipped'] = skipped
 
         pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
         closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
@@ -368,30 +485,105 @@ class TaskView(View):
         num_tasks = namespace_obj.number_of_tasks_users_can_self_assign
         max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
 
+        # Dev Note: Below is the logic for handling re-assignment of tasks. User levels default to novice and 
+        # can be overriden by the user profile in the admin page. How levels affect what group the namespace 
+        # belongs to depends on how the namespace configures the push to and pull from attributes. 
+        # By default, namespaces do not allow for reassignment.
+        
+        # determine if our user's highest level is novice, intermediate, or expert
+        userProfile = UserProfile.objects.get(user = request.user)
+        user_level = 'novice'
+        for ns in userProfile.intermediate_namespaces.all():
+            if namespace == ns.namespace:
+                user_level = 'intermediate'
+        for ns in userProfile.expert_namespaces.all():
+            if namespace == ns.namespace:
+                user_level = 'expert' 
+
+        # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
+        if user_level == 'novice':
+            group_to_push_to = namespace_obj.novice_push_to
+            group_to_pull_from = namespace_obj.novice_pull_from
+        elif user_level == 'intermediate':
+            group_to_push_to = namespace_obj.intermediate_push_to
+            group_to_pull_from = namespace_obj.intermediate_pull_from
+        else:
+            group_to_push_to = namespace_obj.expert_push_to
+            group_to_pull_from = namespace_obj.expert_pull_from
+
+        if 'reassignTasks' in request.POST.keys():
+            # get user profile object
+            userProfile = UserProfile.objects.get(user = request.user)
+
+            # determine if our user's highest level is novice, intermediate, or expert
+            user_level = 'novice'
+            for ns in userProfile.intermediate_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'intermediate'
+            for ns in userProfile.expert_namespaces.all():
+                if namespace == ns.namespace:
+                    user_level = 'expert'
+
+            # determine if the user's group is allowed to reassign in this namespace
+            if group_to_push_to == 'Queue Tasks Not Allowed':
+                return HttpResponse("You do not have permission to reassign tasks in this namespace.", content_type="text/plain")
+            else:
+                # get all the users tasks in this namespace
+                # run through all of them to see if they have been skipped
+                # if they've been skipped, reassign to the correct group with the appropriate priority 
+                tasks = self.client.get_tasks(sieve={
+                                                "assignee": username, 
+                                                "namespace": namespace,
+                                            }, select=['metadata', 'priority'])
+                                            
+                tasks['task_id'] = tasks.index
+
+                # iterate through tasks, check if the task has been skipped, reassign to appropriate bucket
+                reassign_count = 0
+                for i in range(0, len(tasks)):
+                    row = tasks.iloc[i]
+                    metadata = row['metadata']
+                    skipped_keyword = 'skipped'
+                    if (skipped_keyword in metadata.keys()) and (metadata[skipped_keyword] > 0):
+                        original_priority = row['priority'] + metadata[skipped_keyword] 
+                        self.client.patch_task(row["task_id"], 
+                                            assignee = group_to_push_to,
+                                            status = "pending",
+                                            priority = int(original_priority),
+                                            metadata = {'skipped': 0})
+                        reassign_count += 1
+                
+                http_message = "Reassigned {} skipped tasks".format(reassign_count)
+                if reassign_count == 0:
+                    http_message = "You did not have any skipped tasks in your queue. No tasks reassigned."
+                
+                return HttpResponse(http_message, content_type="text/plain")
+        
+        else:
         # Get x unassigned tasks to assign. Return if none
-        unassigned_tasks = self.client.get_tasks(
-            sieve={"assignee": "unassigned", "namespace": namespace}, 
-            limit=num_tasks, 
-            select=["_id"]
-        )
-        if len(unassigned_tasks) == 0:
-            # Warn the user that no tasks are left in the queue
-            return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
+            unassigned_tasks = self.client.get_tasks(
+                sieve={"assignee": group_to_pull_from, "namespace": namespace}, 
+                limit=num_tasks, 
+                select=["_id"]
+            )
+            if len(unassigned_tasks) == 0:
+                # Warn the user that no tasks are left in the queue
+                return HttpResponse("Unable to assign new tasks. No unassigned tasks left in queue.", content_type="text/plain")
 
-        # Get tasks currently assigned to user to make sure we don't exceed the limit
-        assigned_tasks = self.client.get_tasks(
-            sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
-            select=["_id"]
-        )
-        while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
-            unassigned_tasks = unassigned_tasks.iloc[:-1 , :]
+            # Get tasks currently assigned to user to make sure we don't exceed the limit
+            assigned_tasks = self.client.get_tasks(
+                sieve={"assignee": username, "namespace": namespace, "status": ["pending", "open"]},
+                select=["_id"]
+            )
+            while ( len(unassigned_tasks) + len(assigned_tasks) ) > max_tasks:
+                unassigned_tasks = unassigned_tasks.iloc[:-1 , :]
 
-        # Assign the tasks
-        ids = unassigned_tasks.index.tolist()
-        for id in ids:
-            self.client.patch_task(id, assignee=username)
+            # Assign the tasks
+            ids = unassigned_tasks.index.tolist()
+            for id in ids:
+                self.client.patch_task(id, assignee=username)
 
-        return HttpResponse()
+            return HttpResponse()
 
 
 class InspectTaskView(View):
