@@ -107,7 +107,7 @@
                         id="btnYes" 
                         type="button" 
                         class="mainButton submit quad" 
-                        onclick="loadingSpinner('confirm_load')"
+                        onclick="triggerLoadingSpinner('confirm_load')"
                     >
                         <div id = 'confirm_load'>
                              Confirm Split
@@ -118,7 +118,7 @@
                         id="btnYesBut" 
                         type="button" 
                         class="mainButton yesBut" 
-                        onclick="loadingSpinner('refinement_load')"
+                        onclick="triggerLoadingSpinner('refinement_load')"
                     >
                         <div id = 'refinement_load'>
                             Split Requires Refinement
@@ -129,7 +129,7 @@
                     id="btnNoBut" 
                     type="button" 
                     class="mainButton noBut" 
-                    onclick="loadingSpinner('errorNearby_load')"
+                    onclick="triggerLoadingSpinner('errorNearby_load')"
                     
                     >
                         <div id = 'errorNearby_load'>
@@ -141,7 +141,7 @@
                         id="btnNo" 
                         type="button" 
                         class="mainButton flag quad" 
-                        onclick="loadingSpinner('reject_load')"
+                        onclick="triggerLoadingSpinner('reject_load')"
                     >
                         <div id = 'reject_load'>
                             Reject Split
@@ -152,7 +152,7 @@
                         id="btnUnsure" 
                         type="button" 
                         class="mainButton pause quad" 
-                        onclick="loadingSpinner('unsure_load')"
+                        onclick="triggerLoadingSpinner('unsure_load')"
                     >
                         <div id = 'unsure_load'>
                             Unsure
@@ -284,7 +284,7 @@
                         type="button" 
                         class="mainButton skip"
                         accesskey="k"
-                        onclick="loadingSpinner('skip_task_load')" 
+                        onclick="triggerLoadingSpinner('skip_task_load')" 
                     >
                         <div id = 'skip_task_load'>
                             Skip Task
@@ -299,7 +299,7 @@
                         id="btnSubmit" 
                         type="button" 
                         class="mainButton submit"
-                        onclick="loadingSpinner('submit_task_load')" 
+                        onclick="triggerLoadingSpinner('submit_task_load')" 
                     >
                         <div id = 'submit_task_load'>
                             Submit Task
@@ -324,7 +324,7 @@
                         type="button"
                         class="mainButton pause"
                         accesskey="e"
-                        onclick="loadingSpinner('exit_task_load')"
+                        onclick="triggerLoadingSpinner('exit_task_load')"
                     >
                         <div id = 'exit_task_load'>
                             Save and Exit Task
@@ -340,7 +340,7 @@
                         <button 
                             type="button" 
                             class="mainButton return" 
-                            onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
                                 Return to Task page
                             </div>
@@ -389,7 +389,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="loadingSpinner('btnFlagSubmit')">Submit</button>
+                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="triggerLoadingSpinner('btnFlagSubmit')">Submit</button>
                 </div>
             </div>
         </div>
@@ -406,7 +406,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
-                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="loadingSpinner('btnRemoveSubmit')" >Yes</button>
+                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="triggerLoadingSpinner('btnRemoveSubmit')" >Yes</button>
             </div>
         </div>
     </div>
@@ -448,12 +448,12 @@
         return "https://neuroglancer.neuvue.io/#!" + data
     }
 
-    function loadingSpinner(parent_div_name) {
+    {% comment %} function loadingSpinner(parent_div_name) {
          var parent_div = document.getElementById(parent_div_name);
          var spinner = document.getElementById('loading-spinner');
          parent_div.innerHTML = '';
          parent_div.append(spinner);
-     }
+     } {% endcomment %}
      
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
@@ -566,7 +566,7 @@
         } else if ('{{submission_method}}' == "decide_and_submit"){
             $('#btnSubmit').click(function(){
                 if (current_button_selection != 'noneSelected'){
-                    loadingSpinner('submit_task_load');
+                    triggerLoadingSpinner('submit_task_load');
                     submitForm(current_button_selection);
                 } else {
                     alert("Please select a decision!");
