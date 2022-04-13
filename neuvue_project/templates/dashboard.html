@@ -13,7 +13,7 @@
     <!-- Landing page for user to choose namespace and group -->
     {% if not namespace or not group%}
     <div class="inspect-container">
-        <form id="mainForm" action="" method="post" >
+        <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
           {% csrf_token %}
           <h3 style="color: white"> Admin Dashboard</h3>
           <div style="margin: 20px"class="form-group">
@@ -38,8 +38,9 @@
             </select> 
         </div>
 
-        <div style="margin: 20px"  class="form-group">
+        <div style="margin: 20px" class="form-group d-flex">
             <input type="submit" class="btn btn-primary" value="Submit">
+            <div id="submit-spinner" class="text-white ms-3 mt-2"></div>
             
             {% if error %}
             <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
@@ -55,7 +56,7 @@
 
         <!-- Reinput namespace and group if new results desired -->
         <div class="d-flex flex-row bd-highlight mb-3">
-            <form id="mainForm" action="" method="post" >
+            <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('reload-spinner')">
                 {% csrf_token %}
                 <h3 style="color: white"> Admin Dashboard</h3>
                 <div style="margin: 20px"class="form-group">
@@ -80,12 +81,13 @@
                   </select> 
               </div>
       
-              <div style="margin: 20px"  class="form-group">
-                  <input type="submit" class="btn btn-primary" value="Reload">
+              <div style="margin: 20px" class="form-group d-flex">
+                    <input type="submit" class="btn btn-primary" value="Reload">
+                    <div id="reload-spinner" class="text-white ms-3 mt-2"></div>
                   
-                  {% if error %}
-                  <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
-                  {% endif %}
+                    {% if error %}
+                    <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+                    {% endif %}
                 
               </div>
               </form>
@@ -271,7 +273,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
+
+    // Remove loading spinners when page loads. This is important if the back button is clicked
+    window.addEventListener('pageshow', function(e) {
+        if (document.getElementById('submit-spinner') !== null) {
+            removeLoadingSpinner('submit-spinner');
+        }
+        if (document.getElementById('reload-spinner') !== null) {
+            removeLoadingSpinner('reload-spinner');
+        }
+    })
 
     // Detailed results modal: collect selected tasks into an array
     function getSelectedTasks(){

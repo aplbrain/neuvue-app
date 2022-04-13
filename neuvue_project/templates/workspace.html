@@ -448,13 +448,6 @@
         return "https://neuroglancer.neuvue.io/#!" + data
     }
 
-    {% comment %} function loadingSpinner(parent_div_name) {
-         var parent_div = document.getElementById(parent_div_name);
-         var spinner = document.getElementById('loading-spinner');
-         parent_div.innerHTML = '';
-         parent_div.append(spinner);
-     } {% endcomment %}
-     
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
