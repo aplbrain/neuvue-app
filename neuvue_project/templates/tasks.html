@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
-{% comment %} {% load inclusion_tags %} {% endcomment %}
 
 {% block header_includes %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
@@ -283,25 +282,6 @@
         tab_button.classList.toggle("active");
 
     };
-
-    {% comment %} function triggerLoadingSpinner(parent_elem_name) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const spinner = document.getElementById('loading-spinner');
-        parent_elem.innerHTML = '';
-        parent_elem.append(spinner);
-    }
-
-    function removeLoadingSpinner(parent_elem_name, originalText) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const original_container = document.getElementById("loading-spinner-container");
-        original_container.appendChild(parent_elem.firstChild);
-        parent_elem.innerHTML = originalText;
-        //if (parent_elem_name.toLowerCase().includes("reassign")) {
-        //    parent_elem.innerHTML = "Reassign More Tasks"
-        //} else {
-        //    parent_elem.innerHTML = "Add More Tasks";    
-        //};
-    } {% endcomment %}
 
     function tableHide(actionButton, hiddenContentId) {
 
