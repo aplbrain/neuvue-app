@@ -39,6 +39,7 @@
           </div>
           <div class="sideContentInfo">          
               <button type="button" class="btn btn-info" onclick="copyToClipboard(get_synapse_info())"> <i class="fa fa-copy"></i> Copy Synapse Info </button></br>
+              <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
               {% for root, stats in synapse_stats.items %}
               Root ID <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
@@ -49,6 +50,7 @@
               {% endfor %}
           </div>
       </div>
+      
   </div>
 </div> 
 
@@ -66,10 +68,54 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 {% endif%}
 
+<div id="hiddenTable" style="visibility: hidden;"> 
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
   // Neuroglancer State Load 
+
+  /**
+   {% for root, stats in synapse_stats.items %}
+    Root ID <br> 
+    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
+    Number of Presynaptic Connections <br> 
+    <span class ="code"> {{stats.num_pre}} </span> <br>
+    Number of Postsynaptic Connections <br> 
+    <span class ="code">  {{stats.num_post}} </span> <br>
+    {% endfor %}
+              **/
+    const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
+    exportButton_userTable.addEventListener('click', (e) => {
+      let tableContents = `
+                    <thead>
+                      <tr>
+                        <th scope="col">Root ID</th>
+                        <th scope="col">Number of Presynaptic Connections</th>
+                        <th scope="col">Number of Postsynaptic Connections</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for root, stats in synapse_stats.items %}
+                        <tr>
+                          <td>{{root}}</td>
+                          <td>{{stats.num_pre}}</td>
+                          <td>{{stats.num_post}}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>`
+        $('#hiddenTable').html(`
+            <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>  
+        `);
+        // Construct filename
+        const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';
+        // Perform download
+        $('#hiddenIDTable').table2csv('download', {'filename': filename});
+
+    }); 
 
   function get_synapse_info() {
     const synapse_info = "{{synapse_stats|safe}}";

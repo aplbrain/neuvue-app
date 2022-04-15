@@ -62,9 +62,12 @@
                   
                   <label style="color: white" for="namespaceSelect">Namespace</label>
                   <select name="namespace" class="form-select" id="namespaceSelect" required="true">
-                      <option value="" selected disabled>Please select</option>
                       {% for namespace_opt in all_namespaces %}
-                      <option>{{namespace_opt}} </option>
+                        {% if namespace_opt == namespace %}
+                            <option selected value={{namespace_opt}}>{{namespace_opt}} </option>
+                        {% else %}
+                            <option>{{namespace_opt}} </option>
+                        {% endif %}
                       {% endfor %}
                   </select>
       
@@ -73,9 +76,12 @@
               <div style="margin: 20px" class="form-group">
                   <label style="color: white" for="groupSelect">Group</label>
                   <select name="group" class="form-select" id="groupSelect" required="true">
-                      <option value="" selected disabled>Please select</option>
                       {% for group_opt in all_groups %}
-                      <option>{{group_opt}} </option>
+                        {% if group_opt == group %}
+                            <option selected value={{group_opt}}>{{group_opt}} </option>
+                        {% else %}
+                            <option>{{group_opt}} </option>
+                        {% endif %}
                       {% endfor %}
                   </select> 
               </div>
