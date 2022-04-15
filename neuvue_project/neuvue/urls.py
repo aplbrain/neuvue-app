@@ -50,7 +50,7 @@ urlpatterns = [
     path('lineage/', LineageView.as_view(), name="lineage"), 
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
     path('synapse/', SynapseView.as_view(), name="synapse"), 
-    path('synapse/<str:root_id>', SynapseView.as_view(), name="synapse"),
+    path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
     path('report/', ReportView.as_view(), name="report")
 ]
 

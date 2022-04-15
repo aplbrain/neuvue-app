@@ -1031,6 +1031,15 @@ background: transparent;
   font-size: 1.2vh;
 }
 
+.remove-yes {
+  width: 50px;
+}
+
+.flag-submit {
+  width: 75px;
+
+}
+
 .userTags{
   max-width:3vw; 
   overflow:hidden; 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 # Create your models here.
 
 class NeuroglancerLinkType(models.TextChoices):
@@ -32,6 +33,19 @@ class ImageChoices(models.TextChoices):
     MINNIE = 'https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em', _('Minnie65')
     PINKY = 'gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked', _('Pinky')
 
+
+class PushToChoices(models.TextChoices):
+    NULL = 'Queue Tasks Not Allowed'
+    NOVICE = 'unassigned_novice'
+    INTERMEDIATE = 'unassigned_intermediate'
+    EXPERT = 'unassigned_expert'
+
+class PullFromChoices(models.TextChoices):
+    NULL = 'Reassign Tasks Not Allowed'
+    NOVICE = 'unassigned_novice'
+    INTERMEDIATE = 'unassigned_intermediate'
+    EXPERT = 'unassigned_expert'
+
 class Namespace(models.Model):
     namespace_enabled = models.BooleanField(default=True)
     namespace = models.CharField(max_length=50, primary_key=True)
@@ -44,10 +58,27 @@ class Namespace(models.Model):
     refresh_selected_root_ids = models.BooleanField(default=False)
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
+
+    """Pull From Push To Novice"""
+    novice_pull_from = models.CharField(max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL)
+    novice_push_to = models.CharField(max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL)
+
+    """Pull From Push To Intermediate"""
+    intermediate_pull_from = models.CharField(max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL)
+    intermediate_push_to = models.CharField(max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL)
+
+    """Pull From Push To Expert"""
+    expert_pull_from = models.CharField(max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL)
+    expert_push_to = models.CharField(max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL)
     
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
         return self.namespace
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    intermediate_namespaces = models.ManyToManyField(Namespace, related_name='intermediate_namespaces', blank=True)
+    expert_namespaces = models.ManyToManyField(Namespace, related_name='expert_namespaces', blank=True)
 
 
 
