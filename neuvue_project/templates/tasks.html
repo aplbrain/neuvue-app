@@ -168,13 +168,6 @@
     </div>
     <!-- Triggerable elements -->
 
-    <!-- Loading spinner -->
-    <div id="loading-spinner-container" style="display:none;">
-        <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div class="position-fixed top-0 start-50 translate-middle-x mt-5">
         <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
@@ -289,24 +282,6 @@
 
     };
 
-    function triggerLoadingSpinner(parent_elem_name) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const spinner = document.getElementById('loading-spinner');
-        parent_elem.innerHTML = '';
-        parent_elem.append(spinner);
-    }
-
-    function removeLoadingSpinner(parent_elem_name) {
-        const parent_elem = document.getElementById(parent_elem_name);
-        const original_container = document.getElementById("loading-spinner-container");
-        original_container.appendChild(parent_elem.firstChild);
-        if (parent_elem_name.toLowerCase().includes("reassign")) {
-            parent_elem.innerHTML = "Reassign More Tasks"
-        } else {
-            parent_elem.innerHTML = "Add More Tasks";    
-        };
-    }
-
     function tableHide(actionButton, hiddenContentId) {
 
         var acc = document.getElementById(actionButton);
@@ -334,22 +309,6 @@
         toast.show();
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
     function addTasks(namespace) {
 
         const csrftoken = getCookie('csrftoken');
@@ -370,14 +329,14 @@
                 response.text().then(function(text) {
                     if(text) {
                         triggerToast(text);
-                        removeLoadingSpinner(namespace + "TasksSpinner");
+                        removeLoadingSpinner(namespace + "TasksSpinner", "Add More Tasks");
                     } else {
                         location.reload();
                     }
                 });
             } else {
                 triggerToast("Unable to reach queue. Please try again.");
-                removeLoadingSpinner(namespace + "TasksSpinner");
+                removeLoadingSpinner(namespace + "TasksSpinner", "Add More Tasks");
             }
         });
 
@@ -404,7 +363,7 @@
             response.text().then(function(text) {
                 if(text) {
                     triggerToast(text);
-                    removeLoadingSpinner(namespace + "TasksSpinnerReassign");
+                    removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
                     location.reload();
                 } else {
                     location.reload();
@@ -412,7 +371,7 @@
             });
         } else {
             triggerToast("Unable to reach queue. Please try again.");
-            removeLoadingSpinner(namespace + "TasksSpinnerReassign");
+            removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
         }
     });
 

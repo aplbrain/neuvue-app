@@ -125,3 +125,18 @@ function copyToClipboard(copyInfo) {
    /* Copy the text inside the text field */
   navigator.clipboard.writeText(copyInfo);
 }
+
+function triggerLoadingSpinner(parent_elem_name) {
+  const spinner = `
+    <div id="loading-spinner" class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  `;
+  const parent_elem = document.getElementById(parent_elem_name);
+  parent_elem.innerHTML = spinner;
+}
+
+function removeLoadingSpinner(parent_elem_name, originalText = '') {
+  const parent_elem = document.getElementById(parent_elem_name);
+  parent_elem.innerHTML = originalText;
+}
