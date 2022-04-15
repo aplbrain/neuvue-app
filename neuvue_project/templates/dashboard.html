@@ -198,6 +198,7 @@
 
     <div id="hiddenModalTable" style="visibility: hidden;"> 
     </div>
+    <div id="hiddenSelectedTable" style="visibility: none;"> 
     {% endif %}
 </div>
 
@@ -288,12 +289,13 @@
 
     // Detailed results modal: collect selected tasks into an array
     function getSelectedTasks(){
-        let ret = [];
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret.push(ele)
+        var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
+                .find( 'tr' ) // select all rows that has
+                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+            var ret = [];
+            for (let i = 0; i < selectedRows.length ; i++) {
+                ret.push(selectedRows[i].children[0].firstChild.defaultValue);
             };
-        });
         return ret
     }
 
@@ -401,11 +403,37 @@
 
         // Construct filename
         const username = document.getElementById("userModalTitle").textContent;
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
-
         // Perform download
-        $('#hiddenUserTable').table2csv('download', {'filename': filename});
+        function download_all_tasks(){
+            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
+            $('#hiddenUserTable').table2csv('download', {'filename': filename});
+        }
+        if (getSelectedTasks().length == 0){
+            // if no tasks are selected the default is to download all tasks
+            download_all_tasks();
+        } else {
 
+            var filteredTable = $('#userTable').clone()[0] // make a copy of the visible table to edit and export
+            filteredTable.id = 'userSelectedTable'; 
+
+            var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
+                .find( 'tr' ) // select all rows that has
+                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+
+            for (let i = 0; i <  $( '#userTable' ).find( 'tbody' ).find( 'tr' ).length; i++) {
+                filteredTable.deleteRow(1);
+            };
+
+            $('#hiddenSelectedTable').html(filteredTable);
+
+            for (let i = 0; i < selectedRows.length; i++){
+                $('#hiddenSelectedTable tr:last').after('<tr>'+selectedRows[i].innerHTML+'</tr>');
+            }
+
+            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '_selectedTasks.csv';
+            $('#userSelectedTable').table2csv('download', {'filename': filename});
+            
+        }
     }); 
 
 </script>
