@@ -74,6 +74,13 @@
   // Side Bar Interaction
   openSideMenu();
 
+  function selectID(root_id){
+    console.log(root_id);
+
+    // Select the root ID using the viewer interface 
+  }
+
+
   function downloadSVGAsPNG(e){
     const canvas = document.createElement("canvas");
     const svg = document.querySelector('svg');
@@ -115,6 +122,13 @@
 
     $("svg").attr('width', '100%');
     $("svg").attr('height', '100%');
+
+    $(".node").each(
+      function(index, element){
+        let root_id = $(element).children().first().text();
+        root_id = String(root_id);
+        $(element).attr('onclick', `selectID(${root_id})`);
+      });
   });
  
   // Remove loading spinner when page loads. This is important if the back button is clicked
