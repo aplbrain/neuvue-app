@@ -14,6 +14,10 @@ class Config(models.Model):
     show_slices=models.BooleanField(default=False)
     show_slices_switch = models.BooleanField(default=False)
 
+   # Zoom Level
+    zoom_level= models.CharField(max_length=10, default="20")
+    zoom_level_switch = models.BooleanField(default=False)
+
     # 2D Segmentation Opacity 
     alpha_selected= models.CharField(max_length=10, default="0.85")
     alpha_selected_switch = models.BooleanField(default=False)

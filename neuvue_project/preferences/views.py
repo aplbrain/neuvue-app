@@ -41,7 +41,9 @@ class PreferencesView(View):
             'chunkReq': config.chunk_requests,
             'chunkReqSwitch': config.chunk_requests_switch,
             'layout': config.layout,
-            'layoutSwitch': config.layout_switch
+            'layoutSwitch': config.layout_switch,
+            'zoomLevel': config.zoom_level,
+            'zoomLevelSwitch': config.zoom_level_switch
         }
 
         return render(request, "preferences.html", context)
@@ -58,6 +60,9 @@ class PreferencesView(View):
 
         config.show_slices = request.POST.get('showSlices') == 'true'
         config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
+
+        config.zoom_level = request.POST.get('zoomLevel')
+        config.zoom_level_switch = request.POST.get('zoomLevelSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'

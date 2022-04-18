@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.apps import apps
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
@@ -33,7 +34,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
+Config = apps.get_model('preferences', 'Config')
 
 class WorkspaceView(LoginRequiredMixin, View):
 
@@ -49,7 +50,9 @@ class WorkspaceView(LoginRequiredMixin, View):
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
+        config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
         session_task_count = request.session.get('session_task_count', 0)
+        config.save()
         context = {
             'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
@@ -64,6 +67,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'timeout': settings.TIMEOUT,
             'session_task_count' : session_task_count,
             'was_skipped':False,
+            'show_slices': config.show_slices,
         }
 
         if not is_authorized(request.user):

@@ -34,10 +34,22 @@
             <input id="showSlices" class="form-check-input" type="checkbox" value={{showSlices}}>
         </div>
 
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="zoomLevelSwitch"> </div>
+            <div> Zoom Level </div>
+            <input id="zoomLevel" type="range" class="form-range" min="0" 
+                max="100" step="10" value="{{ zoomLevel }}" />
+            
+            <div id="zoomLevelDisplay" class="form-label">"{{ zoomLevel }}"</div>
+        </div>
+
+          
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
-            <div> Zoom Level </div>
+            <div> 2D Segmentation Data Opacity </div>
             <input id="alphaSelected" type="range" class="form-range" min="0" 
                 max="1" step="0.01" value="{{ alphaSelected }}" />
             
@@ -118,6 +130,7 @@
         "annotationColor": "{{annotationColorSwitch}}", 
         "showSlices": "{{showSlicesSwitch}}", 
         "alphaSelected": "{{alphaSelectedSwitch}}", 
+        "zoomLevel": "{{zoomLevelSwitch}}", 
         "alpha3D": "{{alpha3DSwitch}}", 
         "gpuLimit": "{{gpuLimitSwitch}}", 
         "sysLimit": "{{sysLimitSwitch}}", 
@@ -185,6 +198,7 @@
 
         // Display value on sliders
         $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
+        $("#zoomLevelDisplay").html($("#zoomLevel").val() );
         $("#showSlicesDisplay").html($("#showSlices").val() );
         $("#alpha3DDisplay").html($("#alpha3D").val() );
         $("#gpuLimitDisplay").html($("#gpuLimit").val() );
@@ -194,6 +208,11 @@
         // Update value on sliders
         $("#alphaSelected").change(function( ){
             $("#alphaSelectedDisplay").html($("#alphaSelected").val());
+        });
+
+        // Update value on sliders
+        $("#zoomLevel").change(function( ){
+            $("#zoomLevelDisplay").html($("#zoomLevel").val());
         });
 
         $("#alpha3D").change(function( ){
