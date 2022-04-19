@@ -184,21 +184,36 @@ class ReportView(View, LoginRequiredMixin):
 
         # add bar chart
         decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
+
+        sieve = {
+            'assignee': users,
+            'namespace': namespace,
+        }
+
+        if start_field == end_field:
+            sieve[start_field] = {
+                '$gt': start_dt,
+                '$lt': end_dt
+            }
+        else:
+            sieve[start_field] = {
+                '$gt': start_dt
+            }
+            sieve[end_field] = {
+                '$lt': end_dt
+            }
+        
+        task_df = self.client.get_tasks(
+            sieve=sieve, 
+            select=['assignee', 'status', 'duration','metadata','closed','opened']
+            )
+            
         if namespace in decision_namespaces:
             import plotly.express as px
             from plotly.subplots import make_subplots
-            task_df = self.client.get_tasks(sieve={
-                'assignee': users,
-                'namespace': namespace,
-                start_field: {
-                    "$gt": start_dt
-                }, 
-                end_field: {
-                    '$lt': end_dt
-                }
-            }, select=['assignee', 'status', 'duration','metadata','closed','opened'])
             task_df['decision'] = task_df['metadata'].apply(lambda x: x.get('decision'))
-                        
+            
+            
             users=task_df['assignee'].unique()
             fig_decision = make_subplots(rows=1, cols=2, column_widths=[0.12, 0.85], shared_yaxes=True,horizontal_spacing = 0.02)
             color_count = 0
@@ -222,17 +237,7 @@ class ReportView(View, LoginRequiredMixin):
                 legend_title="Decision Type",
             )
             fig_decision.update_xaxes(title_text="assignees", row=1, col=2)
-        else:
-            task_df = self.client.get_tasks(sieve={
-                'assignee': users,
-                'namespace': namespace,
-                start_field: {
-                    "$gt": start_dt
-                }, 
-                end_field: {
-                    '$lt': end_dt
-                }
-            }, select=['assignee', 'status', 'duration','closed','opened'])
+
 
         columns = ['Username', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
         status_states = ['pending','open','closed','errored']
