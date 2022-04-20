@@ -166,21 +166,13 @@
                 $("#neuroglancerConfig").hide(100);
             }
         });
-        if ($("#showSlicesSwitch").is(':checked')) {
-
-            $("#showSlicesSwitch").prop( "checked", true );
-        } else {
-            $("#showSlicesSwitch").prop( "checked", false );
-        }
         
         if ("{{enabled}}" == "True") {
             $("#neuroglancerConfig").show();
             $("#configSwitch").prop( "checked", true );
-            $("#showSlicesSwitch").prop( "checked", true );
         } else {
             $("#neuroglancerConfig").hide();
             $("#configSwitch").prop( "checked", false );
-            $("#showSlicesSwitch").prop( "checked", false );
         }
 
         // Update switches 

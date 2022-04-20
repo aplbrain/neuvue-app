@@ -18,7 +18,6 @@ class PreferencesView(View):
         if Config.objects.filter(user=str(request.user)).count() == 0:
             logging.debug(f"New Config for {request.user}.")
             config = Config.objects.create(user=str(request.user))
-            config.save()
 
         else:
             logging.debug(f"Getting Config for {request.user}.")
@@ -49,7 +48,6 @@ class PreferencesView(View):
         return render(request, "preferences.html", context)
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
 
