@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="basic dashboard">
+  {% if not namespace or not group%}
+    <div class="inspect-container">
+        <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner')">
+          {% csrf_token %}
+          <h3 style="color: white"> Generate Task Report</h3>
+          <div style="margin: 20px"class="form-group">
+            
+            <label style="color: white" for="namespaceSelect">Namespace</label>
+            <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
+                <option value="" selected disabled>Please select</option>
+                {% for namespace_opt in all_namespaces %}
+                <option>{{namespace_opt}} </option>
+                {% endfor %}
+            </select>
+            </br>
+        
+
+            <label style="color: white" for="groupSelect">Group</label>
+            <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
+                <option value="" selected disabled>Please select</option>
+                {% for group_opt in all_groups %}
+                <option>{{group_opt}} </option>
+                {% endfor %}
+            </select> 
+            </br>
+
+            <label style="color: white" for="startSelect">From</label>
+            <select name="start_field" class="form-select" id="startSelect" required="true">
+              <option value="created">Created After</option>
+              <option value="opened">Opened After</option>
+              <option value="closed">Closed After</option>
+            </select> 
+
+            <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true">
+            </br>
+            
+            <label style="color: white" for="endSelect">To</label>
+            <select name="end_field" class="form-select" id="endSelect" required="true">
+              <option value="created">Created Before</option>
+              <option value="opened">Opened Before</option>
+              <option value="closed">Closed Before</option>
+            </select> 
+
+            <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+            </br>
+
+            <div class="d-flex">
+              <input type="submit" class="btn btn-primary" value="Generate Report">
+              <div id="generate-spinner" class="text-white ms-3 mt-2"></div>
+              {% if error %}
+              <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+              {% endif %}
+            </div>
+            
+          </div>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="container-fluid" style="padding: 5vh 5vw;">
+      <div class="d-flex flex-row bd-highlight mb-3">
+        <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner')">
+          {% csrf_token %}
+          <h3 style="color: white"> Generate Task Report</h3>
+          <div style="margin: 20px"class="form-group">
+            
+            <label style="color: white" for="namespaceSelect">Namespace</label>
+            <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
+                {% for namespace_opt in all_namespaces %}
+                  {% if namespace_opt == namespace %}
+                    <option selected>{{namespace_opt}} </option>
+                  {% else %}
+                    <option>{{namespace_opt}} </option>
+                  {% endif %}
+                {% endfor %}
+            </select>
+            </br>
+        
+
+            <label style="color: white" for="groupSelect">Group</label>
+            <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
+                {% for group_opt in all_groups %}
+                  {% if group_opt == group %}
+                    <option selected>{{group_opt}} </option>
+                  {% else %}
+                    <option>{{group_opt}} </option>
+                  {% endif %}
+                {% endfor %}
+            </select> 
+            </br>
+
+            <label style="color: white" for="startSelect">From</label>
+            <select name="start_field" class="form-select" id="startSelect" required="true">
+              {% for field, printed_name in fields.items %}
+                {% if field == start_field %}
+                  <option selected value={{field}}>{{printed_name}}</option>
+                {% else %}
+                  <option value={{field}}>{{printed_name}}</option>
+                {% endif %}
+              {% endfor %}
+            </select> 
+
+            <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true" value="{{start_date}}">
+            </br>
+            
+            <label style="color: white" for="endSelect">To</label>
+            <select name="end_field" class="form-select" id="endSelect" required="true">
+              {% for field, printed_name in fields.items %}
+                {% if field == end_field %}
+                  <option selected value={{field}}>{{printed_name}}</option>
+                {% else %}
+                  <option value={{field}}>{{printed_name}}</option>
+                {% endif %}
+              {% endfor %}
+            </select> 
+
+            
+            <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
+            </br>
+
+            <div class="d-flex">
+              <input type="submit" class="btn btn-primary" value="Generate Report">
+              <div id="generate-spinner" class="text-white ms-3 mt-2"></div>
+              {% if error %}
+              <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+              {% endif %}
+            </div>
+            
+          </div>
+        </form>
+        <div class="d-flex flex-column" style="width:100%; margin-left: 1vw;">
+          {% if fig_decision %}
+            <div style="width:600;height:500; margin-bottom: 2vh;">
+              {{ fig_decision|safe }}
+            </div>
+          {% endif %}
+          <div style="width:600;height:500; margin-bottom: 2vh;">
+            {{ fig_time |safe }}
+          </div>
+          <div class="row" >
+            <div class="col-lg-12" >
+              <div class="card text-center">
+                <div class="card-header">
+                  {% if start_field == end_field %}
+                    Records for <b> {{display_name}} </b> in <b> {{group}} </b> (<b>{{start_field}}</b> from <b>{{start_date}}</b> to <b>{{end_date}}</b>)
+                  {% else %}
+                    Records for <b> {{display_name}} </b> in <b> {{group}} </b> (<b>{{start_field}}</b> by <b>{{start_date}}</b> and <b>{{end_field}}</b> by <b>{{end_date}}</b>)
+                  {% endif %}
+                  <span style="float:right">
+                    <button id="exportBtn" class="btn btn-primary">
+                        Export to CSV
+                    </button>
+                  </span>
+                </div>
+                <div class="card-body">
+                  <table id="summary-table" class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                      {% for column in table_columns %}   
+                          <th scope="col">{{column}}</th>
+                      {% endfor %}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in table_rows %}
+                      <tr>
+                        {% for element in row %}
+                          <td>{{element}}</td>
+                        {% endfor %}
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script type="text/javascript">
+      // Export as CSV Button
+    const exportButton = document.getElementById("exportBtn");
+    exportButton.addEventListener('click', (e) => {
+
+        // Construct filename
+        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
+
+        // Perform download
+        $('#summary-table').table2csv('download', {'filename': filename});
+
+    }); 
+
+</script>
+{% endblock %}
+

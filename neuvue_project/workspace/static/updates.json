@@ -1,6 +1,26 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.5.1",
+            "update_date":"April 18th, 2022",
+            "update_description": "Adds loading indicators to several pages and buttons. Adds CSV export for synapse information in synapse viewer."
+        },
+        {
+            "update_name": "v1.5.0",
+            "update_date":"April 12th, 2022",
+            "update_description": "Adds ability to remove a task from your queue. Adds new hotkey (p) to refresh all selected meshes."
+        },
+        {
+            "update_name": "v1.4.10",
+            "update_date":"April 7th, 2022",
+            "update_description": "Adds support for multiple root IDs in the synapse viewer. Removes NG Error logs. Adds hotkey to dismiss all NG messages (x). Minor bug fixes and improvements."
+        },
+        {
+            "update_name": "v1.4.8",
+            "update_date":"March 23rd, 2022",
+            "update_description": "Adds ability to change point size in neuroglancer annotation side bar. Adds tags to inspect/tasks/admin pages. Adds priority patching on dashboard."
+        },
+        {
             "update_name": "v1.4.7",
             "update_date":"March 15th, 2022",
             "update_description": "Adds individual switches for preference options. Add self-assignment feature."

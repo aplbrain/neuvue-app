@@ -9,7 +9,7 @@ import json
 import requests
 import os 
 import backoff
-import networkx as nx
+import random
 
 
 from nglui.statebuilder import (
@@ -422,7 +422,7 @@ def apply_state_config(state:str, username:str):
 
     return json.dumps(cdict)
 
-def construct_synapse_state(root_id:str):
+def construct_synapse_state(root_ids:List):
     """Construct state for the synapse viewer.
 
     Args:
@@ -432,48 +432,58 @@ def construct_synapse_state(root_id:str):
         string: json-formatted state
         dict: synapse stats
     """
-    root_id = root_id.strip()
     cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
     
     pre_synapses = cave_client.materialize.query_table(
     "synapses_pni_2", 
-    filter_in_dict={"pre_pt_root_id": [root_id]},
-     select_columns=['ctr_pt_position']
+    filter_in_dict={"pre_pt_root_id": root_ids},
+     select_columns=['ctr_pt_position', 'pre_pt_root_id']
     )
 
     post_synapses = cave_client.materialize.query_table(
         "synapses_pni_2", 
-        filter_in_dict={"post_pt_root_id": [root_id]},
-        select_columns=['ctr_pt_position']
+        filter_in_dict={"post_pt_root_id": root_ids},
+        select_columns=['ctr_pt_position', 'post_pt_root_id']
     )
-    
     pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+    pre_synapses['pre_pt_root_id'] = pre_synapses['pre_pt_root_id'].astype(str)
+    post_synapses['post_pt_root_id']= post_synapses['post_pt_root_id'].astype(str)
     post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
     
     if len(pre_synapses['ctr_pt_position']) == 0 and len(post_synapses['ctr_pt_position']) == 0:
-        raise Exception('No pre or post synapses found for this root id.')
+        raise Exception('No pre or post synapses found for root ids.')
     
     position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
+    
 
     data_list = [None]
-    base_state = create_base_state([root_id], position, 'automatedSplit')
+    base_state = create_base_state(root_ids, position, 'automatedSplit')
+    # Random color generation
+    r = lambda: random.randint(0,255)
+    states = [base_state]
+    for root_id in root_ids:
+        pre_points = pre_synapses[pre_synapses["pre_pt_root_id"]==root_id]['ctr_pt_position'].to_numpy()
+        post_points = post_synapses[post_synapses["post_pt_root_id"]==root_id]['ctr_pt_position'].to_numpy()
 
-    data_list.append( generate_point_df( pre_synapses['ctr_pt_position'].to_numpy()))
-    data_list.append( generate_point_df( post_synapses['ctr_pt_position'].to_numpy()))
+        data_list.append( generate_point_df( pre_points))
+        data_list.append( generate_point_df( post_points))
     
-    pre_synapses_state = create_point_state(name='pre_synapses', color='#309ec7')
-    post_synapses_state = create_point_state(name='post_synapses', color='#e96b15')
+        states.append( create_point_state(name=f'pre_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
+        states.append( create_point_state(name=f'post_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
     
-    chained_state = ChainedStateBuilder([base_state, pre_synapses_state, post_synapses_state])
+    chained_state = ChainedStateBuilder(states)
     
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     
-    synapse_stats = {
-        "num_pre": len(pre_synapses),
-        "num_post": len(post_synapses)
-    }
+    synapse_stats = {}
+    
+    for root_id in root_ids:
+        synapse_stats[root_id] = {
+            "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id']==root_id]),
+            "num_post": len(post_synapses[post_synapses['post_pt_root_id']==root_id])
+        }
 
     # Append clefts layers to state 
     state_dict['layers'].append({
