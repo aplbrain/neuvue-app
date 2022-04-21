@@ -74,12 +74,14 @@
   // Side Bar Interaction
   openSideMenu();
 
+  // Add root ID to selected segment in Neuroglancer State once clicked
   function selectID(root_id){
-    console.log(root_id);
-
-    // Select the root ID using the viewer interface 
+    let state = viewer.state.toJSON();
+    if (["segmentation", "segmentation_with_graph"].includes(String(state['layers'][1]['type']))) {
+      state['layers'][1]['segments'].push(root_id)
+      viewer.state.restoreState(state)
+    }
   }
-
 
   function downloadSVGAsPNG(e){
     const canvas = document.createElement("canvas");
@@ -125,8 +127,7 @@
 
     $(".node").each(
       function(index, element){
-        let root_id = $(element).children().first().text();
-        root_id = String(root_id);
+        let root_id = JSON.stringify($(element).children().first().text());
         $(element).attr('onclick', `selectID(${root_id})`);
       });
   });
