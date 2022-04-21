@@ -389,6 +389,7 @@ def apply_state_config(state:str, username:str):
     
     annotation_color = config.annotation_color
     alpha_selected = config.alpha_selected
+    zoom_level = config.zoom_level
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
     sys_limit = config.sys_limit
@@ -405,6 +406,9 @@ def apply_state_config(state:str, username:str):
         cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     if config.chunk_requests_switch:
         cdict["concurrentDownloads"] = int(chunk_requests)
+
+    if config.zoom_level_switch:
+        cdict["navigation"]["zoomFactor"] = int(zoom_level)
     
     for layer in cdict['layers']:
         if 'segmentation' in layer.get('type', '') and config.alpha_selected_switch:

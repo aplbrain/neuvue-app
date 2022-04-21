@@ -18,12 +18,34 @@
     </div>
     <div id="neuroglancerConfig">
         <hr class="row-divider">
+
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
             <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
         </div>
+        <hr class="row-divider">
+        
+        <div class="row-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
+            </div>
+            <div> Show Slices</div>
+            <input id="showSlices" class="form-check-input" type="checkbox" value={{showSlices}}>
+        </div>
 
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="zoomLevelSwitch"> </div>
+            <div> Zoom Level </div>
+            <input id="zoomLevel" type="range" class="form-range" min="0" 
+                max="100" step="10" value="{{ zoomLevel }}" />
+            
+            <div id="zoomLevelDisplay" class="form-label">"{{ zoomLevel }}"</div>
+        </div>
+
+          
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
@@ -106,7 +128,9 @@
 <script>
     const preferenceFields = {
         "annotationColor": "{{annotationColorSwitch}}", 
+        "showSlices": "{{showSlicesSwitch}}", 
         "alphaSelected": "{{alphaSelectedSwitch}}", 
+        "zoomLevel": "{{zoomLevelSwitch}}", 
         "alpha3D": "{{alpha3DSwitch}}", 
         "gpuLimit": "{{gpuLimitSwitch}}", 
         "sysLimit": "{{sysLimitSwitch}}", 
@@ -121,6 +145,11 @@
         for (field in preferenceFields){
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
             let fieldValue = $(`#${field}`).val();
+            
+            if ($(`#${field}`).is(':checked')){
+                fieldValue = "true";
+            }
+            
             if (field != "layout") {
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
             }
@@ -148,6 +177,10 @@
 
         // Update switches 
         for (field in preferenceFields){
+            if ($(`#${field}`).attr('type') == 'checkbox' && $(`#${field}`).val() == 'True' ){
+                $(`#${field}`).prop( "checked", true );
+            }
+
             if (preferenceFields[field] == "True") {
                 $(`#${field}Switch`).prop( "checked", true );
             } else {
@@ -157,6 +190,8 @@
 
         // Display value on sliders
         $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
+        $("#zoomLevelDisplay").html($("#zoomLevel").val() );
+        $("#showSlicesDisplay").html($("#showSlices").val() );
         $("#alpha3DDisplay").html($("#alpha3D").val() );
         $("#gpuLimitDisplay").html($("#gpuLimit").val() );
         $("#sysLimitDisplay").html($("#sysLimit").val() );
@@ -166,7 +201,12 @@
         $("#alphaSelected").change(function( ){
             $("#alphaSelectedDisplay").html($("#alphaSelected").val());
         });
-        
+
+        // Update value on sliders
+        $("#zoomLevel").change(function( ){
+            $("#zoomLevelDisplay").html($("#zoomLevel").val());
+        });
+
         $("#alpha3D").change(function( ){
             $("#alpha3DDisplay").html($("#alpha3D").val());
         });

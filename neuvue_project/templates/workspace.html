@@ -447,7 +447,14 @@
         let data = JSON.stringify(viewer.state.toJSON());
         return "https://neuroglancer.neuvue.io/#!" + data
     }
-
+     
+     function show3DSlices() {
+        let slices = '{{show_slices}}';
+        if (slices == 'True' && !viewer.showPerspectiveSliceViews.value_){
+            viewer.showPerspectiveSliceViews.toggle();
+         }
+     }
+     
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
@@ -517,7 +524,6 @@
 
     // Button Submission
     $(document).ready(function() {
-
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
 
@@ -591,6 +597,8 @@
         $('#timeoutModalNo').click(function() {
             submitForm('stop');
         });
+
+        show3DSlices();
     })
     
     {% if is_open %}
