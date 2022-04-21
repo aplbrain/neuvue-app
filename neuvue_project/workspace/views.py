@@ -50,9 +50,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         if namespace in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
-        config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
         session_task_count = request.session.get('session_task_count', 0)
-        config.save()
         context = {
             'ng_state': {},
             'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
@@ -67,7 +65,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'timeout': settings.TIMEOUT,
             'session_task_count' : session_task_count,
             'was_skipped':False,
-            'show_slices': config.show_slices,
+            'show_slices': False,
         }
 
         if not is_authorized(request.user):
@@ -82,10 +80,9 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
         task_df = self.client.get_next_task(str(request.user), namespace)
-        
+
         if not task_df:
             context['tasks_available'] = False
-            pass
 
         else:
             if task_df['status'] == 'pending':
@@ -104,7 +101,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['was_skipped'] = task_df['metadata'].get('skipped')
             if task_df['priority'] < 2:
                 context['skipable'] = False
-                
+            
+            # Pass User configs to Neuroglancer
+            config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
+            context['show_slices'] = config.show_slices
  
             # Construct NG URL from points or existing state
             # Dev Note: We always load ng state if one is available, overriding 
