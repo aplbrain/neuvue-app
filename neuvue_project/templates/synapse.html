@@ -98,6 +98,7 @@
                     <thead>
                       <tr>
                         <th scope="col">Root ID</th>
+                        <th scope="col">Root ID: formatted</th>
                         <th scope="col">Number of Presynaptic Connections</th>
                         <th scope="col">Number of Postsynaptic Connections</th>
                       </tr>
@@ -106,6 +107,7 @@
                       {% for root, stats in synapse_stats.items %}
                         <tr>
                           <td>{{root}}</td>
+                          <td>#: {{root}}</td>
                           <td>{{stats.num_pre}}</td>
                           <td>{{stats.num_post}}</td>
                         </tr>
