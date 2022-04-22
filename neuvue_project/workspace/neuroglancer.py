@@ -387,7 +387,7 @@ def apply_state_config(state:str, username:str):
     if not config.enabled:
         return state
     
-    annotation_color = config.annotation_color
+    annotation_color_palette = config.annotation_color_palette
     alpha_selected = config.alpha_selected
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
@@ -406,15 +406,31 @@ def apply_state_config(state:str, username:str):
     if config.chunk_requests_switch:
         cdict["concurrentDownloads"] = int(chunk_requests)
     
+    # create color palette dictionary
+    color_palette_dict = {'palette1' : ['#0081A7', '#00AFB9', '#FDFCDC', '#FED9B7', '#F07167'],
+                            'palette2' : ['#001524', '#15616D', '#FFECD1', '#FF7D00', '#78290F'], 
+                            'palette3' : ['#D8E2EC', '#FFE5D9', '#FFCAD4', '#F4ACB7', '#9D8189'], 
+                            'palette4' : ['#01161E', '#124559', '#598392', '#AEC3B0', '#EFF6E0'], 
+                            'palette5' : ['#227C9D', '#17C3B2', '#FFCB77', '#FEF9EF', '#FE6D73'], 
+                            'palette6' : ['#3C1642', '#086375', '#1DD3B0', '#AFFC41', '#B2FF9E']}
+    
+    layer_count = 0
     for layer in cdict['layers']:
+        # handle alpha
         if 'segmentation' in layer.get('type', '') and config.alpha_selected_switch:
             layer['selectedAlpha'] = float(alpha_selected)
         
-        if layer.get('type', '') == 'annotation' and config.annotation_color_switch:
-            layer['annotationColor'] = str(annotation_color)
-        
         if 'segmentation' in layer.get('type', '') and config.alpha_3d_switch:
             layer['objectAlpha'] = float(alpha_3d)
+        
+        # handle layer colors
+        if layer.get('type', '') == 'annotation' and config.annotation_color_palette_switch:
+            color_palette_list = color_palette_dict[annotation_color_palette]
+            annotation_color = color_palette_list[layer_count%len(color_palette_list)]
+            layer['annotationColor'] = str(annotation_color)
+
+        layer_count += 1
+
 
     return json.dumps(cdict)
 

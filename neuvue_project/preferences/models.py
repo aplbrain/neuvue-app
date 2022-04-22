@@ -6,9 +6,9 @@ class Config(models.Model):
     user = models.CharField(max_length=50, default = None)
     enabled = models.BooleanField(default=False)
     
-    # Annotation Color (TODO: Update for multiple. Default is yellow.)
-    annotation_color=models.CharField(max_length=10, default="#ffff00")
-    annotation_color_switch = models.BooleanField(default=False)
+    # Annotation Color Palette
+    annotation_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
+    annotation_color_palette_switch = models.BooleanField(default=False)
 
     # 2D Segmentation Opacity 
     alpha_selected= models.CharField(max_length=10, default="0.85")

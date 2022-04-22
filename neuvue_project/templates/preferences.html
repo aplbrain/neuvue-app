@@ -17,11 +17,27 @@
         </div>
     </div>
     <div id="neuroglancerConfig">
+        <!--
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
             <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
+        </div>-->
+        
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
+            <div> Annotation Color Palette </div>
+            <select name='colorSelect' id="annotationColorPalette" class="form-select" style="width:200px;">
+                <option value="palette1">Rainbow</option>
+                <option value="palette2" style="background-color: red;">Reds</option>
+                <option value="palette3">Oranges</option>
+                <option value="palette4">Greens</option>
+                <option value="palette5">Blues</option>
+                <option value="palette6">Purples</option>
+            </select> 
+            </div>
         </div>
 
         <hr class="row-divider">
@@ -106,6 +122,7 @@
 <script>
     const preferenceFields = {
         "annotationColor": "{{annotationColorSwitch}}", 
+        "annotationColorPalette": "{{annotationColorPaletteSwitch}}",
         "alphaSelected": "{{alphaSelectedSwitch}}", 
         "alpha3D": "{{alpha3DSwitch}}", 
         "gpuLimit": "{{gpuLimitSwitch}}", 
@@ -118,10 +135,10 @@
         let enabled = $('#configSwitch').is(":checked");
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
 
-        for (field in preferenceFields){
+        for (field in preferenceFields){          
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
             let fieldValue = $(`#${field}`).val();
-            if (field != "layout") {
+            if ((field != "layout") && (field != "colorSelect")) {
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
             }
             $('<input>').attr('type', 'hidden').attr('name', `${field}Switch`).attr('value', fieldSwitch).appendTo(form);
@@ -185,6 +202,11 @@
 
         // Select correct layout 
         $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
+
+        // Select correct color palette option
+        $('#annotationColorPalette option[value*="{{annotationColorPalette}}"]').prop('selected', true)
+
+        console.log("{{annotationColorPalette}}");
         
         // Submit Button
         $('#saveConfig').click(function() {

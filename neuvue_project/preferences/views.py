@@ -26,8 +26,8 @@ class PreferencesView(View):
         
         context = {
             'enabled': config.enabled,
-            'annotationColor': config.annotation_color,
-            'annotationColorSwitch': config.annotation_color_switch,
+            'annotationColorPalette': config.annotation_color_palette,
+            'annotationColorPaletteSwitch': config.annotation_color_palette_switch,
             'alphaSelected': config.alpha_selected,
             'alphaSelectedSwitch': config.alpha_selected_switch,
             'alpha3D': config.alpha_3d,
@@ -50,8 +50,8 @@ class PreferencesView(View):
 
         config.enabled = request.POST.get('enabled') == 'true'
 
-        config.annotation_color = request.POST.get('annotationColor')
-        config.annotation_color_switch = request.POST.get('annotationColorSwitch') == 'true'
+        config.annotation_color_palette = request.POST.get('annotationColorPalette')
+        config.annotation_color_palette_switch = request.POST.get('annotationColorPaletteSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'
