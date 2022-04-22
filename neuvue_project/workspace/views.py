@@ -103,9 +103,12 @@ class WorkspaceView(LoginRequiredMixin, View):
                 context['skipable'] = False
             
             # Pass User configs to Neuroglancer
-            config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
-            context['show_slices'] = config.show_slices
- 
+            try:
+                config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
+                context['show_slices'] = config.show_slices
+            except Exception as e: 
+                logging.error(e)
+        
             # Construct NG URL from points or existing state
             # Dev Note: We always load ng state if one is available, overriding 
             # generating the state. However, config options can be applied after
