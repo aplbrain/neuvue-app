@@ -446,26 +446,35 @@ class TaskView(View):
         return render(request, "tasks.html", {'data':context})
 
     def _generate_tables(self, username, namespace):
-        tasks = self.client.get_tasks(sieve={
+        pending_tasks = self.client.get_tasks(sieve={
+            "status": ['open', 'pending'],
             "assignee": username, 
             "namespace": namespace,
-        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
-        
-        tasks['task_id'] = tasks.index
-        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+        } , select=['seg_id', 'status', 'created', 'priority', 'opened', 'metadata'])
 
-        metadata = tasks['metadata'].values
+        closed_tasks = self.client.get_tasks(sieve={
+            "status": ['closed', 'errored'],
+            "assignee": username, 
+            "namespace": namespace,
+        } , select=['seg_id', 'status', 'opened', 'closed', 'duration', 'tags'])
+        
+        pending_tasks['task_id'] = pending_tasks.index
+        closed_tasks['task_id'] = closed_tasks.index
+        
+
+        metadata = pending_tasks['metadata'].values
         skipped = []
         for data in metadata:
             if 'skipped' in data.keys():
-                skipped.append(data['skipped'])
+                skipped.append(int(data['skipped']))
             else:
                 skipped.append(0)
 
-        tasks['skipped'] = skipped
+        pending_tasks['skipped'] = skipped
 
-        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
-        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        # Sort the tasks
+        pending_tasks = pending_tasks.sort_values(by=['priority', 'created'], ascending=[False, True])
+        closed_tasks = closed_tasks.sort_values('closed', ascending=False)
         
             
         # Check if there are any NaNs in opened column
@@ -474,7 +483,9 @@ class TaskView(View):
             default =  pd.to_datetime('1969-12-31')
             closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
             closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
-    
+
+        # Convert timepoints to eastern 
+        pending_tasks['created'] = pending_tasks['created'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
