@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.5.2",
+            "update_date":"April 21st, 2022",
+            "update_description": "Adds zoom level and show slices to user preferences. Minor bug fixes and improvements."
+        },
+        {
             "update_name": "v1.5.1",
             "update_date":"April 18th, 2022",
             "update_description": "Adds loading indicators to several pages and buttons. Adds CSV export for synapse information in synapse viewer."
