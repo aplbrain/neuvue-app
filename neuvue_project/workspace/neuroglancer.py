@@ -407,12 +407,12 @@ def apply_state_config(state:str, username:str):
         cdict["concurrentDownloads"] = int(chunk_requests)
     
     # create color palette dictionary
-    color_palette_dict = {'palette1' : ['#0081A7', '#00AFB9', '#FDFCDC', '#FED9B7', '#F07167'],
-                            'palette2' : ['#001524', '#15616D', '#FFECD1', '#FF7D00', '#78290F'], 
-                            'palette3' : ['#D8E2EC', '#FFE5D9', '#FFCAD4', '#F4ACB7', '#9D8189'], 
-                            'palette4' : ['#01161E', '#124559', '#598392', '#AEC3B0', '#EFF6E0'], 
-                            'palette5' : ['#227C9D', '#17C3B2', '#FFCB77', '#FEF9EF', '#FE6D73'], 
-                            'palette6' : ['#3C1642', '#086375', '#1DD3B0', '#AFFC41', '#B2FF9E']}
+    color_palette_dict = {'palette1' : ['#F9C80E', '#F86624', '#EA3546', '#662E9B', '#43BCCD'],
+                            'palette2' : ['#006D77', '#83C5BE', '#EFG6F9', '#FFDDD2', '#E29578'], 
+                            'palette3' : ['#22577A', '#38A3A5', '#57CC99', '#80ED99', '#C7F9CC'], 
+                            'palette4' : ['#25CED1', '#FFFFFF', '#FCEADE', '#FF8A5B', '#EA526F'], 
+                            'palette5' : ['#335C67', '#FFF3B0', '#E09F3E', '#9E2A2B', '#540B0E'], 
+                            'palette6' : ['#FF99C8', '#FCF6BD', '#D0F4DE', '#A9DEF9', '#E4C1F9']}
     
     layer_count = 0
     for layer in cdict['layers']:

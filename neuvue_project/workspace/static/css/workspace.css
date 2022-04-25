@@ -1037,3 +1037,22 @@ background: transparent;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+input[type=radio] {
+  display: none;
+}
+
+img:hover {
+  opacity:0.6;
+  cursor: pointer;
+}
+
+img:active {
+  opacity:0.4;
+  cursor: pointer;
+}
+
+input[type=radio]:checked + label > img {
+  border: 4px solid var(--primary-accent);
+}
+

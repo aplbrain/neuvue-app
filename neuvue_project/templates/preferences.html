@@ -23,13 +23,13 @@
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
             <div>Annotation Color</div>
             <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
-        </div>-->
+        </div>
         
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
             <div> Annotation Color Palette </div>
-            <select name='colorSelect' id="annotationColorPalette" class="form-select" style="width:200px;">
+            <select id="annotationColorPalette" class="form-select" style="width:200px;">
                 <option value="palette1">Rainbow</option>
                 <option value="palette2">Reds</option>
                 <option value="palette3">Oranges</option>
@@ -37,8 +37,57 @@
                 <option value="palette5">Blues</option>
                 <option value="palette6">Purples</option>
             </select> 
-        </div>
+        </div>-->
 
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
+            <div> Annotation Color Palette </div>
+            <div class="colorPaletteOptions">
+                <div class="div">
+                    <input type="radio" name="annotationColorPalette" id="annotationChoice1" value="palette1" checked>
+                    <label for="annotationChoice1">
+                        <img src="{% static 'images/palette1.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+
+                <div>
+                    <input type="radio" name="annotationColorPalette" id="annotationChoice2" value="palette2">
+                    <label for="annotationChoice2">
+                        <img src="{% static 'images/palette2.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+    
+                <div>
+                    <input type="radio" name="annotationColorPalette"  id="annotationChoice3" value="palette3">
+                    <label for="annotationChoice3">
+                        <img src="{% static 'images/palette3.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+
+                <div>
+                    <input type="radio" name="annotationColorPalette" id="annotationChoice4" value="palette4">
+                    <label for="annotationChoice4">
+                        <img src="{% static 'images/palette4.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+    
+                <div>
+                    <input type="radio" name="annotationColorPalette" id="annotationChoice5" value="palette5">
+                    <label for="annotationChoice5">
+                        <img src="{% static 'images/palette5.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+    
+                <div>
+                    <input type="radio" name="annotationColorPalette" id="annotationChoice6" value="palette6">
+                    <label for="annotationChoice6">
+                        <img src="{% static 'images/palette6.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
+                    </label>
+                </div>
+                
+            </div>
+        </div>
 
         <hr class="row-divider">
         <div class="row-container">
@@ -138,8 +187,19 @@
         for (field in preferenceFields){          
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
             let fieldValue = $(`#${field}`).val();
-            if ((field != "layout") && (field != "colorSelect")) {
+            if (field != "layout") {
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
+            }
+            if (field == "annotationColorPalette") {
+                let radioButtons = document.getElementsByName(field);
+                let selected = '';
+                for(i = 0; i < radioButtons.length; i++) {
+                    if(radioButtons[i].checked) {
+                        selected = radioButtons[i].value;
+                    }
+                }   
+                $('<input>').attr('type', 'hidden').attr('name', field).attr('value', selected).appendTo(form);
+
             }
             $('<input>').attr('type', 'hidden').attr('name', `${field}Switch`).attr('value', fieldSwitch).appendTo(form);
         }
@@ -204,7 +264,15 @@
         $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
 
         // Select correct color palette option
-        $('#annotationColorPalette option[value*="{{annotationColorPalette}}"]').prop('selected', true)
+        //$('#annotationColorPalette option[value*="{{annotationColorPalette}}"]').prop('selected', true)
+
+        let radios = document.getElementsByName("annotationColorPalette");
+        for (let i = 0, length = radios.length; i < length; i++) {
+        if (radios[i].value == "{{annotationColorPalette}}") {
+            radios[i].checked = true;
+            break;
+        }
+        }
 
         console.log("{{annotationColorPalette}}");
         
