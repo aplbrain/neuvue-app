@@ -1,5 +1,6 @@
 {% load static %}
 {% load socialaccount %}
+{% load in_group %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -43,7 +44,7 @@
                 </li>
                 {% endif%}
                 
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and request.user|in_group:"AuthorizedUsers"%}
 
                 <li class="nav-item">
                     <a class="nav-link disabled" href="{% url "getting-started" %}">Getting Started</a>
