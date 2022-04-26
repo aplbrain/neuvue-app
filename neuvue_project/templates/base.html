@@ -44,7 +44,7 @@
                 </li>
                 {% endif%}
                 
-                {% if user.is_authenticated and request.user|in_group:"AuthorizedUsers"%}
+                {% if request.user|in_group:"AuthorizedUsers"%}
 
                 <li class="nav-item">
                     <a class="nav-link disabled" href="{% url "getting-started" %}">Getting Started</a>
@@ -60,7 +60,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "tasks" %}">My Tasks</a>
                 </li>
-                
+                {% endif%}
+
+                {% if request.user.is_authenticated %}
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <b> {{user.username}} </b>
