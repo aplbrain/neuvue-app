@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
-
+{% block header_includes %}
+<!--Add for Palette Dropdown-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src= "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!--End Palette Dropdown-->
+{% endblock %}
 {% block content %}
 <div class="basic pref">
 <div class="pref_main_container">
@@ -12,80 +19,73 @@
         (checked) are actually used. 
         <hr class="row-divider">
         <div class="form-check form-switch">
-            <label class="form-check-label" for="configSwitch"> Enable/Disable Preferences </label>
             <input class="form-check-input" type="checkbox" id="configSwitch">
+            <div class="form-check-label" for="configSwitch"> Enable/Disable Preferences </div>
         </div>
     </div>
     <div id="neuroglancerConfig">
-        <!--
-        <hr class="row-divider">
-        <div class="row-container">
-            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorSwitch"> </div>
-            <div>Annotation Color</div>
-            <input id="annotationColor" class="form-control form-control-color" type="color" value={{annotationColor}}>
-        </div>
-        
-        <hr class="row-divider">
-        <div class="row-container">
-            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
-            <div> Annotation Color Palette </div>
-            <select id="annotationColorPalette" class="form-select" style="width:200px;">
-                <option value="palette1">Rainbow</option>
-                <option value="palette2">Reds</option>
-                <option value="palette3">Oranges</option>
-                <option value="palette4">Greens</option>
-                <option value="palette5">Blues</option>
-                <option value="palette6">Purples</option>
-            </select> 
-        </div>-->
 
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
             <div> Annotation Color Palette </div>
-            <div class="colorPaletteOptions">
-                <div class="div">
-                    <input type="radio" name="annotationColorPalette" id="annotationChoice1" value="palette1" checked>
-                    <label for="annotationChoice1">
-                        <img src="{% static 'images/palette1.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
+            <div class="dropdown">
+                <button class="btn btn-light
+                        dropdown-toggle" type="button" 
+                        id="dropdownMenuButton" 
+                        data-toggle="dropdown"
+                        aria-haspopup="true" 
+                        aria-expanded="false">
+                    Palette Choices
+                </button>
+                <ul class="dropdown-menu annotationChoiceMenu" 
+                    aria-labelledby="dropdownMenuButton">
+                    <li class="dropdown-item" selected="selected">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice1" value="palette1" onClick="changeImage(this.value);">
+                        <label for="annotationChoice1">
+                            <img src="{% static 'images/palette1.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice2" value="palette2" onClick="changeImage(this.value);">
+                        <label for="annotationChoice2">
+                            <img src="{% static 'images/palette2.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice3" value="palette3" onClick="changeImage(this.value);">
+                        <label for="annotationChoice3">
+                            <img src="{% static 'images/palette3.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice4" value="palette4" onClick="changeImage(this.value);">
+                        <label for="annotationChoice4">
+                            <img src="{% static 'images/palette4.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice5" value="palette5" onClick="changeImage(this.value);">
+                        <label for="annotationChoice5">
+                            <img src="{% static 'images/palette5.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice6" value="palette6" onClick="changeImage(this.value);">
+                        <label for="annotationChoice6">
+                            <img src="{% static 'images/palette6.png' %}" style="width: 125px; height: 40px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                </ul>
+            </div>
+            <div id="selected_palette">
+                <img id="selected_palette1" src="{% static 'images/palette1.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
+                <img id="selected_palette2" src="{% static 'images/palette2.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
+                <img id="selected_palette3" src="{% static 'images/palette3.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
+                <img id="selected_palette4" src="{% static 'images/palette4.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
+                <img id="selected_palette5" src="{% static 'images/palette5.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
+                <img id="selected_palette6" src="{% static 'images/palette6.png' %}" style="display: none; width: 125px; height: 40px; border: 1px solid gray;">
 
-                <div>
-                    <input type="radio" name="annotationColorPalette" id="annotationChoice2" value="palette2">
-                    <label for="annotationChoice2">
-                        <img src="{% static 'images/palette2.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
-    
-                <div>
-                    <input type="radio" name="annotationColorPalette"  id="annotationChoice3" value="palette3">
-                    <label for="annotationChoice3">
-                        <img src="{% static 'images/palette3.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
-
-                <div>
-                    <input type="radio" name="annotationColorPalette" id="annotationChoice4" value="palette4">
-                    <label for="annotationChoice4">
-                        <img src="{% static 'images/palette4.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
-    
-                <div>
-                    <input type="radio" name="annotationColorPalette" id="annotationChoice5" value="palette5">
-                    <label for="annotationChoice5">
-                        <img src="{% static 'images/palette5.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
-    
-                <div>
-                    <input type="radio" name="annotationColorPalette" id="annotationChoice6" value="palette6">
-                    <label for="annotationChoice6">
-                        <img src="{% static 'images/palette6.png' %}" style="width: 175px; height: 60px; margin-top: 10px;">
-                    </label>
-                </div>
-                
             </div>
         </div>
 
@@ -263,13 +263,14 @@
         // Select correct layout 
         $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
 
-        // Select correct color palette option
-        //$('#annotationColorPalette option[value*="{{annotationColorPalette}}"]').prop('selected', true)
-
+        // Select Color Palette 
         let radios = document.getElementsByName("annotationColorPalette");
         for (let i = 0, length = radios.length; i < length; i++) {
         if (radios[i].value == "{{annotationColorPalette}}") {
             radios[i].checked = true;
+            var icon_id = "selected_" + "{{annotationColorPalette}}";
+            var selected_icon = document.getElementById(icon_id);
+            selected_icon.style.display = "block";
             break;
         }
         }
@@ -282,6 +283,21 @@
         })
 
     });
+
+    // Change Selected Color Palette Icon
+    function changeImage(imageName) {
+        let radios = document.getElementsByName("annotationColorPalette");
+        for (let i = 0, length = radios.length; i < length; i++) { 
+            var icon_id = "selected_" + radios[i].value;
+            var icon_element = document.getElementById(icon_id);
+            if (radios[i].checked == true) {
+                icon_element.style.display = "block";
+            }
+            else {
+                icon_element.style.display = "none";
+            }
+        }
+    }
 
 </script>
 {% endblock %}

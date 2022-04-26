@@ -1042,17 +1042,22 @@ input[type=radio] {
   display: none;
 }
 
-img:hover {
+.dropdown-item img:hover {
   opacity:0.6;
   cursor: pointer;
 }
 
-img:active {
+.dropdown-item img:active {
   opacity:0.4;
   cursor: pointer;
 }
 
 input[type=radio]:checked + label > img {
-  border: 4px solid var(--primary-accent);
+  border: 4px solid yellow !important;
 }
+
+.annotationChoiceMenu {
+  background-color: darkgray !important;
+}
+
 
