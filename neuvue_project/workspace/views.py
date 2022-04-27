@@ -425,8 +425,22 @@ class TaskView(View):
 
         non_empty_namespace = 0
 
+        print("here")
+        pending_tasks = self.client.get_tasks(sieve={
+            "status": ['open', 'pending'],
+            "assignee": str(request.user), 
+        } , select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata'])
+
+        closed_tasks = self.client.get_tasks(sieve={
+            "status": ['closed', 'errored'],
+            "assignee": str(request.user), 
+        } , select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags'])
+        print("now here")
+
         for namespace in context.keys():
-            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
+            namespace_pending_tasks = pending_tasks[ pending_tasks['namespace'] == namespace ]
+            namespace_closed_tasks = closed_tasks[ closed_tasks['namespace'] == namespace ]
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(namespace_pending_tasks, namespace_closed_tasks)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
@@ -445,22 +459,10 @@ class TaskView(View):
 
         return render(request, "tasks.html", {'data':context})
 
-    def _generate_tables(self, username, namespace):
-        pending_tasks = self.client.get_tasks(sieve={
-            "status": ['open', 'pending'],
-            "assignee": username, 
-            "namespace": namespace,
-        } , select=['seg_id', 'status', 'created', 'priority', 'opened', 'metadata'])
-
-        closed_tasks = self.client.get_tasks(sieve={
-            "status": ['closed', 'errored'],
-            "assignee": username, 
-            "namespace": namespace,
-        } , select=['seg_id', 'status', 'opened', 'closed', 'duration', 'tags'])
+    def _generate_tables(self, pending_tasks, closed_tasks):
         
-        pending_tasks['task_id'] = pending_tasks.index
-        closed_tasks['task_id'] = closed_tasks.index
-        
+        pending_tasks = pending_tasks.rename_axis('task_id').reset_index()
+        closed_tasks = closed_tasks.rename_axis('task_id').reset_index()
 
         metadata = pending_tasks['metadata'].values
         skipped = []
