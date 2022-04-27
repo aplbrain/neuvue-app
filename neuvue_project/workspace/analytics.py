@@ -20,7 +20,7 @@ def is_lastweek(timestamp):
     """
     eastern = timezone('US/Eastern')
     
-    dt = timestamp.to_pydatetime()
+    dt = timestamp.to_pydatetime(warn=False)   # do not warn if nanoseconds are nonzero
     now = eastern.localize(datetime.now())
     weekago = now - timedelta(days=7)
     
@@ -32,13 +32,15 @@ def get_sum_time(table):
     return hours
     
 def get_rate(table):
-    mean =  np.array([x['duration'] for x in table]).mean()
- 
-    if np.isnan(mean):
-        return 0
-    else:
+
+    durations = np.array([x['duration'] for x in table])
+
+    if len(durations) > 0:
+        mean =  durations.mean()
         minutes = round(mean/(60))
         return minutes
+    else:
+        return 0
 
 def user_stats(table):
     # look at weekly stats
