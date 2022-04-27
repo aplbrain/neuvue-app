@@ -425,17 +425,21 @@ class TaskView(View):
 
         non_empty_namespace = 0
 
-        print("here")
-        pending_tasks = self.client.get_tasks(sieve={
-            "status": ['open', 'pending'],
-            "assignee": str(request.user), 
-        } , select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata'])
+        pending_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['open', 'pending'],
+                "assignee": str(request.user)
+            },
+            select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata']
+        )
 
-        closed_tasks = self.client.get_tasks(sieve={
-            "status": ['closed', 'errored'],
-            "assignee": str(request.user), 
-        } , select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags'])
-        print("now here")
+        closed_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['closed', 'errored'],
+                "assignee": str(request.user),
+            },
+            select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags']
+        )
 
         for namespace in context.keys():
             namespace_pending_tasks = pending_tasks[ pending_tasks['namespace'] == namespace ]
