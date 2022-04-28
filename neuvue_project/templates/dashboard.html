@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
+{% load inclusion_tags %}
+
+{% block header_includes %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="basic dashboard">
+
+    <!-- Landing page for user to choose namespace and group -->
     {% if not namespace or not group%}
     <div class="inspect-container">
-        <form id="mainForm" action="" method="post" >
+        <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
           {% csrf_token %}
           <h3 style="color: white"> Admin Dashboard</h3>
           <div style="margin: 20px"class="form-group">
@@ -31,8 +38,9 @@
             </select> 
         </div>
 
-        <div style="margin: 20px"  class="form-group">
+        <div style="margin: 20px" class="form-group d-flex">
             <input type="submit" class="btn btn-primary" value="Submit">
+            <div id="submit-spinner" class="text-white ms-3 mt-2"></div>
             
             {% if error %}
             <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
@@ -42,19 +50,25 @@
         </form>
       </div>
     {% else %}
-    <!-- Begin Page Content -->
+
+    <!-- Results page -->
     <div class="container-fluid" style="padding: 5vh 5vw;">
+
+        <!-- Reinput namespace and group if new results desired -->
         <div class="d-flex flex-row bd-highlight mb-3">
-            <form id="mainForm" action="" method="post" >
+            <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('reload-spinner')">
                 {% csrf_token %}
                 <h3 style="color: white"> Admin Dashboard</h3>
                 <div style="margin: 20px"class="form-group">
                   
                   <label style="color: white" for="namespaceSelect">Namespace</label>
                   <select name="namespace" class="form-select" id="namespaceSelect" required="true">
-                      <option value="" selected disabled>Please select</option>
                       {% for namespace_opt in all_namespaces %}
-                      <option>{{namespace_opt}} </option>
+                        {% if namespace_opt == namespace %}
+                            <option selected value={{namespace_opt}}>{{namespace_opt}} </option>
+                        {% else %}
+                            <option>{{namespace_opt}} </option>
+                        {% endif %}
                       {% endfor %}
                   </select>
       
@@ -63,28 +77,31 @@
               <div style="margin: 20px" class="form-group">
                   <label style="color: white" for="groupSelect">Group</label>
                   <select name="group" class="form-select" id="groupSelect" required="true">
-                      <option value="" selected disabled>Please select</option>
                       {% for group_opt in all_groups %}
-                      <option>{{group_opt}} </option>
+                        {% if group_opt == group %}
+                            <option selected value={{group_opt}}>{{group_opt}} </option>
+                        {% else %}
+                            <option>{{group_opt}} </option>
+                        {% endif %}
                       {% endfor %}
                   </select> 
               </div>
       
-              <div style="margin: 20px"  class="form-group">
-                  <input type="submit" class="btn btn-primary" value="Reload">
+              <div style="margin: 20px" class="form-group d-flex">
+                    <input type="submit" class="btn btn-primary" value="Reload">
+                    <div id="reload-spinner" class="text-white ms-3 mt-2"></div>
                   
-                  {% if error %}
-                  <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
-                  {% endif %}
+                    {% if error %}
+                    <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+                    {% endif %}
                 
               </div>
               </form>
         </div>
 
-
+        <!-- Metrics cards -->
         <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -99,7 +116,6 @@
                 </div>
             </div>
             
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -114,7 +130,6 @@
                 </div>
             </div>
 
-            <!-- Earnings (Annual) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -129,8 +144,6 @@
                 </div>
             </div>
 
-
-            <!-- Pending Requests Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
@@ -146,6 +159,7 @@
             </div>
         </div>
 
+        <!-- Results table -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="card text-center">
@@ -187,13 +201,14 @@
             </div>
         </div>
     </div>
-    <!-- /.container-fluid -->
+
     <div id="hiddenModalTable" style="visibility: hidden;"> 
     </div>
+    <div id="hiddenSelectedTable" style="visibility: none;"> 
     {% endif %}
 </div>
 
-
+<!-- Modal for detailed information about a user's tasks -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
     <input type="hidden" name="namespace" value="{{display_name}}" />
@@ -209,83 +224,117 @@
         ...
       </div>
       <div class="modal-footer">
-        <input id="reassign_user" form="taskPatchForm" name="reassign_user" placeholder="New assignee">
-        <button type="button" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign" class="btn btn-primary">Reassign</button>
-        <button type="button" id="delete_button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+        <div class="me-auto">
+          <div class="btn-group dropup">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Modify Selected Tasks
+          </button>
+          <ul class="dropdown-menu">
+            <li id="dropdown-assignee" class="dropdown-item" onclick="showMenuItem('assignee')">
+              Assignee
+            </li>
+            <li id="dropdown-priority" class="dropdown-item" onclick="showMenuItem('priority')">
+              Priority
+            </li>
+            <li id="dropdown-status" class="dropdown-item" onclick="showMenuItem('status')">
+              Status
+            </li>
+          </ul>
+          </div> 
+          <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none">
+          <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none">
+            Update Assignee
+          </button>
+          <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none" type="number" min="0">
+          <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none">
+            Update Priority
+          </button>
+          <select id="status-input" form="taskPatchForm" name="status-input" class="form-select d-none">
+            <option value="" selected disabled>New status</option>
+            <option value="open">Open</option>
+            <option value="pending">Pending</option>
+            <option value="closed">Closed</option>
+            <option value="errored">Errored</option>
+          </select>
+          <button type="button" id="status-button" form="taskPatchForm" name="selected_action" value="status" class="btn btn-primary d-none">
+            Update Status
+          </button>
+        </div>
+        <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">
+          Delete
+        </button>
         <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
-  </div>  
     </div>
-  </div>  
-    </div>
-  </div>  
+  </div>
 </div>
 
-
-<div class="modal fade" id="confirmReassignModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmReassignModalBody">
-            Confirm you are reassigning the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="reassign_button" form="taskPatchForm" name="selected_action" value="reassign">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div>
-
-
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalTitle">Confirm?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="confirmDeleteModalBody">
-            Confirm you are deleting the following tasks...
-
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="delete_button" form="taskPatchForm" name="selected_action" value="delete">Confirm</button>
-            <button class="btn btn-secondary" data-bs-target="#userModal" data-bs-toggle="modal">Cancel</button>
-          </div>
-        </div>        
-    </div>
-    
-</div>
+<!-- Confirm action modals -->
+{% confirm_modal "assignee" %}
+{% confirm_modal "priority" %}
+{% confirm_modal "status" %}
+{% confirm_modal "delete" %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
+
+    // Remove loading spinners when page loads. This is important if the back button is clicked
+    window.addEventListener('pageshow', function(e) {
+        if (document.getElementById('submit-spinner') !== null) {
+            removeLoadingSpinner('submit-spinner');
+        }
+        if (document.getElementById('reload-spinner') !== null) {
+            removeLoadingSpinner('reload-spinner');
+        }
+    })
+
+    // Detailed results modal: collect selected tasks into an array
+    function getSelectedTasks(){
+        var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
+                .find( 'tr' ) // select all rows that has
+                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+            var ret = [];
+            for (let i = 0; i < selectedRows.length ; i++) {
+                ret.push(selectedRows[i].children[0].firstChild.defaultValue);
+            };
+        return ret
+    }
+
+    // Detailed results modal: show action chosen from actions menu
+    function showMenuItem(selectedMenuItem) {
+        const menuItems = ["assignee", "priority", "status"];
+        for (let menuItem of menuItems) {
+            document.getElementById(menuItem + "-input").classList.add("d-none");
+            document.getElementById(menuItem + "-button").classList.add("d-none");
+        }
+        document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
+        document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
+    }
 
     $(document).ready(function() {
 
+        // Table content in detailed results modal
         {% for row in table %}
             $("#userLink_{{row.username}}").click(function(){
                 let tableContents = `
                     <thead>
                         <tr>
-                        <th scope="col">Select</th>
+                        <th scope="col" style="padding-left: 10px"> <input type="checkbox" name="selectAll" class="taskCheckbox"></th>
                         <th scope="col">Task ID</th>
                         <th scope="col">Segment ID</th>
+                        <th scope="col">Segment ID: formatted</th>
                         <th scope="col">Status</th>
                         <th scope="col">Priority</th>
                         <th scope="col">Created</th>
                         <th scope="col">Opened</th>
                         <th scope="col">Closed</th>
                         <th scope="col">Duration (min)</th>
+                        <th scope="col">Tags</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -294,24 +343,57 @@
                         <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}} class="taskCheckbox"></th>
                         <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
                         <td>{{taskrow.seg_id}}</td>
+                        <td>#: {{taskrow.seg_id}}</td>
                         <td>{{taskrow.status}}</td>
                         <td>{{taskrow.priority}}</td>
                         <td>{{taskrow.created}}</td>
                         <td>{{taskrow.opened}}</td>
                         <td>{{taskrow.closed}}</td>
                         <td>{{taskrow.duration}}</td>
+                        {% if taskrow.tags %}
+                        <td class="userTags">{{taskrow.tags|join:", "}}</td>
+                        {% else %}
+                        <td>None</td>
+                        {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>`
-
                 $('#userModalTitle').text("{{row.username}}")
                 $('#hiddenModalTable').html(`
                     <table id='hiddenUserTable' class="table table-striped table-hover">${tableContents}</table>  
                 `);
                 $('#userModalBody').html(`
-                    <table id='userTable' class="table table-striped table-hover">${tableContents}</table>  
+                    <table id='userTable' class="table table-striped table-hover" style="width:100%">${tableContents}</table>  
                 `);
-                $('#userTable').DataTable();
+                $('#userTable').DataTable({
+                    "columnDefs":[
+                        {
+                        "targets": 0,
+                        "orderable": false
+                        },
+                        {
+                        "targets":3,
+                        "visible":false
+                        }
+                    ]
+                });
+
+                $('input[name=selectAll]').change(function(){
+                    if ($(this).is(':checked')) {
+                        $('#userTable input[name=selected_tasks]').each(function(){
+                            if ($(this).is(':checkbox') && !$(this).is(":checked")) {
+                                $(this).prop( "checked", true );
+                            } 
+                        })
+                    } else {
+                        $('#userTable input[name=selected_tasks]').each(function(ele){
+                            if ($(this).is(':checkbox') && $(this).is(":checked")) {
+                                $(this).prop( "checked", false );
+                            } 
+                        })
+                    }
+                });
+
                 $('#userModal').modal('show');
             });
         {% endfor %}
@@ -328,70 +410,45 @@
         $('#summary-table').table2csv('download', {'filename': filename});
 
     }); 
-    function getSelectedTasks(){
-        let ret = [];
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret.push(ele)
-            };
-        });
-        return ret
-    }
-    function make_list_of_checked_elements(){
-        let ret = "";
-        document.getElementsByName("selected_tasks").forEach((ele) => {
-            if (ele.type == "checkbox" && ele.checked) {
-                ret += "<li>" + ele.value + "</li>"
-            };
-        });
-        return ret
-    };
 
-    document.getElementById("reassign_button").addEventListener('click', (e)=> {        
-        const inputUser = document.getElementById("reassign_user")
-        console.log(e)
-        if (getSelectedTasks() == 0){
-           // do something here?
-        }
-        else if (inputUser.value == ""){
-            inputUser.style.backgroundColor = "indianred";
-        } else {
-            const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-            confirmReassignModalBody.innerHTML = `You are about to reassign the following tasks to <b>${inputUser.value}</b> </b>:`;
-            confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-            $('#userModal').modal('toggle')
-            $('#confirmReassignModal').modal('toggle')
-        }
-    });
-    
-    
-    document.getElementById("delete_button").addEventListener('click', (e)=> {
-        const confirmDeleteModalBody = document.getElementById("confirmDeleteModalBody");
-        confirmDeleteModalBody.innerHTML = "You are about to delete the following tasks:";
-        confirmDeleteModalBody.innerHTML += make_list_of_checked_elements();
-        if (getSelectedTasks() == 0){
-            // do something here?
-        } else {
-             const confirmReassignModalBody = document.getElementById("confirmReassignModalBody");
-             confirmReassignModalBody.innerHTML = "You are about to reassign the following tasks:";
-             confirmReassignModalBody.innerHTML += make_list_of_checked_elements();
-             $('#userModal').modal('toggle')
-             $('#confirmDeleteModal').modal('toggle')
-         }
-    });
-
+    // Export as CSV Button for detailed results
     const exportButton_userTable = document.getElementById("exportBtn_userTable");
     exportButton_userTable.addEventListener('click', (e) => {
 
         // Construct filename
         const username = document.getElementById("userModalTitle").textContent;
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
-
         // Perform download
-        $('#hiddenUserTable').table2csv('download', {'filename': filename});
+        function download_all_tasks(){
+            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
+            $('#hiddenUserTable').table2csv('download', {'filename': filename});
+        }
+        if (getSelectedTasks().length == 0){
+            // if no tasks are selected the default is to download all tasks
+            download_all_tasks();
+        } else {
 
+            var filteredTable = $('#userTable').clone()[0] // make a copy of the visible table to edit and export
+            filteredTable.id = 'userSelectedTable'; 
+
+            var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
+                .find( 'tr' ) // select all rows that has
+                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+
+            for (let i = 0; i <  $( '#userTable' ).find( 'tbody' ).find( 'tr' ).length; i++) {
+                filteredTable.deleteRow(1);
+            };
+
+            $('#hiddenSelectedTable').html(filteredTable);
+
+            for (let i = 0; i < selectedRows.length; i++){
+                $('#hiddenSelectedTable tr:last').after('<tr>'+selectedRows[i].innerHTML+'</tr>');
+            }
+
+            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '_selectedTasks.csv';
+            $('#userSelectedTable').table2csv('download', {'filename': filename});
+            
+        }
     }); 
-
 
 </script>
 {% endblock %}

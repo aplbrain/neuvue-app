@@ -18,7 +18,6 @@ class PreferencesView(View):
         if Config.objects.filter(user=str(request.user)).count() == 0:
             logging.debug(f"New Config for {request.user}.")
             config = Config.objects.create(user=str(request.user))
-            config.save()
 
         else:
             logging.debug(f"Getting Config for {request.user}.")
@@ -26,8 +25,10 @@ class PreferencesView(View):
         
         context = {
             'enabled': config.enabled,
-            'annotationColor': config.annotation_color,
-            'annotationColorSwitch': config.annotation_color_switch,
+            'annotationColorPalette': config.annotation_color_palette,
+            'annotationColorPaletteSwitch': config.annotation_color_palette_switch,
+            'showSlices':config.show_slices,
+            'showSlicesSwitch':config.show_slices_switch,
             'alphaSelected': config.alpha_selected,
             'alphaSelectedSwitch': config.alpha_selected_switch,
             'alpha3D': config.alpha_3d,
@@ -39,7 +40,9 @@ class PreferencesView(View):
             'chunkReq': config.chunk_requests,
             'chunkReqSwitch': config.chunk_requests_switch,
             'layout': config.layout,
-            'layoutSwitch': config.layout_switch
+            'layoutSwitch': config.layout_switch,
+            'zoomLevel': config.zoom_level,
+            'zoomLevelSwitch': config.zoom_level_switch
         }
 
         return render(request, "preferences.html", context)
@@ -50,8 +53,14 @@ class PreferencesView(View):
 
         config.enabled = request.POST.get('enabled') == 'true'
 
-        config.annotation_color = request.POST.get('annotationColor')
-        config.annotation_color_switch = request.POST.get('annotationColorSwitch') == 'true'
+        config.annotation_color_palette = request.POST.get('annotationColorPalette')
+        config.annotation_color_palette_switch = request.POST.get('annotationColorPaletteSwitch') == 'true'
+
+        config.show_slices = request.POST.get('showSlices') == 'true'
+        config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
+
+        config.zoom_level = request.POST.get('zoomLevel')
+        config.zoom_level_switch = request.POST.get('zoomLevelSwitch') == 'true'
 
         config.alpha_selected = request.POST.get('alphaSelected')
         config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'

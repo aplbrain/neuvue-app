@@ -1,5 +1,6 @@
 {% load static %}
 {% load socialaccount %}
+{% load in_group %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,25 +29,30 @@
             <a class="navbar-brand" href="{% url "index" %}"> <img src="{% static 'images/axonolotl.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> NeuVue</a>
             <ul class="navbar-nav ml-auto " style="flex-direction: row;">
 
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="{% url "getting-started" %}">Getting Started</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "inspect" %}">Inspect Task</a>
-                </li>
-
                 {% if request.user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "dashboard" %}">Admin Dashboard</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Admin Tools
+                    </a>
+                    <ul class="dropdown-menu me-2 dropdown-menu-dark preferences" aria-labelledby="navbarDropdown">
+                        <li> <a class="nav-link" href="{% url "dashboard" %}">Admin Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="{% url "report" %}">Reports</a></li>
+                    </ul>
                 </li>
                 {% endif%}
                 
-                {% if user.is_authenticated %}
+                {% if request.user|in_group:"AuthorizedUsers"%}
+
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="{% url "getting-started" %}">Getting Started</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "inspect" %}">Inspect Task</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "synapse" %}">Synapse Viewer</a>
                 </li>
@@ -54,7 +60,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "tasks" %}">My Tasks</a>
                 </li>
-                
+                {% endif%}
+
+                {% if request.user.is_authenticated %}
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <b> {{user.username}} </b>
@@ -68,7 +77,7 @@
                 {% else %}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url "index" %}">Login</a>
+                    <a class="nav-link" href="{% provider_login_url 'google' %}">Login</a>
                 </li>
 
                 {% endif %}

@@ -36,7 +36,7 @@ def utc_to_eastern(time_value):
     try:
         utc = pytz.UTC
         eastern = timezone('US/Eastern')
-        date_time = time_value.to_pydatetime()
+        date_time = time_value.to_pydatetime(warn=False)  # do not warn if nanoseconds are nonzero
         date_time = utc.localize(time_value)
         return date_time.astimezone(eastern)
     except:

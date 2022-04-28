@@ -492,7 +492,7 @@ font-size: 25px;
 .inspect-container {
   display: block;
   margin: auto;
-  padding-top: 20%;
+  padding-top: 10%;
   width: 40%;
   }
 
@@ -1030,3 +1030,43 @@ background: transparent;
   border-color: transparent;
   font-size: 1.2vh;
 }
+
+.remove-yes {
+  width: 50px;
+}
+
+.flag-submit {
+  width: 75px;
+
+}
+
+.userTags{
+  max-width:3vw; 
+  overflow:hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+input[type=radio] {
+  display: none;
+}
+
+.dropdown-item img:hover {
+  opacity:0.6;
+  cursor: pointer;
+}
+
+.dropdown-item img:active {
+  opacity:0.4;
+  cursor: pointer;
+}
+
+input[type=radio]:checked + label > img {
+  border: 4px solid yellow !important;
+}
+
+.annotationChoiceMenu {
+  background-color: darkgray !important;
+}
+
+
