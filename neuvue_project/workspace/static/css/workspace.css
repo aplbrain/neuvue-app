@@ -1046,3 +1046,27 @@ background: transparent;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+input[type=radio] {
+  display: none;
+}
+
+.dropdown-item img:hover {
+  opacity:0.6;
+  cursor: pointer;
+}
+
+.dropdown-item img:active {
+  opacity:0.4;
+  cursor: pointer;
+}
+
+input[type=radio]:checked + label > img {
+  border: 4px solid yellow !important;
+}
+
+.annotationChoiceMenu {
+  background-color: darkgray !important;
+}
+
+
