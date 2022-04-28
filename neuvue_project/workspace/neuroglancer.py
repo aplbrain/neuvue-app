@@ -335,9 +335,15 @@ def _get_soma_center(root_ids: List, cave_client):
 def _get_nx_graph_image(nx_graph):
     def networkx_to_graphViz(nx_graph):
         import graphviz
+        import networkx as nx
         gv_graph = graphviz.Digraph('lineage',format = 'svg',graph_attr={'size':'6,{}','ratio':"compress",'ranksep':'0.5'},node_attr={'fontsize':'18','fontname':"Arial"}) # 'size':'6,3',
+        timestamps = nx.get_node_attributes(nx_graph, "timestamp") # dictionary of all timestamps in the graph, key: node
+        operation_ids = nx.get_node_attributes(nx_graph, "operation_id") # dictionary of all operation ids in the graph, key: node
         for node in nx_graph.nodes():
-            gv_graph.node(str(node),label=str(node))
+            label_str = str(node)
+            label_str += '\n' + datetime.fromtimestamp(timestamps.get(node)).strftime('%Y-%m-%d') if timestamps.get(node) else '' # add timestamp if it exists
+            label_str +=  '\n id: ' + str(operation_ids.get(node)) if operation_ids.get(node) else '' # add operation id if it exists
+            gv_graph.node(str(node),label=label_str)
         for edge0, edge1 in nx_graph.edges():
             gv_graph.edge(str(edge0), str(edge1))
         gv_graph = gv_graph.unflatten(stagger=10) 
@@ -389,6 +395,7 @@ def apply_state_config(state:str, username:str):
     
     annotation_color_palette = config.annotation_color_palette
     alpha_selected = config.alpha_selected
+    zoom_level = config.zoom_level
     alpha_3d = config.alpha_3d
     gpu_limit = config.gpu_limit
     sys_limit = config.sys_limit
@@ -405,6 +412,9 @@ def apply_state_config(state:str, username:str):
         cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     if config.chunk_requests_switch:
         cdict["concurrentDownloads"] = int(chunk_requests)
+
+    if config.zoom_level_switch:
+        cdict["navigation"]["zoomFactor"] = int(zoom_level)
     
     # create color palette dictionary
     color_palette_dict = {'palette1' : ['#F9C80E', '#F86624', '#EA3546', '#662E9B', '#43BCCD'],

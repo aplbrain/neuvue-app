@@ -8,15 +8,18 @@
 
 <div class="basic workspace">
   <div class="inspect-container">
-    <form id="mainForm" action="" method="post" >
+    <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
         <input class="form-control" id="rootIDInput" placeholder="Enter Root ID" name="root_id" required="true">
         <br>
-        <input type="submit" class="btn btn-primary" value="Submit">
-        {% if error%}
-        <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
-        {% endif %}
+        <div class="d-flex">
+          <input type="submit" class="btn btn-primary" value="Submit">
+          <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
+          {% if error%}
+          <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+          {% endif %}
+        </div>
       </div>
     </form>
   </div>
@@ -66,10 +69,19 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
   // Side Bar Interaction
   openSideMenu();
+
+  // Add root ID to selected segment in Neuroglancer State once clicked
+  function selectID(root_id){
+    let state = viewer.state.toJSON();
+    if (["segmentation", "segmentation_with_graph"].includes(String(state['layers'][1]['type']))) {
+      state['layers'][1]['segments'].push(root_id)
+      viewer.state.restoreState(state)
+    }
+  }
 
   function downloadSVGAsPNG(e){
     const canvas = document.createElement("canvas");
@@ -112,7 +124,21 @@
 
     $("svg").attr('width', '100%');
     $("svg").attr('height', '100%');
+
+    $(".node").each(function(index, element){
+        let root_id = JSON.stringify($(element).children().first().text());
+        $(element).attr('onclick', `selectID(${root_id})`);
+        $(element).attr('style', `cursor:pointer`);
+        $(element).attr('class', `child`);
+    });
   });
  
+  // Remove loading spinner when page loads. This is important if the back button is clicked
+  window.addEventListener('pageshow', function(e) {
+    if (document.getElementById('submit-spinner') !== null) {
+      removeLoadingSpinner('submit-spinner');
+    }
+  })
+
   </script>
 {% endblock %}
