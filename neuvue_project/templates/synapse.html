@@ -40,9 +40,8 @@
           <div class="sideContentTitle">
               Segment Information
           </div>
-          <div class="sideContentInfo">          
-              <button type="button" class="btn btn-info" onclick="copyToClipboard(get_synapse_info())"> <i class="fa fa-copy"></i> Copy Synapse Info </button></br>
-              <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
+          <div class="sideContentInfo">             
+              
               {% for root, stats in synapse_stats.items %}
               Root ID <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
@@ -51,6 +50,13 @@
               Number of Postsynaptic Connections <br> 
               <span class ="code">  {{stats.num_post}} </span> <br>
               {% endfor %}
+          </div>
+      </div>
+      <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
+        <div class="sideContentInfo">     
+            <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
+            <button type="button" class="btn btn-info" onclick="copyToClipboard(get_synapse_info())"> <i class="fa fa-copy"></i> Copy Synapse Info </button></br>
+            <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
           </div>
       </div>
       
@@ -120,8 +126,26 @@
         const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';
         // Perform download
         $('#hiddenIDTable').table2csv('download', {'filename': filename});
-
     }); 
+
+  // function getState(){
+  //   window.localStorage['ng_state_url'] = viewer.saver.savedUrl;
+  // }
+
+  async function getLink() {
+    // viewer.postJsonState(true, undefined, true, getState);
+    // if(typeof window.localStorage['ng_state_url'] !== "undefined"){
+    //     $('.overlay').first().hide();
+    //     return window.localStorage['ng_state_url']
+    // } else {
+    //     setTimeout(getState, 250);
+    // }
+    viewer.postJsonState();
+    let url = await Promise() => {
+      return viewer.saver.savedUrl;
+    };
+    return url
+  }
 
   function get_synapse_info() {
     const synapse_info = "{{synapse_stats|safe}}";
