@@ -54,7 +54,7 @@
       </div>
       <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
         <div class="sideContentInfo">     
-            <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
+            <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
             <button type="button" class="btn btn-info" onclick="copyToClipboard(get_synapse_info())"> <i class="fa fa-copy"></i> Copy Synapse Info </button></br>
             <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
           </div>
@@ -132,7 +132,7 @@
   //   window.localStorage['ng_state_url'] = viewer.saver.savedUrl;
   // }
 
-  async function getLink() {
+  function getLink() {
     // viewer.postJsonState(true, undefined, true, getState);
     // if(typeof window.localStorage['ng_state_url'] !== "undefined"){
     //     $('.overlay').first().hide();
@@ -140,11 +140,10 @@
     // } else {
     //     setTimeout(getState, 250);
     // }
-    viewer.postJsonState();
-    let url = await Promise() => {
-      return viewer.saver.savedUrl;
-    };
-    return url
+    viewer.postJsonState(true, undefined, true, function() {
+      let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+      copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+    });
   }
 
   function get_synapse_info() {
