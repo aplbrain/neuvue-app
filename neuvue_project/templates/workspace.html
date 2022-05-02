@@ -74,16 +74,6 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td scope="row">Save Checkpoint</td>
-                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>S</kbd></td>
-                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Reload Checkpoint</td>
-                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>R</kbd></td>
-                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>R</kbd></td>
-                        </tr>
-                        <tr>
                             <td scope="row">Flag Task</td>
                             <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>F</kbd></td>
                             <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
@@ -117,7 +107,7 @@
                         id="btnYes" 
                         type="button" 
                         class="mainButton submit quad" 
-                        onclick="loadingSpinner('confirm_load')"
+                        onclick="triggerLoadingSpinner('confirm_load')"
                     >
                         <div id = 'confirm_load'>
                              Confirm Split
@@ -128,7 +118,7 @@
                         id="btnYesBut" 
                         type="button" 
                         class="mainButton yesBut" 
-                        onclick="loadingSpinner('refinement_load')"
+                        onclick="triggerLoadingSpinner('refinement_load')"
                     >
                         <div id = 'refinement_load'>
                             Split Requires Refinement
@@ -139,7 +129,7 @@
                     id="btnNoBut" 
                     type="button" 
                     class="mainButton noBut" 
-                    onclick="loadingSpinner('errorNearby_load')"
+                    onclick="triggerLoadingSpinner('errorNearby_load')"
                     
                     >
                         <div id = 'errorNearby_load'>
@@ -151,7 +141,7 @@
                         id="btnNo" 
                         type="button" 
                         class="mainButton flag quad" 
-                        onclick="loadingSpinner('reject_load')"
+                        onclick="triggerLoadingSpinner('reject_load')"
                     >
                         <div id = 'reject_load'>
                             Reject Split
@@ -162,7 +152,7 @@
                         id="btnUnsure" 
                         type="button" 
                         class="mainButton pause quad" 
-                        onclick="loadingSpinner('unsure_load')"
+                        onclick="triggerLoadingSpinner('unsure_load')"
                     >
                         <div id = 'unsure_load'>
                             Unsure
@@ -274,6 +264,19 @@
                         Flag Task
                     </button>
 
+                    {% if allowed_to_reassgin%}
+                    <! Remove >
+                    <button
+                        id="btnRemove" 
+                        type="button" 
+                        class="mainButton remove"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#removeModal"
+                    >
+                    Remove Task
+                    </button>
+                    {% endif %}
+                    
                     <! Skip >
                     {% if skipable %}
                     <button
@@ -281,7 +284,7 @@
                         type="button" 
                         class="mainButton skip"
                         accesskey="k"
-                        onclick="loadingSpinner('skip_task_load')" 
+                        onclick="triggerLoadingSpinner('skip_task_load')" 
                     >
                         <div id = 'skip_task_load'>
                             Skip Task
@@ -296,7 +299,7 @@
                         id="btnSubmit" 
                         type="button" 
                         class="mainButton submit"
-                        onclick="loadingSpinner('submit_task_load')" 
+                        onclick="triggerLoadingSpinner('submit_task_load')" 
                     >
                         <div id = 'submit_task_load'>
                             Submit Task
@@ -321,7 +324,7 @@
                         type="button"
                         class="mainButton pause"
                         accesskey="e"
-                        onclick="loadingSpinner('exit_task_load')"
+                        onclick="triggerLoadingSpinner('exit_task_load')"
                     >
                         <div id = 'exit_task_load'>
                             Save and Exit Task
@@ -337,7 +340,7 @@
                         <button 
                             type="button" 
                             class="mainButton return" 
-                            onclick= "document.location='{% url 'tasks' %}';loadingSpinner('exit_workspace')">
+                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
                             <div id = 'exit_workspace'>
                                 Return to Task page
                             </div>
@@ -386,12 +389,28 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnFlagSubmit">Submit</button>
+                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="triggerLoadingSpinner('btnFlagSubmit')">Submit</button>
                 </div>
             </div>
         </div>
     </div> 
 </form>
+
+<!-- Remove task Modal -->
+<div id="removeModal" class="modal" name="remove" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black; text-align: center;">Are you sure you want to remove this task from your queue?</h5>
+                <button type="button" class="btn-close" id="btnRemoveClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
+                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="triggerLoadingSpinner('btnRemoveSubmit')" >Yes</button>
+            </div>
+        </div>
+    </div>
+</div> 
 
 <div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
@@ -428,12 +447,12 @@
         let data = JSON.stringify(viewer.state.toJSON());
         return "https://neuroglancer.neuvue.io/#!" + data
     }
-
-    function loadingSpinner(parent_div_name) {
-         var parent_div = document.getElementById(parent_div_name);
-         var spinner = document.getElementById('loading-spinner');
-         parent_div.innerHTML = '';
-         parent_div.append(spinner);
+     
+     function show3DSlices() {
+        let slices = '{{show_slices}}';
+        if (slices == 'True' && !viewer.showPerspectiveSliceViews.value_){
+            viewer.showPerspectiveSliceViews.toggle();
+         }
      }
      
     function submitForm(value, form='#mainForm') {
@@ -505,7 +524,6 @@
 
     // Button Submission
     $(document).ready(function() {
-
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
 
@@ -547,7 +565,7 @@
         } else if ('{{submission_method}}' == "decide_and_submit"){
             $('#btnSubmit').click(function(){
                 if (current_button_selection != 'noneSelected'){
-                    loadingSpinner('submit_task_load');
+                    triggerLoadingSpinner('submit_task_load');
                     submitForm(current_button_selection);
                 } else {
                     alert("Please select a decision!");
@@ -557,6 +575,10 @@
 
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
+        })
+
+        $('#btnRemoveSubmit').click(function() {
+            submitForm('remove')
         })
         
         $('#btnFlagSubmit').click(function() {
@@ -575,6 +597,8 @@
         $('#timeoutModalNo').click(function() {
             submitForm('stop');
         });
+
+        show3DSlices();
     })
     
     {% if is_open %}

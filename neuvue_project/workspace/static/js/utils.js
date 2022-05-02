@@ -1,8 +1,8 @@
 /* Toggles the Small Drop Down Menus in the Task Queue List */
 function block_toggle() {
 
-  var acc = document.getElementsByClassName("taskButton");
-  var i;
+  let acc = document.getElementsByClassName("taskButton");
+  let i;
 
   for (i = 0; i < acc.length; i++) {
     acc[i].onclick=function() {
@@ -11,7 +11,7 @@ function block_toggle() {
       this.classList.toggle("active");
 
       /* Toggle between hiding and showing the active panel */
-      var panel = this.nextElementSibling;
+      let panel = this.nextElementSibling;
       if (panel.style.display === "block") {
         panel.style.display = "none";
       } else {
@@ -25,8 +25,8 @@ function block_toggle() {
 
 function sidemenu_content() {
   
-  var side_button = document.getElementById("sidebarActivate");
-  var neuroglancer_window = document.getElementById("neuroglancer");
+  let side_button = document.getElementById("sidebarActivate");
+  let neuroglancer_window = document.getElementById("neuroglancer");
 
   /* Toggle between adding and removing the "active" class,
   to highlight the button that controls the panel */
@@ -44,11 +44,11 @@ function sidemenu_content() {
 
 /* Opens Side Menu */
 function openSideMenu(){
-  var sidemenu = document.getElementById("neuVue-sidemenu");
-  var sidebar = document.getElementById("neuVue-sidebar");
-  var sidecontent = document.getElementById("neuVue-sidecontent");
-  var neuroglancer_window = document.getElementById("neuroglancer");
-
+  let sidemenu = document.getElementById("neuVue-sidemenu");
+  let sidebar = document.getElementById("neuVue-sidebar");
+  let sidecontent = document.getElementById("neuVue-sidecontent");
+  let neuroglancer_window = document.getElementById("neuroglancer");
+  
   sidemenu.style.width = "25%";
   sidebar.style.width = "8%";
   sidecontent.style.width = "85%";
@@ -63,16 +63,17 @@ function openSideMenu(){
   sidebar.style.transition = "0.15s";
   sidecontent.style.animationDelay = "0.29s";
 
-  neuroglancer_window.style.width = "75%";
-  neuroglancer_window.style.left = "0%";
-  
+  if (neuroglancer_window != null){
+    neuroglancer_window.style.width = "75%";
+    neuroglancer_window.style.left = "0%";
+  }
 }
 /* Closes Side Menu */
 function closeSideMenu() {
-  var sidemenu = document.getElementById("neuVue-sidemenu");
-  var sidebar = document.getElementById("neuVue-sidebar");
-  var sidecontent = document.getElementById("neuVue-sidecontent");
-  var neuroglancer_window = document.getElementById("neuroglancer");
+  let sidemenu = document.getElementById("neuVue-sidemenu");
+  let sidebar = document.getElementById("neuVue-sidebar");
+  let sidecontent = document.getElementById("neuVue-sidecontent");
+  let neuroglancer_window = document.getElementById("neuroglancer");
 
   sidemenu.style.width = "2%";
   sidebar.style.width = "100%";
@@ -88,9 +89,11 @@ function closeSideMenu() {
   sidebar.style.transitionDelay = "0.15s";
   sidecontent.style.transition = "0.3s";
 
-  
+  if (neuroglancer_window != null){  
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
+  }
+  
 }
 function getCookie(name) {
   let cookieValue = null;
@@ -110,8 +113,8 @@ function getCookie(name) {
 
 /* Flag Modal */
 function toggleTextbox(){
-    var reason=document.getElementById("select-flag");
-    var textbox = document.getElementById("text")
+    let reason=document.getElementById("select-flag");
+    let textbox = document.getElementById("text")
     if(reason.value == "other")
         textbox.style.display = "block"
     else
@@ -123,11 +126,17 @@ function copyToClipboard(copyInfo) {
   navigator.clipboard.writeText(copyInfo);
 }
 
+function triggerLoadingSpinner(parent_elem_name) {
+  const spinner = `
+    <div id="loading-spinner" class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  `;
+  const parent_elem = document.getElementById(parent_elem_name);
+  parent_elem.innerHTML = spinner;
+}
 
-
-
-
-
-
-
-
+function removeLoadingSpinner(parent_elem_name, originalText = '') {
+  const parent_elem = document.getElementById(parent_elem_name);
+  parent_elem.innerHTML = originalText;
+}
