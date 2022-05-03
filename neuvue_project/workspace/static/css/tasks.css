@@ -248,13 +248,13 @@ tbody.pending >:nth-child(2) {
   font-size: 12pt;
   padding: 5px 20px;
   border: transparent;
-  color: var(--primary-accent-activated);
+  color: var(--navbar-text);
   background-color: transparent;
   width: 10vw;
   text-align: left;
 }
 .tab-item:hover{
-  color: var(--navbar-text);
+  color: var(--primary-accent-activated);
 }
 .sub-h2{
   padding: 5px 35px;
@@ -263,7 +263,7 @@ tbody.pending >:nth-child(2) {
   padding: 5px 50px;
 }
 .tab-header{
-  color: var(--primary-accent-activated);
+  color: var(--navbar-text);
   font-size: 20pt;
   padding: 5px 20px;
   font-weight: 600;
@@ -287,25 +287,22 @@ tbody.pending >:nth-child(2) {
 .getting-started-content{
   border-radius: 8px;
   padding: 20px 30px 20px 30px;
-  background-color: var(--transparent-standard);
+  background-color: var(--transparent-card-items-background);
   margin: 1%;
   width: 98%; 
   min-height: 97%;
   font-size: 14pt;
-  color:var(--background);
+  color: var(--primary-accent);
 }
 .getting-started-content h1 {
-  color: var(--header);
-  font-size: 24pt;
+  font-size: 26pt;
   font-weight: 600;
 }
 .getting-started-content h2 {
-  color: var(--header);
   font-size: 22pt;
   font-weight: 500;
 }
 .getting-started-content h3 {
-  color: var(--header);
   font-size: 20pt;
   font-weight: 400;
 }
