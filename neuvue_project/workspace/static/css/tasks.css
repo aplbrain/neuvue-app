@@ -242,24 +242,36 @@ tbody.pending >:nth-child(2) {
   margin-top: 2vh;
   flex-direction: column;
   left:0;
+  margin-left: 1vw;
 }
 .tab-item{
-  padding: 10px 10px 10px 10px;
-  border-radius: 0px 8px 8px 0px;
-  border: 1pt solid var(--secondary-accent);
-  color: var(--secondary-accent);
+  font-size: 12pt;
+  padding: 5px 20px;
+  border: transparent;
+  color: var(--primary-accent-activated);
   background-color: transparent;
   width: 10vw;
   text-align: left;
 }
 .tab-item:hover{
-  background-color: var(--transparent-hover);
-  color: var(--background);
-  border: 1pt solid transparent;
+  color: var(--navbar-text);
 }
+.sub-h2{
+  padding: 5px 35px;
+}
+.sub-h3{
+  padding: 5px 50px;
+}
+.tab-header{
+  color: var(--primary-accent-activated);
+  font-size: 20pt;
+  padding: 5px 20px;
+  font-weight: 600;
+}
+
 .getting-started-container {
   background-color: transparent !important;
-  border-radius: 8px 0px 8px 8px;
+  border-radius: 8px;
   border: 1.5px solid var(--secondary-accent);
   padding: 10px 10px 10px 10px;
   float: center;
