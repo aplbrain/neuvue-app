@@ -498,6 +498,7 @@ def construct_synapse_state(root_ids:List):
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
     
     synapse_stats = {}
     
