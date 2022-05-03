@@ -10,6 +10,7 @@ from .models import Namespace, UserProfile
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
+import markdown
 
 from .neuroglancer import (
     construct_proofreading_state, 
@@ -749,5 +750,19 @@ class TokenView(View):
         return render(request, "token.html", context={'code': request.GET.get('code')})
 
 class GettingStartedView(View):
+    
     def get(self, request, *args, **kwargs):
-        return render(request, "getting-started.html")
+        try:
+            p = staticfiles_storage.path('getting_started.md')
+            print('p: ', p)
+            with open(p, 'r') as f:
+                text = f.read()
+                html = markdown.markdown(text)
+        except:
+            html = "Error Rendering Text"
+
+        ## Get updates from local updates.json
+        context = {
+            "getting_started_text": html
+        }
+        return render(request, "getting-started.html",context)

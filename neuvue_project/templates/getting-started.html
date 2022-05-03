@@ -10,8 +10,15 @@
 {% block content %}
 <div class="basic workspace">
     <div class="d-flex justify-content-center">
-        <div class="getting-started-container">
-            ...
+        <div class="container-and-tabs">
+            <div class="getting-started-container" >
+                <div class="getting-started-content" >
+                    {{ getting_started_text|safe }}
+                </div>
+            </div>
+            <div id="tabContainer" class="tab-holder">
+                
+            </div>
         </div>
     </div>
 
@@ -19,4 +26,22 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+    // get all headers
+    var headers = document.querySelectorAll("h1");
+    // make a tab for them
+    var tabItems = "";
+    for (var i=0;i< headers.length;i++){
+        var header = headers[i].innerHTML;
+        tabItems += `<button class="tab-item" onclick="scrollPlease(`+i+`)">`+header+`</button><br>`;
+    }
+    var tabContainer = document.getElementById("tabContainer");
+    tabContainer.innerHTML = tabItems;
+
+    function scrollPlease(headerIndex){
+        var scrollLocation = headers[headerIndex]
+        scrollLocation.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    }
+
+</script>
 {% endblock %}

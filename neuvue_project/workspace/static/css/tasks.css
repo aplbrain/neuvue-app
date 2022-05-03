@@ -234,16 +234,66 @@ tbody.pending >:nth-child(2) {
   text-overflow: ellipsis;
   vertical-align: top;
 }
-
+.container-and-tabs{
+  display: flex;
+  flex-direction: row;
+}
+.tab-holder{
+  margin-top: 2vh;
+  flex-direction: column;
+  left:0;
+}
+.tab-item{
+  padding: 10px 10px 10px 10px;
+  border-radius: 0px 8px 8px 0px;
+  border: 1pt solid var(--secondary-accent);
+  color: var(--secondary-accent);
+  background-color: transparent;
+  width: 10vw;
+  text-align: left;
+}
+.tab-item:hover{
+  background-color: var(--transparent-hover);
+  color: var(--background);
+  border: 1pt solid transparent;
+}
 .getting-started-container {
   background-color: transparent !important;
-  border-radius: 8px;
+  border-radius: 8px 0px 8px 8px;
   border: 1.5px solid var(--secondary-accent);
   padding: 10px 10px 10px 10px;
   float: center;
-  height: 85vh;
-  width: 70%;
-  
+  height: 87vh;
+  margin-top: 2vh;
+  margin-left: 3vw;
+  width: 70vw;
+  right: 0;  
   overflow: auto;
   overflow-x: hidden;
+}
+
+.getting-started-content{
+  border-radius: 8px;
+  padding: 20px 30px 20px 30px;
+  background-color: var(--transparent-standard);
+  margin: 1%;
+  width: 98%; 
+  min-height: 97%;
+  font-size: 14pt;
+  color:var(--background);
+}
+.getting-started-content h1 {
+  color: var(--header);
+  font-size: 24pt;
+  font-weight: 600;
+}
+.getting-started-content h2 {
+  color: var(--header);
+  font-size: 22pt;
+  font-weight: 500;
+}
+.getting-started-content h3 {
+  color: var(--header);
+  font-size: 20pt;
+  font-weight: 400;
 }
