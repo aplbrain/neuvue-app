@@ -128,10 +128,6 @@
         $('#hiddenIDTable').table2csv('download', {'filename': filename});
     }); 
 
-  // function getState(){
-  //   window.localStorage['ng_state_url'] = viewer.saver.savedUrl;
-  // }
-
   function getLink() {
     viewer.postJsonState(true, undefined, true, function() {
       let url_prefix = "https://neuroglancer.neuvue.io/?json_url="

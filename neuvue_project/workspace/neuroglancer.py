@@ -1,4 +1,4 @@
-from django.conf import Settings, settings
+from django.conf import settings
 from django.apps import apps
 import pandas as pd 
 import numpy as np 
