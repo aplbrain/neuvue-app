@@ -57,7 +57,7 @@
                     Tasks Completed This Session <br> 
                     <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
-                    <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
+                    <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
                     
                 </div>
             </div>
@@ -426,7 +426,7 @@
         </div>
     </div>
 </div> 
-
+<style> .overlay { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
@@ -434,6 +434,12 @@
 <script type="text/javascript"> 
     // Delete previous state info
     // window.localStorage.removeItem("ngState")
+    function getLink() {
+        viewer.postJsonState(true, undefined, true, function() {
+        let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+        copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+        });
+    }
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
@@ -443,10 +449,6 @@
         openSideMenu();
     }
     
-    function getLink() {
-        let data = JSON.stringify(viewer.state.toJSON());
-        return "https://neuroglancer.neuvue.io/#!" + data
-    }
      
      function show3DSlices() {
         let slices = '{{show_slices}}';
