@@ -25,6 +25,12 @@
                 </div>
                 <div class="sideContentInfo">
                     {{ instructions.prompt }}
+                    {% if instructions.media %} 
+                        <br>
+                        <div style="display:flex; justify-content: center; margin:1vh 0vh;">
+                            <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <! Task Notes >
