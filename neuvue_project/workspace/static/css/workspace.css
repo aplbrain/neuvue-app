@@ -372,6 +372,16 @@ color: var(--primary-accent);
   font-size: 1.2vh;
 }
 
+
+.instruction-image{
+  max-width: 80%;
+  max-height: 15vh; 
+  overflow: hidden;
+}
+.instruction-image:hover{
+  border: 3pt solid var(--secondary-accent-activated);
+}
+
 .index-title-container {
 display: flex;
 flex-direction: column;
