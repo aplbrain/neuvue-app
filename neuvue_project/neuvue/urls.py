@@ -26,7 +26,8 @@ from workspace.views import (
     LineageView,
     TokenView,
     SynapseView,
-    GettingStartedView
+    GettingStartedView,
+    SaveStateView
     )
 from preferences.views import PreferencesView
 from dashboard.views import DashboardView, ReportView
@@ -51,7 +52,8 @@ urlpatterns = [
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
-    path('report/', ReportView.as_view(), name="report")
+    path('report/', ReportView.as_view(), name="report"),
+    path('workspace/save_state', SaveStateView.as_view(), name="save-state")
 ]
 
 

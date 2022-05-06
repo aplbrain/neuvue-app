@@ -317,6 +317,18 @@
                         </div>
                     </button>
                     {% endif %}
+
+                    <! Save State > 
+                    <button 
+                        id="btnSaveState"
+                        type="button"
+                        class="mainButton save_state"
+                        onclick="triggerLoadingSpinner('save_state')"
+                        >
+                        <div id = 'save_state'>
+                            Save State
+                        </div>
+                    </button>
                     
                     <! Stop >
                     <button 
@@ -330,6 +342,7 @@
                             Save and Exit Task
                         </div>
                     </button>
+
 
                     {% else %}
                     <! In-between Tasks >
@@ -347,6 +360,7 @@
                         </button>
                         {% endif %}
                     </div>
+
                 </form>
         </div>
     </div>
@@ -446,6 +460,20 @@
     function getLink() {
         let data = JSON.stringify(viewer.state.toJSON());
         return "https://neuroglancer.neuvue.io/#!" + data
+    }
+
+    function saveState() {
+        console.log("in saveState")
+        console.log(viewer.postJsonState)
+        viewer.postJsonState(callback = () => {
+            console.log("in callback from postJsonState");
+            let state = viewer.saver.state;
+            let post_body = JSON.stringify({'task_id' : "{{task_id}}", 'ng_state' : state});
+            fetch(window.location.host + 'save_state', {body : post_body, method : "POST"}).then((response) => console.log("Response from fetch: ", response));
+        });
+        removeLoadingSpinner("save_state", "Save State");
+        console.log("finished running saveState");
+
     }
      
      function show3DSlices() {
@@ -583,6 +611,11 @@
         
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')
+        })
+
+        $('#btnSaveState').click(function() {
+            console.log("button submission: savestate");
+            saveState();
         })
 
         $('#btnStop').click(function(){
