@@ -117,7 +117,7 @@
     </div>
     <div style="flex-direction:column;">
         <button id="saveConfig" type="button" class="btn btn-primary" style="width:10vw;">Save</button>
-        <button id="resetConfig" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
+        <button id="resetConfig" onClick="resetConfig()" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
     </div>
     </form>
 </br>
@@ -155,6 +155,13 @@
             }
             $('<input>').attr('type', 'hidden').attr('name', `${field}Switch`).attr('value', fieldSwitch).appendTo(form);
         }
+        $(form).submit();
+    }
+
+    function resetConfig() {
+        let form = document.createElement("form")
+        form.setAttribute("method", "post");
+        $('<input>').attr('type', 'hidden').attr('name', 'reset').attr('value', 'true').appendTo(form);
         $(form).submit();
     }
     $(document).ready(function() {

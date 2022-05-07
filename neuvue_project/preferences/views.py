@@ -50,6 +50,18 @@ class PreferencesView(View):
     def post(self, request, *args, **kwargs):
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
+        if request.POST.get('reset') == 'true' :
+            setattr(config, 'annotation_color', 'ffff00')
+            setattr(config, 'show_slices', 'False')
+            setattr(config, 'alpha_selected', '0.85')
+            setattr(config, 'alpha_3d', '0.5')
+            setattr(config, 'gpu_limit', '1.0')
+            setattr(config, 'sys_limit', '2.0')
+            setattr(config, 'chunk_requests', '32')
+            setattr(config, 'layout', 'xy-3d')
+            setattr(config, 'zoom_level', '20')
+            config.save()
+
 
         config.enabled = request.POST.get('enabled') == 'true'
 
