@@ -53,7 +53,7 @@ urlpatterns = [
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
     path('report/', ReportView.as_view(), name="report"),
-    path('workspace/save_state', SaveStateView.as_view(), name="save-state")
+    path('save_state', SaveStateView.as_view(), name="save-state")
 ]
 
 

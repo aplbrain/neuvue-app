@@ -170,6 +170,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
+        print("I'm in the workspace post!")
         namespace = kwargs.get('namespace')
         namespace_obj = Namespace.objects.get(namespace = namespace)
 
@@ -757,13 +758,13 @@ class GettingStartedView(View):
 
 
 class SaveStateView(View):
-    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
+        print("in dispatch!!")
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
-    @csrf_exempt
     def post(self, request, *args, **kwargs):
+        print("in post!!")
         data = str(request.body.decode('utf-8'))
         data = json.loads(data)
         print("Data: ", data)
