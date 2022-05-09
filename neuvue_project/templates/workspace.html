@@ -251,13 +251,13 @@
                         class="mainButton flag"
                         accesskey="f"
                     {% if submission_method == "forced_choice" and skipable %}
-                        style="margin-left: 20%;"
-                    {% elif submission_method == "forced_choice" %}
-                        style="margin-left: 30%;"
-                    {% elif skipable %}
                         style="margin-left: 10%;"
-                    {% else %}
+                    {% elif submission_method == "forced_choice" %}
                         style="margin-left: 20%;"
+                    {% elif skipable %}
+                        style="margin-left: 0%;"
+                    {% else %}
+                        style="margin-left: 10%;"
                     {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#flagModal">
