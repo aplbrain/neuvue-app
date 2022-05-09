@@ -170,7 +170,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-        print("I'm in the workspace post!")
         namespace = kwargs.get('namespace')
         namespace_obj = Namespace.objects.get(namespace = namespace)
 
@@ -767,9 +766,8 @@ class SaveStateView(View):
         print("in post!!")
         data = str(request.body.decode('utf-8'))
         data = json.loads(data)
-        print("Data: ", data)
-        ng_state = data['ng_state']
-        task_id = data['task_id']
+        ng_state = data.get('ng_state')
+        task_id = data.get('task_id')
 
         # do some validation on ng_state (should be a link) and task_id (should be a string of random numbers and letters)
         # make sure each is not empty, and what you expect

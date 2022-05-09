@@ -481,20 +481,15 @@
 }
     
     function saveState() {
-        console.log("in saveState")
-        console.log(viewer.postJsonState)
         viewer.postJsonState(true, undefined, true, function() {
-            console.log("in callback from postJsonState");
-            let state = viewer.saver.state;
+            let state = JSON.stringify(viewer.state.toJSON());
             let post_body = JSON.stringify({'task_id' : "{{task_id}}", 'ng_state' : state});
-            console.log("host: ", window.location.host)
-            fetch('save_state', 
-                    {body : JSON.stringify({'task_id' : "{{task_id}}", 'ng_state' : state}), 
+            fetch('/save_state', 
+                    {body : post_body, 
                     headers: {"X-CSRFToken": getCookie("csrftoken")}, 
-                    method : "POST"}).then((response) => console.log("Response from fetch: ", response.json()));
+                    method : "POST"}).then((response) => {removeLoadingSpinner("save_state", "Save State");
+                                            console.log("Response from fetch: ", response.text())});
         });
-        removeLoadingSpinner("save_state", "Save State");
-        console.log("finished running saveState");
 
     }
      
