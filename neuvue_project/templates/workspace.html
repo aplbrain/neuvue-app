@@ -576,6 +576,12 @@
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
         })
+        document.addEventListener("keydown", function(event) {
+            if (event.altKey && (event.keyCode == 75)){
+                // alt + s: save checkpoint
+                $('#btnSkipSubmit').click();
+            }
+        });
 
         $('#btnRemoveSubmit').click(function() {
             submitForm('remove')
@@ -584,9 +590,21 @@
         $('#btnFlagSubmit').click(function() {
             submitForm('flag', '#flagForm')
         })
+        document.addEventListener("keydown", function(event) {
+            if (event.altKey && (event.keyCode == 70)){
+                // alt + f: flag task
+                $('#btnFlag').click();
+            }
+        });
 
         $('#btnStop').click(function(){
             submitForm('stop');
+        });
+        document.addEventListener("keydown", function(event) {
+            if (event.altKey && (event.keyCode == 69)){
+                // alt + e: exit task load
+                $('#btnStop').click();
+            }
         });
 
         $('#btnStart').click(function() {
