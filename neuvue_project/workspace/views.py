@@ -460,8 +460,10 @@ class TaskView(View):
         # for one task type at a time
         request.session['session_task_count'] = 0
 
+        # reorder context dict by total pending tasks (descending order)
+        sorted_context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
 
-        return render(request, "tasks.html", {'data':context})
+        return render(request, "tasks.html", {'data':sorted_context})
 
     def _generate_tables(self, pending_tasks, closed_tasks):
         
