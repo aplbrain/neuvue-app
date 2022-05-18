@@ -442,19 +442,9 @@ class TaskView(View):
         # for one task type at a time
         request.session['session_task_count'] = 0
 
-        # reorder context dict by total pending tasks
+        # reorder context dict by total pending tasks (descending order)
         sorted_context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
 
-
-        print("namespaces and pending tasks unordered")
-        for namespace in context.keys():
-            print(namespace, ": ", context[namespace]['total_pending'])
-
-        print()
-        print("sorted namespaces and pending tasks")
-        for namespace in sorted_context.keys():
-            print(namespace, ": ", context[namespace]['total_pending'])
-        
         return render(request, "tasks.html", {'data':sorted_context})
 
     def _generate_tables(self, username, namespace):
