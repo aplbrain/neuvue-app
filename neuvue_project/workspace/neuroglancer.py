@@ -335,9 +335,15 @@ def _get_soma_center(root_ids: List, cave_client):
 def _get_nx_graph_image(nx_graph):
     def networkx_to_graphViz(nx_graph):
         import graphviz
+        import networkx as nx
         gv_graph = graphviz.Digraph('lineage',format = 'svg',graph_attr={'size':'6,{}','ratio':"compress",'ranksep':'0.5'},node_attr={'fontsize':'18','fontname':"Arial"}) # 'size':'6,3',
+        timestamps = nx.get_node_attributes(nx_graph, "timestamp") # dictionary of all timestamps in the graph, key: node
+        operation_ids = nx.get_node_attributes(nx_graph, "operation_id") # dictionary of all operation ids in the graph, key: node
         for node in nx_graph.nodes():
-            gv_graph.node(str(node),label=str(node))
+            label_str = str(node)
+            label_str += '\n' + datetime.fromtimestamp(timestamps.get(node)).strftime('%Y-%m-%d') if timestamps.get(node) else '' # add timestamp if it exists
+            label_str +=  '\n id: ' + str(operation_ids.get(node)) if operation_ids.get(node) else '' # add operation id if it exists
+            gv_graph.node(str(node),label=label_str)
         for edge0, edge1 in nx_graph.edges():
             gv_graph.edge(str(edge0), str(edge1))
         gv_graph = gv_graph.unflatten(stagger=10) 
@@ -362,7 +368,11 @@ def construct_lineage_state_and_graph(root_id:str):
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
-    root_ids = [str(x) for x in lineage_graph]
+    root_ids = {str(x) for x in lineage_graph}
+
+    # Ensure original root ID is in list of shown IDs
+    root_ids.add(root_id)
+    root_ids = list(root_ids)
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
     base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
@@ -387,7 +397,7 @@ def apply_state_config(state:str, username:str):
     if not config.enabled:
         return state
     
-    annotation_color = config.annotation_color
+    annotation_color_palette = config.annotation_color_palette
     alpha_selected = config.alpha_selected
     zoom_level = config.zoom_level
     alpha_3d = config.alpha_3d
@@ -410,15 +420,31 @@ def apply_state_config(state:str, username:str):
     if config.zoom_level_switch:
         cdict["navigation"]["zoomFactor"] = int(zoom_level)
     
+    # create color palette dictionary
+    color_palette_dict = {'palette1' : ['#F9C80E', '#F86624', '#EA3546', '#662E9B', '#43BCCD'],
+                            'palette2' : ['#006D77', '#83C5BE', '#EFG6F9', '#FFDDD2', '#E29578'], 
+                            'palette3' : ['#22577A', '#38A3A5', '#57CC99', '#80ED99', '#C7F9CC'], 
+                            'palette4' : ['#25CED1', '#FFFFFF', '#FCEADE', '#FF8A5B', '#EA526F'], 
+                            'palette5' : ['#335C67', '#FFF3B0', '#E09F3E', '#9E2A2B', '#540B0E'], 
+                            'palette6' : ['#FF99C8', '#FCF6BD', '#D0F4DE', '#A9DEF9', '#E4C1F9']}
+    
+    layer_count = 0
     for layer in cdict['layers']:
+        # handle alpha
         if 'segmentation' in layer.get('type', '') and config.alpha_selected_switch:
             layer['selectedAlpha'] = float(alpha_selected)
         
-        if layer.get('type', '') == 'annotation' and config.annotation_color_switch:
-            layer['annotationColor'] = str(annotation_color)
-        
         if 'segmentation' in layer.get('type', '') and config.alpha_3d_switch:
             layer['objectAlpha'] = float(alpha_3d)
+        
+        # handle layer colors
+        if layer.get('type', '') == 'annotation' and config.annotation_color_palette_switch:
+            color_palette_list = color_palette_dict[annotation_color_palette]
+            annotation_color = color_palette_list[layer_count%len(color_palette_list)]
+            layer['annotationColor'] = str(annotation_color)
+
+        layer_count += 1
+
 
     return json.dumps(cdict)
 
@@ -476,6 +502,7 @@ def construct_synapse_state(root_ids:List):
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
     
     synapse_stats = {}
     
