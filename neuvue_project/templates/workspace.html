@@ -105,7 +105,7 @@
         <div class="left">
             {% if is_open %}
                 {% if submission_method == "forced_choice" %}
-                <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
+                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
 
                     <! Submission Options>
@@ -167,7 +167,7 @@
                     
                 </form>
                 {% elif submission_method == "decide_and_submit" %}
-                    <div id="decide_and_submit_buttons" class="bottomBar" style="order: 0;">
+                    <div id="decide_and_submit_buttons" class="bottomBar justify-content-center" style="order: 0;">
                         <button 
                             id="yes" 
                             type="button" 
@@ -215,7 +215,44 @@
                         </button>
 
                     </div>
-                    
+                {% elif submission_method == "yes_no_maybe" %}   
+                    <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
+                        {% csrf_token %}
+
+                        <! Submission Options>
+                        <button 
+                            id="btnYes" 
+                            type="button" 
+                            class="mainButton submit quad" 
+                            onclick="triggerLoadingSpinner('yes_load')"
+                        >
+                            <div id = 'yes_load'>
+                                Yes
+                            </div>
+                        </button>
+
+                        <button 
+                            id="btnNo" 
+                            type="button" 
+                            class="mainButton flag quad" 
+                            onclick="triggerLoadingSpinner('no_load')"
+                        >
+                            <div id = 'no_load'>
+                                No
+                            </div>
+                        </button>
+
+                        <button 
+                            id="btnUnsure" 
+                            type="button" 
+                            class="mainButton pause quad" 
+                            onclick="triggerLoadingSpinner('maybe_load')"
+                        >
+                            <div id = 'maybe_load'>
+                                Maybe
+                            </div>
+                        </button>
+                    </form>
                 {% endif %}
 
                 
@@ -224,7 +261,7 @@
                 <div id="neuroglancer-container" class="neuroglancer-container"></div>
             {% endif %}
             <! Buttons >
-                <form id="mainForm" action="" method="post" class="bottomBar">
+                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
                     <! Save/Reload >
@@ -243,9 +280,6 @@
                         type="button" 
                         class="mainButton"
                         accesskey="r"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-right: 15vw;"
-                    {% endif %}
                     >
                         Reload Checkpoint
                     </button> {% endcomment %}
@@ -256,15 +290,6 @@
                         type="button" 
                         class="mainButton flag"
                         accesskey="f"
-                    {% if submission_method == "forced_choice" and skipable %}
-                        style="margin-left: 20%;"
-                    {% elif submission_method == "forced_choice" %}
-                        style="margin-left: 30%;"
-                    {% elif skipable %}
-                        style="margin-left: 10%;"
-                    {% else %}
-                        style="margin-left: 20%;"
-                    {% endif %}
                         data-bs-toggle="modal" 
                         data-bs-target="#flagModal">
                         Flag Task
@@ -551,6 +576,18 @@
         if ('{{submission_method}}' == "submit"){
             $('#btnSubmit').click(function(){
                 submitForm('submit');
+            });
+        } else if ('{{submission_method}}' == "yes_no_maybe") {
+            $('#btnYes').click(function(){
+                submitForm('yes');
+            });
+
+            $('#btnNo').click(function(){
+                submitForm('no');
+            });
+
+            $('#btnUnsure').click(function(){
+                submitForm('unsure');
             });
         } else if ('{{submission_method}}' == "forced_choice") {
             $('#btnYes').click(function(){
