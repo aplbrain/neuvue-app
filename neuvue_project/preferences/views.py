@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-        print('getting!')
         if Config.objects.filter(user=str(request.user)).count() == 0:
             logging.debug(f"New Config for {request.user}.")
             config = Config.objects.create(user=str(request.user))
@@ -50,25 +49,9 @@ class PreferencesView(View):
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
         if request.POST.get('reset') == 'true' :
-            setattr(config, 'enabled', 'True')
-            setattr(config, 'annotation_color_palette', 'palette1')
-            setattr(config, 'annotation_color_palette_switch', 'False')
-            setattr(config, 'show_slices', 'False')
-            setattr(config, 'show_slices_switch', 'False')
-            setattr(config, 'alpha_selected', '0.85')
-            setattr(config, 'alpha_selected_switch', 'False')
-            setattr(config, 'alpha_3d', '0.5')
-            setattr(config, 'alpha_3d_switch', 'False')
-            setattr(config, 'gpu_limit', '1.0')
-            setattr(config, 'gpu_limit_switch', 'False')
-            setattr(config, 'sys_limit', '2.0')
-            setattr(config, 'sys_limit_switch', 'False')
-            setattr(config, 'chunk_requests', '32')
-            setattr(config, 'chunk_requests_switch', 'False')
-            setattr(config, 'layout', 'xy-3d')
-            setattr(config, 'layout_switch', 'False')
-            setattr(config, 'zoom_level', '20')
-            setattr(config, 'zoom_level_switch', 'False')
+            for field in Config._meta.get_fields():
+                if field.name != 'user': 
+                    setattr(config, field.name, field.get_default())
             config.save()
         else:
             config.enabled = request.POST.get('enabled') == 'true'
