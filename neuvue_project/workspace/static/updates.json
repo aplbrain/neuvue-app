@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.5.4",
+            "update_date":"May 3rd, 2022",
+            "update_description": "Adds multi-split mode under the path finding tool widget. Adds neuroglancer link sharing to synapse viewer."
+        },
+        {
             "update_name": "v1.5.3",
             "update_date":"April 28th, 2022",
             "update_description": "Adds annotation color pallete preference. Updates to lineage viewer."

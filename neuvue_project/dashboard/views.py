@@ -38,12 +38,17 @@ class DashboardView(View, LoginRequiredMixin):
         Namespaces = apps.get_model('workspace', 'Namespace')
         
         context = {}
-        context['all_groups'] = [x.name for x in Group.objects.all()]
-        context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
-        
+        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+
         if not group or not namespace: 
             return render(request, "dashboard.html", context)
-        
+
+        try:
+            context['all_groups'].remove('AuthorizedUsers')
+        except:
+            pass 
+
         users = _get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
         
@@ -149,8 +154,14 @@ class ReportView(View, LoginRequiredMixin):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
         context = {}
-        context['all_groups'] = [x.name for x in Group.objects.all()]
-        context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
+        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+        
+        try:
+            context['all_groups'].remove('AuthorizedUsers')
+        except:
+            pass 
+
         return render(request, "report.html", context)
 
     def _format_time(self, x):
