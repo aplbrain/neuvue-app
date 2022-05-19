@@ -456,7 +456,7 @@
         
     function saveState() {
         viewer.postJsonState(true, undefined, true, function() {
-            let state = JSON.stringify(viewer.state.toJSON());
+            let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id' : "{{task_id}}", 'ng_state' : state});
             fetch('/save_state', 
                     {body : post_body, 
