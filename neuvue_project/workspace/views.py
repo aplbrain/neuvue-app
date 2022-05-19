@@ -426,8 +426,6 @@ class TaskView(View):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
-        non_empty_namespace = 0
-
         pending_tasks = self.client.get_tasks(
             sieve={
                 "status": ['open', 'pending'],
@@ -451,22 +449,24 @@ class TaskView(View):
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
+            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
+        
+        # Reorder context dict by total pending tasks (descending order)
+        context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
+
+        # Provide table index
+        non_empty_namespace = 0
+        for namespace in context.keys():
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
                 context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
-            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-
-        
         # Reset session count when task page loads. This ensures session counts only increment
         # for one task type at a time
         request.session['session_task_count'] = 0
 
-        # reorder context dict by total pending tasks (descending order)
-        sorted_context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
-
-        return render(request, "tasks.html", {'data':sorted_context})
+        return render(request, "tasks.html", {'data':context})
 
     def _generate_tables(self, pending_tasks, closed_tasks):
         
