@@ -186,7 +186,7 @@
                         </button>
 
                     </div>
-                {% elif submission_method == "yes_no_maybe" %}   
+                {% elif submission_method == "yes_no" %}   
                     <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                         {% csrf_token %}
 
@@ -210,17 +210,6 @@
                         >
                             <div id = 'no_load'>
                                 No
-                            </div>
-                        </button>
-
-                        <button 
-                            id="btnUnsure" 
-                            type="button" 
-                            class="mainButton pause quad" 
-                            onclick="triggerLoadingSpinner('maybe_load')"
-                        >
-                            <div id = 'maybe_load'>
-                                Maybe
                             </div>
                         </button>
                     </form>
@@ -548,17 +537,13 @@
             $('#btnSubmit').click(function(){
                 submitForm('submit');
             });
-        } else if ('{{submission_method}}' == "yes_no_maybe") {
+        } else if ('{{submission_method}}' == "yes_no") {
             $('#btnYes').click(function(){
                 submitForm('yes');
             });
 
             $('#btnNo').click(function(){
                 submitForm('no');
-            });
-
-            $('#btnUnsure').click(function(){
-                submitForm('unsure');
             });
         } else if ('{{submission_method}}' == "forced_choice") {
             $('#btnYes').click(function(){
