@@ -360,6 +360,17 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
+    <!-- Triggerable elements -->
+
+    <!-- Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
+        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-body" class="toast-body"> <!-- triggerToast will fill in text here--> </div>
+                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <form id="flagForm" method="post">
@@ -457,12 +468,15 @@
     function saveState() {
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
-            let post_body = JSON.stringify({'task_id' : "{{task_id}}", 'ng_state' : state});
-            fetch('/save_state', 
-                    {body : post_body, 
-                    headers: {"X-CSRFToken": getCookie("csrftoken")}, 
-                    method : "POST"}).then((response) => {removeLoadingSpinner("save_state", "Save State");
-                                            console.log("Response from fetch: ", response.text())});
+            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
+            fetch('/save_state', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+                .then((response) => {
+                    response.text()
+                    .then((text) => {
+                        removeLoadingSpinner("save_state", "Save State");
+                        triggerToast(text)
+                    })
+                });
         });
     }
      
@@ -495,6 +509,14 @@
     function exitAlert(e) {
         e.preventDefault(); 
         e.returnValue = '';
+    }
+    
+    function triggerToast(toastText) {
+        const toastBody = document.getElementById('toast-body');
+        toastBody.textContent = toastText;
+        const toastDiv = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastDiv);
+        toast.show();
     }
     
     // Current time 
@@ -544,18 +566,6 @@
     $(document).ready(function() {
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
-
-        // $('#btnSave').click(function() {
-        //    window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
-        // }) 
-
-        //  $('#btnReload').click(function() {
-        //      if (window.localStorage.getItem('ngState') !== null){
-        //          let state = JSON.parse(window.localStorage['ngState']);
-        //          viewer.state.restoreState(state)
-        //      }
-        //  })
-
         // add specific class to save state overlay
 
         if ('{{submission_method}}' == "submit"){

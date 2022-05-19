@@ -387,15 +387,17 @@ def construct_lineage_state_and_graph(root_id:str):
     return json.dumps(base_state_dict), graph_image
 
 def apply_state_config(state:str, username:str):
+    cdict = json.loads(state)
+    cdict['jsonStateServer'] = settings.JSON_STATE_SERVER
     #make ng state preferences changes, json string to dict
     try:
         config = Config.objects.filter(user=username).order_by('-id')[0]
     except Exception as e:
         logging.error(e) 
-        return state
+        return json.dumps(cdict)
 
     if not config.enabled:
-        return state
+        return json.dumps(cdict)
     
     annotation_color_palette = config.annotation_color_palette
     alpha_selected = config.alpha_selected

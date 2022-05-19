@@ -777,12 +777,10 @@ class GettingStartedView(View):
 
 class SaveStateView(View):
     def dispatch(self, request, *args, **kwargs):
-        print("in dispatch!!")
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print("in post!!")
         data = str(request.body.decode('utf-8'))
         data = json.loads(data)
         ng_state = data.get('ng_state')
@@ -793,7 +791,7 @@ class SaveStateView(View):
 
         if ((type(ng_state) == str) and (ng_state)) and ((type(task_id) == str) and (task_id)) :
             try:
-                print("trying patch task")
+                logging.debug("Patching task state")
                 self.client.patch_task(task_id, ng_state = ng_state)
                 return HttpResponse("Successfully saved state", status=201, content_type="text/plain")
             except:
