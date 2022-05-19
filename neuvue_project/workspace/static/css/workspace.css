@@ -217,11 +217,11 @@ overflow-x: hidden;
 
 /* buttons used in bottom container */
 .mainButton {
+  min-width: 12%;
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  width: 19%;
   height: 3.5vh;
   padding: 0.15vh 0.25vh;
   margin: 0vh 0.5vw;
@@ -298,11 +298,15 @@ color: var(--primary-accent);
   font-size: 1.5vh;
   margin: 0.5vh 1vw;
 }
+.mainButton.return:hover{
+  border: 3px solid var(--flag-accent);
+  background-color: var(--flag-accent);
+  color: var(--primary-accent);
+}
 
 .mainButton.submit.quad{
   min-width: 10%;
   max-width: 12%;
-  margin-left: 13%;
 }
 
 .mainButton:active, .mainButton.active {

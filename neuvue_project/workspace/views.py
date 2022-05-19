@@ -425,8 +425,26 @@ class TaskView(View):
 
         non_empty_namespace = 0
 
+        pending_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['open', 'pending'],
+                "assignee": str(request.user)
+            },
+            select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata']
+        )
+
+        closed_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['closed', 'errored'],
+                "assignee": str(request.user),
+            },
+            select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags']
+        )
+
         for namespace in context.keys():
-            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
+            namespace_pending_tasks = pending_tasks[ pending_tasks['namespace'] == namespace ]
+            namespace_closed_tasks = closed_tasks[ closed_tasks['namespace'] == namespace ]
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(namespace_pending_tasks, namespace_closed_tasks)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
@@ -442,30 +460,29 @@ class TaskView(View):
         # for one task type at a time
         request.session['session_task_count'] = 0
 
+        # reorder context dict by total pending tasks (descending order)
+        sorted_context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
 
-        return render(request, "tasks.html", {'data':context})
+        return render(request, "tasks.html", {'data':sorted_context})
 
-    def _generate_tables(self, username, namespace):
-        tasks = self.client.get_tasks(sieve={
-            "assignee": username, 
-            "namespace": namespace,
-        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
+    def _generate_tables(self, pending_tasks, closed_tasks):
         
-        tasks['task_id'] = tasks.index
-        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+        pending_tasks = pending_tasks.rename_axis('task_id').reset_index()
+        closed_tasks = closed_tasks.rename_axis('task_id').reset_index()
 
-        metadata = tasks['metadata'].values
+        metadata = pending_tasks['metadata'].values
         skipped = []
         for data in metadata:
             if 'skipped' in data.keys():
-                skipped.append(data['skipped'])
+                skipped.append(int(data['skipped']))
             else:
                 skipped.append(0)
 
-        tasks['skipped'] = skipped
+        pending_tasks['skipped'] = skipped
 
-        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
-        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        # Sort the tasks
+        pending_tasks = pending_tasks.sort_values(by=['priority', 'created'], ascending=[False, True])
+        closed_tasks = closed_tasks.sort_values('closed', ascending=False)
         
             
         # Check if there are any NaNs in opened column
@@ -474,7 +491,9 @@ class TaskView(View):
             default =  pd.to_datetime('1969-12-31')
             closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
             closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
-    
+
+        # Convert timepoints to eastern 
+        pending_tasks['created'] = pending_tasks['created'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
