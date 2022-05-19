@@ -185,9 +185,14 @@
     </div>
     <div style="flex-direction:column;">
         <button id="saveConfig" type="button" class="btn btn-primary" style="width:10vw;">Save</button>
-        <button id="resetConfig" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
+        <button id="resetConfig" onClick="resetConfigs()" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
     </div>
     </form>
+    <div style="display:none;">
+        <form id="resetForm" action="" method="post" >
+            {% csrf_token %}
+        </form>
+    </div>
 </br>
 </div>
 </div>
@@ -204,6 +209,11 @@
         "sysLimit": "{{sysLimitSwitch}}", 
         "chunkReq": "{{chunkReqSwitch}}",
         "layout": "{{layoutSwitch}}"
+    };
+    function resetConfigs() {
+        let form = '#resetForm'
+        $('<input>').attr('type', 'hidden').attr('name', 'reset').attr('value', true).appendTo(form);
+        $(form).submit();
     };
     function submitConfig() {
         let form = '#configForm'
@@ -324,7 +334,7 @@
         })
 
     });
-
+    
     // Change Selected Color Palette Icon
     function changeImage(imageName) {
         let radios = document.getElementsByName("annotationColorPalette");
