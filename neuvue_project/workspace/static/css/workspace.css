@@ -254,6 +254,17 @@ color: var(--primary-accent);
   color: var(--background);
 }
 
+.mainButton.save_state {
+  background-color: #6099b6;;
+  color: var(--background);
+}
+
+.mainButton.save_state:hover {
+  border: 3px solid var(--pause-accent);
+  background: var(--pause-accent);
+  color: var(--primary-accent);
+}
+
 .mainButton.pause:hover{
 border: 3px solid var(--pause-accent);
 background: var(--pause-accent);

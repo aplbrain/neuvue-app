@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace, UserProfile
+from django.views.decorators.csrf import csrf_exempt
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
@@ -169,7 +170,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-        
         namespace = kwargs.get('namespace')
         namespace_obj = Namespace.objects.get(namespace = namespace)
 
@@ -360,6 +360,9 @@ class WorkspaceView(LoginRequiredMixin, View):
                     ng_differ_stack
                 )
             return redirect(reverse('tasks'))
+        
+        elif button == 'saveState':
+            print("button: saveState")
     
         return redirect(reverse('workspace', args=[namespace]))
 
@@ -770,3 +773,28 @@ class TokenView(View):
 class GettingStartedView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "getting-started.html")
+
+
+class SaveStateView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = str(request.body.decode('utf-8'))
+        data = json.loads(data)
+        ng_state = data.get('ng_state')
+        task_id = data.get('task_id')
+
+        # do some validation on ng_state (should be a link) and task_id (should be a string of random numbers and letters)
+        # make sure each is not empty, and what you expect
+
+        if ((type(ng_state) == str) and (ng_state)) and ((type(task_id) == str) and (task_id)) :
+            try:
+                logging.debug("Patching task state")
+                self.client.patch_task(task_id, ng_state = ng_state)
+                return HttpResponse("Successfully saved state", status=201, content_type="text/plain")
+            except:
+                return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
+        
+        return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
