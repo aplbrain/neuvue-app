@@ -26,6 +26,7 @@ from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
 import json
 import os
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -363,8 +364,8 @@ class WorkspaceView(LoginRequiredMixin, View):
     
         return redirect(reverse('workspace', args=[namespace]))
 
+class TaskView(LoginRequiredMixin, View):
 
-class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
