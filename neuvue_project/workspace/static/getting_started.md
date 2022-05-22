@@ -6,7 +6,7 @@ This page contains resources and documentation to help you get started proofread
 
 ### Home Page
 
-![Home Page](https://i.imgur.com/BbuuTWg.png)
+<img src="https://i.imgur.com/BbuuTWg.png" alt="Home Page" width="800"/>
 
 NeuVue's main home page will be always located at app.neuvue.io. To make the login process seamless, we use google sign-on service to create an account using a pre-existing google account. Once you are logged in, you will have access to additional pages on the top navigation bar on the web app. The top right item in the navigation bar will be your **username**. Click the dropdown here will provide access to user preferences and logging out. Usernames are assigned automatically based on your google credentials. Please contact Neuvue development team if you'd like to change your username. Passwords are automatically managed by the google account you used to create the NeuVue account. 
 
@@ -14,7 +14,7 @@ Regular updates to the app will be posted to the "Recent Changes" widget located
 
 ### Task Page
 
-![Task Page](https://i.imgur.com/OWiPeYC.jpg)
+<img src="https://i.imgur.com/OWiPeYC.jpg" alt="Task Page" width="800"/>
 
 The task page will be the central console that you will use to start proofreading on specific task types, or *namespaces*, that exist for your user. Each blue row in the task page represents a task type assigned to your user. The number in parathenses at the end of each task type name is the number of pending tasks that you are currently assigned for that task. At the right of the page, you will also find tables corresponding to each task type containing summary statistics on number of tasks done, duration, and rate. 
 
@@ -22,7 +22,7 @@ The task page will be the central console that you will use to start proofreadin
 
 Clicking on the blue row header for a task type will expand it to show a table with multiple tabs. Here you can inspect the details for individual tasks separated by pending tasks and closed tasks. 
 
-![Pending Table](https://i.imgur.com/c4mUj23.png)
+<img src="https://i.imgur.com/c4mUj23.png" alt="Pending Table" width="800"/>
 
 The pending table will show tasks for that task type ordered by descending priority level. The number in the tab after "Pending" show how many pending tasks are available. The columns are described below:
 
@@ -33,7 +33,7 @@ The pending table will show tasks for that task type ordered by descending prior
 * **Status** - Current status of the task. Four possible statuses: "open", "pending", "closed", "errored". Only "open" and "pending" tasks are shown in this table. 
 * **Times Skipped** - Counter on how many times a task has been skipped. Skipping a task reduces the priority by 1 and after a task has been skipped it can be re-assigned to another user if the particular task types allows it. 
 
-![Closed Table](https://i.imgur.com/jumurbc.png)
+<img src="https://i.imgur.com/jumurbc.png" alt="Closed Table" width="800"/>
 
 The closed tab is slightly different than the pending tab. This table is sorted by the "Closed Time" column. The number in the tab after "Closed" represents the total number of closed or errored tasks listed in the table. The columns are described below:
 
@@ -56,7 +56,7 @@ From this point you can begin proofreading by deciding on which task types you w
 
 ### Workspace Page
 
-![Workspace Page](https://i.imgur.com/CEsxB92.jpg)
+<img src="https://i.imgur.com/CEsxB92.jpg" alt="Workspace Page" width="800"/>
 
 The workspace page provides all the tools necessary to complete a proofreading task. The page is an extension of [Neuroglancer](https://github.com/google/neuroglancer), the primary tool for viewing, annotating, and editing the volumetric data we use for proofreading. 
 
@@ -93,13 +93,13 @@ NeuVue contains other tools to help proofreading or training. These are all acce
 
 ### Inspect Task
 
-![Inspect Task Page](https://i.imgur.com/yDWxmXq.jpg)
+<img src="https://i.imgur.com/yDWxmXq.jpg" alt="Inspect Task Page" width="800"/>
 
 The inspect task page has a similar layout to the workspace except it does not contain any submission or decision buttons. This page is useful to re-visit older, closed tasks or share a particular task with others. To open a task in the inspect task page, you can either copy the task ID in input box located on app.neuvue.io/inspect or click on a task ID link in the Tasks page. 
 
 ### Synapse Viewer
 
-![Synapse Viewer Page](https://i.imgur.com/a29xKER.png)
+<img src="https://i.imgur.com/a29xKER.png" alt="Synapse Viewer Page" width="800"/>
 
 The synapse viewer page is a visualization tool which means it can be accessed by any user with a valid root ID. It displays all presynaptic and postsynaptic locations for a valid root ID or multiple IDs. The pre and post annotations for each root ID are placed in an individual Neuroglancer layer so colors and sizes can be indepedently set. The sidebar displays information of on the number of connections for each root ID. This information can be copied or downloaded with the buttons below the table in the sidebar as well. To use the synaptic viewer, copy the list of root IDs (comma-separated) you want to visualize and paste them in the input box at app.neuvue.io/synapse. 
 
@@ -107,7 +107,7 @@ Be aware that visualizing more than 10 root IDs at a time in the synpase viewer 
 
 ### User Preferences
 
-![User Preferences](https://i.imgur.com/3uVM8yo.jpg)
+<img src="https://i.imgur.com/3uVM8yo.jpg" alt="User Preferences" width="800"/>
 
 The user preferences config is a user-specific collection of Neuroglancer settings that are applied globally to all tasks. These settings include aethetic configurations such as annotation color and opacity as well as hardware settings that can increase the performance of Neuroglancer on your system. You can access the preferences for your user account at app.neuvue.io/preferences.
 
