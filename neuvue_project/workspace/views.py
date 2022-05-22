@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace, UserProfile
+from django.views.decorators.csrf import csrf_exempt
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
@@ -170,7 +171,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-        
         namespace = kwargs.get('namespace')
         namespace_obj = Namespace.objects.get(namespace = namespace)
 
@@ -361,6 +361,9 @@ class WorkspaceView(LoginRequiredMixin, View):
                     ng_differ_stack
                 )
             return redirect(reverse('tasks'))
+        
+        elif button == 'saveState':
+            print("button: saveState")
     
         return redirect(reverse('workspace', args=[namespace]))
 
@@ -424,49 +427,66 @@ class TaskView(View):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
-        non_empty_namespace = 0
+        pending_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['open', 'pending'],
+                "assignee": str(request.user)
+            },
+            select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata']
+        )
+
+        closed_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['closed', 'errored'],
+                "assignee": str(request.user),
+            },
+            select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags']
+        )
 
         for namespace in context.keys():
-            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
+            namespace_pending_tasks = pending_tasks[ pending_tasks['namespace'] == namespace ]
+            namespace_closed_tasks = closed_tasks[ closed_tasks['namespace'] == namespace ]
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(namespace_pending_tasks, namespace_closed_tasks)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
+            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
+        
+        # Reorder context dict by total pending tasks (descending order)
+        context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
+
+        # Provide table index
+        non_empty_namespace = 0
+        for namespace in context.keys():
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
                 context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
-            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-
-        
         # Reset session count when task page loads. This ensures session counts only increment
         # for one task type at a time
         request.session['session_task_count'] = 0
 
-
         return render(request, "tasks.html", {'data':context})
 
-    def _generate_tables(self, username, namespace):
-        tasks = self.client.get_tasks(sieve={
-            "assignee": username, 
-            "namespace": namespace,
-        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
+    def _generate_tables(self, pending_tasks, closed_tasks):
         
-        tasks['task_id'] = tasks.index
-        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+        pending_tasks = pending_tasks.rename_axis('task_id').reset_index()
+        closed_tasks = closed_tasks.rename_axis('task_id').reset_index()
 
-        metadata = tasks['metadata'].values
+        metadata = pending_tasks['metadata'].values
         skipped = []
         for data in metadata:
             if 'skipped' in data.keys():
-                skipped.append(data['skipped'])
+                skipped.append(int(data['skipped']))
             else:
                 skipped.append(0)
 
-        tasks['skipped'] = skipped
+        pending_tasks['skipped'] = skipped
 
-        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
-        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        # Sort the tasks
+        pending_tasks = pending_tasks.sort_values(by=['priority', 'created'], ascending=[False, True])
+        closed_tasks = closed_tasks.sort_values('closed', ascending=False)
         
             
         # Check if there are any NaNs in opened column
@@ -475,7 +495,9 @@ class TaskView(View):
             default =  pd.to_datetime('1969-12-31')
             closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
             closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
-    
+
+        # Convert timepoints to eastern 
+        pending_tasks['created'] = pending_tasks['created'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
@@ -750,7 +772,6 @@ class TokenView(View):
         return render(request, "token.html", context={'code': request.GET.get('code')})
 
 class GettingStartedView(View):
-    
     def get(self, request, *args, **kwargs):
         try:
             p = staticfiles_storage.path('getting_started.md')
@@ -766,3 +787,27 @@ class GettingStartedView(View):
             "getting_started_text": html
         }
         return render(request, "getting-started.html",context)
+
+class SaveStateView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = str(request.body.decode('utf-8'))
+        data = json.loads(data)
+        ng_state = data.get('ng_state')
+        task_id = data.get('task_id')
+
+        # do some validation on ng_state (should be a link) and task_id (should be a string of random numbers and letters)
+        # make sure each is not empty, and what you expect
+
+        if ((type(ng_state) == str) and (ng_state)) and ((type(task_id) == str) and (task_id)) :
+            try:
+                logging.debug("Patching task state")
+                self.client.patch_task(task_id, ng_state = ng_state)
+                return HttpResponse("Successfully saved state", status=201, content_type="text/plain")
+            except:
+                return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
+        
+        return HttpResponse("Was unable to save state", status=400, content_type="text/plain")

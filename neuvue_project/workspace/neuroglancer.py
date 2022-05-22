@@ -368,7 +368,11 @@ def construct_lineage_state_and_graph(root_id:str):
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
-    root_ids = [str(x) for x in lineage_graph]
+    root_ids = {str(x) for x in lineage_graph}
+
+    # Ensure original root ID is in list of shown IDs
+    root_ids.add(root_id)
+    root_ids = list(root_ids)
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
     base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
@@ -383,15 +387,17 @@ def construct_lineage_state_and_graph(root_id:str):
     return json.dumps(base_state_dict), graph_image
 
 def apply_state_config(state:str, username:str):
+    cdict = json.loads(state)
+    cdict['jsonStateServer'] = settings.JSON_STATE_SERVER
     #make ng state preferences changes, json string to dict
     try:
         config = Config.objects.filter(user=username).order_by('-id')[0]
     except Exception as e:
         logging.error(e) 
-        return state
+        return json.dumps(cdict)
 
     if not config.enabled:
-        return state
+        return json.dumps(cdict)
     
     annotation_color_palette = config.annotation_color_palette
     alpha_selected = config.alpha_selected
@@ -498,6 +504,7 @@ def construct_synapse_state(root_ids:List):
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
     
     synapse_stats = {}
     

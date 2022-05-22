@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 class PreferencesView(View):
     def get(self, request, *args, **kwargs):
-
         if Config.objects.filter(user=str(request.user)).count() == 0:
             logging.debug(f"New Config for {request.user}.")
             config = Config.objects.create(user=str(request.user))
@@ -44,41 +43,45 @@ class PreferencesView(View):
             'zoomLevel': config.zoom_level,
             'zoomLevelSwitch': config.zoom_level_switch
         }
-
         return render(request, "preferences.html", context)
 
     def post(self, request, *args, **kwargs):
         logging.debug(f"Update Config for {request.user}.")
         config = Config.objects.filter(user=str(request.user)).order_by('-id')[0]
+        if request.POST.get('reset') == 'true' :
+            for field in Config._meta.get_fields():
+                if field.name != 'user': 
+                    setattr(config, field.name, field.get_default())
+            config.save()
+        else:
+            config.enabled = request.POST.get('enabled') == 'true'
 
-        config.enabled = request.POST.get('enabled') == 'true'
+            config.annotation_color_palette = request.POST.get('annotationColorPalette')
+            config.annotation_color_palette_switch = request.POST.get('annotationColorPaletteSwitch') == 'true'
 
-        config.annotation_color_palette = request.POST.get('annotationColorPalette')
-        config.annotation_color_palette_switch = request.POST.get('annotationColorPaletteSwitch') == 'true'
+            config.show_slices = request.POST.get('showSlices') == 'true'
+            config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
 
-        config.show_slices = request.POST.get('showSlices') == 'true'
-        config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
+            config.zoom_level = request.POST.get('zoomLevel')
+            config.zoom_level_switch = request.POST.get('zoomLevelSwitch') == 'true'
 
-        config.zoom_level = request.POST.get('zoomLevel')
-        config.zoom_level_switch = request.POST.get('zoomLevelSwitch') == 'true'
+            config.alpha_selected = request.POST.get('alphaSelected')
+            config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'
 
-        config.alpha_selected = request.POST.get('alphaSelected')
-        config.alpha_selected_switch = request.POST.get('alphaSelectedSwitch') == 'true'
+            config.alpha_3d = request.POST.get('alpha3D')
+            config.alpha_3d_switch = request.POST.get('alpha3DSwitch') == 'true'
 
-        config.alpha_3d = request.POST.get('alpha3D')
-        config.alpha_3d_switch = request.POST.get('alpha3DSwitch') == 'true'
+            config.gpu_limit = request.POST.get('gpuLimit')
+            config.gpu_limit_switch = request.POST.get('gpuLimitSwitch') == 'true'
 
-        config.gpu_limit = request.POST.get('gpuLimit')
-        config.gpu_limit_switch = request.POST.get('gpuLimitSwitch') == 'true'
+            config.sys_limit = request.POST.get('sysLimit')
+            config.sys_limit_switch = request.POST.get('sysLimitSwitch') == 'true'
 
-        config.sys_limit = request.POST.get('sysLimit')
-        config.sys_limit_switch = request.POST.get('sysLimitSwitch') == 'true'
+            config.chunk_requests = request.POST.get('chunkReq')
+            config.chunk_requests_switch = request.POST.get('chunkReqSwitch') == 'true'
 
-        config.chunk_requests = request.POST.get('chunkReq')
-        config.chunk_requests_switch = request.POST.get('chunkReqSwitch') == 'true'
+            config.layout = request.POST.get('layout')
+            config.layout_switch = request.POST.get('layoutSwitch') == 'true'
 
-        config.layout = request.POST.get('layout')
-        config.layout_switch = request.POST.get('layoutSwitch') == 'true'
-
-        config.save()
+            config.save()
         return redirect(reverse('preferences'))

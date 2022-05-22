@@ -22,7 +22,8 @@ class NeuroglancerLinkType(models.TextChoices):
 
 class SubmissionMethod(models.TextChoices):
     SUBMIT = 'submit', _('Submit Button')
-    FORCED_CHOICE = 'forced_choice', _('Yes/No/Maybe Button')
+    FORCED_CHOICE = 'forced_choice', _('Forced Choice')
+    YES_NO = 'yes_no', _('Y/N')
     DECIDE_AND_SUBMIT = 'decide_and_submit', _('Decide and Submit Button')
 
 class PcgChoices(models.TextChoices):

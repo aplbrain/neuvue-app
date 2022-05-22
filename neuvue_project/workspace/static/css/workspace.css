@@ -218,11 +218,11 @@ overflow-x: hidden;
 
 /* buttons used in bottom container */
 .mainButton {
+  min-width: 12%;
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  width: 19%;
   height: 3.5vh;
   padding: 0.15vh 0.25vh;
   margin: 0vh 0.5vw;
@@ -253,6 +253,17 @@ color: var(--primary-accent);
 .mainButton.pause{
   background-color: var(--pause-accent);
   color: var(--background);
+}
+
+.mainButton.save_state {
+  background-color: #6099b6;;
+  color: var(--background);
+}
+
+.mainButton.save_state:hover {
+  border: 3px solid var(--pause-accent);
+  background: var(--pause-accent);
+  color: var(--primary-accent);
 }
 
 .mainButton.pause:hover{
@@ -299,11 +310,15 @@ color: var(--primary-accent);
   font-size: 1.5vh;
   margin: 0.5vh 1vw;
 }
+.mainButton.return:hover{
+  border: 3px solid var(--flag-accent);
+  background-color: var(--flag-accent);
+  color: var(--primary-accent);
+}
 
 .mainButton.submit.quad{
   min-width: 10%;
   max-width: 12%;
-  margin-left: 13%;
 }
 
 .mainButton:active, .mainButton.active {
@@ -371,6 +386,16 @@ color: var(--primary-accent);
   display: inline-block;
   width: 90%;
   font-size: 1.2vh;
+}
+
+
+.instruction-image{
+  max-width: 80%;
+  max-height: 15vh; 
+  overflow: hidden;
+}
+.instruction-image:hover{
+  border: 3pt solid var(--secondary-accent-activated);
 }
 
 .index-title-container {
