@@ -775,7 +775,6 @@ class GettingStartedView(View):
     def get(self, request, *args, **kwargs):
         try:
             p = staticfiles_storage.path('getting_started.md')
-            print('p: ', p)
             with open(p, 'r') as f:
                 text = f.read()
                 html = markdown.markdown(text)
