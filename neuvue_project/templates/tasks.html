@@ -125,6 +125,20 @@
                     </div>
                 {% endif %}
             {% endfor %}
+
+            <div class="neuvueRow">
+                <div id="pinkyHeader" class="pinkyHeader jobHeader active">
+                    Pinky Sandbox
+                </div>
+                <div class="header-button rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'"> 
+                    <button class="header-button-text" id='pinkySandboxButton'
+                    onclick="triggerLoadingSpinner('PinkyNgSpinner')">
+                        <div id='PinkyNgSpinner'>
+                            Start Sandbox
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
 
 
@@ -375,6 +389,14 @@
         }
     });
 
+    }
+
+    function startSandbox() {
+        console.log("opening sandbox");
+        setTimeout(function(){
+            console.log("Executed after 2 seconds");
+        }, 2000);
+        removeLoadingSpinner('PinkyNgSpinner', 'Start Sandbox');
     }
 
 </script>
