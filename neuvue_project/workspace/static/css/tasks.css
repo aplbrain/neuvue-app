@@ -234,3 +234,75 @@ tbody.pending >:nth-child(2) {
   text-overflow: ellipsis;
   vertical-align: top;
 }
+.container-and-tabs{
+  display: flex;
+  flex-direction: row;
+}
+.tab-holder{
+  margin-top: 2vh;
+  flex-direction: column;
+  left:0;
+  margin-left: 1vw;
+}
+.tab-item{
+  font-size: 12pt;
+  padding: 5px 20px;
+  border: transparent;
+  color: var(--navbar-text);
+  background-color: transparent;
+  width: 10vw;
+  text-align: left;
+}
+.tab-item:hover{
+  color: var(--primary-accent-activated);
+}
+.sub-h2{
+  padding: 5px 35px;
+}
+.sub-h3{
+  padding: 5px 50px;
+}
+.tab-header{
+  color: var(--navbar-text);
+  font-size: 20pt;
+  padding: 5px 20px;
+  font-weight: 600;
+}
+
+.getting-started-container {
+  background-color: transparent !important;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  padding: 10px 10px 10px 10px;
+  float: center;
+  height: 87vh;
+  margin-top: 2vh;
+  margin-left: 3vw;
+  width: 70vw;
+  right: 0;  
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.getting-started-content{
+  border-radius: 8px;
+  padding: 20px 30px 20px 30px;
+  background-color: var(--transparent-card-items-background);
+  margin: 1%;
+  width: 98%; 
+  min-height: 97%;
+  font-size: 14pt;
+  color: var(--primary-accent);
+}
+.getting-started-content h1 {
+  font-size: 26pt;
+  font-weight: 600;
+}
+.getting-started-content h2 {
+  font-size: 22pt;
+  font-weight: 500;
+}
+.getting-started-content h3 {
+  font-size: 20pt;
+  font-weight: 400;
+}
