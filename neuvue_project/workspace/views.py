@@ -240,7 +240,26 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df["_id"],
                     ng_differ_stack
                 )
-        
+
+        elif button in ['extended', 'cannotExtend', 'alreadyComplete', 'mergeError', 'axon', 'notNeuron']:
+            logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
+            metadata['decision'] = button
+            # Update task data
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state,
+                metadata=metadata,
+                tags=tags)
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
+
         elif button == 'skip':
             logger.info('Skipping task')
 

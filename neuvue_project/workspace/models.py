@@ -25,6 +25,7 @@ class SubmissionMethod(models.TextChoices):
     FORCED_CHOICE = 'forced_choice', _('Forced Choice')
     YES_NO = 'yes_no', _('Y/N')
     DECIDE_AND_SUBMIT = 'decide_and_submit', _('Decide and Submit Button')
+    EXTENSION_CHOICE = 'extension_choice', _('Extension Choice')
 
 class PcgChoices(models.TextChoices):
     MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')
