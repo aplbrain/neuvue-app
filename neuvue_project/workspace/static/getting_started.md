@@ -84,8 +84,11 @@ The common submissions methods of task are:
 Some forced choice tasks have both decision buttons and a "Submit" button. In these cases you must a select a decision and then click "Submit" when you are ready to submit the task. For all tasks, refer to the instructions in the side panel for more concrete detail on how and when to submit the task. 
 
 ### Neuroglancer (WIP)
+Here is a great instructional video on how to operate Neuroglancer for basic navigation and data exploration. 
 
-Please refer to [this cheatsheet](https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing) (credit to flywire.ai) for basic Neuroglancer navigation and operation instructions. 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TwBTyWWnbxc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[This cheatsheet](https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing) (credit to flywire.ai) has additional useful information thats specific to this proofreading effort! 
 
 ## Additional Pages and Tools
 
@@ -115,7 +118,7 @@ Preferences are disabled by default, each individual preference must be switched
 
 ### External Neuroglancer
 
-When a Neuroglancer link is copied from the app, they use our externally hosted Neuroglancer instance, neuroglancer.neuvue.io. This is an identical Neuroglancer instance as the one used in NeuVue and requires no tasks or independent queue to use. Therefore, links from this neuroglancer instance can be freely distributed and shared. 
+When a Neuroglancer link is copied from the app, it will use our externally hosted Neuroglancer instance, neuroglancer.neuvue.io. This is an identical Neuroglancer instance as the one used in NeuVue and requires no tasks or independent queue to use. Therefore, links from this neuroglancer instance can be freely distributed and shared. 
 
 ## FAQ
 ### What Browser/OS should I use?
