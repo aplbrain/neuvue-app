@@ -357,6 +357,11 @@ color: var(--primary-accent);
   max-width: 12%;
 }
 
+.mainButton.skip.quad{
+  min-width: 10%;
+  max-width: 12%;
+}
+
 
 
 
