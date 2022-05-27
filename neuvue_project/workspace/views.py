@@ -466,7 +466,13 @@ class TaskView(View):
         # for one task type at a time
         request.session['session_task_count'] = 0
 
-        return render(request, "tasks.html", {'data':context})
+        # create settings and context dicts
+        settings_dict = {'SANDBOX_ID' : settings.SANDBOX_ID}
+        data_dict = {'settings' : settings_dict,
+                    'namespaces' : context
+        }
+        return render(request, "tasks.html", {'data' : data_dict})
+
 
     def _generate_tables(self, pending_tasks, closed_tasks):
         

@@ -10,7 +10,7 @@
 <div class="basic tasks">
     <div class="neuvueRow">
         <div class="jobQueue" >
-            {% for namespace, context in data.items %}
+            {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
                         <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
@@ -147,7 +147,7 @@
                 Stats
             </div>
             
-            {% for namespace, context in data.items %}
+            {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="sideContentInfo">
                         <span class = "analyticsSubHeader"> {{context.display_name}} </span>
@@ -236,7 +236,7 @@
 
     start();
     function start() {
-        {% for namespace, context in data.items %}
+        {% for namespace, context in data.namespaces.items %}
             if ({{context.total_tasks}}) {
                 tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
                 document.getElementById("pending{{namespace}}Tab").click();
@@ -389,14 +389,6 @@
         }
     });
 
-    }
-
-    function startSandbox() {
-        console.log("opening sandbox");
-        setTimeout(function(){
-            console.log("Executed after 2 seconds");
-        }, 2000);
-        removeLoadingSpinner('PinkyNgSpinner', 'Start Sandbox');
     }
 
 </script>
