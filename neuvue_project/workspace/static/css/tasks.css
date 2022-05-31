@@ -201,7 +201,7 @@ tbody.pending >:nth-child(2) {
   max-height: 30vh;
   min-height: 20vh;
   overflow: -moz-scrollbars-vertical; 
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
   
@@ -243,6 +243,11 @@ tbody.pending >:nth-child(2) {
   flex-direction: column;
   left:0;
   margin-left: 1vw;
+  width: 16vw;
+  border-radius: 8px;
+  border: 1.5px solid var(--secondary-accent);
+  overflow-y: scroll;
+  height: 87vh;
 }
 .tab-item{
   font-size: 12pt;
@@ -250,7 +255,7 @@ tbody.pending >:nth-child(2) {
   border: transparent;
   color: var(--navbar-text);
   background-color: transparent;
-  width: 10vw;
+  width: 15vw;
   text-align: left;
 }
 .tab-item:hover{
