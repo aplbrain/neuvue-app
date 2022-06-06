@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
+import markdown
 
 from .neuroglancer import (
     construct_proofreading_state, 
@@ -27,6 +28,7 @@ from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
 import json
 import os
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -238,7 +240,26 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df["_id"],
                     ng_differ_stack
                 )
-        
+
+        elif button in ['extended', 'cannotExtend', 'alreadyComplete', 'mergeError', 'axon', 'notNeuron']:
+            logger.info('Submitting task')
+            request.session['session_task_count'] = session_task_count +1
+            metadata['decision'] = button
+            # Update task data
+            self.client.patch_task(
+                task_df["_id"], 
+                duration=duration, 
+                status="closed",
+                ng_state=ng_state,
+                metadata=metadata,
+                tags=tags)
+            # Add new differ stack entry
+            if ng_differ_stack != []:
+                self.client.post_differ_stack(
+                    task_df["_id"],
+                    ng_differ_stack
+                )
+
         elif button == 'skip':
             logger.info('Skipping task')
 
@@ -366,8 +387,8 @@ class WorkspaceView(LoginRequiredMixin, View):
     
         return redirect(reverse('workspace', args=[namespace]))
 
+class TaskView(LoginRequiredMixin, View):
 
-class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
@@ -778,8 +799,19 @@ class TokenView(View):
 
 class GettingStartedView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "getting-started.html")
+        try:
+            p = staticfiles_storage.path('getting_started.md')
+            with open(p, 'r') as f:
+                text = f.read()
+                html = markdown.markdown(text)
+        except:
+            html = "Error Rendering Text"
 
+        ## Get updates from local updates.json
+        context = {
+            "getting_started_text": html
+        }
+        return render(request, "getting-started.html",context)
 
 class SaveStateView(View):
     def dispatch(self, request, *args, **kwargs):

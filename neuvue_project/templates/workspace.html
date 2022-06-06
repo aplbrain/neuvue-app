@@ -75,11 +75,13 @@
     <div id="neuroglancer" class="leftFormatting">
         <div class="left">
             {% if is_open %}
+            <! Submission Options>
+                <! Forced Choice>
                 {% if submission_method == "forced_choice" %}
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
 
-                    <! Submission Options>
+                    
                     <button 
                         id="btnYes" 
                         type="button" 
@@ -135,7 +137,76 @@
                             Unsure
                         </div>
                     </button>
-                    
+                </form>
+                <! Extension Choice >
+                {% elif submission_method == "extension_choice" %}
+                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
+                    {% csrf_token %}
+                    <button 
+                        id="btnExtended" 
+                        type="button" 
+                        class="mainButton submit quad" 
+                        onclick="triggerLoadingSpinner('extended_load')"
+                    >
+                        <div id = 'extended_load'>
+                            Extended
+                         </div>
+                    </button>
+
+                    <button 
+                        id="btnAlreadyComplete" 
+                        type="button" 
+                        class="mainButton yesBut" 
+                        onclick="triggerLoadingSpinner('alreadyComplete_load')"
+                    >
+                        <div id = 'alreadyComplete_load'>
+                            Already Complete
+                        </div>
+                    </button>
+
+                    <button 
+                    id="btnCannotExtend" 
+                    type="button" 
+                    class="mainButton noBut" 
+                    onclick="triggerLoadingSpinner('cannotExtend_load')"
+                    >
+                        <div id = 'cannotExtend_load'>
+                            Cannot Extend
+                        </div>
+                    </button>
+
+                    <button 
+                        id="btnMergeError" 
+                        type="button" 
+                        class="mainButton flag quad" 
+                        onclick="triggerLoadingSpinner('mergeError_load')"
+                    >
+                        <div id = 'mergeError_load'>
+                            Merge Error
+                        </div>
+                    </button>
+
+                    <button 
+                        id="btnAxon" 
+                        type="button" 
+                        class="mainButton pause quad" 
+                        onclick="triggerLoadingSpinner('axon_load')"
+                    >
+                        <div id = 'axon_load'>
+                            Axon
+                        </div>
+                    </button>
+
+                    <button 
+                        id="btnNotNeuron" 
+                        type="button" 
+                        class="mainButton skip quad" 
+                        onclick="triggerLoadingSpinner('notNeuron_load')"
+                    >
+                        <div id = 'notNeuron_load'>
+                            Not Neuron
+                        </div>
+                    </button>
                 </form>
                 {% elif submission_method == "decide_and_submit" %}
                     <div id="decide_and_submit_buttons" class="bottomBar justify-content-center" style="order: 0;">
@@ -349,7 +420,7 @@
                                 Return to Task page
                             </div>
                         </button>
-                        {% endif %}
+                    {% endif %}
                     </div>
 
                 </form>
@@ -599,6 +670,30 @@
 
             $('#btnUnsure').click(function(){
                 submitForm('unsure');
+            });
+        } else if ('{{submission_method}}' == "extension_choice") {
+            $('#btnExtended').click(function(){
+                submitForm('extended');
+            });
+
+            $('#btnCannotExtend').click(function(){
+                submitForm('cannotExtend');
+            });
+
+            $('#btnAlreadyComplete').click(function(){
+                submitForm('alreadyComplete');
+            });
+
+            $('#btnMergeError').click(function(){
+                submitForm('mergeError');
+            });
+
+            $('#btnAxon').click(function(){
+                submitForm('axon');
+            });
+
+            $('#btnNotNeuron').click(function(){
+                submitForm('notNeuron');
             });
         } else if ('{{submission_method}}' == "decide_and_submit"){
             $('#btnSubmit').click(function(){

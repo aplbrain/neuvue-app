@@ -4,6 +4,7 @@
   /* PRIMARY COLORS #000e22;*/
   --background: #120c1a;
   --header-background: #3122449f;
+  --header: #211431;
   --navbar-text: #e6f1ff;
   --primary-accent: #e6f1ff;
   --primary-accent-activated: #8892b0;
@@ -352,6 +353,11 @@ color: var(--primary-accent);
   max-width: 12%;
 }
 .mainButton.pause.quad{
+  min-width: 10%;
+  max-width: 12%;
+}
+
+.mainButton.skip.quad{
   min-width: 10%;
   max-width: 12%;
 }
