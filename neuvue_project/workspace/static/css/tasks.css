@@ -55,9 +55,14 @@
   font-weight: normal;
   cursor: pointer;
 }
+
 .jobHeader.active, .jobHeader:hover {
   background-color: var(--complete-color-actived);
   color:var(--background);
+}
+
+#pinkyHeader {
+  background-color: var(--secondary-accent);
 }
 
 /* Task category header buttons */

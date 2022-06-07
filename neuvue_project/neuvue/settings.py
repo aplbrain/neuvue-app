@@ -205,6 +205,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
+SANDBOX_ID = '6269888a101fc4da81fdd410'
 # NEUVUE_QUEUE_ADDR = "http://localhost:9005"
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True
