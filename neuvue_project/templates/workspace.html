@@ -737,6 +737,12 @@
         });
 
         show3DSlices();
+        
+        setInterval(autoSave, 300000);
+        function autoSave() {
+            console.log("autosaved state")
+            saveState();
+        }
 
         // additional hotkeys
         document.addEventListener("keydown", function(event) {
