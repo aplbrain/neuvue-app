@@ -77,226 +77,46 @@
             {% if is_open %}
             <! Submission Options>
                 <! Forced Choice>
-                {% if submission_method == "forced_choice" %}
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
-
-                    
-                    <button 
-                        id="btnYes" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="triggerLoadingSpinner('confirm_load')"
-                    >
-                        <div id = 'confirm_load'>
-                             Confirm Split
-                         </div>
-                    </button>
-
-                    <button 
-                        id="btnYesBut" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="triggerLoadingSpinner('refinement_load')"
-                    >
-                        <div id = 'refinement_load'>
-                            Split Requires Refinement
-                        </div>
-                    </button>
-
-                    <button 
-                    id="btnNoBut" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="triggerLoadingSpinner('errorNearby_load')"
-                    
-                    >
-                        <div id = 'errorNearby_load'>
-                            Reject Split but Error Nearby
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnNo" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="triggerLoadingSpinner('reject_load')"
-                    >
-                        <div id = 'reject_load'>
-                            Reject Split
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnUnsure" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="triggerLoadingSpinner('unsure_load')"
-                    >
-                        <div id = 'unsure_load'>
-                            Unsure
-                        </div>
-                    </button>
-                </form>
-                <! Extension Choice >
-                {% elif submission_method == "extension_choice" %}
-                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
-                    {% csrf_token %}
-                    <button 
-                        id="btnExtended" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="triggerLoadingSpinner('extended_load')"
-                    >
-                        <div id = 'extended_load'>
-                            Extended
-                         </div>
-                    </button>
-
-                    <button 
-                        id="btnAlreadyComplete" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="triggerLoadingSpinner('alreadyComplete_load')"
-                    >
-                        <div id = 'alreadyComplete_load'>
-                            Already Complete
-                        </div>
-                    </button>
-
-                    <button 
-                    id="btnCannotExtend" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="triggerLoadingSpinner('cannotExtend_load')"
-                    >
-                        <div id = 'cannotExtend_load'>
-                            Cannot Extend
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnMergeError" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="triggerLoadingSpinner('mergeError_load')"
-                    >
-                        <div id = 'mergeError_load'>
-                            Merge Error
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnAxon" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="triggerLoadingSpinner('axon_load')"
-                    >
-                        <div id = 'axon_load'>
-                            Axon
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnNotNeuron" 
-                        type="button" 
-                        class="mainButton skip quad" 
-                        onclick="triggerLoadingSpinner('notNeuron_load')"
-                    >
-                        <div id = 'notNeuron_load'>
-                            Not Neuron
-                        </div>
-                    </button>
-                </form>
-                {% elif submission_method == "decide_and_submit" %}
-                    <div id="decide_and_submit_buttons" class="bottomBar justify-content-center" style="order: 0;">
+                    {% for button in button_list %}
+                        <style>
+                            .{{button.submission_value}} {
+                                background-color: {{button.button_color}};
+                            }   
+                            .{{button.submission_value}}:hover {
+                                background-color: {{button.button_color_active}};
+                                border: 2.5px solid {{button.button_color_active}};
+                            }
+                            {% if submit_task_button %}
+                            .{{button.submission_value}}.active {
+                                background-color: {{button.button_color_active}};
+                            } 
+                            {% endif %}
+                        </style>
                         <button 
-                            id="yes" 
+                            id="{{button.submission_value}}" 
                             type="button" 
-                            class="mainButton submit quad" 
-                            onclick="updateButtonSelected('yes')"
+                            class="forcedChoiceButton {{button.submission_value}}"
+                            {% if submit_task_button %} 
+                                onclick="updateButtonSelected('{{button.submission_value}}')"
+                            {% else %}
+                                onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
+                            {% endif %}
                         >
-                            Confirm Split
-                        </button>
-
-                        <button 
-                            id="yesConditional" 
-                            type="button" 
-                            class="mainButton yesBut" 
-                            onclick="updateButtonSelected('yesConditional')"
-                        >
-                            Split Requires Refinement
-                        </button>
-
-                        <button 
-                        id="errorNearby" 
-                        type="button" 
-                        class="mainButton noBut" 
-                        onclick="updateButtonSelected('errorNearby')"
-                        
-                        >
-                            Reject Split but Error Nearby
-                        </button>
-
-                        <button 
-                            id="no" 
-                            type="button" 
-                            class="mainButton flag quad" 
-                            onclick="updateButtonSelected('no')"
-                        >
-                            Reject Split
-                        </button>
-
-                        <button 
-                            id="unsure" 
-                            type="button" 
-                            class="mainButton pause quad" 
-                            onclick="updateButtonSelected('unsure')"
-                        >
-                            Unsure
-                        </button>
-
-                    </div>
-                {% elif submission_method == "yes_no" %}   
-                    <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
-                        {% csrf_token %}
-
-                        <! Submission Options>
-                        <button 
-                            id="btnYes" 
-                            type="button" 
-                            class="mainButton submit quad" 
-                            onclick="triggerLoadingSpinner('yes_load')"
-                        >
-                            <div id = 'yes_load'>
-                                Yes
+                            <div id = '{{button.submission_value}}_load'>
+                                {{button.display_name}}
                             </div>
                         </button>
-
-                        <button 
-                            id="btnNo" 
-                            type="button" 
-                            class="mainButton flag quad" 
-                            onclick="triggerLoadingSpinner('no_load')"
-                        >
-                            <div id = 'no_load'>
-                                No
-                            </div>
-                        </button>
-                    </form>
-                {% endif %}
-
-                
-            {% endif %}
-            {% if is_open %}
+                {% endfor %}
+            </form>   
+                   
                 <div id="neuroglancer-container" class="neuroglancer-container"></div>
-            {% endif %}
             <! Buttons >
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
                     <! Save/Reload >
-                    {% if is_open %}
                     {% comment %} <button
                         id="btnSave" 
                         type="button" 
@@ -355,24 +175,13 @@
                     {% endif %}
 
                     <! Submit >
-                    {% if submission_method == "submit" %}
+                    {% if submit_task_button %}
                     <button 
                         name="btnSubmit"
                         id="btnSubmit" 
                         type="button" 
                         class="mainButton submit"
                         onclick="triggerLoadingSpinner('submit_task_load')" 
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
-                    {% elif submission_method == "decide_and_submit"%}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
                     >
                         <div id = 'submit_task_load'>
                             Submit Task
@@ -639,72 +448,28 @@
         viewer.state.restoreState(received_data);
         // add specific class to save state overlay
 
-        if ('{{submission_method}}' == "submit"){
-            $('#btnSubmit').click(function(){
-                submitForm('submit');
-            });
-        } else if ('{{submission_method}}' == "yes_no") {
-            $('#btnYes').click(function(){
-                submitForm('yes');
-            });
-
-            $('#btnNo').click(function(){
-                submitForm('no');
-            });
-        } else if ('{{submission_method}}' == "forced_choice") {
-            $('#btnYes').click(function(){
-                submitForm('yes');
-            });
-
-            $('#btnYesBut').click(function(){
-                submitForm('yesConditional');
-            });
-
-            $('#btnNoBut').click(function(){
-                submitForm('errorNearby');
-            });
-
-            $('#btnNo').click(function(){
-                submitForm('no');
-            });
-
-            $('#btnUnsure').click(function(){
-                submitForm('unsure');
-            });
-        } else if ('{{submission_method}}' == "extension_choice") {
-            $('#btnExtended').click(function(){
-                submitForm('extended');
-            });
-
-            $('#btnCannotExtend').click(function(){
-                submitForm('cannotExtend');
-            });
-
-            $('#btnAlreadyComplete').click(function(){
-                submitForm('alreadyComplete');
-            });
-
-            $('#btnMergeError').click(function(){
-                submitForm('mergeError');
-            });
-
-            $('#btnAxon').click(function(){
-                submitForm('axon');
-            });
-
-            $('#btnNotNeuron').click(function(){
-                submitForm('notNeuron');
-            });
-        } else if ('{{submission_method}}' == "decide_and_submit"){
-            $('#btnSubmit').click(function(){
-                if (current_button_selection != 'noneSelected'){
-                    triggerLoadingSpinner('submit_task_load');
-                    submitForm(current_button_selection);
-                } else {
-                    alert("Please select a decision!");
-                }
-            });
-        }
+        {% if submit_task_button %}
+            {% if button_list %}
+                $('#btnSubmit').click(function(){
+                    if (current_button_selection != 'noneSelected'){
+                        triggerLoadingSpinner('submit_task_load');
+                        submitForm(current_button_selection);
+                    } else {
+                        alert("Please select a decision!");
+                    }
+                });
+            {% else %}
+                $('#btnSubmit').click(function(){
+                    submitForm('submit');
+                });
+            {% endif %}
+        {% else %}
+            {% for button in button_list %}
+                $("#btn{{button.submission_value}}").click(function(){
+                    submitForm("{{button.submission_value}}");
+                });
+            {% endfor %}
+        {% endif %}
 
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')

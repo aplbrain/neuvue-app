@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.staticfiles.storage import staticfiles_storage
-from .models import Namespace, UserProfile
+from .models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton
 from django.views.decorators.csrf import csrf_exempt
 
 from neuvueclient import NeuvueQueue
@@ -70,6 +70,21 @@ class WorkspaceView(LoginRequiredMixin, View):
             'was_skipped':False,
             'show_slices': False,
         }
+
+        forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
+        if forced_choice_buttons:
+            button_list = []
+            for button in forced_choice_buttons:
+                button_item = {
+                    'display_name':getattr(button, 'display_name'),
+                    'submission_value':getattr(button, 'submission_value'),
+                    'button_color':getattr(button, 'button_color'),
+                    'button_color_active':getattr(button, 'button_color_active'),
+                }
+                button_list.append(button_item)
+            context['button_list'] = button_list
+
+        context['submit_task_button'] = getattr(ForcedChoiceButtonGroup.objects.filter(group_name=context.get('submission_method')).first(), 'submit_task_button')
 
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
