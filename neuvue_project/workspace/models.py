@@ -66,7 +66,7 @@ class Namespace(models.Model):
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.PREGENERATED)
-    submission_method = models.ForeignKey(ForcedChoiceButtonGroup, on_delete = models.PROTECT, blank=True, null=True, to_field="group_name", db_column="submission_method")
+    submission_method = models.ForeignKey(ForcedChoiceButtonGroup, on_delete=models.PROTECT, blank=True, null=True, to_field="group_name", db_column="submission_method")
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     track_operation_ids = models.BooleanField(default=True)
