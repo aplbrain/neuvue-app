@@ -95,7 +95,7 @@
                             {% endif %}
                         </style>
                         <button 
-                            id="btn{{button.submission_value}}" 
+                            id="{{button.submission_value}}" 
                             type="button" 
                             class="forcedChoiceButton {{button.submission_value}}"
                             {% if submit_task_button %} 
@@ -465,7 +465,7 @@
             {% endif %}
         {% else %}
             {% for button in button_list %}
-                $("#btn{{button.submission_value}}").click(function(){
+                $("#{{button.submission_value}}").click(function(){
                     submitForm("{{button.submission_value}}");
                 });
             {% endfor %}
