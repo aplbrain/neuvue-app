@@ -10,6 +10,10 @@ class Config(models.Model):
     annotation_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
     annotation_color_palette_switch = models.BooleanField(default=False)
 
+    # Mesh Color Palette
+    mesh_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
+    mesh_color_palette_switch = models.BooleanField(default=False)
+
     # 2D Show Slices
     show_slices=models.BooleanField(default=False)
     show_slices_switch = models.BooleanField(default=False)

@@ -26,6 +26,8 @@ class PreferencesView(View):
             'enabled': config.enabled,
             'annotationColorPalette': config.annotation_color_palette,
             'annotationColorPaletteSwitch': config.annotation_color_palette_switch,
+            'meshColorPalette': config.mesh_color_palette,
+            'meshColorPaletteSwitch': config.mesh_color_palette_switch,
             'showSlices':config.show_slices,
             'showSlicesSwitch':config.show_slices_switch,
             'alphaSelected': config.alpha_selected,
@@ -58,6 +60,9 @@ class PreferencesView(View):
 
             config.annotation_color_palette = request.POST.get('annotationColorPalette')
             config.annotation_color_palette_switch = request.POST.get('annotationColorPaletteSwitch') == 'true'
+
+            config.mesh_color_palette_switch = request.POST.get('meshColorPaletteSwitch') == 'true'
+            config.mesh_color_palette = request.POST.get('meshColorPalette')
 
             config.show_slices = request.POST.get('showSlices') == 'true'
             config.show_slices_switch = request.POST.get('showSlicesSwitch') == 'true'
