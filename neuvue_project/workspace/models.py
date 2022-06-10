@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
 from django.contrib.auth.models import User
 from django.contrib import admin
+from .validators import validate_submission_value
 # Create your models here.
 
 class NeuroglancerLinkType(models.TextChoices):
@@ -34,7 +35,7 @@ class ForcedChoiceButtonGroup(models.Model):
 class ForcedChoiceButton(models.Model):
     set_name = models.ForeignKey(ForcedChoiceButtonGroup, to_field='group_name', on_delete=models.CASCADE)
     display_name = models.CharField(max_length=100)
-    submission_value = models.CharField(max_length=100)
+    submission_value = models.CharField(max_length=100, validators=[validate_submission_value])
     button_color = ColorField(format='hexa')
     button_color_active = ColorField(format='hexa')
     def __str__(self):
