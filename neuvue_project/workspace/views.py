@@ -219,6 +219,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 metadata['operation_ids'] = new_operation_ids
 
+        ### Forced Choice Button groups ###
+        submission_method = namespace_obj.submission_method
+        forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=submission_method).all()
+
         if button == 'submit':
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
@@ -237,26 +241,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     ng_differ_stack
                 )
         
-        elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
-            logger.info('Submitting task')
-            request.session['session_task_count'] = session_task_count +1
-            metadata['decision'] = button
-            # Update task data
-            self.client.patch_task(
-                task_df["_id"], 
-                duration=duration, 
-                status="closed",
-                ng_state=ng_state,
-                metadata=metadata,
-                tags=tags)
-            # Add new differ stack entry
-            if ng_differ_stack != []:
-                self.client.post_differ_stack(
-                    task_df["_id"],
-                    ng_differ_stack
-                )
-
-        elif button in ['extended', 'cannotExtend', 'alreadyComplete', 'mergeError', 'axon', 'notNeuron']:
+        elif button in [x.submission_value for x in forced_choice_buttons]:
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
             metadata['decision'] = button

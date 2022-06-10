@@ -95,7 +95,7 @@
                             {% endif %}
                         </style>
                         <button 
-                            id="{{button.submission_value}}" 
+                            id="btn{{button.submission_value}}" 
                             type="button" 
                             class="forcedChoiceButton {{button.submission_value}}"
                             {% if submit_task_button %} 
@@ -108,7 +108,7 @@
                                 {{button.display_name}}
                             </div>
                         </button>
-                {% endfor %}
+                    {% endfor %}
             </form>   
                    
                 <div id="neuroglancer-container" class="neuroglancer-container"></div>
