@@ -68,27 +68,33 @@ class DashboardView(View, LoginRequiredMixin):
         table_rows = []
         # Counts
         tc = tp = to = te = 0
-        for user in users:
-            task_df = self.client.get_tasks(sieve={
-                'assignee': user,
+        task_df = self.client.get_tasks(
+            sieve={
+                'assignee': users,
                 'namespace': namespace
-            }, return_states=False, return_metadata=False)
-            task_df= task_df.sort_values('created', ascending=False)
-            last_closed = self._format_time(task_df['closed'].max())
-            task_df['task_id'] = task_df.index
-            task_df['opened'] = task_df['opened'].apply(self._format_time)
-            task_df['closed'] = task_df['closed'].apply(self._format_time)
-            task_df['created'] = task_df['created'].apply(self._format_time)
-            task_df['duration'] = (task_df['duration']/60).round(1)
+            },
+            return_metadata=False,
+            return_states=False
+        )
+        for user in users:
+
+            user_df = task_df[task_df['assignee'] == user]
+            user_df= user_df.sort_values('created', ascending=False)
+            last_closed = self._format_time(user_df['closed'].max())
+            user_df['task_id'] = user_df.index
+            user_df['opened'] = user_df['opened'].apply(self._format_time)
+            user_df['closed'] = user_df['closed'].apply(self._format_time)
+            user_df['created'] = user_df['created'].apply(self._format_time)
+            user_df['duration'] = (user_df['duration']/60).round(1)
             # Append row info 
             row = {
                 'username': user,
-                'pending': self._get_status_count(task_df, 'pending'),
-                'open': self._get_status_count(task_df, 'open'),
-                'closed': self._get_status_count(task_df, 'closed'),
-                'errored': self._get_status_count(task_df, 'errored'),
+                'pending': self._get_status_count(user_df, 'pending'),
+                'open': self._get_status_count(user_df, 'open'),
+                'closed': self._get_status_count(user_df, 'closed'),
+                'errored': self._get_status_count(user_df, 'errored'),
                 'last_closed': last_closed,
-                'user_tasks': task_df.to_dict('records')
+                'user_tasks': user_df.to_dict('records')
             }
 
             table_rows.append(row)
@@ -116,6 +122,7 @@ class DashboardView(View, LoginRequiredMixin):
         group = request.POST.get("group")
         namespace = Namespaces.objects.get(display_name = display_name).namespace
 
+        # If update task(s) button was clicked - api call is made to update the task(s)
         if "selected_tasks" in request.POST:
             selected_action = request.POST.get("selected_action")
             selected_tasks = request.POST.getlist("selected_tasks")
@@ -140,6 +147,8 @@ class DashboardView(View, LoginRequiredMixin):
                 elif selected_action == "status":
                     self.client.patch_task(task, status=new_status)
                     logging.debug(f"Updating task {task} to {new_status}")
+
+        # Redirect to dashboard page from splashpage or modal
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
 
 

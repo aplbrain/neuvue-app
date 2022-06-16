@@ -358,36 +358,36 @@
 
     function reassignTasks(namespace) {
 
-    const csrftoken = getCookie('csrftoken');
-    const formData = new FormData();
-    formData.append('namespace', namespace);
-    formData.append('reassignTasks', 'True');
+        const csrftoken = getCookie('csrftoken');
+        const formData = new FormData();
+        formData.append('namespace', namespace);
+        formData.append('reassignTasks', 'True');
 
-    const request = {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-        },
-        body: formData,
-        credentials: 'same-origin',
-    };
-    // Call the post request defined for this view
-    fetch('', request).then(function (response) {
-        if (response.ok) {
-            response.text().then(function(text) {
-                if(text) {
-                    triggerToast(text);
-                    removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-                    location.reload();
-                } else {
-                    location.reload();
-                }
-            });
-        } else {
-            triggerToast("Unable to reach queue. Please try again.");
-            removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-        }
-    });
+        const request = {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: formData,
+            credentials: 'same-origin',
+        };
+        // Call the post request defined for this view
+        fetch('', request).then(function (response) {
+            if (response.ok) {
+                response.text().then(function(text) {
+                    if(text) {
+                        triggerToast(text);
+                        removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                triggerToast("Unable to reach queue. Please try again.");
+                removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
+            }
+        });
 
     }
 
