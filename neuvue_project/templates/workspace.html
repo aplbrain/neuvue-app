@@ -81,180 +81,216 @@
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
 
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnYes" 
+                            type="button" 
+                            class="mainButton submit" 
+                            onclick="triggerLoadingSpinner('confirm_load')"
+                        >
+                            <div id = 'confirm_load'>
+                                Confirm Split
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnYesBut" 
+                            type="button" 
+                            class="mainButton yesBut" 
+                            onclick="triggerLoadingSpinner('refinement_load')"
+                        >
+                            <div id = 'refinement_load'>
+                                Split Requires Refinement
+                            </div>
+                        </button>
+                    </div>
                     
-                    <button 
-                        id="btnYes" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="triggerLoadingSpinner('confirm_load')"
-                    >
-                        <div id = 'confirm_load'>
-                             Confirm Split
-                         </div>
-                    </button>
 
-                    <button 
-                        id="btnYesBut" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="triggerLoadingSpinner('refinement_load')"
-                    >
-                        <div id = 'refinement_load'>
-                            Split Requires Refinement
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnNoBut" 
+                            type="button" 
+                            class="mainButton noBut" 
+                            onclick="triggerLoadingSpinner('errorNearby_load')"
+                            
+                            >
+                                <div id = 'errorNearby_load'>
+                                    Reject Split but Error Nearby
+                                </div>
+                        </button>
+                    </div>
 
-                    <button 
-                    id="btnNoBut" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="triggerLoadingSpinner('errorNearby_load')"
-                    
-                    >
-                        <div id = 'errorNearby_load'>
-                            Reject Split but Error Nearby
-                        </div>
-                    </button>
 
-                    <button 
-                        id="btnNo" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="triggerLoadingSpinner('reject_load')"
-                    >
-                        <div id = 'reject_load'>
-                            Reject Split
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnNo" 
+                            type="button" 
+                            class="mainButton flag" 
+                            onclick="triggerLoadingSpinner('reject_load')"
+                        >
+                            <div id = 'reject_load'>
+                                Reject Split
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                        id="btnUnsure" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="triggerLoadingSpinner('unsure_load')"
-                    >
-                        <div id = 'unsure_load'>
-                            Unsure
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnUnsure" 
+                            type="button" 
+                            class="mainButton pause" 
+                            onclick="triggerLoadingSpinner('unsure_load')"
+                        >
+                            <div id = 'unsure_load'>
+                                Unsure
+                            </div>
+                        </button>
+                    </div>
+
                 </form>
                 <! Extension Choice >
                 {% elif submission_method == "extension_choice" %}
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
-                    <button 
-                        id="btnExtended" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="triggerLoadingSpinner('extended_load')"
-                    >
-                        <div id = 'extended_load'>
-                            Extended
-                         </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                            <button 
+                            id="btnExtended" 
+                            type="button" 
+                            class="mainButton submit" 
+                            onclick="triggerLoadingSpinner('extended_load')"
+                        >
+                            <div id = 'extended_load'>
+                                Extended
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                        id="btnAlreadyComplete" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="triggerLoadingSpinner('alreadyComplete_load')"
-                    >
-                        <div id = 'alreadyComplete_load'>
-                            Already Complete
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnAlreadyComplete" 
+                            type="button" 
+                            class="mainButton yesBut" 
+                            onclick="triggerLoadingSpinner('alreadyComplete_load')"
+                        >
+                            <div id = 'alreadyComplete_load'>
+                                Already Complete
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                    id="btnCannotExtend" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="triggerLoadingSpinner('cannotExtend_load')"
-                    >
-                        <div id = 'cannotExtend_load'>
-                            Cannot Extend
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper noBut">
+                        <button 
+                            id="btnCannotExtend" 
+                            type="button" 
+                            class="mainButton noBut" 
+                            onclick="triggerLoadingSpinner('cannotExtend_load')"
+                        >
+                            <div id = 'cannotExtend_load'>
+                                Cannot Extend
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                        id="btnMergeError" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="triggerLoadingSpinner('mergeError_load')"
-                    >
-                        <div id = 'mergeError_load'>
-                            Merge Error
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnMergeError" 
+                            type="button" 
+                            class="mainButton flag" 
+                            onclick="triggerLoadingSpinner('mergeError_load')"
+                        >
+                            <div id = 'mergeError_load'>
+                                Merge Error
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                        id="btnAxon" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="triggerLoadingSpinner('axon_load')"
-                    >
-                        <div id = 'axon_load'>
-                            Axon
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnAxon" 
+                            type="button" 
+                            class="mainButton pause" 
+                            onclick="triggerLoadingSpinner('axon_load')"
+                            >
+                            <div id = 'axon_load'>
+                                Axon
+                            </div>
+                        </button>
+                    </div>
 
-                    <button 
-                        id="btnNotNeuron" 
-                        type="button" 
-                        class="mainButton skip quad" 
-                        onclick="triggerLoadingSpinner('notNeuron_load')"
-                    >
-                        <div id = 'notNeuron_load'>
-                            Not Neuron
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper quad">
+                        <button 
+                            id="btnNotNeuron" 
+                            type="button" 
+                            class="mainButton skip" 
+                            onclick="triggerLoadingSpinner('notNeuron_load')"
+                        >
+                            <div id = 'notNeuron_load'>
+                                Not Neuron
+                            </div>
+                        </button>
+                    </div>
+
                 </form>
                 {% elif submission_method == "decide_and_submit" %}
                     <div id="decide_and_submit_buttons" class="bottomBar justify-content-center" style="order: 0;">
-                        <button 
-                            id="yes" 
-                            type="button" 
-                            class="mainButton submit quad" 
-                            onclick="updateButtonSelected('yes')"
-                        >
-                            Confirm Split
-                        </button>
+                        <div class="mainButtonWrapper quad">
+                            <button 
+                                id="yes" 
+                                type="button" 
+                                class="mainButton submit" 
+                                onclick="updateButtonSelected('yes')"
+                            >
+                                Confirm Split
+                            </button>
+                        </div>
 
-                        <button 
-                            id="yesConditional" 
-                            type="button" 
-                            class="mainButton yesBut" 
-                            onclick="updateButtonSelected('yesConditional')"
-                        >
-                            Split Requires Refinement
-                        </button>
+                        <div class="mainButtonWrapper yesBut">
+                            <button 
+                                id="yesConditional" 
+                                type="button" 
+                                class="mainButton yesBut" 
+                                onclick="updateButtonSelected('yesConditional')"
+                            >
+                                Split Requires Refinement
+                            </button>
+                        </div>
 
-                        <button 
-                        id="errorNearby" 
-                        type="button" 
-                        class="mainButton noBut" 
-                        onclick="updateButtonSelected('errorNearby')"
-                        
-                        >
-                            Reject Split but Error Nearby
-                        </button>
+                        <div class="mainButtonWrapper">
+                            <button 
+                                id="errorNearby" 
+                                type="button" 
+                                class="mainButton noBut" 
+                                onclick="updateButtonSelected('errorNearby')"
+                                
+                                >
+                                Reject Split but Error Nearby
+                            </button>
+                        </div>
 
-                        <button 
-                            id="no" 
-                            type="button" 
-                            class="mainButton flag quad" 
-                            onclick="updateButtonSelected('no')"
-                        >
-                            Reject Split
-                        </button>
+                        <div class="mainButtonWrapper quad">
+                            <button 
+                                id="no" 
+                                type="button" 
+                                class="mainButton flag" 
+                                onclick="updateButtonSelected('no')"
+                            >
+                                Reject Split
+                            </button>
+                        </div>
 
-                        <button 
-                            id="unsure" 
-                            type="button" 
-                            class="mainButton pause quad" 
-                            onclick="updateButtonSelected('unsure')"
-                        >
-                            Unsure
-                        </button>
+                        <div class="mainButtonWrapper quad">
+                            <button 
+                                id="unsure" 
+                                type="button" 
+                                class="mainButton pause" 
+                                onclick="updateButtonSelected('unsure')"
+                            >
+                                Unsure
+                            </button>
+                        </div>
+
 
                     </div>
                 {% elif submission_method == "yes_no" %}   
@@ -262,27 +298,32 @@
                         {% csrf_token %}
 
                         <! Submission Options>
-                        <button 
-                            id="btnYes" 
-                            type="button" 
-                            class="mainButton submit quad" 
-                            onclick="triggerLoadingSpinner('yes_load')"
-                        >
-                            <div id = 'yes_load'>
-                                Yes
-                            </div>
-                        </button>
+                        <div class="mainButtonWrapper quad">
+                            <button 
+                                id="btnYes" 
+                                type="button" 
+                                class="mainButton submit" 
+                                onclick="triggerLoadingSpinner('yes_load')"
+                            >
+                                <div id = 'yes_load'>
+                                    Yes
+                                </div>
+                            </button>
+                        </div>
 
-                        <button 
-                            id="btnNo" 
-                            type="button" 
-                            class="mainButton flag quad" 
-                            onclick="triggerLoadingSpinner('no_load')"
-                        >
-                            <div id = 'no_load'>
-                                No
-                            </div>
-                        </button>
+                        <div class="mainButtonWrapper quad">
+                            <button 
+                                id="btnNo" 
+                                type="button" 
+                                class="mainButton flag" 
+                                onclick="triggerLoadingSpinner('no_load')"
+                            >
+                                <div id = 'no_load'>
+                                    No
+                                </div>
+                            </button>
+                        </div>
+
                     </form>
                 {% endif %}
 
@@ -297,113 +338,149 @@
 
                     <! Save/Reload >
                     {% if is_open %}
-                    {% comment %} <button
-                        id="btnSave" 
-                        type="button" 
-                        class="mainButton" 
-                        accesskey="s"
-                    >
-                        Save Checkpoint
-                    </button>
-                    
-                    <button
-                        id="btnReload" 
-                        type="button" 
-                        class="mainButton"
-                        accesskey="r"
-                    >
-                        Reload Checkpoint
-                    </button> {% endcomment %}
+                    {% comment %} 
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSave" 
+                            type="button" 
+                            class="mainButton" 
+                            accesskey="s"
+                        >
+                            Save Checkpoint
+                        </button>
+                    </div>
+
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnReload" 
+                            type="button" 
+                            class="mainButton"
+                            accesskey="r"
+                        >
+                            Reload Checkpoint
+                        </button> 
+                    </div>
+                    {% endcomment %}
                     
                     <! Flag >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnFlag" 
+                            type="button" 
+                            class="mainButton flag"
+                            accesskey="f"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#flagModal">
+                            Flag Task
+                        </button>
+                        <div class="hotkeyHint">
+                            <img src="{% static 'images/command_button.png' %}" alt="Command image">
+                            <span> + f</span>
+                        </div>
+                    </div>
+
 
                     {% if allowed_to_reassgin%}
                     <! Remove >
-                    <button
-                        id="btnRemove" 
-                        type="button" 
-                        class="mainButton remove"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#removeModal"
-                    >
-                    Remove Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnRemove" 
+                            type="button" 
+                            class="mainButton remove"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#removeModal">
+                            Remove Task
+                        </button>
+                    </div>
+ 
                     {% endif %}
                     
                     <! Skip >
                     {% if skipable %}
-                    <button
-                        id="btnSkipSubmit" 
-                        type="button" 
-                        class="mainButton skip"
-                        accesskey="k"
-                        onclick="triggerLoadingSpinner('skip_task_load')" 
-                    >
-                        <div id = 'skip_task_load'>
-                            Skip Task
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSkipSubmit" 
+                            type="button" 
+                            class="mainButton skip"
+                            accesskey="k"
+                            onclick="triggerLoadingSpinner('skip_task_load')" >
+                            <div id = 'skip_task_load'>
+                                Skip Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">
+                            <img src="{% static 'images/command_button.png' %}" alt="Command image">
+                            <span> + s</span>
                         </div>
-                    </button>
+                    </div>
+
                     {% endif %}
 
                     <! Submit >
                     {% if submission_method == "submit" %}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
-                        onclick="triggerLoadingSpinner('submit_task_load')" 
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            name="btnSubmit"
+                            id="btnSubmit" 
+                            type="button" 
+                            class="mainButton submit"
+                            onclick="triggerLoadingSpinner('submit_task_load')" >
+                            <div id = 'submit_task_load'>
+                                Submit Task
+                            </div>
+                        </button>
+                    </div>
+
                     {% elif submission_method == "decide_and_submit"%}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
-                    {% endif %}
+                    <div class="mainButtonWrapper">
+                        <button 
+                            name="btnSubmit"
+                            id="btnSubmit" 
+                            type="button" 
+                            class="mainButton submit">
+                            <div id = 'submit_task_load'>
+                                Submit Task
+                            </div>
+                        </button>
+
+                    </div>
+                {% endif %}
+
+                
 
                     <! Save State > 
-                    <button 
-                        id="btnSaveState"
-                        type="button"
-                        class="mainButton save_state"
-                        onclick="triggerLoadingSpinner('save_state')"
-                        >
-                        <div id = 'save_state'>
-                            Save State
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnSaveState"
+                            type="button"
+                            class="mainButton save_state"
+                            onclick="triggerLoadingSpinner('save_state')"
+                            >
+                            <div id = 'save_state'>
+                                Save State
+                            </div>
+                        </button>
+                    </div>
+
                     
                     <! Stop >
-                    <button 
-                        id="btnStop"
-                        type="button"
-                        class="mainButton pause"
-                        accesskey="e"
-                        onclick="triggerLoadingSpinner('exit_task_load')"
-                    >
-                        <div id = 'exit_task_load'>
-                            Save and Exit Task
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnStop"
+                            type="button"
+                            class="mainButton pause"
+                            accesskey="e"
+                            onclick="triggerLoadingSpinner('exit_task_load')">
+                            <div id = 'exit_task_load'>
+                                Save and Exit Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">
+                            <img src="{% static 'images/command_button.png' %}" alt="Command image">
+                            <span> + e</span>
                         </div>
-                    </button>
+
+                    </div>
 
 
                     {% else %}
@@ -412,14 +489,17 @@
                         <div class="interTaskTitle">
                             Tasks Complete <br> {{display_name}} 
                         </div>
-                        <button 
-                            type="button" 
-                            class="mainButton return" 
-                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                            <div id = 'exit_workspace'>
-                                Return to Task page
+                        <div class="mainButtonWrapper">
+                            <button 
+                                type="button" 
+                                class="mainButton return" 
+                                onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                                <div id = 'exit_workspace'>
+                                    Return to Task page
                             </div>
-                        </button>
+                            </button>
+                        </div>
+
                     {% endif %}
                     </div>
 

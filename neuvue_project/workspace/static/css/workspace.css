@@ -216,14 +216,25 @@ overflow-x: hidden;
   /*align-items: flex-end;*/
 }
 
+.mainButtonWrapper {
+  margin: 0vh 0.5vw;
+  padding: 0.15vh 0.25vh;
+  min-width: 12%;
+}
+
+.mainButtonWrapper.quad {
+  max-width: 12%;
+  min-width: 10%;
+}
+
 /* buttons used in bottom container */
 .mainButton {
-  min-width: 12%;
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
   height: 3.5vh;
+  width: 100%;
   padding: 0.15vh 0.25vh;
   margin: 0vh 0.5vw;
   text-align: center;
@@ -316,52 +327,57 @@ color: var(--primary-accent);
   color: var(--primary-accent);
 }
 
-.mainButton.submit.quad{
-  min-width: 10%;
-  max-width: 12%;
-}
-
 .mainButton:active, .mainButton.active {
   border: 2.5px solid white;
   color: var(--primary-accent);
 }
 
-.mainButton.yesBut{
+.mainButtonWrapper.yesBut {
   min-width: 15%;
   max-width: 18%;
+}
+
+.mainButton.yesBut{
   background-color: var(--yesBut);  
 }
+
 .mainButton.yesBut:hover{
   border: 3px solid var(--yesBut-activated);
   background-color: var(--yesBut-activated);  
   
 }
 
-.mainButton.noBut{
+.mainButonWrapper.noBut {
   min-width: 15%;
   max-width: 18%;
+}
+
+.mainButton.noBut{
   background-color: var(--noBut); 
 }
+
 .mainButton.noBut:hover{
   border: 3px solid var(--noBut-activated);
   background-color: var(--noBut-activated);  
   
 }
 
-.mainButton.flag.quad{
-  min-width: 10%;
-  max-width: 12%;
-}
-.mainButton.pause.quad{
-  min-width: 10%;
-  max-width: 12%;
+.hotkeyHint {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 
-.mainButton.skip.quad{
-  min-width: 10%;
-  max-width: 12%;
+.hotkeyHint span {
+  margin-left: 3px;
+  color: #aaa;
 }
 
+.hotkeyHint img {
+  height: 25px;
+  width: 25px;
+}
 
 
 
