@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-# Convienence function
+# Convenience function
 def _get_users_from_group(group:str): 
     users = Group.objects.get(name=group).user_set.all() 
     return [x.username for x in users]
@@ -31,7 +31,7 @@ class DashboardView(View, LoginRequiredMixin):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, namespace=None, group=None, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
             return redirect(reverse('index'))
         
@@ -41,9 +41,30 @@ class DashboardView(View, LoginRequiredMixin):
         context['all_groups'] = sorted([x.name for x in Group.objects.all()])
         context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
 
-        if not group or not namespace: 
-            return render(request, "dashboard.html", context)
+        return render(request, "dashboard.html", context)
 
+    def post(self, request, *args, **kwargs):
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        display_name = request.POST.get("namespace")
+        group = request.POST.get("group")
+        namespace = Namespaces.objects.get(display_name = display_name).namespace
+
+        return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+
+class DashboardNamespaceView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, group=None, namespace=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+        
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        
+        context = {}
+        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
         try:
             context['all_groups'].remove('AuthorizedUsers')
         except:
@@ -61,9 +82,8 @@ class DashboardView(View, LoginRequiredMixin):
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
 
+        return render(request, "dashboard-namespace-view.html", context)
 
-        return render(request, "dashboard.html", context)
-    
     def _generate_table_and_counts(self, namespace: str, users: List):
         table_rows = []
         # Counts
@@ -150,7 +170,6 @@ class DashboardView(View, LoginRequiredMixin):
 
         # Redirect to dashboard page from splashpage or modal
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
-
 
 class ReportView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
