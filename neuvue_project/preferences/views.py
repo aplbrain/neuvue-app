@@ -43,7 +43,9 @@ class PreferencesView(View):
             'layout': config.layout,
             'layoutSwitch': config.layout_switch,
             'zoomLevel': config.zoom_level,
-            'zoomLevelSwitch': config.zoom_level_switch
+            'zoomLevelSwitch': config.zoom_level_switch,
+            'enableSound': config.enable_sound,
+            'enableSoundSwitch': config.enable_sound_switch
         }
         return render(request, "preferences.html", context)
 
@@ -87,6 +89,9 @@ class PreferencesView(View):
 
             config.layout = request.POST.get('layout')
             config.layout_switch = request.POST.get('layoutSwitch') == 'true'
+
+            config.enable_sound = request.POST.get('enableSound')
+            config.enable_sound_switch = request.POST.get('enableSoundSwitch') == 'true'
 
             config.save()
         return redirect(reverse('preferences'))
