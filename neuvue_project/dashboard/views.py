@@ -41,7 +41,7 @@ class DashboardView(View, LoginRequiredMixin):
         context['all_groups'] = sorted([x.name for x in Group.objects.all()])
         context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
 
-        return render(request, "dashboard.html", context)
+        return render(request, "admin_dashboard/dashboard.html", context)
 
     def post(self, request, *args, **kwargs):
         Namespaces = apps.get_model('workspace', 'Namespace')
@@ -82,7 +82,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
 
-        return render(request, "dashboard-namespace-view.html", context)
+        return render(request, "admin_dashboard/dashboard-namespace-view.html", context)
 
     def _generate_table_and_counts(self, namespace: str, users: List):
         table_rows = []
