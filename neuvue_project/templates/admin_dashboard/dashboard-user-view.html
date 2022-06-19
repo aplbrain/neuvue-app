@@ -18,8 +18,9 @@
         {% csrf_token %}
 
         <h3 style="color: white"> Admin Dashboard</h3>
+        <h3 style="color: white"> Hannah's Version </h3>
 
-        <div style="margin: 20px"class="form-group">
+        {% comment %} <div style="margin: 20px"class="form-group">
           <label style="color: white" for="namespaceSelect">Namespace</label>
           <select name="namespace" class="form-select" id="namespaceSelect" required="true">
             {% for namespace_opt in all_namespaces %}
@@ -51,22 +52,73 @@
           {% if error %}
           <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
           {% endif %}
-        </div>
+        </div> {% endcomment %}
 
       </form>
     </div>
 
     <!-- Metrics cards -->
-    <div class="row">
+    {% comment %} <div class="row">
 
-      {% metrics_card "Total Pending Tasks" total_pending "secondary" %}
-      {% metrics_card "Total Open Tasks" total_open "primary" %}
-      {% metrics_card "Total Closed Tasks" total_closed "success" %}
-      {% metrics_card "Total Errored Tasks" total_errored "danger" %}
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                  Total Pending Tasks</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_pending}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                  Total Open Tasks</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_open}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                  Total Closed Tasks</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_closed}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                  Total Errored Tasks</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_errored}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
 
-    <!-- Results table -->
+<!-- Results table -->
     <div class="row">
       <div class="col-lg-12">
         <div class="card text-center">
@@ -108,12 +160,12 @@
   </div>
 
   <div id="hiddenModalTable" style="visibility: hidden;"></div>
-  <div id="hiddenSelectedTable" style="visibility: none;"></div>
+  <div id="hiddenSelectedTable" style="visibility: none;"></div> {% endcomment %}
 
 </div>
 
 <!-- Modal for detailed information about a user's tasks -->
-<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+{% comment %} <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
     <input type="hidden" name="namespace" value="{{display_name}}" />
     <input type="hidden" name="group" value="{{group}}" />
@@ -352,5 +404,5 @@
     }); 
 
 </script>
-
+ {% endcomment %}
 {% endblock %}

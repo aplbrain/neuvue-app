@@ -50,6 +50,7 @@ class DashboardView(View, LoginRequiredMixin):
         namespace = Namespaces.objects.get(display_name = display_name).namespace
 
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+        # return redirect(reverse('dashboard', kwargs={"username": "hannah"}))
 
 class DashboardNamespaceView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -170,6 +171,18 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
 
         # Redirect to dashboard page from splashpage or modal
         return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+
+class DashboardUserView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, username=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
+        context = {}
+        return render(request, "admin_dashboard/dashboard-user-view.html", context)
 
 class ReportView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
