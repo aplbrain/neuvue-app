@@ -17,7 +17,7 @@
           <div style="margin: 20px"class="form-group">
             
             <label style="color: white" for="namespaceSelect">Namespace</label>
-            <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
+            <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one">
                 <option value="" selected disabled>Please select</option>
                 {% for namespace_opt in all_namespaces %}
                 <option>{{namespace_opt}} </option>
@@ -28,10 +28,24 @@
         
         <div style="margin: 20px" class="form-group">
             <label style="color: white" for="groupSelect">Group</label>
-            <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
+            <select name="group" class="form-select" id="groupSelect" placeholder="Select one">
                 <option value="" selected disabled>Please select</option>
                 {% for group_opt in all_groups %}
                 <option>{{group_opt}} </option>
+                {% endfor %}
+            </select> 
+        </div>
+
+        <div style="margin: 20px; color: white; font-style: italic">
+        OR
+        </div>
+
+        <div style="margin: 20px" class="form-group">
+            <label style="color: white" for="userSelect">Username</label>
+            <select name="username" class="form-select" id="userSelect" placeholder="Select one">
+                <option value="" selected disabled>Please select</option>
+                {% for user_opt in all_users %}
+                <option>{{user_opt}} </option>
                 {% endfor %}
             </select> 
         </div>

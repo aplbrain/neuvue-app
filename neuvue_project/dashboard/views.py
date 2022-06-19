@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.apps import apps
 
 from neuvueclient import NeuvueQueue
@@ -40,6 +40,7 @@ class DashboardView(View, LoginRequiredMixin):
         context = {}
         context['all_groups'] = sorted([x.name for x in Group.objects.all()])
         context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+        context['all_users'] = sorted([x.username for x in User.objects.all()])
 
         return render(request, "admin_dashboard/dashboard.html", context)
 
@@ -47,10 +48,19 @@ class DashboardView(View, LoginRequiredMixin):
         Namespaces = apps.get_model('workspace', 'Namespace')
         display_name = request.POST.get("namespace")
         group = request.POST.get("group")
-        namespace = Namespaces.objects.get(display_name = display_name).namespace
+        username = request.POST.get("username")
 
-        return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
-        # return redirect(reverse('dashboard', kwargs={"username": "hannah"}))
+        print(display_name)
+        print(group)
+        print(username)
+        if display_name and group:
+            namespace = Namespaces.objects.get(display_name = display_name).namespace
+            return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+        elif username:
+            return redirect(reverse('dashboard', kwargs={"username": username}))
+        else:
+            # TODO: add error message of some kind
+            return redirect(reverse('dashboard'))
 
 class DashboardNamespaceView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
