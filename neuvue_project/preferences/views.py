@@ -90,7 +90,7 @@ class PreferencesView(View):
             config.layout = request.POST.get('layout')
             config.layout_switch = request.POST.get('layoutSwitch') == 'true'
 
-            config.enable_sound = request.POST.get('enableSound')
+            config.enable_sound = request.POST.get('enableSound') == 'true'
             config.enable_sound_switch = request.POST.get('enableSoundSwitch') == 'true'
 
             config.save()

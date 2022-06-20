@@ -408,7 +408,7 @@ def apply_state_config(state:str, username:str):
     sys_limit = config.sys_limit
     chunk_requests = config.chunk_requests
     layout = config.layout
-    enable_sound = config.enable_sound == 'true'
+    enable_sound = config.enable_sound
 
     cdict = json.loads(state)
 
