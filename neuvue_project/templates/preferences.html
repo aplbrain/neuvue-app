@@ -245,6 +245,19 @@
         </div>
 
         <hr class="row-divider">
+        
+        <div class="row-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="enableSoundSwitch" value={{enableSoundSwitch}}>  
+            </div>
+            <div>
+                <span> Enable Sound </span>
+                <input id="enableSound" class="form-check-input" type="checkbox" value={{enableSound}} style="margin-left: 5px;">
+            </div>
+            
+        </div>
+
+        <hr class="row-divider">
     </div>
     <div style="flex-direction:column;">
         <button id="saveConfig" type="button" class="btn btn-primary" style="width:10vw;">Save</button>
@@ -272,7 +285,8 @@
         "gpuLimit": "{{gpuLimitSwitch}}", 
         "sysLimit": "{{sysLimitSwitch}}", 
         "chunkReq": "{{chunkReqSwitch}}",
-        "layout": "{{layoutSwitch}}"
+        "layout": "{{layoutSwitch}}",
+        "enableSound": "{{enableSoundSwitch}}"
     };
     function resetConfigs() {
         let form = '#resetForm'
@@ -360,6 +374,7 @@
         $("#gpuLimitDisplay").html($("#gpuLimit").val() );
         $("#sysLimitDisplay").html($("#sysLimit").val() );
         $("#chunkReqDisplay").html($("#chunkReq").val() );
+        $("#enableSoundDisplay").html($("#enableSound").val() );
 
         // Update value on sliders
         $("#alphaSelected").change(function( ){

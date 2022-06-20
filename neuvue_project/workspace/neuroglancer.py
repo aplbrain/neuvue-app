@@ -408,6 +408,7 @@ def apply_state_config(state:str, username:str):
     sys_limit = config.sys_limit
     chunk_requests = config.chunk_requests
     layout = config.layout
+    enable_sound = config.enable_sound
 
     cdict = json.loads(state)
 
@@ -419,9 +420,10 @@ def apply_state_config(state:str, username:str):
         cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     if config.chunk_requests_switch:
         cdict["concurrentDownloads"] = int(chunk_requests)
-
     if config.zoom_level_switch:
         cdict["navigation"]["zoomFactor"] = int(zoom_level)
+    if config.enable_sound_switch:
+        cdict['enableSound'] == enable_sound
     
     # create color palette dictionary
     annotation_color_palette_dict = {'palette1' : ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF', '#FFFFFC'],
