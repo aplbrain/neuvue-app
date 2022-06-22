@@ -12,58 +12,16 @@
 
   <div class="container-fluid" style="padding: 5vh 5vw;">
 
-    <!-- Reinput namespace and group if new results desired -->
-    <div class="d-flex flex-row bd-highlight mb-3">
-      <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('reload-spinner')">
-        {% csrf_token %}
-
-        <h3 style="color: white"> Admin Dashboard</h3>
-
-        <div style="margin: 20px"class="form-group">
-          <label style="color: white" for="namespaceSelect">Namespace</label>
-          <select name="namespace" class="form-select" id="namespaceSelect" required="true">
-            {% for namespace_opt in all_namespaces %}
-              {% if namespace_opt == namespace %}
-                <option selected value={{namespace_opt}}>{{namespace_opt}} </option>
-              {% else %}
-                <option>{{namespace_opt}} </option>
-              {% endif %}
-            {% endfor %}
-          </select>
-        </div>
-
-        <div style="margin: 20px" class="form-group">
-          <label style="color: white" for="groupSelect">Group</label>
-          <select name="group" class="form-select" id="groupSelect" required="true">
-            {% for group_opt in all_groups %}
-              {% if group_opt == group %}
-                <option selected value={{group_opt}}>{{group_opt}} </option>
-              {% else %}
-                <option>{{group_opt}} </option>
-              {% endif %}
-            {% endfor %}
-          </select> 
-        </div>
-
-        <div style="margin: 20px" class="form-group d-flex">
-          <input type="submit" class="btn btn-primary" value="Reload">
-          <div id="reload-spinner" class="text-white ms-3 mt-2"></div>
-          {% if error %}
-          <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
-          {% endif %}
-        </div>
-
-      </form>
-    </div>
+    <h3 class="d-flex flex-row bd-highlight mb-3 text-white">
+      Admin Dashboard
+    </h3>
 
     <!-- Metrics cards -->
     <div class="row">
-
       {% metrics_card "Total Pending Tasks" total_pending "secondary" %}
       {% metrics_card "Total Open Tasks" total_open "primary" %}
       {% metrics_card "Total Closed Tasks" total_closed "success" %}
       {% metrics_card "Total Errored Tasks" total_errored "danger" %}
-
     </div>
 
     <!-- Results table -->

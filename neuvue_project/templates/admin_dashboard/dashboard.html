@@ -24,7 +24,7 @@
 
         <div class="tab-content">
             <div class="tab-pane fade show active" id="namespaceAndGroup">
-                <form action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
+                <form action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner-tab1')">
                 {% csrf_token %}
                     <div class="form-group my-3">
                         <label class="text-white" for="namespaceSelect">Namespace</label>
@@ -49,7 +49,7 @@
 
                     <div class="form-group d-flex my-4">
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <div id="submit-spinner" class="text-white ms-3 mt-2"></div>
+                        <div id="submit-spinner-tab1" class="text-white ms-3 mt-2"></div>
                         
                         {% if error %}
                         <small id="errormessage" class="form-text text-danger"> {{error}} </small>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="tab-pane fade" id="username">
-                <form action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
+                <form action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner-tab2')">
                 {% csrf_token %}
                     <div class="form-group my-3">
                         <label class="text-white" for="userSelect">Username</label>
@@ -74,7 +74,7 @@
 
                     <div class="form-group d-flex my-4">
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <div id="submit-spinner" class="text-white ms-3 mt-2"></div>
+                        <div id="submit-spinner-tab2" class="text-white ms-3 mt-2"></div>
                         
                         {% if error %}
                         <small id="errormessage" class="form-text text-danger"> {{error}} </small>
@@ -93,8 +93,13 @@
 
     // Remove loading spinners when page loads. This is important if the back button is clicked
     window.addEventListener('pageshow', function(e) {
-        if (document.getElementById('submit-spinner') !== null) {
-            removeLoadingSpinner('submit-spinner');
+        if (document.getElementById('submit-spinner-tab1') !== null) {
+            removeLoadingSpinner('submit-spinner-tab1');
+        }
+    })
+    window.addEventListener('pageshow', function(e) {
+        if (document.getElementById('submit-spinner-tab2') !== null) {
+            removeLoadingSpinner('submit-spinner-tab2');
         }
     })
 
