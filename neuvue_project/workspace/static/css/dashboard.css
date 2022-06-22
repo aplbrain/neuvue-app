@@ -2,3 +2,18 @@
   display: inline-block;
   width: auto;
 }
+
+.margin-right-05 {
+  padding: 0vw;
+  padding-right: .5vw;
+}
+
+.nav-pills .nav-item .nav-link.active {
+  background-color: var(--secondary-accent);
+  border: 1.5px solid var(--secondary-accent);
+}
+
+.nav-pills .nav-item .nav-link {
+  color: var(--secondary-accent);
+  border: 1.5px solid;
+}
