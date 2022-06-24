@@ -471,6 +471,13 @@
             {% endfor %}
         {% endif %}
 
+        var button_id_to_hotkey = {}
+        {% for button in button_list %}
+                var button_id = "{{button.submission_value}}";
+                var hotkey = "{{button.hotkey}}"
+                button_id_to_hotkey[button_id] = hotkey;
+        {% endfor %}
+
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
         })
@@ -511,8 +518,26 @@
 
         // additional hotkeys
         document.addEventListener("keydown", function(event) {
-            if (event.altKey && (event.keyCode == 75)){
-                // alt + s: save checkpoint
+            // define key character to charcode mapping
+            var char_to_key_code = {'c': 67, 'd': 68, 'j': 74, 'm': 77, 'q': 81,
+                'r': 82, 't': 84, 'v': 86, 'w': 87, 'y': 89, 'z': 90};
+
+            // iterate through forced choice butttons to check for hotkey action
+            var button_list = document.getElementsByClassName('forcedChoiceButton');
+            for (var i = 0; i < button_list.length; i++) {
+                var button = button_list.item(i);
+                var id = button.id;
+                var button_hotkey = button_id_to_hotkey[id];
+                var button_hotkey_code = char_to_key_code[button_hotkey];
+                
+                if (event.altKey && event.keyCode == button_hotkey_code) {
+                    button.click();
+                }
+            }
+
+            // additional hotkeys
+            if (event.altKey && event.keyCode == 75){
+                // alt + k: save checkpoint
                 $('#btnSkipSubmit').click();
             } else if (event.altKey && (event.keyCode == 70)){
                 // alt + f: flag task
@@ -521,6 +546,7 @@
                 // alt + e: exit task load
                 $('#btnStop').click();
             }
+
         });
     });
     

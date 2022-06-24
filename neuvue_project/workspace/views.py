@@ -80,6 +80,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     'submission_value':getattr(button, 'submission_value'),
                     'button_color':getattr(button, 'button_color'),
                     'button_color_active':getattr(button, 'button_color_active'),
+                    'hotkey':getattr(button, 'hotkey'),
                 }
                 button_list.append(button_item)
             context['button_list'] = button_list
