@@ -39,6 +39,7 @@ class DashboardView(View, LoginRequiredMixin):
         
         context = {}
         context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_groups'].append('See All Users')
         context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
 
         if not group or not namespace: 
@@ -185,6 +186,7 @@ class ReportView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
+        Buttons = apps.get_model('workspace', 'ForcedChoiceButton')
         
         # Access POST fields
         display_name = request.POST.get('namespace')
@@ -201,9 +203,11 @@ class ReportView(View, LoginRequiredMixin):
         # Retrieve valid tasks
         namespace = Namespaces.objects.get(display_name = display_name).namespace
         users = _get_users_from_group(group)
-
+        
+        button_sets = set()
+        for o in Buttons.objects.all(): button_sets.add(str(o.set_name))
         # add bar chart
-        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
+        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=list(button_sets)).all()]
 
         sieve = {
             'assignee': users,
