@@ -324,7 +324,6 @@ class UserNamespaceView(View, LoginRequiredMixin):
         Namespaces = apps.get_model('workspace', 'Namespace')
 
         context = {}
-        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
         context['all_users'] = sorted([x.username for x in User.objects.all()])
         context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
         
@@ -347,7 +346,6 @@ class UserNamespaceView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
-        Buttons = apps.get_model('workspace', 'ForcedChoiceButton')
         
         # Access POST fields
         display_name = request.POST.get('namespace')
@@ -363,12 +361,6 @@ class UserNamespaceView(View, LoginRequiredMixin):
 
         # Retrieve valid tasks
         namespace = Namespaces.objects.get(display_name = display_name).namespace if display_name else ''
-
-        button_sets = set()
-        for o in Buttons.objects.all(): button_sets.add(str(o.set_name))
-        
-        # add bar chart
-        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=list(button_sets)).all()]
 
         if display_name:
             sieve = {
@@ -430,6 +422,8 @@ class UserNamespaceView(View, LoginRequiredMixin):
                     "opened": "Opened By",
                     "closed": "Closed By"}
 
+        filename_field = display_name if display_name else username
+
         context = {"display_name":display_name,
                     "namespace":namespace,
                     "start_field":start_field,
@@ -439,8 +433,9 @@ class UserNamespaceView(View, LoginRequiredMixin):
                     "table_columns":columns,
                     "table_rows":table_rows,
                     "fields":fields,
-                    "all_groups": [x.name for x in Group.objects.all()],
+                    'all_users': sorted([x.username for x in User.objects.all()]),
                     "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
+                    'filename_field': filename_field
                 }
 
         return render(request,'user-namespace.html',context)

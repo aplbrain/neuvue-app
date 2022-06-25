@@ -4,47 +4,83 @@
 
 {% block content %}
   <div class="basic dashboard">
-    {% if not namespace and not username %}
-    
     <div class="row">
       <div class="column">
         <div class="inspect-container">
-            <form id="namespaceForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner')">
+            <form id="namespaceForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner-namespace')">
               {% csrf_token %}
-              <h3 style="color: white"> Generate Namespace Query</h3>
+              <h3 style="color: white"> Namespace Query</h3>
               <div style="margin: 20px"class="form-group">
                 <label style="color: white" for="namespaceSelect">Namespace</label>
                 <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
-                    <option value="" selected disabled>Please select</option>
-                    {% for namespace_opt in all_namespaces %}
-                    <option>{{namespace_opt}} </option>
-                    {% endfor %}
+                    {% if namespace %}
+                        {% for namespace_opt in all_namespaces %}
+                            {% if namespace_opt == namespace %}
+                            <option selected>{{namespace_opt}} </option>
+                            {% else %}
+                                <option>{{namespace_opt}} </option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <option value="" selected disabled>Please select</option>
+                        {% for namespace_opt in all_namespaces %}
+                            <option>{{namespace_opt}} </option>
+                        {% endfor %}
+                    {% endif %}
                 </select>
                 </br>
   
                 <label style="color: white" for="startSelect">From</label>
                 <select name="start_field" class="form-select" id="startSelect" required="true">
-                  <option value="created">Created After</option>
-                  <option value="opened">Opened After</option>
-                  <option value="closed">Closed After</option>
+                    {% if start_field %}
+                        {% for field, printed_name in fields.items %}
+                            {% if field == start_field %}
+                                <option selected value={{field}}>{{printed_name}}</option>
+                            {% else %}
+                                <option value={{field}}>{{printed_name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for field, printed_name in fields.items %}
+                            <option value={{field}}>{{printed_name}}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select> 
   
-                <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true">
+                {% if start_date %}
+                    <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true" value="{{start_date}}">
+                {% else %}
+                    <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true">
+                {% endif %}
                 </br>
                 
                 <label style="color: white" for="endSelect">To</label>
                 <select name="end_field" class="form-select" id="endSelect" required="true">
-                  <option value="created">Created Before</option>
-                  <option value="opened">Opened Before</option>
-                  <option value="closed">Closed Before</option>
+                    {% if end_field %}
+                        {% for field, printed_name in fields.items %}
+                            {% if field == end_field %}
+                                <option selected value={{field}}>{{printed_name}}</option>
+                            {% else %}
+                                <option value={{field}}>{{printed_name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for field, printed_name in fields.items %}
+                            <option value={{field}}>{{printed_name}}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select> 
-  
-                <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+                
+                {% if end_date %}
+                    <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
+                {% else %}
+                    <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+                {% endif %}
                 </br>
   
                 <div class="d-flex">
                   <input type="submit" class="btn btn-primary" value="Generate Report">
-                  <div id="generate-spinner" class="text-white ms-3 mt-2"></div>
+                  <div id="generate-spinner-namespace" class="text-white ms-3 mt-2"></div>
                   {% if error %}
                   <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
                   {% endif %}
@@ -56,42 +92,80 @@
       </div>
       <div class="column">
         <div class="inspect-container">
-            <form id="userForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner')">
+            <form id="userForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner-user')">
               {% csrf_token %}
-              <h3 style="color: white"> Generate User Query</h3>
+              <h3 style="color: white"> User Query</h3>
               <div style="margin: 20px"class="form-group">
                 <label style="color: white" for="userSelect">User</label>
                 <select name="user" class="form-select" id="userSelect" placeholder="Select one" required="true">
-                    <option value="" selected disabled>Please select</option>
-                    {% for user_opt in all_users %}
-                    <option>{{user_opt}} </option>
-                    {% endfor %}
+                    {% if username %}
+                        {% for user_opt in all_users %}
+                            {% if user_opt == username %}
+                            <option selected>{{user_opt}} </option>
+                            {% else %}
+                                <option>{{user_opt}} </option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <option value="" selected disabled>Please select</option>
+                        {% for user_opt in all_users %}
+                            <option>{{user_opt}} </option>
+                        {% endfor %}
+                    {% endif %}
                 </select>
                 </br>
   
                 <label style="color: white" for="startSelect">From</label>
                 <select name="start_field" class="form-select" id="startSelect" required="true">
-                  <option value="created">Created After</option>
-                  <option value="opened">Opened After</option>
-                  <option value="closed">Closed After</option>
+                    {% if start_field %}
+                        {% for field, printed_name in fields.items %}
+                            {% if field == start_field %}
+                                <option selected value={{field}}>{{printed_name}}</option>
+                            {% else %}
+                                <option value={{field}}>{{printed_name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for field, printed_name in fields.items %}
+                            <option value={{field}}>{{printed_name}}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select> 
   
-                <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true">
+                {% if start_date %}
+                    <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true" value="{{start_date}}">
+                {% else %}
+                    <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true">
+                {% endif %}
                 </br>
                 
                 <label style="color: white" for="endSelect">To</label>
                 <select name="end_field" class="form-select" id="endSelect" required="true">
-                  <option value="created">Created Before</option>
-                  <option value="opened">Opened Before</option>
-                  <option value="closed">Closed Before</option>
+                    {% if end_field %}
+                        {% for field, printed_name in fields.items %}
+                            {% if field == end_field %}
+                                <option selected value={{field}}>{{printed_name}}</option>
+                            {% else %}
+                                <option value={{field}}>{{printed_name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for field, printed_name in fields.items %}
+                            <option value={{field}}>{{printed_name}}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select> 
-  
-                <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+                
+                {% if end_date %}
+                    <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
+                {% else %}
+                    <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
+                {% endif %}
                 </br>
   
                 <div class="d-flex">
                   <input type="submit" class="btn btn-primary" value="Generate Report">
-                  <div id="generate-spinner" class="text-white ms-3 mt-2"></div>
+                  <div id="generate-spinner-user" class="text-white ms-3 mt-2"></div>
                   {% if error %}
                   <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
                   {% endif %}
@@ -101,7 +175,7 @@
         </div>
       </div>
     </div>
-  {% else %}
+    {% if filename_field %}
     <div class="container-fluid" style="padding: 5vh 5vw;">
       <div class="d-flex flex-row bd-highlight mb-3">
         <div class="d-flex flex-column" style="width:100%; margin-left: 1vw;">
@@ -110,9 +184,9 @@
               <div class="card text-center">
                 <div class="card-header">
                   {% if start_field == end_field %}
-                    Records for <b>{{namespace}}{{username}}</b>  (<b>{{start_field}}</b> from <b>{{start_date}}</b> to <b>{{end_date}}</b>)
+                    Records for <b>{{filename_field}}</b>  (<b>{{start_field}}</b> from <b>{{start_date}}</b> to <b>{{end_date}}</b>)
                   {% else %}
-                    Records for  <b>{{namespace}}{{username}}</b>  (<b>{{start_field}}</b> by <b>{{start_date}}</b> and <b>{{end_field}}</b> by <b>{{end_date}}</b>)
+                    Records for  <b>{{filename_field}}</b>  (<b>{{start_field}}</b> by <b>{{start_date}}</b> and <b>{{end_field}}</b> by <b>{{end_date}}</b>)
                   {% endif %}
                   <span style="float:right">
                     <button id="exportBtn" class="btn btn-primary">
