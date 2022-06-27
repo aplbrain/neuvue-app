@@ -9,10 +9,8 @@
 
 {% block content %}
 <div class="basic dashboard">
-
   <div class="container-fluid" style="padding: 5vh 5vw;">
 
-    <!-- Reinput namespace and group if new results desired -->
     <h3 class="d-flex flex-row bd-highlight mb-3 text-white">
       Admin Dashboard
     </h3>
@@ -25,7 +23,7 @@
       {% metrics_card "Total Errored Tasks" total_errored "danger" %}
     </div>
 
-<!-- Results table -->
+    <!-- Results table -->
     <div class="row">
       <div class="col-lg-12">
         <div class="card text-center">
@@ -78,11 +76,8 @@
         </div>
       </div>
     </div>
+
   </div>
-
-  {% comment %} <div id="hiddenModalTable" style="visibility: hidden;"></div>
-  <div id="hiddenSelectedTable" style="visibility: none;"></div> {% endcomment %}
-
 </div>
 
 <!-- Modal for detailed information about a user's tasks -->
@@ -152,6 +147,7 @@
 {% confirm_modal "priority" %}
 {% confirm_modal "status" %}
 {% confirm_modal "delete" %}
+ {% endcomment %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -160,13 +156,7 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
 
-  // Remove loading spinners when page loads. This is important if the back button is clicked
-  window.addEventListener('pageshow', function(e) {
-    if (document.getElementById('reload-spinner') !== null) {
-      removeLoadingSpinner('reload-spinner');
-    }
-  })
-
+  /*
     // Detailed results modal: collect selected tasks into an array
     function getSelectedTasks(){
         var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
@@ -189,88 +179,44 @@
         document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
         document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
     }
+    */
 
-    $(document).ready(function() {
+  $(document).ready(function() {
 
-        // Table content in detailed results modal
-        {% for row in table %}
-            $("#userLink_{{row.username}}").click(function(){
-                let tableContents = `
-                    <thead>
-                        <tr>
-                        <th scope="col" style="padding-left: 10px"> <input type="checkbox" name="selectAll" class="taskCheckbox"></th>
-                        <th scope="col">Task ID</th>
-                        <th scope="col">Segment ID</th>
-                        <th scope="col">Segment ID: formatted</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Priority</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Opened</th>
-                        <th scope="col">Closed</th>
-                        <th scope="col">Duration (min)</th>
-                        <th scope="col">Tags</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for taskrow in row.user_tasks %}
-                        <tr>
-                        <th scope="row"><input type="checkbox" form="taskPatchForm" name="selected_tasks" id="select_{{taskrow.task_id}}" value={{taskrow.task_id}} class="taskCheckbox"></th>
-                        <th scope="row"><a href="{% url 'inspect' taskrow.task_id %}">{{taskrow.task_id}}</a></th>
-                        <td>{{taskrow.seg_id}}</td>
-                        <td>#: {{taskrow.seg_id}}</td>
-                        <td>{{taskrow.status}}</td>
-                        <td>{{taskrow.priority}}</td>
-                        <td>{{taskrow.created}}</td>
-                        <td>{{taskrow.opened}}</td>
-                        <td>{{taskrow.closed}}</td>
-                        <td>{{taskrow.duration}}</td>
-                        {% if taskrow.tags %}
-                        <td class="userTags">{{taskrow.tags|join:", "}}</td>
-                        {% else %}
-                        <td>None</td>
-                        {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>`
-                $('#userModalTitle').text("{{row.username}}")
-                $('#hiddenModalTable').html(`
-                    <table id='hiddenUserTable' class="table table-striped table-hover">${tableContents}</table>  
-                `);
-                $('#userModalBody').html(`
-                    <table id='userTable' class="table table-striped table-hover" style="width:100%">${tableContents}</table>  
-                `);
-                $('#userTable').DataTable({
-                    "columnDefs":[
-                        {
-                        "targets": 0,
-                        "orderable": false
-                        },
-                        {
-                        "targets":3,
-                        "visible":false
-                        }
-                    ]
-                });
+    $('#summary-table').DataTable({
+      "columnDefs":[
+        {
+          "targets": 0,
+          "orderable": false
+        },
+        {
+          "targets":3,
+          "visible":false
+        }
+      ],
+      select: true
+    });
 
-                $('input[name=selectAll]').change(function(){
-                    if ($(this).is(':checked')) {
-                        $('#userTable input[name=selected_tasks]').each(function(){
-                            if ($(this).is(':checkbox') && !$(this).is(":checked")) {
-                                $(this).prop( "checked", true );
-                            } 
-                        })
-                    } else {
-                        $('#userTable input[name=selected_tasks]').each(function(ele){
-                            if ($(this).is(':checkbox') && $(this).is(":checked")) {
-                                $(this).prop( "checked", false );
-                            } 
-                        })
-                    }
-                });
+    $('input[name=selectAll]').change(function(){
+      if ($(this).is(':checked')) {
+        $('#summary-table input[name=selected_tasks]').each(function(){
+          if ($(this).is(':checkbox') && !$(this).is(":checked")) {
+            $(this).prop( "checked", true );
+          } 
+        })
+      } else {
+        $('#summary-table input[name=selected_tasks]').each(function(ele){
+          if ($(this).is(':checkbox') && $(this).is(":checked")) {
+            $(this).prop( "checked", false );
+          } 
+        })
+      }
+    });
 
-                $('#userModal').modal('show');
-            });
-        {% endfor %}
+  });
+
+/*
+
     })
 
     // Export as CSV Button
@@ -285,16 +231,17 @@
 
     }); 
 
+
     // Export as CSV Button for detailed results
-    const exportButton_userTable = document.getElementById("exportBtn_userTable");
+    const exportButton_userTable = document.getElementById("exportBtn");
     exportButton_userTable.addEventListener('click', (e) => {
 
         // Construct filename
         const username = document.getElementById("userModalTitle").textContent;
         // Perform download
         function download_all_tasks(){
-            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '.csv';
-            $('#hiddenUserTable').table2csv('download', {'filename': filename});
+            const filename = username + '_' + Date.now() + '.csv';
+            $('#summary-table').table2csv('download', {'filename': filename});
         }
         if (getSelectedTasks().length == 0){
             // if no tasks are selected the default is to download all tasks
@@ -324,6 +271,6 @@
         }
     }); 
 
+    */
 </script>
- {% endcomment %}
 {% endblock %}
