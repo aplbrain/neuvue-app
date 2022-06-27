@@ -332,6 +332,12 @@ class UserNamespaceView(View, LoginRequiredMixin):
         except:
             pass 
 
+        fields = {"created":"Created By",
+                    "opened": "Opened By",
+                    "closed": "Closed By"}
+
+        context['fields'] = fields
+
         return render(request, "user-namespace.html", context)
 
     def _format_time(self, x):
@@ -430,6 +436,7 @@ class UserNamespaceView(View, LoginRequiredMixin):
                     "start_date":start_date,
                     "end_field":end_field,
                     "end_date":end_date,
+                    'username':username,
                     "table_columns":columns,
                     "table_rows":table_rows,
                     "fields":fields,
