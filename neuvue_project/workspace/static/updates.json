@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.6.1",
+            "update_date":"June 19th, 2022",
+            "update_description": "Adds sound effects in Neuroglancer. Sped up admin tools. Added color palettes for Mesh colors."
+        },
+        {
             "update_name": "v1.5.7",
             "update_date":"May 19th, 2022",
             "update_description": "Fixed issue with neuroglancer taskbar. Added Save State button. Added Y/N task type. Improved user experience and load times."
