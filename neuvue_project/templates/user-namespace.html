@@ -2,22 +2,26 @@
 {% load static %}
 {% load socialaccount %}
 
+{% block header_includes %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
   <div class="basic dashboard">
     {% if not filename_field %}
     <div class="inspect-container">
       <ul class="nav nav-pills">
         <li class="nav-item margin-right-05">
-            <a class="nav-link active" href="#namespaceAndGroup" data-bs-toggle="tab">Namespace Query</a>
+            <a class="nav-link active" href="#namespaceTab" data-bs-toggle="tab">Namespace Query</a>
         </li>
         <li class="nav-item margin-right-05">
-            <a class="nav-link" href="#username" data-bs-toggle="tab">Username Query</a>
+            <a class="nav-link" href="#usernameTab" data-bs-toggle="tab">Username Query</a>
         </li>
       </ul>
     <br>
     <div class="row">
       <div class="tab-content">
-          <div class="tab-pane fade show active" id="namespaceAndGroup">
+          <div class="tab-pane fade show active" id="namespaceTab">
             <form id="namespaceForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner-namespace')">
               {% csrf_token %}
               <div style="margin: 20px"class="form-group">
@@ -89,7 +93,7 @@
                 </br>
 
                 <div class="d-flex">
-                  <input type="submit" class="btn btn-primary" value="Generate Report">
+                  <input type="submit" class="btn btn-primary submit_button" value="Generate Report">
                   <div id="generate-spinner-namespace" class="text-white ms-3 mt-2"></div>
                   {% if error %}
                   <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
@@ -100,7 +104,7 @@
             </form>
           </div>
 
-          <div class="tab-pane fade" id="username">
+          <div class="tab-pane fade" id="usernameTab">
             <form id="userForm" action="" method="post" onSubmit="triggerLoadingSpinner('generate-spinner-user')">
               {% csrf_token %}
               <div style="margin: 20px"class="form-group">
@@ -172,7 +176,7 @@
                 </br>
 
                 <div class="d-flex">
-                  <input type="submit" class="btn btn-primary" value="Generate Report">
+                  <input type="submit" class="btn btn-primary submit_button" value="Generate Report">
                   <div id="generate-spinner-user" class="text-white ms-3 mt-2"></div>
                   {% if error %}
                   <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
