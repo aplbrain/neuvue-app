@@ -389,7 +389,7 @@ class UserNamespaceView(View, LoginRequiredMixin):
             sieve[end_field] = {
                 '$lt': end_dt
             }
-        print('sieve:', sieve)
+            
         task_df = self.client.get_tasks(
             sieve=sieve, 
             select=['assignee', 'status', 'duration','metadata','closed','opened','namespace']
