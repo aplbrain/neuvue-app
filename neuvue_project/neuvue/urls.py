@@ -30,7 +30,7 @@ from workspace.views import (
     SaveStateView
     )
 from preferences.views import PreferencesView
-from dashboard.views import DashboardView, ReportView
+from dashboard.views import DashboardView, ReportView,UserNamespaceView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -53,6 +53,7 @@ urlpatterns = [
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
     path('report/', ReportView.as_view(), name="report"),
+    path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
     path('save_state', SaveStateView.as_view(), name="save-state")
 ]
 
