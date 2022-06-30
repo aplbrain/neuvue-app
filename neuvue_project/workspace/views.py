@@ -12,6 +12,7 @@ from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
 import markdown
+import platform
 
 from .neuroglancer import (
     construct_proofreading_state, 

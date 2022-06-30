@@ -217,7 +217,7 @@ overflow-x: hidden;
 }
 
 .forcedChoiceButton{
-  min-width: 12%;
+  width: 100%;
   font-family: var(--monospace-font);
   border-radius: 8px;
   color: var(--background);
@@ -237,15 +237,26 @@ overflow-x: hidden;
 }
 
 /* buttons used in bottom container */
-.mainButton {
+.mainButtonWrapper {
   min-width: 12%;
+  padding: 0.15vh 0.25vh;
+  margin: 0vh 0.5vw;
+  text-align: center;
+}
+
+.hotkeyHint {
+  color: rgb(156, 156, 156);
+  display: inline-block;
+}
+
+
+.mainButton {
+  width: 100%;
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
   height: 3.5vh;
-  padding: 0.15vh 0.25vh;
-  margin: 0vh 0.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
