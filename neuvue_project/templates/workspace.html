@@ -109,8 +109,8 @@
                                     {{button.display_name}}
                                 </div>
                             </button>
-                            <div class="hotkeyHint forcedChoiceHotkeyHint">                            
-                                <kbd><span class="modifier"></span><span class="hotkey_button"> + {{button.hotkey}}</span></kbd>
+                            <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">                            
+                                <kbd><span class="modifier"></span><span class="hotkey_button">+ {{button.hotkey}}</span></kbd>
                             </div>
                         </div>
                     {% endfor %}
@@ -495,6 +495,15 @@
             var modifier_text = hotkey_hint_obs.item(i).getElementsByClassName("modifier").item(0);
             if (modifier_text){
                 modifier_text.innerHTML = modifier;
+            }
+        }
+
+        // show valid hotkey hints for forced choice buttons
+        var forced_choice_hotkey_hints = document.getElementsByClassName("forcedChoiceHotkeyHint");
+        for (var i = 0; i < forced_choice_hotkey_hints.length; i++) {
+            var hotkey_text = forced_choice_hotkey_hints.item(i).getElementsByClassName("hotkey_button").item(0).innerHTML.toLowerCase();
+            if (!(hotkey_text.includes('none'))) {
+                forced_choice_hotkey_hints.item(i).style.display = 'block';
             }
         }
         
