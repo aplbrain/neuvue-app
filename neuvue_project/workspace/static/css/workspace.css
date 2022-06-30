@@ -251,6 +251,10 @@ overflow-x: hidden;
   display: inline-block;
 }
 
+.forcedChoiceHotkeyHint {
+  margin-left: 15px;
+}
+
 
 .mainButton {
   width: 100%;
