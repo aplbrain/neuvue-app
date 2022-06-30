@@ -94,21 +94,24 @@
                             } 
                             {% endif %}
                         </style>
-                        <div class="mainButtonWrapper">
+                        <div class="mainButtonWrapper forcedChoiceWrapper">
                             <button 
-                            id="{{button.submission_value}}" 
-                            type="button" 
-                            class="forcedChoiceButton {{button.submission_value}}"
-                            {% if submit_task_button %} 
-                                onclick="updateButtonSelected('{{button.submission_value}}')"
-                            {% else %}
-                                onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
-                            {% endif %}
-                        >
-                            <div id = '{{button.submission_value}}_load'>
-                                {{button.display_name}}
+                                id="{{button.submission_value}}" 
+                                type="button" 
+                                class="forcedChoiceButton {{button.submission_value}}"
+                                {% if submit_task_button %} 
+                                    onclick="updateButtonSelected('{{button.submission_value}}')"
+                                {% else %}
+                                    onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
+                                {% endif %}
+                            >
+                                <div id = '{{button.submission_value}}_load'>
+                                    {{button.display_name}}
+                                </div>
+                            </button>
+                            <div class="hotkeyHint">                            
+                                <kbd><span class="modifier"></span><span class="hotkey_button"> + {{button.hotkey}}</span></kbd>
                             </div>
-                        </button>
                         </div>
                     {% endfor %}
             </form>   
@@ -241,7 +244,7 @@
                             </div>
                         </button>
                         <div class="hotkeyHint">                            
-                            <kbd><span class="modifier"></span><span> + e</span></kbd>
+                            <kbd><span class="modifier"></span><span class="hotkey_button"> + e</span></kbd>
                         </div>
                     </div>
 
@@ -494,8 +497,6 @@
                 modifier_text.innerHTML = modifier;
             }
         }
-        
-        
         
         // add specific class to save state overlay
 
