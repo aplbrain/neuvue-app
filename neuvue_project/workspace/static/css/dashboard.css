@@ -17,3 +17,8 @@
   color: var(--secondary-accent-activated);
   border: 1.5px solid;
 }
+
+.submit_button{
+  background-color: var(--secondary-accent) !important;
+  border: 1.5px solid var(--secondary-accent) !important;
+}
