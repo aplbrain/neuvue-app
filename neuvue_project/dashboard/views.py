@@ -64,7 +64,7 @@ class DashboardView(View, LoginRequiredMixin):
         elif username:
             return redirect(reverse('dashboard', kwargs={"username": username}))
         else:
-            # as long as all fields contain required="true" this case should not be reached
+            # as long as all html form fields contain required="true" this case should not be reached
             return redirect(reverse('dashboard'))
 
 class DashboardNamespaceView(View, LoginRequiredMixin):
@@ -78,14 +78,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
         
-        # TODO: is this part still needed after removing the query bars?
         context = {}
-        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
-        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
-        try:
-            context['all_groups'].remove('AuthorizedUsers')
-        except:
-            pass 
 
         users = _get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
@@ -246,15 +239,6 @@ class ReportView(View, LoginRequiredMixin):
 
         return render(request, "report.html", context)
 
-    def _format_time(self, x):
-        try:
-            return x.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            return 'N/A'
-
-    def _get_status_count(self, task_df, status):
-        return task_df['status'].value_counts().get(status, 0)
-
     def post(self, request, *args, **kwargs):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
@@ -410,15 +394,6 @@ class UserNamespaceView(View, LoginRequiredMixin):
         context['fields'] = fields
 
         return render(request, "user-namespace.html", context)
-
-    def _format_time(self, x):
-        try:
-            return x.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            return 'N/A'
-
-    def _get_status_count(self, task_df, status):
-        return task_df['status'].value_counts().get(status, 0)
 
     def post(self, request, *args, **kwargs):
         

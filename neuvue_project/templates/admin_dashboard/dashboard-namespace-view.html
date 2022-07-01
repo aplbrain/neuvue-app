@@ -82,17 +82,17 @@
   })
 
 
-    // Export as CSV Button
-    const exportButton = document.getElementById("exportBtn");
-    exportButton.addEventListener('click', (e) => {
+  // Export as CSV Button
+  const exportButton = document.getElementById("exportBtn");
+  exportButton.addEventListener('click', (e) => {
 
-        // Construct filename
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
+    // Construct filename
+    const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
 
-        // Perform download
-        $('#summary-table').table2csv('download', {'filename': filename});
+    // Perform download
+    $('#summary-table').table2csv('download', {'filename': filename});
 
-    }); 
+  }); 
 
 </script>
 
