@@ -147,22 +147,20 @@ class DashboardUserView(View, LoginRequiredMixin):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, username=None, *args, **kwargs):
+    def get(self, request, username=None, filter=None, *args, **kwargs):
         if not request.user.is_staff:
             return redirect(reverse('index'))
 
         context = {}
         table, counts = self._generate_table_and_counts(username)
         
-        # context['group'] = group
-        # context['namespace'] = namespace
-        # context['display_name'] = Namespaces.objects.get(namespace = namespace).display_name
         context['username'] = username
         context['table'] = table
         context['total_closed'] = counts[0]
         context['total_pending'] = counts[1]
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
+        context['filter'] = filter
 
         return render(request, "admin_dashboard/dashboard-user-view.html", context)
 

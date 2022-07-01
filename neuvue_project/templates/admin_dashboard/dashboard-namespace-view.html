@@ -49,7 +49,7 @@
               <tbody>
                 {% for row in table %}
                 <tr>
-                <th scope="row"><button id="userLink_{{row.username}}"> {{row.username}} </button></th>
+                <th scope="row"><a href="{% url 'dashboard' username=row.username filter=namespace %}"> {{row.username}} </a></th>
                 <td>{{row.pending}}</td>
                 <td>{{row.open}}</td>
                 <td>{{row.closed}}</td>
