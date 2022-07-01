@@ -118,7 +118,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
-            context['tags'] = task_df['tags']
+            if task_df.get('tags'):
+                context['tags'] = ','.join(task_df['tags'])
             if task_df['priority'] < 2:
                 context['skipable'] = False
             
