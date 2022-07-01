@@ -10,6 +10,7 @@ import requests
 import os 
 import backoff
 import random
+from .models import ImageChoices, PcgChoices
 
 
 from nglui.statebuilder import (
@@ -30,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 Config = apps.get_model('preferences', 'Config')
 
-def create_base_state(seg_ids, coordinate, namespace):
+def create_base_state(seg_ids, coordinate, namespace=None):
     """Generates a base state containing imagery and segmentation layers. 
 
     Args:
@@ -42,7 +43,11 @@ def create_base_state(seg_ids, coordinate, namespace):
     """
     
     # Create ImageLayerConfig
-    img_source = "precomputed://" + Namespace.objects.get(namespace = namespace).img_source
+    if namespace:
+        img_source = "precomputed://" + Namespace.objects.get(namespace = namespace).img_source
+    else:
+        img_source = "precomputed://" + ImageChoices.MINNIE
+
     try: 
         black = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["black"]
         white = settings.DATASET_VIEWER_OPTIONS[img_source]['contrast']["white"]
@@ -59,7 +64,11 @@ def create_base_state(seg_ids, coordinate, namespace):
         )
     
     # Create SegmentationLayerConfig
-    seg_source = "graphene://" + Namespace.objects.get(namespace = namespace).pcg_source
+    if namespace:
+        seg_source = "graphene://" + Namespace.objects.get(namespace = namespace).pcg_source
+    else:
+        seg_source = "graphene://" + PcgChoices.MINNIE
+    
     segmentation_view_options = {
         'alpha_selected': 0.6,
         'alpha_3d': 0.3
@@ -365,16 +374,15 @@ def construct_lineage_state_and_graph(root_id:str):
     # Lineage graph gives you the nodes and edges of a root IDs history
     lineage_graph = _get_lineage_graph(root_id, cave_client)
     graph_image = _get_nx_graph_image(lineage_graph)
-    # We need the root ids and a position to create a base state.
-    # Since this is not part of any particular namespace, I chose automatedSplit 
-    # to ensure the neuroglancer state uses Minnie data. 
+
     root_ids = {str(x) for x in lineage_graph}
 
     # Ensure original root ID is in list of shown IDs
     root_ids.add(root_id)
     root_ids = list(root_ids)
+
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
-    base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
+    base_state = create_base_state(root_ids_with_center, position)
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as='dict')
@@ -529,7 +537,7 @@ def construct_synapse_state(root_ids:List):
     
 
     data_list = [None]
-    base_state = create_base_state(root_ids, position, 'automatedSplit')
+    base_state = create_base_state(root_ids, position)
     # Random color generation
     r = lambda: random.randint(0,255)
     states = [base_state]
