@@ -1,5 +1,4 @@
 from cProfile import label
-import json
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.shortcuts import render, redirect, reverse
@@ -142,41 +141,6 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
 
         return table_rows, (tc, tp, to, te)
 
-    def post(self, request, *args, **kwargs):
-        Namespaces = apps.get_model('workspace', 'Namespace')
-        # Refresh request
-        display_name = request.POST.get("namespace")
-        group = request.POST.get("group")
-        namespace = Namespaces.objects.get(display_name = display_name).namespace
-
-        # If update task(s) button was clicked - api call is made to update the task(s)
-        if "selected_tasks" in request.POST:
-            selected_action = request.POST.get("selected_action")
-            selected_tasks = request.POST.getlist("selected_tasks")
-            new_assignee = request.POST.get("assignee-input")
-            new_status = request.POST.get("status-input")
-            
-            try:
-                new_priority = int(request.POST.get("priority-input"))
-            except:
-                new_priority = 0
-
-            for task in selected_tasks:
-                if selected_action == 'delete':
-                    logging.debug(f"Delete task: {task}")
-                    self.client.delete_task(task)
-                elif selected_action == "assignee":
-                    self.client.patch_task(task,assignee=new_assignee)
-                    logging.debug(f"Resassigning task {task} to {new_assignee}")
-                elif selected_action == "priority":
-                    self.client.patch_task(task, priority=new_priority)
-                    logging.debug(f"Reprioritizing task {task} to {new_priority}")
-                elif selected_action == "status":
-                    self.client.patch_task(task, status=new_status)
-                    logging.debug(f"Updating task {task} to {new_status}")
-
-        # Redirect to dashboard page from splashpage or modal
-        return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
 
 class DashboardUserView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -228,6 +192,39 @@ class DashboardUserView(View, LoginRequiredMixin):
         te += int(_get_status_count(user_df, 'errored'))
 
         return table_rows, (tc, tp, to, te)
+
+    def post(self, request, *args, **kwargs):
+        # Refresh request
+        username = request.POST.get("username")
+
+        # If update task(s) button was clicked - api call is made to update the task(s)
+        if "selected_tasks" in request.POST:
+            selected_action = request.POST.get("selected_action")
+            selected_tasks = request.POST.getlist("selected_tasks")
+            new_assignee = request.POST.get("assignee-input")
+            new_status = request.POST.get("status-input")
+            
+            try:
+                new_priority = int(request.POST.get("priority-input"))
+            except:
+                new_priority = 0
+
+            for task in selected_tasks:
+                if selected_action == 'delete':
+                    logging.debug(f"Delete task: {task}")
+                    self.client.delete_task(task)
+                elif selected_action == "assignee":
+                    self.client.patch_task(task,assignee=new_assignee)
+                    logging.debug(f"Resassigning task {task} to {new_assignee}")
+                elif selected_action == "priority":
+                    self.client.patch_task(task, priority=new_priority)
+                    logging.debug(f"Reprioritizing task {task} to {new_priority}")
+                elif selected_action == "status":
+                    self.client.patch_task(task, status=new_status)
+                    logging.debug(f"Updating task {task} to {new_status}")
+
+        # Redirect to dashboard page from splashpage or modal
+        return redirect(reverse('dashboard', kwargs={"username": username}))
 
 class ReportView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):

@@ -29,11 +29,57 @@
         <div class="card text-center">
           <div class="card-header">
             Records for <b> {{username}} </b>
-            <span style="float:right">
-              <button id="exportBtn" class="btn btn-primary">Export to CSV</button>
-            </span>
           </div>
-          <div class="card-body">
+          <div id="table-card" class="card-body">
+
+            <div id="action-buttons" class="d-flex">
+              <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
+                <input type="hidden" name="username" value="{{username}}" />
+              </form>
+              <div class="col-lg-8 text-start">
+                <button id="exportBtn" class="btn btn-primary me-2">Export to CSV</button>
+                <div class="btn-group dropdown">
+                  <button type="button" class="btn btn-primary dropdown-toggle me-2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Modify
+                  </button>
+                  <ul class="dropdown-menu me-2">
+                    <li id="dropdown-assignee" class="dropdown-item" onclick="showMenuItem('assignee')">
+                      Assignee
+                    </li>
+                    <li id="dropdown-priority" class="dropdown-item" onclick="showMenuItem('priority')">
+                      Priority
+                    </li>
+                    <li id="dropdown-status" class="dropdown-item" onclick="showMenuItem('status')">
+                      Status
+                    </li>
+                  </ul>
+                </div> 
+                <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none me-2">
+                <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none me-2">
+                  Update Assignee
+                </button>
+                <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none me-2" type="number" min="0">
+                <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none me-2">
+                  Update Priority
+                </button>
+                <select id="status-input" form="taskPatchForm" name="status-input" class="form-select me-2 align-middle d-none">
+                  <option value="" selected disabled>New status</option>
+                  <option value="open">Open</option>
+                  <option value="pending">Pending</option>
+                  <option value="closed">Closed</option>
+                  <option value="errored">Errored</option>
+                </select>
+                <button type="button" id="status-button" form="taskPatchForm" name="selected_action" value="status" class="btn btn-primary d-none me-2">
+                  Update Status
+                </button>
+              </div>
+              <div class="col-lg-4 text-end">
+                <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">Delete</button>
+              </div>
+            </div>
+
+            <hr>
+
             <table id="summary-table" class="table table-striped table-hover">
               <thead>
                 <tr>
@@ -72,74 +118,14 @@
                 {% endfor %}
               </tbody>
             </table>
-           </div>
+
+          </div>
         </div>
       </div>
     </div>
 
   </div>
-</div>
-
-<!-- Modal for detailed information about a user's tasks -->
-{% comment %} <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <form id="taskPatchForm" action="" method="POST">{% csrf_token %}
-    <input type="hidden" name="namespace" value="{{display_name}}" />
-    <input type="hidden" name="group" value="{{group}}" />
-  </form>
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="userModalTitle">Username</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div id="userModalBody" class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <div class="me-auto">
-          <div class="btn-group dropup">
-          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Modify Selected Tasks
-          </button>
-          <ul class="dropdown-menu">
-            <li id="dropdown-assignee" class="dropdown-item" onclick="showMenuItem('assignee')">
-              Assignee
-            </li>
-            <li id="dropdown-priority" class="dropdown-item" onclick="showMenuItem('priority')">
-              Priority
-            </li>
-            <li id="dropdown-status" class="dropdown-item" onclick="showMenuItem('status')">
-              Status
-            </li>
-          </ul>
-          </div> 
-          <input id="assignee-input" form="taskPatchForm" name="assignee-input" placeholder="New assignee" class="d-none">
-          <button type="button" id="assignee-button" form="taskPatchForm" name="selected_action" value="assignee" class="btn btn-primary d-none">
-            Update Assignee
-          </button>
-          <input id="priority-input" form="taskPatchForm" name="priority-input" placeholder="New priority" class="d-none" type="number" min="0">
-          <button type="button" id="priority-button" form="taskPatchForm" name="selected_action" value="priority" class="btn btn-primary d-none">
-            Update Priority
-          </button>
-          <select id="status-input" form="taskPatchForm" name="status-input" class="form-select d-none">
-            <option value="" selected disabled>New status</option>
-            <option value="open">Open</option>
-            <option value="pending">Pending</option>
-            <option value="closed">Closed</option>
-            <option value="errored">Errored</option>
-          </select>
-          <button type="button" id="status-button" form="taskPatchForm" name="selected_action" value="status" class="btn btn-primary d-none">
-            Update Status
-          </button>
-        </div>
-        <button type="button" id="delete-button" form="taskPatchForm" name="selected_action" value="delete" class="btn btn-danger">
-          Delete
-        </button>
-        <button id="exportBtn_userTable" class="btn btn-primary">Export to CSV</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
+  <div id="hiddenSelectedTable" style="visibility: none;"> 
 </div>
 
 <!-- Confirm action modals -->
@@ -147,7 +133,6 @@
 {% confirm_modal "priority" %}
 {% confirm_modal "status" %}
 {% confirm_modal "delete" %}
- {% endcomment %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -156,35 +141,34 @@
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
 
-  /*
-    // Detailed results modal: collect selected tasks into an array
-    function getSelectedTasks(){
-        var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
-                .find( 'tr' ) // select all rows that has
-                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
-            var ret = [];
-            for (let i = 0; i < selectedRows.length ; i++) {
-                ret.push(selectedRows[i].children[0].firstChild.defaultValue);
-            };
-        return ret
-    }
+  // Modify selected tasks menu
+  function showMenuItem(selectedMenuItem) {
+      const menuItems = ["assignee", "priority", "status"];
+      for (let menuItem of menuItems) {
+          document.getElementById(menuItem + "-input").classList.add("d-none");
+          document.getElementById(menuItem + "-button").classList.add("d-none");
+      }
+      document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
+      document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
+  }
 
-    // Detailed results modal: show action chosen from actions menu
-    function showMenuItem(selectedMenuItem) {
-        const menuItems = ["assignee", "priority", "status"];
-        for (let menuItem of menuItems) {
-            document.getElementById(menuItem + "-input").classList.add("d-none");
-            document.getElementById(menuItem + "-button").classList.add("d-none");
-        }
-        document.getElementById(selectedMenuItem + "-input").classList.remove("d-none");
-        document.getElementById(selectedMenuItem + "-button").classList.remove("d-none");
-    }
-    */
+  // Collect selected tasks into an array
+  function getSelectedTasks(){
+    let selectedRows = $( '#summary-table' ).find( 'tbody' ) // select table body and
+      .find( 'tr' ) // select all rows that has
+      .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+    let ret = [];
+    for (let i = 0; i < selectedRows.length ; i++) {
+      ret.push(selectedRows[i].children[0].firstChild.defaultValue);
+    };
+    return ret;
+  }
 
   $(document).ready(function() {
 
-    $('#summary-table').DataTable({
-      "columnDefs":[
+    // Create data table
+    let summary_table = $('#summary-table').DataTable({
+      "columnDefs": [
         {
           "targets": 0,
           "orderable": false
@@ -192,11 +176,11 @@
         {
           "targets":3,
           "visible":false
-        }
-      ],
-      select: true
+        },
+      ]
     });
 
+    // Select all checkbox
     $('input[name=selectAll]').change(function(){
       if ($(this).is(':checked')) {
         $('#summary-table input[name=selected_tasks]').each(function(){
@@ -213,64 +197,46 @@
       }
     });
 
-  });
-
-/*
-
-    })
-
-    // Export as CSV Button
+    // Export as CSV Button for detailed results
     const exportButton = document.getElementById("exportBtn");
     exportButton.addEventListener('click', (e) => {
 
-        // Construct filename
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + Date.now() + '.csv';
+      // Construct filename
+      const username = "{{username}}";
 
-        // Perform download
+      // If no tasks are selected the default is to download all tasks
+      if (getSelectedTasks().length == 0){
+        const filename = username + '_' + Date.now() + '.csv';
         $('#summary-table').table2csv('download', {'filename': filename});
 
-    }); 
+      // Otherwise, download only the tasks that were selected
+      } else {
 
+        let filteredTable = $('#summary-table').clone()[0] // make a copy of the visible table to edit and export
 
-    // Export as CSV Button for detailed results
-    const exportButton_userTable = document.getElementById("exportBtn");
-    exportButton_userTable.addEventListener('click', (e) => {
+        filteredTable.id = 'userSelectedTable'; 
 
-        // Construct filename
-        const username = document.getElementById("userModalTitle").textContent;
-        // Perform download
-        function download_all_tasks(){
-            const filename = username + '_' + Date.now() + '.csv';
-            $('#summary-table').table2csv('download', {'filename': filename});
+        const selectedRows = $( '#summary-table' ).find( 'tbody' ) // select table body and
+            .find( 'tr' ) // select all rows that has
+            .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+
+        for (let i = 0; i <  $( '#summary-table' ).find( 'tbody' ).find( 'tr' ).length; i++) {
+            filteredTable.deleteRow(1);
+        };
+
+        $('#hiddenSelectedTable').html(filteredTable);
+
+        for (let i = 0; i < selectedRows.length; i++){
+            $('#hiddenSelectedTable tr:last').after('<tr>'+selectedRows[i].innerHTML+'</tr>');
         }
-        if (getSelectedTasks().length == 0){
-            // if no tasks are selected the default is to download all tasks
-            download_all_tasks();
-        } else {
 
-            var filteredTable = $('#userTable').clone()[0] // make a copy of the visible table to edit and export
-            filteredTable.id = 'userSelectedTable'; 
+        const filename = username + '_' + Date.now() + '_selectedTasks.csv';
+        $('#userSelectedTable').table2csv('download', {'filename': filename});
 
-            var selectedRows = $( '#userTable' ).find( 'tbody' ) // select table body and
-                .find( 'tr' ) // select all rows that has
-                .has( 'input[type=checkbox]:checked' ); // checked checkbox element
+      }
+    });
 
-            for (let i = 0; i <  $( '#userTable' ).find( 'tbody' ).find( 'tr' ).length; i++) {
-                filteredTable.deleteRow(1);
-            };
+  });
 
-            $('#hiddenSelectedTable').html(filteredTable);
-
-            for (let i = 0; i < selectedRows.length; i++){
-                $('#hiddenSelectedTable tr:last').after('<tr>'+selectedRows[i].innerHTML+'</tr>');
-            }
-
-            const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + username + '_' + Date.now() + '_selectedTasks.csv';
-            $('#userSelectedTable').table2csv('download', {'filename': filename});
-            
-        }
-    }); 
-
-    */
 </script>
 {% endblock %}
