@@ -69,6 +69,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
+            'tags': '',
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
@@ -117,6 +118,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
+            context['tags'] = task_df['tags']
             if task_df['priority'] < 2:
                 context['skipable'] = False
             
@@ -278,7 +280,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state)
+                    ng_state=ng_state,
+                    tags=tags)
                 # Add new differ stack entry
                 if ng_differ_stack != []:
                     self.client.post_differ_stack(
@@ -373,7 +376,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                metadata=metadata)
+                metadata=metadata,
+                tags=tags)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
