@@ -39,7 +39,11 @@
                     Task tags
                 </div>
                 <div class="sideContentInput" >
-                    <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma separated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                    {% if tags %}
+                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" spellcheck="false"> {{tags}} </textarea>
+                    {% else %}
+                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma separated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                    {% endif %}
                 </div>
             </div>
             <! Task Information >
