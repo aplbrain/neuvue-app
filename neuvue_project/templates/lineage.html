@@ -16,7 +16,7 @@
         <div class="d-flex">
           <input type="submit" class="btn btn-primary" value="Submit">
           <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
-          {% if error%}
+          {% if error %}
           <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
           {% endif %}
         </div>
@@ -78,7 +78,22 @@
   function selectID(root_id){
     let state = viewer.state.toJSON();
     if (["segmentation", "segmentation_with_graph"].includes(String(state['layers'][1]['type']))) {
-      state['layers'][1]['segments'].push(root_id)
+ 
+      console.log('hidden: ', state['layers'][1]['hiddenSegments'])
+      console.log(root_id)
+      console.log('selected: ', state['layers'][1]['segments'].length)
+      console.log('unselected: ', state['layers'][1]['hiddenSegments'].length)
+      console.log('hiddenSegments.includes(root_id): ', state['layers'][1]['hiddenSegments'].includes(root_id))
+
+      if (state['layers'][1]['hiddenSegments'].includes(root_id.toString())){
+        state['layers'][1]['segments'].push(root_id);
+        state['layers'][1]['hiddenSegments'].pop(root_id);
+        console.log('adding')
+      } 
+
+      console.log('after')
+      console.log('selected: ', state['layers'][1]['segments'].length)
+      console.log('unselected: ', state['layers'][1]['hiddenSegments'].length)
       viewer.state.restoreState(state)
     }
   }

@@ -79,6 +79,7 @@ def create_base_state(seg_ids, coordinate, namespace=None):
         fixed_ids=seg_ids,
         view_kws=segmentation_view_options
         )
+
     view_options = {'position': coordinate, 'zoom_image': 20}
 
     return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
@@ -380,7 +381,7 @@ def construct_lineage_state_and_graph(root_id:str):
     # Ensure original root ID is in list of shown IDs
     root_ids.add(root_id)
     root_ids = list(root_ids)
-
+    
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
     base_state = create_base_state(root_ids_with_center, position)
 
@@ -390,7 +391,8 @@ def construct_lineage_state_and_graph(root_id:str):
     base_state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     for layer in base_state_dict['layers']:
         if layer['name'] == 'seg':
-            layer['hiddenSegments'] = root_ids[3:]
+            selected_segments = layer['segments']
+            layer['hiddenSegments'] = [root_id for root_id in root_ids if root_id not in selected_segments]
 
     return json.dumps(base_state_dict), graph_image
 
