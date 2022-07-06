@@ -30,7 +30,7 @@ from workspace.views import (
     SaveStateView
     )
 from preferences.views import PreferencesView
-from dashboard.views import DashboardView, ReportView,UserNamespaceView
+from dashboard.views import DashboardView, DashboardNamespaceView, DashboardUserView, ReportView, UserNamespaceView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -43,7 +43,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
-    path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardView.as_view(), name="dashboard"),
+    path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardNamespaceView.as_view(), name="dashboard"),
+    path('dashboard/username/<str:username>', DashboardUserView.as_view(), name="dashboard"),
+    path('dashboard/username/<str:username>/<str:filter>', DashboardUserView.as_view(), name="dashboard"),
     path('auth_redirect.html',AuthView.as_view(),name='auth_redirect'),
     path('token/', TokenView.as_view(), name='token'),
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
