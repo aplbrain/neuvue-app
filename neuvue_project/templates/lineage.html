@@ -85,7 +85,7 @@
       console.log('unselected: ', state['layers'][1]['hiddenSegments'].length)
       console.log('hiddenSegments.includes(root_id): ', state['layers'][1]['hiddenSegments'].includes(root_id))
 
-      if (state['layers'][1]['hiddenSegments'].includes(root_id.toString())){
+      if (state['layers'][1]['hiddenSegments'].includes(root_id)){
         state['layers'][1]['segments'].push(root_id);
         state['layers'][1]['hiddenSegments'].pop(root_id);
         console.log('adding')
