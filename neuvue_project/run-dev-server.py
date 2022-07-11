@@ -2,7 +2,10 @@
 
 import subprocess
 
-# Collect static files 
+# Get recent migrations to database
+subprocess.run(['python3', 'manage.py', 'migrate'])
+
+# Collect static files
 subprocess.run(['python3', 'manage.py', 'collectstatic', '--no-input'])
 
 # Turn debug mode on in settings.py
