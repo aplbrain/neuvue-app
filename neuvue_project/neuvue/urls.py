@@ -26,10 +26,11 @@ from workspace.views import (
     LineageView,
     TokenView,
     SynapseView,
-    GettingStartedView
+    GettingStartedView,
+    SaveStateView
     )
 from preferences.views import PreferencesView
-from dashboard.views import DashboardView, ReportView
+from dashboard.views import DashboardView, DashboardNamespaceView, DashboardUserView, ReportView, UserNamespaceView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -42,7 +43,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('dashboard/', DashboardView.as_view(), name="dashboard"),
-    path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardView.as_view(), name="dashboard"),
+    path('dashboard/namespace/<str:namespace>/group/<str:group>', DashboardNamespaceView.as_view(), name="dashboard"),
+    path('dashboard/username/<str:username>', DashboardUserView.as_view(), name="dashboard"),
+    path('dashboard/username/<str:username>/<str:filter>', DashboardUserView.as_view(), name="dashboard"),
     path('auth_redirect.html',AuthView.as_view(),name='auth_redirect'),
     path('token/', TokenView.as_view(), name='token'),
     path('inspect/', InspectTaskView.as_view(), name="inspect"), 
@@ -51,7 +54,9 @@ urlpatterns = [
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
-    path('report/', ReportView.as_view(), name="report")
+    path('report/', ReportView.as_view(), name="report"),
+    path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
+    path('save_state', SaveStateView.as_view(), name="save-state")
 ]
 
 

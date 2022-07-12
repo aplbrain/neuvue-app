@@ -40,6 +40,8 @@
                         <li><a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="nav-link" href="{% url "report" %}">Reports</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="{% url "user-namespace" %}">User/Namespace Query</a></li>
                     </ul>
                 </li>
                 {% endif%}
@@ -47,7 +49,7 @@
                 {% if request.user|in_group:"AuthorizedUsers"%}
 
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="{% url "getting-started" %}">Getting Started</a>
+                    <a class="nav-link" href="{% url "getting-started" %}">Getting Started</a>
                 </li>
                 
                 <li class="nav-item">

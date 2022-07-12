@@ -1,9 +1,20 @@
 from django.contrib import admin
-from .models import Namespace, UserProfile
+from .models import ForcedChoiceButtonGroup, ForcedChoiceButton, Namespace, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 admin.site.unregister(User)
+
+class ButtonsInline(admin.TabularInline):
+    model = ForcedChoiceButton
+    verbose_name = "forced choice button"
+    verbose_name_plural = "forced choice buttons"
+    extra = 1
+    max_num = 8
+
+@admin.register(ForcedChoiceButtonGroup)
+class ForcedChoiceAdmin(admin.ModelAdmin):
+    inlines = (ButtonsInline, )    
 
 class NamespaceAdmin(admin.ModelAdmin):
     list_display = ('namespace', 'namespace_enabled')

@@ -11,3 +11,11 @@ def confirm_modal(column):
         "confirm_text_id": "confirmUpdate" + column.capitalize() + "ModalBody",
         "button_id": column.lower() + "-button",
     }
+
+@register.inclusion_tag('reusable_components/metrics_card.html')
+def metrics_card(title, value, color):
+    return {
+        "title": title,
+        "value": value,
+        "color": color     # should be a bootstrap color utility, e.g. primary, secondary
+    }

@@ -368,7 +368,11 @@ def construct_lineage_state_and_graph(root_id:str):
     # We need the root ids and a position to create a base state.
     # Since this is not part of any particular namespace, I chose automatedSplit 
     # to ensure the neuroglancer state uses Minnie data. 
-    root_ids = [str(x) for x in lineage_graph]
+    root_ids = {str(x) for x in lineage_graph}
+
+    # Ensure original root ID is in list of shown IDs
+    root_ids.add(root_id)
+    root_ids = list(root_ids)
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
     base_state = create_base_state(root_ids_with_center, position, 'automatedSplit')
 
@@ -383,17 +387,20 @@ def construct_lineage_state_and_graph(root_id:str):
     return json.dumps(base_state_dict), graph_image
 
 def apply_state_config(state:str, username:str):
+    cdict = json.loads(state)
+    cdict['jsonStateServer'] = settings.JSON_STATE_SERVER
     #make ng state preferences changes, json string to dict
     try:
         config = Config.objects.filter(user=username).order_by('-id')[0]
     except Exception as e:
         logging.error(e) 
-        return state
+        return json.dumps(cdict)
 
     if not config.enabled:
-        return state
+        return json.dumps(cdict)
     
     annotation_color_palette = config.annotation_color_palette
+    mesh_color_palette = config.mesh_color_palette
     alpha_selected = config.alpha_selected
     zoom_level = config.zoom_level
     alpha_3d = config.alpha_3d
@@ -401,6 +408,7 @@ def apply_state_config(state:str, username:str):
     sys_limit = config.sys_limit
     chunk_requests = config.chunk_requests
     layout = config.layout
+    enable_sound = config.enable_sound
 
     cdict = json.loads(state)
 
@@ -412,19 +420,37 @@ def apply_state_config(state:str, username:str):
         cdict["systemMemoryLimit"] = int(float(sys_limit) * 1E9)
     if config.chunk_requests_switch:
         cdict["concurrentDownloads"] = int(chunk_requests)
-
     if config.zoom_level_switch:
         cdict["navigation"]["zoomFactor"] = int(zoom_level)
+    if config.enable_sound_switch:
+        cdict['enableSound'] == enable_sound
     
     # create color palette dictionary
-    color_palette_dict = {'palette1' : ['#F9C80E', '#F86624', '#EA3546', '#662E9B', '#43BCCD'],
-                            'palette2' : ['#006D77', '#83C5BE', '#EFG6F9', '#FFDDD2', '#E29578'], 
-                            'palette3' : ['#22577A', '#38A3A5', '#57CC99', '#80ED99', '#C7F9CC'], 
-                            'palette4' : ['#25CED1', '#FFFFFF', '#FCEADE', '#FF8A5B', '#EA526F'], 
-                            'palette5' : ['#335C67', '#FFF3B0', '#E09F3E', '#9E2A2B', '#540B0E'], 
-                            'palette6' : ['#FF99C8', '#FCF6BD', '#D0F4DE', '#A9DEF9', '#E4C1F9']}
+    annotation_color_palette_dict = {'palette1' : ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF', '#FFFFFC'],
+                            'palette2' : ['#F72585', '#B5179E', '#7209B7', '#560BAD', '#480CA8', '#3A0CA3', '#3F37C9', '#4361EE', '#4895EF', '#4CC9F0'], 
+                            'palette3' : ['#7400B8', '#6930C3', '#5E60CE', '#5390D9', '#4EA8DE', '#48BFE3', '#56CFE1', '#64DFDF', '#72EFDD', '#80FFDB'], 
+                            'palette4' : ['#F94144', '#F3722C', '#F8961E', '#F9844A', '#F9C74F', '#90BE6D', '#43AA8B', '#4D908E', '#577590', '#277DA1'], 
+                            'palette5' : ['#005F73', '#0A9396', '#94D2BD', '#E9D8A6', '#EE9B00', '#CA6702', '#BB3E03', '#AE2012', '#9B2226'], 
+                            'palette6' : ['#011A51', '#1957DB', '#487BEA', '#7EA3F1', '#C8D7F9', '#B83700', '#F06C00', '#FAB129', '#FBC55F', '#FDE9C3']}
+
+    # create mesh color palette dictionary
+    mesh_color_palette_dict = {'palette1' : ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF', '#FFFFFC'],
+                            'palette2' : ['#F72585', '#B5179E', '#7209B7', '#560BAD', '#480CA8', '#3A0CA3', '#3F37C9', '#4361EE', '#4895EF', '#4CC9F0'], 
+                            'palette3' : ['#7400B8', '#6930C3', '#5E60CE', '#5390D9', '#4EA8DE', '#48BFE3', '#56CFE1', '#64DFDF', '#72EFDD', '#80FFDB'], 
+                            'palette4' : ['#F94144', '#F3722C', '#F8961E', '#F9844A', '#F9C74F', '#90BE6D', '#43AA8B', '#4D908E', '#577590', '#277DA1'], 
+                            'palette5' : ['#005F73', '#0A9396', '#94D2BD', '#E9D8A6', '#EE9B00', '#CA6702', '#BB3E03', '#AE2012', '#9B2226'], 
+                            'palette6' : ['#011A51', '#1957DB', '#487BEA', '#7EA3F1', '#C8D7F9', '#B83700', '#F06C00', '#FAB129', '#FBC55F', '#FDE9C3']}
+
+
+
+    # generate random color
+    def getRandomHexColor():
+        random_number = random.randint(0,16777215)
+        hex_number = str(hex(random_number))
+        hex_color = '#'+ hex_number[2:].upper()
+        return hex_color
     
-    layer_count = 0
+    annotation_layer_count = 0
     for layer in cdict['layers']:
         # handle alpha
         if 'segmentation' in layer.get('type', '') and config.alpha_selected_switch:
@@ -433,13 +459,37 @@ def apply_state_config(state:str, username:str):
         if 'segmentation' in layer.get('type', '') and config.alpha_3d_switch:
             layer['objectAlpha'] = float(alpha_3d)
         
-        # handle layer colors
+        # handle annotation layer colors
         if layer.get('type', '') == 'annotation' and config.annotation_color_palette_switch:
-            color_palette_list = color_palette_dict[annotation_color_palette]
-            annotation_color = color_palette_list[layer_count%len(color_palette_list)]
+            annotation_color_palette_list = annotation_color_palette_dict[annotation_color_palette]
+            
+            # set annotation color 
+            # get a random color, if the layer is within the number of available color palette colors, grab next color paltte color
+            annotation_color = getRandomHexColor()  # set this to random color
+            if annotation_layer_count < len(annotation_color_palette_list):
+                annotation_color = annotation_color_palette_list[annotation_layer_count%len(annotation_color_palette_list)]
             layer['annotationColor'] = str(annotation_color)
+            annotation_layer_count += 1
+    
+        # handle mesh layer colors
+        if 'segmentation' in layer.get('type', '') and config.mesh_color_palette_switch:
+            mesh_color_palette_list = mesh_color_palette_dict[mesh_color_palette]
+            segments = layer['segments']
+            segmentColors = {}
 
-        layer_count += 1
+            # populate segment colors dictionary
+            # get a random color, if the layer is within the number of available color palette colors, grab next color paltte color
+            mesh_layer_count = 0
+            for segment in segments:
+                mesh_color = getRandomHexColor()
+                if mesh_layer_count < len(mesh_color_palette_list):
+                    mesh_color = mesh_color_palette_list[mesh_layer_count%len(mesh_color_palette_list)]
+                segmentColors[segment] = mesh_color
+                mesh_layer_count += 1
+            
+            # add segment colors dictionary to layer state
+            layer['segmentColors'] = segmentColors
+
 
 
     return json.dumps(cdict)
@@ -498,6 +548,7 @@ def construct_synapse_state(root_ids:List):
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
     
     synapse_stats = {}
     

@@ -1,12 +1,11 @@
 from cProfile import label
-import json
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.apps import apps
 
 from neuvueclient import NeuvueQueue
@@ -16,34 +15,71 @@ import plotly.graph_objects as go
 
 # import the logging library
 import logging
-import pandas as pd
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-# Convienence function
+# Convenience functions
 def _get_users_from_group(group:str): 
     users = Group.objects.get(name=group).user_set.all() 
     return [x.username for x in users]
+
+def _format_time(x):
+    try:
+        return x.strftime('%Y-%m-%d %H:%M:%S')
+    except:
+        return 'N/A'
+
+def _get_status_count(task_df, status):
+    return task_df['status'].value_counts().get(status, 0)
 
 class DashboardView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, namespace=None, group=None, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
             return redirect(reverse('index'))
         
         Namespaces = apps.get_model('workspace', 'Namespace')
         
         context = {}
-        context['all_groups'] = [x.name for x in Group.objects.all()]
-        context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
+        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_groups'].append('See All Users')
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+        context['all_users'] = sorted([x.username for x in User.objects.all()])
+
+        return render(request, "admin_dashboard/dashboard.html", context)
+
+    def post(self, request, *args, **kwargs):
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        display_name = request.POST.get("namespace")
+        group = request.POST.get("group")
+        username = request.POST.get("username")
+
+        if display_name and group:
+            namespace = Namespaces.objects.get(display_name = display_name).namespace
+            return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
+        elif username:
+            return redirect(reverse('dashboard', kwargs={"username": username}))
+        else:
+            # as long as all html form fields contain required="true" this case should not be reached
+            return redirect(reverse('dashboard'))
+
+class DashboardNamespaceView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, group=None, namespace=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
         
-        if not group or not namespace: 
-            return render(request, "dashboard.html", context)
+        Namespaces = apps.get_model('workspace', 'Namespace')
         
+        context = {}
+
         users = _get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
         
@@ -56,34 +92,39 @@ class DashboardView(View, LoginRequiredMixin):
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
 
+        return render(request, "admin_dashboard/dashboard-namespace-view.html", context)
 
-        return render(request, "dashboard.html", context)
-    
     def _generate_table_and_counts(self, namespace: str, users: List):
         table_rows = []
         # Counts
         tc = tp = to = te = 0
-        for user in users:
-            task_df = self.client.get_tasks(sieve={
-                'assignee': user,
+        task_df = self.client.get_tasks(
+            sieve={
+                'assignee': users,
                 'namespace': namespace
-            }, return_states=False, return_metadata=False)
-            task_df= task_df.sort_values('created', ascending=False)
-            last_closed = self._format_time(task_df['closed'].max())
-            task_df['task_id'] = task_df.index
-            task_df['opened'] = task_df['opened'].apply(self._format_time)
-            task_df['closed'] = task_df['closed'].apply(self._format_time)
-            task_df['created'] = task_df['created'].apply(self._format_time)
-            task_df['duration'] = (task_df['duration']/60).round(1)
+            },
+            return_metadata=False,
+            return_states=False
+        )
+        for user in users:
+
+            user_df = task_df[task_df['assignee'] == user]
+            user_df= user_df.sort_values('created', ascending=False)
+            last_closed = _format_time(user_df['closed'].max())
+            user_df['task_id'] = user_df.index
+            user_df['opened'] = user_df['opened'].apply(_format_time)
+            user_df['closed'] = user_df['closed'].apply(_format_time)
+            user_df['created'] = user_df['created'].apply(_format_time)
+            user_df['duration'] = (user_df['duration']/60).round(1)
             # Append row info 
             row = {
                 'username': user,
-                'pending': self._get_status_count(task_df, 'pending'),
-                'open': self._get_status_count(task_df, 'open'),
-                'closed': self._get_status_count(task_df, 'closed'),
-                'errored': self._get_status_count(task_df, 'errored'),
+                'pending': _get_status_count(user_df, 'pending'),
+                'open': _get_status_count(user_df, 'open'),
+                'closed': _get_status_count(user_df, 'closed'),
+                'errored': _get_status_count(user_df, 'errored'),
                 'last_closed': last_closed,
-                'user_tasks': task_df.to_dict('records')
+                'user_tasks': user_df.to_dict('records')
             }
 
             table_rows.append(row)
@@ -92,25 +133,63 @@ class DashboardView(View, LoginRequiredMixin):
             to += int(row['open'])
             te += int(row['errored'])
 
-            
         return table_rows, (tc, tp, to, te)
 
-    def _format_time(self, x):
-        try:
-            return x.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            return 'N/A'
 
-    def _get_status_count(self, task_df, status):
-        return task_df['status'].value_counts().get(status, 0)
+class DashboardUserView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, username=None, filter=None, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+
+        context = {}
+        table, counts = self._generate_table_and_counts(username)
+        
+        context['username'] = username
+        context['table'] = table
+        context['total_closed'] = counts[0]
+        context['total_pending'] = counts[1]
+        context['total_open'] = counts[2]
+        context['total_errored'] = counts[3]
+        context['filter'] = filter
+
+        return render(request, "admin_dashboard/dashboard-user-view.html", context)
+
+    def _generate_table_and_counts(self, user: str):
+        table_rows = []
+        # Counts
+        tc = tp = to = te = 0
+        user_df = self.client.get_tasks(
+            sieve={
+                'assignee': user,
+            },
+            return_metadata=False,
+            return_states=False
+        )
+
+        user_df= user_df.sort_values('created', ascending=False)
+        user_df['task_id'] = user_df.index
+        user_df['opened'] = user_df['opened'].apply(_format_time)
+        user_df['closed'] = user_df['closed'].apply(_format_time)
+        user_df['created'] = user_df['created'].apply(_format_time)
+        user_df['duration'] = (user_df['duration']/60).round(1)
+
+        table_rows = user_df.to_dict('records')
+        tc = int(_get_status_count(user_df, 'closed'))
+        tp += int(_get_status_count(user_df, 'pending'))
+        to += int(_get_status_count(user_df, 'open'))
+        te += int(_get_status_count(user_df, 'errored'))
+
+        return table_rows, (tc, tp, to, te)
 
     def post(self, request, *args, **kwargs):
-        Namespaces = apps.get_model('workspace', 'Namespace')
         # Refresh request
-        display_name = request.POST.get("namespace")
-        group = request.POST.get("group")
-        namespace = Namespaces.objects.get(display_name = display_name).namespace
+        username = request.POST.get("username")
 
+        # If update task(s) button was clicked - api call is made to update the task(s)
         if "selected_tasks" in request.POST:
             selected_action = request.POST.get("selected_action")
             selected_tasks = request.POST.getlist("selected_tasks")
@@ -135,8 +214,9 @@ class DashboardView(View, LoginRequiredMixin):
                 elif selected_action == "status":
                     self.client.patch_task(task, status=new_status)
                     logging.debug(f"Updating task {task} to {new_status}")
-        return redirect(reverse('dashboard', kwargs={"namespace":namespace, "group": group}))
 
+        # Redirect to dashboard page from splashpage or modal
+        return redirect(reverse('dashboard', kwargs={"username": username}))
 
 class ReportView(View, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -149,22 +229,20 @@ class ReportView(View, LoginRequiredMixin):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
         context = {}
-        context['all_groups'] = [x.name for x in Group.objects.all()]
-        context['all_namespaces'] = [x.display_name for x in Namespaces.objects.all()]
-        return render(request, "report.html", context)
-
-    def _format_time(self, x):
+        context['all_groups'] = sorted([x.name for x in Group.objects.all()])
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+        
         try:
-            return x.strftime('%Y-%m-%d %H:%M:%S')
+            context['all_groups'].remove('AuthorizedUsers')
         except:
-            return 'N/A'
+            pass 
 
-    def _get_status_count(self, task_df, status):
-        return task_df['status'].value_counts().get(status, 0)
+        return render(request, "report.html", context)
 
     def post(self, request, *args, **kwargs):
         
         Namespaces = apps.get_model('workspace', 'Namespace')
+        Buttons = apps.get_model('workspace', 'ForcedChoiceButton')
         
         # Access POST fields
         display_name = request.POST.get('namespace')
@@ -182,8 +260,11 @@ class ReportView(View, LoginRequiredMixin):
         namespace = Namespaces.objects.get(display_name = display_name).namespace
         users = _get_users_from_group(group)
 
+        button_sets = set()
+        for o in Buttons.objects.all(): button_sets.add(str(o.set_name))
+
         # add bar chart
-        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=['forced_choice','decide_and_submit']).all()]
+        decision_namespaces = [x.namespace for x in Namespaces.objects.filter(submission_method__in=list(button_sets)).all()]
 
         sieve = {
             'assignee': users,
@@ -285,3 +366,129 @@ class ReportView(View, LoginRequiredMixin):
             context["fig_decision"] = fig_decision.to_html()
 
         return render(request,'report.html',context)
+
+class UserNamespaceView(View, LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect(reverse('index'))
+        
+        Namespaces = apps.get_model('workspace', 'Namespace')
+
+        context = {}
+        context['all_users'] = sorted([x.username for x in User.objects.all()])
+        context['all_namespaces'] = sorted([x.display_name for x in Namespaces.objects.all()])
+        
+        try:
+            context['all_groups'].remove('AuthorizedUsers')
+        except:
+            pass 
+
+        fields = {"created":"Created By",
+                    "opened": "Opened By",
+                    "closed": "Closed By"}
+
+        context['fields'] = fields
+
+        return render(request, "user-namespace.html", context)
+
+    def post(self, request, *args, **kwargs):
+        
+        Namespaces = apps.get_model('workspace', 'Namespace')
+        
+        # Access POST fields
+        display_name = request.POST.get('namespace')
+        username = request.POST.get('user')
+        start_field = request.POST.get('start_field')
+        start_date = request.POST.get('start_date')
+        end_field = request.POST.get('end_field')
+        end_date = request.POST.get('end_date')
+        
+        # Convert to datetime Objects
+        start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+        end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+
+        # Retrieve valid tasks
+        namespace = Namespaces.objects.get(display_name = display_name).namespace if display_name else ''
+
+        if display_name:
+            sieve = {
+                'namespace': namespace,
+            }
+        else:
+            sieve = {
+                'assignee': username,
+            }
+
+        if start_field == end_field:
+            sieve[start_field] = {
+                '$gt': start_dt,
+                '$lt': end_dt
+            }
+        else:
+            sieve[start_field] = {
+                '$gt': start_dt
+            }
+            sieve[end_field] = {
+                '$lt': end_dt
+            }
+            
+        task_df = self.client.get_tasks(
+            sieve=sieve, 
+            select=['assignee', 'status', 'duration','metadata','closed','opened','namespace']
+            )
+
+        if display_name:    
+            columns = ['Username', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
+            status_states = ['pending','open','closed','errored']
+            columns.extend(status_states)
+            table_rows = []
+            for assignee, assignee_df in task_df.groupby('assignee'):
+                total_duration = str(round(assignee_df['duration'].sum()/3600,2))
+                avg_closed_duration = str(round(assignee_df[assignee_df['status']=='closed']['duration'].mean()/60,2))
+                avg_duration = str(round(assignee_df['duration'].mean()/60,2))
+                user_metrics = [assignee, total_duration, avg_closed_duration, avg_duration]
+                for status in status_states:
+                    number_of_tasks = len(assignee_df[assignee_df['status']==status])
+                    user_metrics.append(number_of_tasks)
+                table_rows.append(user_metrics)
+        else:
+            columns = ['Namespace', 'Total Duration (h)', 'Avg Closed Duration (m)' , 'Avg Duration (m)']
+            status_states = ['pending','open','closed','errored']
+            columns.extend(status_states)
+            table_rows = []
+            for namespace, namespace_df in task_df.groupby('namespace'):
+                total_duration = str(round(namespace_df['duration'].sum()/3600,2))
+                avg_closed_duration = str(round(namespace_df[namespace_df['status']=='closed']['duration'].mean()/60,2))
+                avg_duration = str(round(namespace_df['duration'].mean()/60,2))
+                namespace_metrics = [namespace, total_duration, avg_closed_duration, avg_duration]
+                for status in status_states:
+                    number_of_tasks = len(namespace_df[namespace_df['status']==status])
+                    namespace_metrics.append(number_of_tasks)
+                table_rows.append(namespace_metrics)
+
+        fields = {"created":"Created By",
+                    "opened": "Opened By",
+                    "closed": "Closed By"}
+
+        filename_field = display_name if display_name else username
+
+        context = {"display_name":display_name,
+                    "namespace":namespace,
+                    "start_field":start_field,
+                    "start_date":start_date,
+                    "end_field":end_field,
+                    "end_date":end_date,
+                    'username':username,
+                    "table_columns":columns,
+                    "table_rows":table_rows,
+                    "fields":fields,
+                    'all_users': sorted([x.username for x in User.objects.all()]),
+                    "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
+                    'filename_field': filename_field
+                }
+
+        return render(request,'user-namespace.html',context)

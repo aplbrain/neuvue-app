@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'dashboard',
     'webpack_loader',
     'preferences',
-    'debug_toolbar'
+    'debug_toolbar',
+    'colorfield'
 ]
 
 MIDDLEWARE = [
@@ -199,11 +200,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+LOGIN_URL = 'index'
 LOGIN_REDIRECT_URL = '/tasks'
 LOGOUT_REDIRECT_URL = '/'
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
+SANDBOX_ID = '6269888a101fc4da81fdd410'
 # NEUVUE_QUEUE_ADDR = "http://localhost:9005"
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True

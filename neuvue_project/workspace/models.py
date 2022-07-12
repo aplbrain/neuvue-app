@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from colorfield.fields import ColorField
 from django.contrib.auth.models import User
+from django.contrib import admin
+from .validators import validate_submission_value
 # Create your models here.
 
 class NeuroglancerLinkType(models.TextChoices):
@@ -20,10 +23,38 @@ class NeuroglancerLinkType(models.TextChoices):
     POINT = 'point', _('Annotation Layer')
     PREGENERATED = 'pregen', _('Pregenerated')
 
-class SubmissionMethod(models.TextChoices):
-    SUBMIT = 'submit', _('Submit Button')
-    FORCED_CHOICE = 'forced_choice', _('Yes/No/Maybe Button')
-    DECIDE_AND_SUBMIT = 'decide_and_submit', _('Decide and Submit Button')
+class ForcedChoiceButtonGroup(models.Model):
+    group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
+    submit_task_button = models.BooleanField(default=True)
+    def __str__(self):
+        return self.group_name
+    class Meta:
+        verbose_name = "Forced Choice Button Group"
+        verbose_name_plural = "Forced Choice Button Groups"
+
+class HotkeyChoices(models.TextChoices):
+    C = 'c'
+    D = 'd'
+    J = 'j'
+    M = 'm'
+    Q = 'q'
+    R = 'r'
+    T = 't'
+    V = 'v'
+    W = 'w'
+    Y = 'y'
+    Z = 'z'
+
+
+class ForcedChoiceButton(models.Model):
+    set_name = models.ForeignKey(ForcedChoiceButtonGroup, to_field='group_name', on_delete=models.CASCADE)
+    display_name = models.CharField(max_length=100)
+    submission_value = models.CharField(max_length=100, validators=[validate_submission_value])
+    button_color = ColorField(format='hexa')
+    button_color_active = ColorField(format='hexa')
+    hotkey = models.CharField(max_length=300, choices=HotkeyChoices.choices, blank=True, null=True)
+    def __str__(self):
+        return str(self.set_name)
 
 class PcgChoices(models.TextChoices):
     MINNIE = 'https://minnie.microns-daf.com/segmentation/table/minnie3_v1', _('Minnie65')
@@ -51,7 +82,7 @@ class Namespace(models.Model):
     namespace = models.CharField(max_length=50, primary_key=True)
     display_name = models.CharField(max_length=100)
     ng_link_type = models.CharField(max_length=50, choices = NeuroglancerLinkType.choices, default= NeuroglancerLinkType.PREGENERATED)
-    submission_method = models.CharField(max_length=50, choices=SubmissionMethod.choices, default=SubmissionMethod.SUBMIT)
+    submission_method = models.ForeignKey(ForcedChoiceButtonGroup, on_delete=models.PROTECT, blank=True, null=True, to_field="group_name", db_column="submission_method")
     pcg_source = models.CharField(max_length=300, choices=PcgChoices.choices, default=PcgChoices.MINNIE)
     img_source = models.CharField(max_length=300, choices=ImageChoices.choices, default=ImageChoices.MINNIE)
     track_operation_ids = models.BooleanField(default=True)
