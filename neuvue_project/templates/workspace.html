@@ -114,7 +114,7 @@
                                 </div>
                             </button>
                             <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">                            
-                                <kbd><span class="modifier"></span><span class="hotkey_button">+ {{button.hotkey}}</span></kbd>
+                                <span class="modifier"></span><span class="hotkey_button">+ <kbd>{{button.hotkey}}</kbd></span>
                             </div>
                         </div>
                     {% endfor %}
@@ -162,7 +162,7 @@
                             Flag Task
                         </button>
                         <div class="hotkeyHint">                            
-                            <kbd><span class="modifier"></span><span> + f</span></kbd>
+                            <span class="modifier"></span><span> + <kbd>f</kbd> </span>
                         </div>
                     </div>
 
@@ -197,7 +197,7 @@
                             </div>
                         </button>
                         <div class="hotkeyHint">                            
-                            <kbd><span class="modifier"></span><span> + k</span></kbd>
+                            <span class="modifier"></span><span> + <kbd>k</kbd></span>
                         </div>
 
                     </div>
@@ -248,7 +248,7 @@
                             </div>
                         </button>
                         <div class="hotkeyHint">                            
-                            <kbd><span class="modifier"></span><span class="hotkey_button"> + e</span></kbd>
+                            <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
                         </div>
                     </div>
 
@@ -491,7 +491,7 @@
         var os = navigator.platform.toLowerCase();
         var modifier = "Alt";
         if (os.includes('mac')) {
-            modifier = "Option";
+            modifier = "⌥";
         } 
         
         var hotkey_hint_obs = document.getElementsByClassName("hotkeyHint");
