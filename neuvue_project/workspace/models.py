@@ -32,12 +32,27 @@ class ForcedChoiceButtonGroup(models.Model):
         verbose_name = "Forced Choice Button Group"
         verbose_name_plural = "Forced Choice Button Groups"
 
+class HotkeyChoices(models.TextChoices):
+    C = 'c'
+    D = 'd'
+    J = 'j'
+    M = 'm'
+    Q = 'q'
+    R = 'r'
+    T = 't'
+    V = 'v'
+    W = 'w'
+    Y = 'y'
+    Z = 'z'
+
+
 class ForcedChoiceButton(models.Model):
     set_name = models.ForeignKey(ForcedChoiceButtonGroup, to_field='group_name', on_delete=models.CASCADE)
     display_name = models.CharField(max_length=100)
     submission_value = models.CharField(max_length=100, validators=[validate_submission_value])
     button_color = ColorField(format='hexa')
     button_color_active = ColorField(format='hexa')
+    hotkey = models.CharField(max_length=300, choices=HotkeyChoices.choices, blank=True, null=True)
     def __str__(self):
         return str(self.set_name)
 

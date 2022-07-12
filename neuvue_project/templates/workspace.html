@@ -98,20 +98,25 @@
                             } 
                             {% endif %}
                         </style>
-                        <button 
-                            id="{{button.submission_value}}" 
-                            type="button" 
-                            class="forcedChoiceButton {{button.submission_value}}"
-                            {% if submit_task_button %} 
-                                onclick="updateButtonSelected('{{button.submission_value}}')"
-                            {% else %}
-                                onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
-                            {% endif %}
-                        >
-                            <div id = '{{button.submission_value}}_load'>
-                                {{button.display_name}}
+                        <div class="mainButtonWrapper forcedChoiceWrapper">
+                            <button 
+                                id="{{button.submission_value}}" 
+                                type="button" 
+                                class="forcedChoiceButton {{button.submission_value}}"
+                                {% if submit_task_button %} 
+                                    onclick="updateButtonSelected('{{button.submission_value}}')"
+                                {% else %}
+                                    onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
+                                {% endif %}
+                            >
+                                <div id = '{{button.submission_value}}_load'>
+                                    {{button.display_name}}
+                                </div>
+                            </button>
+                            <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">                            
+                                <kbd><span class="modifier"></span><span class="hotkey_button">+ {{button.hotkey}}</span></kbd>
                             </div>
-                        </button>
+                        </div>
                     {% endfor %}
             </form>   
                    
@@ -121,102 +126,131 @@
                     {% csrf_token %}
 
                     <! Save/Reload >
-                    {% comment %} <button
-                        id="btnSave" 
-                        type="button" 
-                        class="mainButton" 
-                        accesskey="s"
-                    >
-                        Save Checkpoint
-                    </button>
-                    
-                    <button
-                        id="btnReload" 
-                        type="button" 
-                        class="mainButton"
-                        accesskey="r"
-                    >
-                        Reload Checkpoint
-                    </button> {% endcomment %}
+                    {% comment %} 
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSave" 
+                            type="button" 
+                            class="mainButton" 
+                            accesskey="s"
+                        >
+                            Save Checkpoint
+                        </button>
+                    </div>
+
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnReload" 
+                            type="button" 
+                            class="mainButton"
+                            accesskey="r"
+                        >
+                            Reload Checkpoint
+                        </button> 
+                    </div>
+                    {% endcomment %}
                     
                     <! Flag >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnFlag" 
+                            type="button" 
+                            class="mainButton flag"
+                            accesskey="f"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#flagModal">
+                            Flag Task
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <kbd><span class="modifier"></span><span> + f</span></kbd>
+                        </div>
+                    </div>
+
 
                     {% if allowed_to_reassgin%}
                     <! Remove >
-                    <button
-                        id="btnRemove" 
-                        type="button" 
-                        class="mainButton remove"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#removeModal"
-                    >
-                    Remove Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnRemove" 
+                            type="button" 
+                            class="mainButton remove"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#removeModal"
+                            >
+                            Remove Task
+                        </button>
+                    </div>
                     {% endif %}
                     
                     <! Skip >
                     {% if skipable %}
-                    <button
-                        id="btnSkipSubmit" 
-                        type="button" 
-                        class="mainButton skip"
-                        accesskey="k"
-                        onclick="triggerLoadingSpinner('skip_task_load')" 
-                    >
-                        <div id = 'skip_task_load'>
-                            Skip Task
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSkipSubmit" 
+                            type="button" 
+                            class="mainButton skip"
+                            accesskey="k"
+                            onclick="triggerLoadingSpinner('skip_task_load')" 
+                        >
+                            <div id = 'skip_task_load'>
+                                Skip Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <kbd><span class="modifier"></span><span> + k</span></kbd>
                         </div>
-                    </button>
+
+                    </div>
                     {% endif %}
 
                     <! Submit >
                     {% if submit_task_button %}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
-                        onclick="triggerLoadingSpinner('submit_task_load')" 
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            name="btnSubmit"
+                            id="btnSubmit" 
+                            type="button" 
+                            class="mainButton submit"
+                            onclick="triggerLoadingSpinner('submit_task_load')" 
+                        >
+                            <div id = 'submit_task_load'>
+                                Submit Task
+                            </div>
+                        </button>
+                    </div>
                     {% endif %}
 
                     <! Save State > 
-                    <button 
-                        id="btnSaveState"
-                        type="button"
-                        class="mainButton save_state"
-                        onclick="triggerLoadingSpinner('save_state')"
-                        >
-                        <div id = 'save_state'>
-                            Save State
-                        </div>
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnSaveState"
+                            type="button"
+                            class="mainButton save_state"
+                            onclick="triggerLoadingSpinner('save_state')"
+                            >
+                            <div id = 'save_state'>
+                                Save State
+                            </div>
+                        </button>
+                    </div>
                     
                     <! Stop >
-                    <button 
-                        id="btnStop"
-                        type="button"
-                        class="mainButton pause"
-                        accesskey="e"
-                        onclick="triggerLoadingSpinner('exit_task_load')"
-                    >
-                        <div id = 'exit_task_load'>
-                            Save and Exit Task
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnStop"
+                            type="button"
+                            class="mainButton pause"
+                            accesskey="e"
+                            onclick="triggerLoadingSpinner('exit_task_load')"
+                        >
+                            <div id = 'exit_task_load'>
+                                Save and Exit Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <kbd><span class="modifier"></span><span class="hotkey_button"> + e</span></kbd>
                         </div>
-                    </button>
+                    </div>
 
 
                     {% else %}
@@ -225,14 +259,16 @@
                         <div class="interTaskTitle">
                             Tasks Complete <br> {{display_name}} 
                         </div>
-                        <button 
-                            type="button" 
-                            class="mainButton return" 
-                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                            <div id = 'exit_workspace'>
-                                Return to Task page
-                            </div>
-                        </button>
+                        <div class="mainButtonWrapper">
+                            <button 
+                                type="button" 
+                                class="mainButton return" 
+                                onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                                <div id = 'exit_workspace'>
+                                    Return to Task page
+                                </div>
+                            </button>
+                        </div>
                     {% endif %}
                     </div>
 
@@ -450,6 +486,31 @@
     $(document).ready(function() {
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
+        
+        // alter hotkey hints based on operating system
+        var os = navigator.platform.toLowerCase();
+        var modifier = "Alt";
+        if (os.includes('mac')) {
+            modifier = "Option";
+        } 
+        
+        var hotkey_hint_obs = document.getElementsByClassName("hotkeyHint");
+        for (var i = 0; i < hotkey_hint_obs.length; i++) {
+            var modifier_text = hotkey_hint_obs.item(i).getElementsByClassName("modifier").item(0);
+            if (modifier_text){
+                modifier_text.innerHTML = modifier;
+            }
+        }
+
+        // show valid hotkey hints for forced choice buttons
+        var forced_choice_hotkey_hints = document.getElementsByClassName("forcedChoiceHotkeyHint");
+        for (var i = 0; i < forced_choice_hotkey_hints.length; i++) {
+            var hotkey_text = forced_choice_hotkey_hints.item(i).getElementsByClassName("hotkey_button").item(0).innerHTML.toLowerCase();
+            if (!(hotkey_text.includes('none'))) {
+                forced_choice_hotkey_hints.item(i).style.display = 'block';
+            }
+        }
+        
         // add specific class to save state overlay
 
         {% if submit_task_button %}
@@ -474,6 +535,13 @@
                 });
             {% endfor %}
         {% endif %}
+
+        var button_id_to_hotkey = {}
+        {% for button in button_list %}
+                var button_id = "{{button.submission_value}}";
+                var hotkey = "{{button.hotkey}}"
+                button_id_to_hotkey[button_id] = hotkey;
+        {% endfor %}
 
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
@@ -515,8 +583,26 @@
 
         // additional hotkeys
         document.addEventListener("keydown", function(event) {
-            if (event.altKey && (event.keyCode == 75)){
-                // alt + s: save checkpoint
+            // define key character to charcode mapping
+            var char_to_key_code = {'c': 67, 'd': 68, 'j': 74, 'm': 77, 'q': 81,
+                'r': 82, 't': 84, 'v': 86, 'w': 87, 'y': 89, 'z': 90};
+
+            // iterate through forced choice butttons to check for hotkey action
+            var button_list = document.getElementsByClassName('forcedChoiceButton');
+            for (var i = 0; i < button_list.length; i++) {
+                var button = button_list.item(i);
+                var id = button.id;
+                var button_hotkey = button_id_to_hotkey[id];
+                var button_hotkey_code = char_to_key_code[button_hotkey];
+                
+                if (event.altKey && event.keyCode == button_hotkey_code) {
+                    button.click();
+                }
+            }
+
+            // additional hotkeys
+            if (event.altKey && event.keyCode == 75){
+                // alt + k: save checkpoint
                 $('#btnSkipSubmit').click();
             } else if (event.altKey && (event.keyCode == 70)){
                 // alt + f: flag task
@@ -525,7 +611,9 @@
                 // alt + e: exit task load
                 $('#btnStop').click();
             }
+
         });
+
     });
     
     {% if is_open %}
