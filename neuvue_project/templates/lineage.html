@@ -78,22 +78,12 @@
   function selectID(root_id){
     let state = viewer.state.toJSON();
     if (["segmentation", "segmentation_with_graph"].includes(String(state['layers'][1]['type']))) {
- 
-      console.log('hidden: ', state['layers'][1]['hiddenSegments'])
-      console.log(root_id)
-      console.log('selected: ', state['layers'][1]['segments'].length)
-      console.log('unselected: ', state['layers'][1]['hiddenSegments'].length)
-      console.log('hiddenSegments.includes(root_id): ', state['layers'][1]['hiddenSegments'].includes(root_id))
 
-      if (state['layers'][1]['hiddenSegments'].includes(root_id)){
+      const index = state['layers'][1]['hiddenSegments'].indexOf(root_id);
+      if (index > -1) {
         state['layers'][1]['segments'].push(root_id);
-        state['layers'][1]['hiddenSegments'].pop(root_id);
-        console.log('adding')
-      } 
-
-      console.log('after')
-      console.log('selected: ', state['layers'][1]['segments'].length)
-      console.log('unselected: ', state['layers'][1]['hiddenSegments'].length)
+        state['layers'][1]['hiddenSegments'].splice(index, 1);
+      }
       viewer.state.restoreState(state)
     }
   }
