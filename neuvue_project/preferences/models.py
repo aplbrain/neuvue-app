@@ -10,37 +10,45 @@ class Config(models.Model):
     annotation_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
     annotation_color_palette_switch = models.BooleanField(default=False)
 
+    # Mesh Color Palette
+    mesh_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
+    mesh_color_palette_switch = models.BooleanField(default=False)
+
     # 2D Show Slices
-    show_slices=models.BooleanField(default=False)
+    show_slices = models.BooleanField(default=False)
     show_slices_switch = models.BooleanField(default=False)
 
    # Zoom Level
-    zoom_level= models.CharField(max_length=10, default="20")
+    zoom_level = models.CharField(max_length=10, default="20")
     zoom_level_switch = models.BooleanField(default=False)
 
     # 2D Segmentation Opacity 
-    alpha_selected= models.CharField(max_length=10, default="0.85")
+    alpha_selected = models.CharField(max_length=10, default="0.85")
     alpha_selected_switch = models.BooleanField(default=False)
 
     # 3D Segmentation Opacity 
-    alpha_3d= models.CharField(max_length=10, default="0.5")
+    alpha_3d = models.CharField(max_length=10, default="0.5")
     alpha_3d_switch = models.BooleanField(default=False)
 
     # GPU Memory Limit
-    gpu_limit=models.CharField(max_length=10, default="1.0")
+    gpu_limit = models.CharField(max_length=10, default="1.0")
     gpu_limit_switch = models.BooleanField(default=False)
 
     # CPU Memory Limit
-    sys_limit=models.CharField(max_length=10, default="2.0")
+    sys_limit = models.CharField(max_length=10, default="2.0")
     sys_limit_switch = models.BooleanField(default=False)
 
     # Concurrent Chunk Requests
-    chunk_requests=models.CharField(max_length=10, default="32")
+    chunk_requests = models.CharField(max_length=10, default="32")
     chunk_requests_switch = models.BooleanField(default=False)
 
     # NG Layout
     layout = models.CharField(max_length=10, default="xy-3d")
     layout_switch = models.BooleanField(default=False)
+
+    # Enable Sound
+    enable_sound = models.BooleanField(default=False)
+    enable_sound_switch = models.BooleanField(default=False)
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""

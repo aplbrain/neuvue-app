@@ -5,11 +5,13 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.contrib.staticfiles.storage import staticfiles_storage
-from .models import Namespace, UserProfile
+from .models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton
+from django.views.decorators.csrf import csrf_exempt
 
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
+import markdown
 
 from .neuroglancer import (
     construct_proofreading_state, 
@@ -26,6 +28,7 @@ from .analytics import user_stats
 from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
 import json
 import os
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -66,7 +69,24 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
+            'tags': '',
         }
+
+        forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
+        if forced_choice_buttons:
+            button_list = []
+            for button in forced_choice_buttons:
+                button_item = {
+                    'display_name':getattr(button, 'display_name'),
+                    'submission_value':getattr(button, 'submission_value'),
+                    'button_color':getattr(button, 'button_color'),
+                    'button_color_active':getattr(button, 'button_color_active'),
+                    'hotkey':getattr(button, 'hotkey'),
+                }
+                button_list.append(button_item)
+            context['button_list'] = button_list
+
+        context['submit_task_button'] = getattr(ForcedChoiceButtonGroup.objects.filter(group_name=context.get('submission_method')).first(), 'submit_task_button')
 
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
@@ -99,6 +119,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
+            if task_df.get('tags'):
+                context['tags'] = ','.join(task_df['tags'])
             if task_df['priority'] < 2:
                 context['skipable'] = False
             
@@ -169,7 +191,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         return render(request, "workspace.html", context)
 
     def post(self, request, *args, **kwargs):
-        
         namespace = kwargs.get('namespace')
         namespace_obj = Namespace.objects.get(namespace = namespace)
 
@@ -202,6 +223,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 metadata['operation_ids'] = new_operation_ids
 
+        ### Forced Choice Button groups ###
+        submission_method = namespace_obj.submission_method
+        forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=submission_method).all()
+
         if button == 'submit':
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
@@ -220,7 +245,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     ng_differ_stack
                 )
         
-        elif button in ['yes', 'no', 'unsure', 'yesConditional', 'errorNearby']:
+        elif button in [x.submission_value for x in forced_choice_buttons]:
             logger.info('Submitting task')
             request.session['session_task_count'] = session_task_count +1
             metadata['decision'] = button
@@ -238,7 +263,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df["_id"],
                     ng_differ_stack
                 )
-        
+
         elif button == 'skip':
             logger.info('Skipping task')
 
@@ -257,7 +282,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state)
+                    ng_state=ng_state,
+                    tags=tags)
                 # Add new differ stack entry
                 if ng_differ_stack != []:
                     self.client.post_differ_stack(
@@ -352,7 +378,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 ng_state=ng_state,
-                metadata=metadata)
+                metadata=metadata,
+                tags=tags)
             # Add new differ stack entry
             if ng_differ_stack != []:
                 self.client.post_differ_stack(
@@ -360,11 +387,14 @@ class WorkspaceView(LoginRequiredMixin, View):
                     ng_differ_stack
                 )
             return redirect(reverse('tasks'))
+        
+        elif button == 'saveState':
+            print("button: saveState")
     
         return redirect(reverse('workspace', args=[namespace]))
 
+class TaskView(LoginRequiredMixin, View):
 
-class TaskView(View):
     def dispatch(self, request, *args, **kwargs):
         self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
         return super().dispatch(request, *args, **kwargs)
@@ -423,49 +453,72 @@ class TaskView(View):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
-        non_empty_namespace = 0
+        pending_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['open', 'pending'],
+                "assignee": str(request.user)
+            },
+            select=['seg_id', 'namespace', 'status', 'created', 'priority', 'opened', 'metadata']
+        )
+
+        closed_tasks = self.client.get_tasks(
+            sieve={
+                "status": ['closed', 'errored'],
+                "assignee": str(request.user),
+            },
+            select=['seg_id', 'namespace', 'status', 'opened', 'closed', 'duration', 'tags']
+        )
 
         for namespace in context.keys():
-            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(str(request.user), namespace)
+            namespace_pending_tasks = pending_tasks[ pending_tasks['namespace'] == namespace ]
+            namespace_closed_tasks = closed_tasks[ closed_tasks['namespace'] == namespace ]
+            context[namespace]['pending'], context[namespace]['closed'] = self._generate_tables(namespace_pending_tasks, namespace_closed_tasks)
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
+            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
+        
+        # Reorder context dict by total pending tasks (descending order)
+        context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
+
+        # Provide table index
+        non_empty_namespace = 0
+        for namespace in context.keys():
             if (context[namespace]["total_tasks"]):
                 context[namespace]["start"] = non_empty_namespace*2
                 context[namespace]["end"] = (non_empty_namespace*2)+2
                 non_empty_namespace += 1
 
-            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-
-        
         # Reset session count when task page loads. This ensures session counts only increment
         # for one task type at a time
         request.session['session_task_count'] = 0
 
+        # create settings and context dicts
+        settings_dict = {'SANDBOX_ID' : settings.SANDBOX_ID}
+        data_dict = {'settings' : settings_dict,
+                    'namespaces' : context
+        }
+        return render(request, "tasks.html", {'data' : data_dict})
 
-        return render(request, "tasks.html", {'data':context})
 
-    def _generate_tables(self, username, namespace):
-        tasks = self.client.get_tasks(sieve={
-            "assignee": username, 
-            "namespace": namespace,
-        } , select=['seg_id', 'created', 'priority', 'status', 'opened', 'closed', 'duration', 'tags', 'metadata'])
+    def _generate_tables(self, pending_tasks, closed_tasks):
         
-        tasks['task_id'] = tasks.index
-        tasks['created'] = tasks['created'].apply(lambda x: utc_to_eastern(x))
+        pending_tasks = pending_tasks.rename_axis('task_id').reset_index()
+        closed_tasks = closed_tasks.rename_axis('task_id').reset_index()
 
-        metadata = tasks['metadata'].values
+        metadata = pending_tasks['metadata'].values
         skipped = []
         for data in metadata:
             if 'skipped' in data.keys():
-                skipped.append(data['skipped'])
+                skipped.append(int(data['skipped']))
             else:
                 skipped.append(0)
 
-        tasks['skipped'] = skipped
+        pending_tasks['skipped'] = skipped
 
-        pending_tasks = tasks[tasks.status.isin(['pending', 'open'])].sort_values(by=['priority', 'created'], ascending=[False, True])
-        closed_tasks = tasks[tasks.status.isin(['closed', 'errored'])].sort_values('closed', ascending=False)
+        # Sort the tasks
+        pending_tasks = pending_tasks.sort_values(by=['priority', 'created'], ascending=[False, True])
+        closed_tasks = closed_tasks.sort_values('closed', ascending=False)
         
             
         # Check if there are any NaNs in opened column
@@ -474,7 +527,9 @@ class TaskView(View):
             default =  pd.to_datetime('1969-12-31')
             closed_tasks['opened'] = closed_tasks['opened'].fillna(default)
             closed_tasks['closed'] = closed_tasks['closed'].fillna(default)
-    
+
+        # Convert timepoints to eastern 
+        pending_tasks['created'] = pending_tasks['created'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['opened'] = closed_tasks['opened'].apply(lambda x: utc_to_eastern(x))
         closed_tasks['closed'] = closed_tasks['closed'].apply(lambda x: utc_to_eastern(x))
 
@@ -750,4 +805,40 @@ class TokenView(View):
 
 class GettingStartedView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "getting-started.html")
+        try:
+            p = staticfiles_storage.path('getting_started.md')
+            with open(p, 'r') as f:
+                text = f.read()
+                html = markdown.markdown(text)
+        except:
+            html = "Error Rendering Text"
+
+        ## Get updates from local updates.json
+        context = {
+            "getting_started_text": html
+        }
+        return render(request, "getting-started.html",context)
+
+class SaveStateView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = str(request.body.decode('utf-8'))
+        data = json.loads(data)
+        ng_state = data.get('ng_state')
+        task_id = data.get('task_id')
+
+        # do some validation on ng_state (should be a link) and task_id (should be a string of random numbers and letters)
+        # make sure each is not empty, and what you expect
+
+        if ((type(ng_state) == str) and (ng_state)) and ((type(task_id) == str) and (task_id)) :
+            try:
+                logging.debug("Patching task state")
+                self.client.patch_task(task_id, ng_state = ng_state)
+                return HttpResponse("Successfully saved state", status=201, content_type="text/plain")
+            except:
+                return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
+        
+        return HttpResponse("Was unable to save state", status=400, content_type="text/plain")

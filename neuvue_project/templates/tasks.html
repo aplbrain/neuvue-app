@@ -10,7 +10,7 @@
 <div class="basic tasks">
     <div class="neuvueRow">
         <div class="jobQueue" >
-            {% for namespace, context in data.items %}
+            {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
                         <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
@@ -125,6 +125,20 @@
                     </div>
                 {% endif %}
             {% endfor %}
+
+            <div class="neuvueRow">
+                <div id="pinkyHeader" class="pinkyHeader jobHeader active">
+                    Pinky Sandbox
+                </div>
+                <div class="header-button rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'"> 
+                    <button class="header-button-text" id='pinkySandboxButton'
+                    onclick="triggerLoadingSpinner('PinkyNgSpinner')">
+                        <div id='PinkyNgSpinner'>
+                            Start Sandbox
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
 
 
@@ -133,7 +147,7 @@
                 Stats
             </div>
             
-            {% for namespace, context in data.items %}
+            {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="sideContentInfo">
                         <span class = "analyticsSubHeader"> {{context.display_name}} </span>
@@ -222,7 +236,7 @@
 
     start();
     function start() {
-        {% for namespace, context in data.items %}
+        {% for namespace, context in data.namespaces.items %}
             if ({{context.total_tasks}}) {
                 tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
                 document.getElementById("pending{{namespace}}Tab").click();
@@ -344,36 +358,36 @@
 
     function reassignTasks(namespace) {
 
-    const csrftoken = getCookie('csrftoken');
-    const formData = new FormData();
-    formData.append('namespace', namespace);
-    formData.append('reassignTasks', 'True');
+        const csrftoken = getCookie('csrftoken');
+        const formData = new FormData();
+        formData.append('namespace', namespace);
+        formData.append('reassignTasks', 'True');
 
-    const request = {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-        },
-        body: formData,
-        credentials: 'same-origin',
-    };
-    // Call the post request defined for this view
-    fetch('', request).then(function (response) {
-        if (response.ok) {
-            response.text().then(function(text) {
-                if(text) {
-                    triggerToast(text);
-                    removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-                    location.reload();
-                } else {
-                    location.reload();
-                }
-            });
-        } else {
-            triggerToast("Unable to reach queue. Please try again.");
-            removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-        }
-    });
+        const request = {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: formData,
+            credentials: 'same-origin',
+        };
+        // Call the post request defined for this view
+        fetch('', request).then(function (response) {
+            if (response.ok) {
+                response.text().then(function(text) {
+                    if(text) {
+                        triggerToast(text);
+                        removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                triggerToast("Unable to reach queue. Please try again.");
+                removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
+            }
+        });
 
     }
 

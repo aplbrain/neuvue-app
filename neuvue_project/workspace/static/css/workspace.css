@@ -4,6 +4,7 @@
   /* PRIMARY COLORS #000e22;*/
   --background: #120c1a;
   --header-background: #3122449f;
+  --header: #211431;
   --navbar-text: #e6f1ff;
   --primary-accent: #e6f1ff;
   --primary-accent-activated: #8892b0;
@@ -207,6 +208,7 @@ overflow-x: hidden;
 .bottomBar {
   background-color: transparent;
   max-height:5vh;
+  margin-bottom: 10px;
   bottom:1.5vh;
   width: 95%;
   display: flex;
@@ -215,16 +217,55 @@ overflow-x: hidden;
   /*align-items: flex-end;*/
 }
 
+.forcedChoiceButton{
+  width: 100%;
+  font-family: var(--monospace-font);
+  border-radius: 8px;
+  color: var(--background);
+  height: 3.5vh;
+  padding: 0.15vh 0.25vh;
+  margin: 0vh 0.5vw;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.5vh;
+}
+
+.forcedChoiceButton.active {
+  border: 2.5px solid white;
+  color: var(--primary-accent);
+}
+
 /* buttons used in bottom container */
+.mainButtonWrapper {
+  min-width: 12%;
+  padding: 0.15vh 0.25vh;
+  margin: 0vh 0.5vw;
+  text-align: center;
+}
+
+.hotkeyHint {
+  color: rgb(156, 156, 156);
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.forcedChoiceHotkeyHint {
+  color: rgb(156, 156, 156);
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+
 .mainButton {
+  width: 100%;
   font-family: var(--monospace-font);
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  width: 19%;
   height: 3.5vh;
-  padding: 0.15vh 0.25vh;
-  margin: 0vh 0.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -252,6 +293,17 @@ color: var(--primary-accent);
 .mainButton.pause{
   background-color: var(--pause-accent);
   color: var(--background);
+}
+
+.mainButton.save_state {
+  background-color: #6099b6;;
+  color: var(--background);
+}
+
+.mainButton.save_state:hover {
+  border: 3px solid var(--pause-accent);
+  background: var(--pause-accent);
+  color: var(--primary-accent);
 }
 
 .mainButton.pause:hover{
@@ -298,11 +350,15 @@ color: var(--primary-accent);
   font-size: 1.5vh;
   margin: 0.5vh 1vw;
 }
+.mainButton.return:hover{
+  border: 3px solid var(--flag-accent);
+  background-color: var(--flag-accent);
+  color: var(--primary-accent);
+}
 
 .mainButton.submit.quad{
   min-width: 10%;
   max-width: 12%;
-  margin-left: 13%;
 }
 
 .mainButton:active, .mainButton.active {
@@ -341,6 +397,11 @@ color: var(--primary-accent);
   max-width: 12%;
 }
 
+.mainButton.skip.quad{
+  min-width: 10%;
+  max-width: 12%;
+}
+
 
 
 
@@ -370,6 +431,16 @@ color: var(--primary-accent);
   display: inline-block;
   width: 90%;
   font-size: 1.2vh;
+}
+
+
+.instruction-image{
+  max-width: 80%;
+  max-height: 15vh; 
+  overflow: hidden;
+}
+.instruction-image:hover{
+  border: 3pt solid var(--secondary-accent-activated);
 }
 
 .index-title-container {
@@ -494,110 +565,7 @@ font-size: 25px;
   margin: auto;
   padding-top: 10%;
   width: 40%;
-  }
-
-/* NAVIGATION BAR */
-
-/* *{
-  padding: 0;
-  margin: 0;
-  text-decoration: none;
-  list-style: none;
-  box-sizing: border-box;
 }
-body{
-  font-family: var(--body-font)
-}
-nav{
-  background: var(--header-background);
-  height: 70px;
-  width: 100%;
-}
-label.logo{
-  font-family: var(--header-font);
-  color: var(--navbar-text);
-  font-size: 50px;
-  padding: 0 2%;
-  line-height: 70px;
-  font-weight: lighter;
-  cursor: pointer;
-  z-index: 2;
-}
-nav ul{
-  float: right;
-  margin-right: 20px;
-}
-nav ul li{
-  display: inline-block;
-  line-height: 70px;
-  margin: 0 5px;
-}
-nav ul li a{
-  font-family: var(--monospace-font);
-  color: var(--navbar-text);
-  font-size: 17px;
-  padding: 7px 13px;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-a.active,a:hover{
-  background-color: transparent;
-  border-radius: 8px;
-  color: var(--navbar-text) !important;
-  border: 1.5px solid var(--secondary-accent);
-}
-.checkbtn{
-  font-size: 30px;
-  color: var(--navbar-text);
-  float: right;
-  line-height: 70px;
-  margin-right: 40px;
-  cursor: pointer;
-  display: none;
-}
-#check{
-  display: none;
-}
-@media (max-width: 952px){
-  label.logo{
-    font-size: 30px;
-    padding-left: 50px;
-  }
-  nav ul li a{
-    font-size: 16px;
-  }
-}
-@media (max-width: 858px){
-  .checkbtn{
-    display: block;
-  }
-  ul{
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    background: #2c3e50;
-    top: 70px;
-    left: -100%;
-    text-align: center;
-    transition: all .5s;
-  }
-  nav ul li{
-    display: block;
-    margin: 50px 0;
-    line-height: 30px;
-  }
-  nav ul li a{
-    font-size: 20px;
-  }
-  a:hover,a.active{
-      background-color: transparent;
-      border-radius: 8px;
-      border: 1.5px solid var(--secondary-accent);
-  }
-  #check:checked ~ ul{
-    left: 0;
-  }
-} */
 
 /* Task buttons in the TaskQueue sidebar container*/
 
@@ -791,22 +759,6 @@ a.fill-div {
   top: 4vh;
 }
 
-/*
-.sidemenu a {
-  padding: 8px;
-  text-decoration: none;
-  color: var(--primary-accent-activated);
-  display: block;
-}
-
-.sidemenu a:hover, .sidemenu a:focus {
-  color: var(--navbar-text);
-}
-
-.sidemenu .closebtn {
-  position: absolute;
-  
-}*/
 
 /* Container for all information in the sidebar */
 .sidecontent {
@@ -1068,5 +1020,4 @@ input[type=radio]:checked + label > img {
 .annotationChoiceMenu {
   background-color: darkgray !important;
 }
-
 

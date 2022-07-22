@@ -25,6 +25,12 @@
                 </div>
                 <div class="sideContentInfo">
                     {{ instructions.prompt }}
+                    {% if instructions.media %} 
+                        <br>
+                        <div style="display:flex; justify-content: center; margin:1vh 0vh;">
+                            <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <! Task Notes >
@@ -33,7 +39,11 @@
                     Task tags
                 </div>
                 <div class="sideContentInput" >
-                    <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma seperated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                    {% if tags %}
+                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" spellcheck="false"> {{tags}} </textarea>
+                    {% else %}
+                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma separated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                    {% endif %}
                 </div>
             </div>
             <! Task Information >
@@ -57,40 +67,11 @@
                     Tasks Completed This Session <br> 
                     <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
-                    <button type="button" class="btn btn-info" onclick="copyToClipboard(getLink())"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>
+                    <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
                     
                 </div>
             </div>
             
-            <! Shortcuts >
-            <div class="sideContentBox" style="padding: 0 !important;">
-                <table class="analyticsTable mini">
-                    <thead>
-                        <tr>
-                        <th scope="col">Shortcut</th>
-                        <th scope="col">Mac</th>
-                        <th scope="col">Windows</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td scope="row">Flag Task</td>
-                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>F</kbd></td>
-                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Exit Task</td>
-                            <td><kbd>CTRL</kbd>+<kbd>OPT</kbd>+<kbd>E</kbd></td>
-                            <td><kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>E</kbd></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Full Screen (Chrome)</td>
-                            <td><kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>F</kbd></td>
-                            <td><kbd>F11</kbd></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
             <br><br><br><br><br>
         </div>
     </div> 
@@ -98,238 +79,179 @@
     <div id="neuroglancer" class="leftFormatting">
         <div class="left">
             {% if is_open %}
-                {% if submission_method == "forced_choice" %}
-                <form id="mainForm" action="" method="post" class="bottomBar" style="order: 0;">
+            <! Submission Options>
+                <! Forced Choice>
+                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
-
-                    <! Submission Options>
-                    <button 
-                        id="btnYes" 
-                        type="button" 
-                        class="mainButton submit quad" 
-                        onclick="triggerLoadingSpinner('confirm_load')"
-                    >
-                        <div id = 'confirm_load'>
-                             Confirm Split
-                         </div>
-                    </button>
-
-                    <button 
-                        id="btnYesBut" 
-                        type="button" 
-                        class="mainButton yesBut" 
-                        onclick="triggerLoadingSpinner('refinement_load')"
-                    >
-                        <div id = 'refinement_load'>
-                            Split Requires Refinement
+                    {% for button in button_list %}
+                        <style>
+                            .{{button.submission_value}} {
+                                background-color: {{button.button_color}};
+                            }   
+                            .{{button.submission_value}}:hover {
+                                background-color: {{button.button_color_active}};
+                                border: 2.5px solid {{button.button_color_active}};
+                            }
+                            {% if submit_task_button %}
+                            .{{button.submission_value}}.active {
+                                background-color: {{button.button_color_active}};
+                            } 
+                            {% endif %}
+                        </style>
+                        <div class="mainButtonWrapper forcedChoiceWrapper">
+                            <button 
+                                id="{{button.submission_value}}" 
+                                type="button" 
+                                class="forcedChoiceButton {{button.submission_value}}"
+                                {% if submit_task_button %} 
+                                    onclick="updateButtonSelected('{{button.submission_value}}')"
+                                {% else %}
+                                    onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
+                                {% endif %}
+                            >
+                                <div id = '{{button.submission_value}}_load'>
+                                    {{button.display_name}}
+                                </div>
+                            </button>
+                            <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">                            
+                                <span class="modifier"></span><span class="hotkey_button">+ <kbd>{{button.hotkey}}</kbd></span>
+                            </div>
                         </div>
-                    </button>
-
-                    <button 
-                    id="btnNoBut" 
-                    type="button" 
-                    class="mainButton noBut" 
-                    onclick="triggerLoadingSpinner('errorNearby_load')"
-                    
-                    >
-                        <div id = 'errorNearby_load'>
-                            Reject Split but Error Nearby
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnNo" 
-                        type="button" 
-                        class="mainButton flag quad" 
-                        onclick="triggerLoadingSpinner('reject_load')"
-                    >
-                        <div id = 'reject_load'>
-                            Reject Split
-                        </div>
-                    </button>
-
-                    <button 
-                        id="btnUnsure" 
-                        type="button" 
-                        class="mainButton pause quad" 
-                        onclick="triggerLoadingSpinner('unsure_load')"
-                    >
-                        <div id = 'unsure_load'>
-                            Unsure
-                        </div>
-                    </button>
-                    
-                </form>
-                {% elif submission_method == "decide_and_submit" %}
-                    <div id="decide_and_submit_buttons" class="bottomBar" style="order: 0;">
-                        <button 
-                            id="yes" 
-                            type="button" 
-                            class="mainButton submit quad" 
-                            onclick="updateButtonSelected('yes')"
-                        >
-                            Confirm Split
-                        </button>
-
-                        <button 
-                            id="yesConditional" 
-                            type="button" 
-                            class="mainButton yesBut" 
-                            onclick="updateButtonSelected('yesConditional')"
-                        >
-                            Split Requires Refinement
-                        </button>
-
-                        <button 
-                        id="errorNearby" 
-                        type="button" 
-                        class="mainButton noBut" 
-                        onclick="updateButtonSelected('errorNearby')"
-                        
-                        >
-                            Reject Split but Error Nearby
-                        </button>
-
-                        <button 
-                            id="no" 
-                            type="button" 
-                            class="mainButton flag quad" 
-                            onclick="updateButtonSelected('no')"
-                        >
-                            Reject Split
-                        </button>
-
-                        <button 
-                            id="unsure" 
-                            type="button" 
-                            class="mainButton pause quad" 
-                            onclick="updateButtonSelected('unsure')"
-                        >
-                            Unsure
-                        </button>
-
-                    </div>
-                    
-                {% endif %}
-
-                
-            {% endif %}
-            {% if is_open %}
+                    {% endfor %}
+            </form>   
+                   
                 <div id="neuroglancer-container" class="neuroglancer-container"></div>
-            {% endif %}
             <! Buttons >
-                <form id="mainForm" action="" method="post" class="bottomBar">
+                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
                     <! Save/Reload >
-                    {% if is_open %}
-                    {% comment %} <button
-                        id="btnSave" 
-                        type="button" 
-                        class="mainButton" 
-                        accesskey="s"
-                    >
-                        Save Checkpoint
-                    </button>
-                    
-                    <button
-                        id="btnReload" 
-                        type="button" 
-                        class="mainButton"
-                        accesskey="r"
-                    {% if submission_method == "forced_choice" %}
-                        style="margin-right: 15vw;"
-                    {% endif %}
-                    >
-                        Reload Checkpoint
-                    </button> {% endcomment %}
+                    {% comment %} 
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSave" 
+                            type="button" 
+                            class="mainButton" 
+                            accesskey="s"
+                        >
+                            Save Checkpoint
+                        </button>
+                    </div>
+
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnReload" 
+                            type="button" 
+                            class="mainButton"
+                            accesskey="r"
+                        >
+                            Reload Checkpoint
+                        </button> 
+                    </div>
+                    {% endcomment %}
                     
                     <! Flag >
-                    <button
-                        id="btnFlag" 
-                        type="button" 
-                        class="mainButton flag"
-                        accesskey="f"
-                    {% if submission_method == "forced_choice" and skipable %}
-                        style="margin-left: 20%;"
-                    {% elif submission_method == "forced_choice" %}
-                        style="margin-left: 30%;"
-                    {% elif skipable %}
-                        style="margin-left: 10%;"
-                    {% else %}
-                        style="margin-left: 20%;"
-                    {% endif %}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#flagModal">
-                        Flag Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnFlag" 
+                            type="button" 
+                            class="mainButton flag"
+                            accesskey="f"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#flagModal">
+                            Flag Task
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <span class="modifier"></span><span> + <kbd>f</kbd> </span>
+                        </div>
+                    </div>
+
 
                     {% if allowed_to_reassgin%}
                     <! Remove >
-                    <button
-                        id="btnRemove" 
-                        type="button" 
-                        class="mainButton remove"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#removeModal"
-                    >
-                    Remove Task
-                    </button>
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnRemove" 
+                            type="button" 
+                            class="mainButton remove"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#removeModal"
+                            >
+                            Remove Task
+                        </button>
+                    </div>
                     {% endif %}
                     
                     <! Skip >
                     {% if skipable %}
-                    <button
-                        id="btnSkipSubmit" 
-                        type="button" 
-                        class="mainButton skip"
-                        accesskey="k"
-                        onclick="triggerLoadingSpinner('skip_task_load')" 
-                    >
-                        <div id = 'skip_task_load'>
-                            Skip Task
+                    <div class="mainButtonWrapper">
+                        <button
+                            id="btnSkipSubmit" 
+                            type="button" 
+                            class="mainButton skip"
+                            accesskey="k"
+                            onclick="triggerLoadingSpinner('skip_task_load')" 
+                        >
+                            <div id = 'skip_task_load'>
+                                Skip Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <span class="modifier"></span><span> + <kbd>k</kbd></span>
                         </div>
-                    </button>
+
+                    </div>
                     {% endif %}
 
                     <! Submit >
-                    {% if submission_method == "submit" %}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
-                        onclick="triggerLoadingSpinner('submit_task_load')" 
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
-                    {% elif submission_method == "decide_and_submit"%}
-                    <button 
-                        name="btnSubmit"
-                        id="btnSubmit" 
-                        type="button" 
-                        class="mainButton submit"
-                    >
-                        <div id = 'submit_task_load'>
-                            Submit Task
-                        </div>
-                    </button>
+                    {% if submit_task_button %}
+                    <div class="mainButtonWrapper">
+                        <button 
+                            name="btnSubmit"
+                            id="btnSubmit" 
+                            type="button" 
+                            class="mainButton submit"
+                            onclick="triggerLoadingSpinner('submit_task_load')" 
+                        >
+                            <div id = 'submit_task_load'>
+                                Submit Task
+                            </div>
+                        </button>
+                    </div>
                     {% endif %}
+
+                    <! Save State > 
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnSaveState"
+                            type="button"
+                            class="mainButton save_state"
+                            onclick="triggerLoadingSpinner('save_state')"
+                            >
+                            <div id = 'save_state'>
+                                Save State
+                            </div>
+                        </button>
+                    </div>
                     
                     <! Stop >
-                    <button 
-                        id="btnStop"
-                        type="button"
-                        class="mainButton pause"
-                        accesskey="e"
-                        onclick="triggerLoadingSpinner('exit_task_load')"
-                    >
-                        <div id = 'exit_task_load'>
-                            Save and Exit Task
+                    <div class="mainButtonWrapper">
+                        <button 
+                            id="btnStop"
+                            type="button"
+                            class="mainButton pause"
+                            accesskey="e"
+                            onclick="triggerLoadingSpinner('exit_task_load')"
+                        >
+                            <div id = 'exit_task_load'>
+                                Save and Exit Task
+                            </div>
+                        </button>
+                        <div class="hotkeyHint">                            
+                            <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
                         </div>
-                    </button>
+                    </div>
+
 
                     {% else %}
                     <! In-between Tasks >
@@ -337,22 +259,36 @@
                         <div class="interTaskTitle">
                             Tasks Complete <br> {{display_name}} 
                         </div>
-                        <button 
-                            type="button" 
-                            class="mainButton return" 
-                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                            <div id = 'exit_workspace'>
-                                Return to Task page
-                            </div>
-                        </button>
-                        {% endif %}
+                        <div class="mainButtonWrapper">
+                            <button 
+                                type="button" 
+                                class="mainButton return" 
+                                onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                                <div id = 'exit_workspace'>
+                                    Return to Task page
+                                </div>
+                            </button>
+                        </div>
+                    {% endif %}
                     </div>
+
                 </form>
         </div>
     </div>
     <div style="display:none;">
         <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
             <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <!-- Triggerable elements -->
+
+    <!-- Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
+        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-body" class="toast-body"> <!-- triggerToast will fill in text here--> </div>
+                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
         </div>
     </div>
 </div>
@@ -426,7 +362,7 @@
         </div>
     </div>
 </div> 
-
+<style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
@@ -434,6 +370,12 @@
 <script type="text/javascript"> 
     // Delete previous state info
     // window.localStorage.removeItem("ngState")
+    function getLink() {
+        viewer.postJsonState(true, undefined, true, function() {
+        let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+        copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+        });
+    }
 
     if (window.localStorage.getItem('sidebarStatus') == 'open') {
         openSideMenu();
@@ -442,10 +384,20 @@
     } else {
         openSideMenu();
     }
-    
-    function getLink() {
-        let data = JSON.stringify(viewer.state.toJSON());
-        return "https://neuroglancer.neuvue.io/#!" + data
+        
+    function saveState() {
+        viewer.postJsonState(true, undefined, true, function() {
+            let state = viewer.saver.savedUrl;
+            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
+            fetch('/save_state', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+                .then((response) => {
+                    response.text()
+                    .then((text) => {
+                        removeLoadingSpinner("save_state", "Save State");
+                        triggerToast(text)
+                    })
+                });
+        });
     }
      
      function show3DSlices() {
@@ -477,6 +429,14 @@
     function exitAlert(e) {
         e.preventDefault(); 
         e.returnValue = '';
+    }
+    
+    function triggerToast(toastText) {
+        const toastBody = document.getElementById('toast-body');
+        toastBody.textContent = toastText;
+        const toastDiv = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastDiv);
+        toast.show();
     }
     
     // Current time 
@@ -526,52 +486,62 @@
     $(document).ready(function() {
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
-
-        // $('#btnSave').click(function() {
-        //    window.localStorage['ngState'] = JSON.stringify(viewer.state.toJSON());
-        // }) 
-
-        //  $('#btnReload').click(function() {
-        //      if (window.localStorage.getItem('ngState') !== null){
-        //          let state = JSON.parse(window.localStorage['ngState']);
-        //          viewer.state.restoreState(state)
-        //      }
-        //  })
-
-        if ('{{submission_method}}' == "submit"){
-            $('#btnSubmit').click(function(){
-                submitForm('submit');
-            });
-        } else if ('{{submission_method}}' == "forced_choice") {
-            $('#btnYes').click(function(){
-                submitForm('yes');
-            });
-
-            $('#btnYesBut').click(function(){
-                submitForm('yesConditional');
-            });
-
-            $('#btnNoBut').click(function(){
-                submitForm('errorNearby');
-            });
-
-            $('#btnNo').click(function(){
-                submitForm('no');
-            });
-
-            $('#btnUnsure').click(function(){
-                submitForm('unsure');
-            });
-        } else if ('{{submission_method}}' == "decide_and_submit"){
-            $('#btnSubmit').click(function(){
-                if (current_button_selection != 'noneSelected'){
-                    triggerLoadingSpinner('submit_task_load');
-                    submitForm(current_button_selection);
-                } else {
-                    alert("Please select a decision!");
-                }
-            });
+        
+        // alter hotkey hints based on operating system
+        var os = navigator.platform.toLowerCase();
+        var modifier = "Alt";
+        if (os.includes('mac')) {
+            modifier = "⌥";
+        } 
+        
+        var hotkey_hint_obs = document.getElementsByClassName("hotkeyHint");
+        for (var i = 0; i < hotkey_hint_obs.length; i++) {
+            var modifier_text = hotkey_hint_obs.item(i).getElementsByClassName("modifier").item(0);
+            if (modifier_text){
+                modifier_text.innerHTML = modifier;
+            }
         }
+
+        // show valid hotkey hints for forced choice buttons
+        var forced_choice_hotkey_hints = document.getElementsByClassName("forcedChoiceHotkeyHint");
+        for (var i = 0; i < forced_choice_hotkey_hints.length; i++) {
+            var hotkey_text = forced_choice_hotkey_hints.item(i).getElementsByClassName("hotkey_button").item(0).innerHTML.toLowerCase();
+            if (!(hotkey_text.includes('none'))) {
+                forced_choice_hotkey_hints.item(i).style.display = 'block';
+            }
+        }
+        
+        // add specific class to save state overlay
+
+        {% if submit_task_button %}
+            {% if button_list %}
+                $('#btnSubmit').click(function(){
+                    if (current_button_selection != 'noneSelected'){
+                        triggerLoadingSpinner('submit_task_load');
+                        submitForm(current_button_selection);
+                    } else {
+                        alert("Please select a decision!");
+                    }
+                });
+            {% else %}
+                $('#btnSubmit').click(function(){
+                    submitForm('submit');
+                });
+            {% endif %}
+        {% else %}
+            {% for button in button_list %}
+                $("#{{button.submission_value}}").click(function(){
+                    submitForm("{{button.submission_value}}");
+                });
+            {% endfor %}
+        {% endif %}
+
+        var button_id_to_hotkey = {}
+        {% for button in button_list %}
+                var button_id = "{{button.submission_value}}";
+                var hotkey = "{{button.hotkey}}"
+                button_id_to_hotkey[button_id] = hotkey;
+        {% endfor %}
 
         $('#btnSkipSubmit').click(function() {
             submitForm('skip')
@@ -585,10 +555,15 @@
             submitForm('flag', '#flagForm')
         })
 
+        $('#btnSaveState').click(function() {
+            console.log("button submission: savestate");
+            saveState();
+        })
+
         $('#btnStop').click(function(){
             submitForm('stop');
         });
-
+        
         $('#btnStart').click(function() {
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', 'start').appendTo('#mainForm');
             $('#mainForm').submit();
@@ -599,7 +574,47 @@
         });
 
         show3DSlices();
-    })
+        
+        setInterval(autoSave, 300000);
+        function autoSave() {
+            console.log("autosaved state")
+            saveState();
+        }
+
+        // additional hotkeys
+        document.addEventListener("keydown", function(event) {
+            // define key character to charcode mapping
+            var char_to_key_code = {'c': 67, 'd': 68, 'j': 74, 'm': 77, 'q': 81,
+                'r': 82, 't': 84, 'v': 86, 'w': 87, 'y': 89, 'z': 90};
+
+            // iterate through forced choice butttons to check for hotkey action
+            var button_list = document.getElementsByClassName('forcedChoiceButton');
+            for (var i = 0; i < button_list.length; i++) {
+                var button = button_list.item(i);
+                var id = button.id;
+                var button_hotkey = button_id_to_hotkey[id];
+                var button_hotkey_code = char_to_key_code[button_hotkey];
+                
+                if (event.altKey && event.keyCode == button_hotkey_code) {
+                    button.click();
+                }
+            }
+
+            // additional hotkeys
+            if (event.altKey && event.keyCode == 75){
+                // alt + k: save checkpoint
+                $('#btnSkipSubmit').click();
+            } else if (event.altKey && (event.keyCode == 70)){
+                // alt + f: flag task
+                $('#btnFlag').click();
+            } else if (event.altKey && (event.keyCode == 69)){
+                // alt + e: exit task load
+                $('#btnStop').click();
+            }
+
+        });
+
+    });
     
     {% if is_open %}
     window.addEventListener('beforeunload', exitAlert);
