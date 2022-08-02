@@ -742,16 +742,24 @@ class LineageView(View):
 
 
 class SynapseView(View):
-    def get(self, request, root_ids=None, *args, **kwargs):
+    def get(self, request, root_ids=None, pre_synapses=None, post_synapses=None, cleft_layer=None, timestamp = None, *args, **kwargs):
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
-
+        print(f"First root_ids:{root_ids}")
+        print(f"Presynapses: {pre_synapses}")
+        print(f"Postsynapses: {post_synapses}")
+        print(f"CleftLayer: {cleft_layer}")
+        print(f"Timestamp: {timestamp}")
         if root_ids in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{root_ids}', content_type='application/javascript')
 
         context = {
             "root_ids": None,
+            "pre_synapses": None,
+            "post_synapses": None,
+            "cleft_layer": None,
+            "timestamp": None,
             "ng_state": None,
             "synapse_stats": None,
             "error": None
@@ -761,10 +769,17 @@ class SynapseView(View):
             return render(request, "synapse.html", context)
 
         root_ids = [x.strip() for x in root_ids.split(',')]
-        
+        flags = {"pre_synapses": pre_synapses,
+                 "post_synapses": post_synapses,
+                 "cleft_layer": cleft_layer,
+                 "timestamp": timestamp}
         try:
             context['root_ids'] = root_ids
-            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_ids)
+            context['pre_synapses'] = pre_synapses
+            context['post_synapses'] = post_synapses
+            context['cleft_layer'] = cleft_layer
+            context['timestamp'] = timestamp
+            context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_ids=root_ids, flags=flags)
         except Exception as e: 
             context['error'] = e
 
@@ -773,7 +788,18 @@ class SynapseView(View):
 
     def post(self, request, *args, **kwargs):
         root_ids = request.POST.get("root_ids")
-        return redirect(reverse('synapse', kwargs={"root_ids":root_ids}))
+        pre_synapses = request.POST.get("pre_synapses")
+        post_synapses = request.POST.get("post_synapses")
+        cleft_layer = request.POST.get("cleft_layer")
+        timestamp = request.POST.get("timestamp")
+
+        return redirect(reverse('synapse', kwargs={
+            "root_ids": root_ids,
+            "pre_synapses": pre_synapses,
+            "post_synapses": post_synapses,
+            "cleft_layer": cleft_layer,
+            "timestamp": timestamp
+        }))
 
 
 #TODO: Move simple views to other file 
