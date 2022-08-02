@@ -521,14 +521,12 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     """
     cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
 
-    print(flags)
     # Error checking
     if flags['pre_synapses'] != 'True' and flags['post_synapses'] != 'True':
         raise Exception("You must pick at least one of the following: Pre-Synapses, Post Synapses")
 
     # Pre-synapses
     if flags['pre_synapses'] == 'True':
-        print('pre_synapses is True')
         if flags['timestamp'] != 'None':
             pre_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
@@ -551,7 +549,6 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
 
     # Post-synapses
     if flags['post_synapses'] == 'True':
-        print('post_synapses is True')
         if flags['timestamp'] != 'None':
             post_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",

@@ -746,11 +746,7 @@ class SynapseView(View):
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
-        print(f"First root_ids:{root_ids}")
-        print(f"Presynapses: {pre_synapses}")
-        print(f"Postsynapses: {post_synapses}")
-        print(f"CleftLayer: {cleft_layer}")
-        print(f"Timestamp: {timestamp}")
+
         if root_ids in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{root_ids}', content_type='application/javascript')
 
