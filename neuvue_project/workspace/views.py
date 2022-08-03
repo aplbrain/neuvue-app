@@ -788,6 +788,8 @@ class SynapseView(View):
         post_synapses = request.POST.get("post_synapses")
         cleft_layer = request.POST.get("cleft_layer")
         timestamp = request.POST.get("timestamp")
+        if not timestamp:
+            timestamp = 'None'
 
         return redirect(reverse('synapse', kwargs={
             "root_ids": root_ids,

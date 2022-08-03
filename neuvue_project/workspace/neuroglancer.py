@@ -532,7 +532,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 "synapses_pni_2",
                 filter_in_dict={"pre_pt_root_id": root_ids},
                 select_columns=['ctr_pt_position', 'pre_pt_root_id'],
-                timestamp=datetime.strptime(flags['timestamp'], '%m-%d-%Y')
+                timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
             )
         else:
             pre_synapses = cave_client.materialize.query_table(
@@ -554,7 +554,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 "synapses_pni_2",
                 filter_in_dict={"post_pt_root_id": root_ids},
                 select_columns=['ctr_pt_position', 'post_pt_root_id'],
-                timestamp=datetime.strptime(flags['timestamp'], '%m-%d-%Y')
+                timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
             )
         else:
             post_synapses = cave_client.materialize.query_table(
