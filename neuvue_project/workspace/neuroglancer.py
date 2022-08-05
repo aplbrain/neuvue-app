@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.apps import apps
-import pandas as pd 
-import numpy as np 
+import pandas as pd
+import numpy as np
 from caveclient import CAVEclient
 from typing import List
 from datetime import datetime
 import json
 import requests
-import os 
+import os
 import backoff
 import random
 from .models import ImageChoices, PcgChoices
@@ -504,78 +504,129 @@ def apply_state_config(state:str, username:str):
 
     return json.dumps(cdict)
 
-def construct_synapse_state(root_ids:List):
+def construct_synapse_state(root_ids: List, flags: dict = None):
     """Construct state for the synapse viewer.
 
     Args:
-        root_id (str): segment root id
+        root_ids (list): segment root id
+        flags (dict): query parameters
+            - pre_synapses
+            - post_synapses
+            - cleft_layer
+            - timestamp
 
     Returns:
         string: json-formatted state
         dict: synapse stats
     """
-    cave_client = CAVEclient('minnie65_phase3_v1',  auth_token=os.environ['CAVECLIENT_TOKEN'])
-    
-    pre_synapses = cave_client.materialize.query_table(
-    "synapses_pni_2", 
-    filter_in_dict={"pre_pt_root_id": root_ids},
-     select_columns=['ctr_pt_position', 'pre_pt_root_id']
-    )
+    cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
 
-    post_synapses = cave_client.materialize.query_table(
-        "synapses_pni_2", 
-        filter_in_dict={"post_pt_root_id": root_ids},
-        select_columns=['ctr_pt_position', 'post_pt_root_id']
-    )
-    pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
-    pre_synapses['pre_pt_root_id'] = pre_synapses['pre_pt_root_id'].astype(str)
-    post_synapses['post_pt_root_id']= post_synapses['post_pt_root_id'].astype(str)
-    post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
-    
-    if len(pre_synapses['ctr_pt_position']) == 0 and len(post_synapses['ctr_pt_position']) == 0:
-        raise Exception('No pre or post synapses found for root ids.')
-    
-    position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
-    
+    # Error checking
+    if flags['pre_synapses'] != 'True' and flags['post_synapses'] != 'True':
+        raise Exception("You must pick at least one of the following: Pre-Synapses, Post Synapses")
+
+    # Pre-synapses
+    if flags['pre_synapses'] == 'True':
+        if flags['timestamp'] != 'None':
+            try:
+                pre_synapses = cave_client.materialize.query_table(
+                    "synapses_pni_2",
+                    filter_in_dict={"pre_pt_root_id": root_ids},
+                    select_columns=['ctr_pt_position', 'pre_pt_root_id'],
+                    timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
+                )
+            except Exception as index:
+                raise Exception(f"Root ID {index} not found for this timestamp")
+        else:
+            pre_synapses = cave_client.materialize.query_table(
+                "synapses_pni_2",
+                filter_in_dict={"pre_pt_root_id": root_ids},
+                select_columns=['ctr_pt_position', 'pre_pt_root_id']
+            )
+        pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+        pre_synapses['pre_pt_root_id'] = pre_synapses['pre_pt_root_id'].astype(str)
+
+        if len(pre_synapses['ctr_pt_position']) == 0:
+            raise Exception('No pre-synapses found for root ids.')
+        position = np.random.choice(pre_synapses['ctr_pt_position'].to_numpy())
+
+    # Post-synapses
+    if flags['post_synapses'] == 'True':
+        if flags['timestamp'] != 'None':
+            try:
+                post_synapses = cave_client.materialize.query_table(
+                    "synapses_pni_2",
+                    filter_in_dict={"post_pt_root_id": root_ids},
+                    select_columns=['ctr_pt_position', 'post_pt_root_id'],
+                    timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
+                )
+            except Exception as index:
+                raise Exception(f"Root ID {index} not found for this timestamp")
+        else:
+            post_synapses = cave_client.materialize.query_table(
+                "synapses_pni_2",
+                filter_in_dict={"post_pt_root_id": root_ids},
+                select_columns=['ctr_pt_position', 'post_pt_root_id']
+            )
+        post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
+        post_synapses['post_pt_root_id'] = post_synapses['post_pt_root_id'].astype(str)
+
+        if len(post_synapses['ctr_pt_position']) == 0:
+            raise Exception('No post-synapses found for root ids.')
+        position = np.random.choice(post_synapses['ctr_pt_position'].to_numpy())
 
     data_list = [None]
     base_state = create_base_state(root_ids, position)
+
     # Random color generation
-    r = lambda: random.randint(0,255)
+    r = lambda: random.randint(0, 255)
     states = [base_state]
     for root_id in root_ids:
-        pre_points = pre_synapses[pre_synapses["pre_pt_root_id"]==root_id]['ctr_pt_position'].to_numpy()
-        post_points = post_synapses[post_synapses["post_pt_root_id"]==root_id]['ctr_pt_position'].to_numpy()
+        if flags['pre_synapses'] == 'True':
+            pre_points = pre_synapses[pre_synapses["pre_pt_root_id"] == root_id]['ctr_pt_position'].to_numpy()
+            data_list.append(generate_point_df(pre_points))
+            states.append(
+                create_point_state(name=f'pre_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
+        if flags['post_synapses'] == 'True':
+            post_points = post_synapses[post_synapses["post_pt_root_id"] == root_id]['ctr_pt_position'].to_numpy()
+            data_list.append(generate_point_df(post_points))
+            states.append(
+                create_point_state(name=f'post_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
 
-        data_list.append( generate_point_df( pre_points))
-        data_list.append( generate_point_df( post_points))
-    
-        states.append( create_point_state(name=f'pre_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
-        states.append( create_point_state(name=f'post_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
-    
     chained_state = ChainedStateBuilder(states)
-    
+
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
     state_dict['layout'] = '3d'
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
-    
-    synapse_stats = {}
-    
-    for root_id in root_ids:
-        synapse_stats[root_id] = {
-            "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id']==root_id]),
-            "num_post": len(post_synapses[post_synapses['post_pt_root_id']==root_id])
-        }
 
-    # Append clefts layers to state 
-    state_dict['layers'].append({
-        "type": "segmentation",
-        "source": "precomputed://s3://bossdb-open-data/iarpa_microns/minnie/minnie65/clefts-sharded",
-        "tab": "source",
-        "name": "clefts-sharded",
-        "visible": False
-    })
+    synapse_stats = {}
+
+    if flags['pre_synapses'] == flags['post_synapses'] == 'True':
+        for root_id in root_ids:
+            synapse_stats[root_id] = {
+                "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]),
+                "num_post": len(post_synapses[post_synapses['post_pt_root_id'] == root_id])
+            }
+    elif flags['pre_synapses'] == 'True':
+        for root_id in root_ids:
+            synapse_stats[root_id] = {
+                "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id'] == root_id])
+            }
+    else:
+        for root_id in root_ids:
+            synapse_stats[root_id] = {
+                "num_post": len(post_synapses[post_synapses['post_pt_root_id'] == root_id])
+            }
+    # Append clefts layers to state
+    if flags['cleft_layer'] == 'True':
+        state_dict['layers'].append({
+            "type": "segmentation",
+            "source": "precomputed://s3://bossdb-open-data/iarpa_microns/minnie/minnie65/clefts-sharded",
+            "tab": "source",
+            "name": "clefts-sharded",
+            "visible": False
+        })
     return json.dumps(state_dict), synapse_stats
 
 def refresh_ids(ng_state:str, namespace:str): 

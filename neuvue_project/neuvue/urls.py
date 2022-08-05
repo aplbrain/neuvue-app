@@ -54,6 +54,7 @@ urlpatterns = [
     path('lineage/<str:root_id>', LineageView.as_view(), name="lineage"),
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
+    path('synapse/<str:root_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>', SynapseView.as_view(), name="synapse"),
     path('report/', ReportView.as_view(), name="report"),
     path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
     path('save_state', SaveStateView.as_view(), name="save-state")

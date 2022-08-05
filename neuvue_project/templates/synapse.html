@@ -11,8 +11,27 @@
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
-        <input class="form-control" id="rootIDInput" placeholder="Enter Root ID (s) separated by commas" name="root_ids" required="true">
-        <br>
+        <label class="text-white-50" for="rootIDInput">Root ID (Enter Root ID (s) separated by commas)</label>
+        <input class="form-control" id="rootIDInput" name="root_ids" required="true">
+      </div>
+      <br>
+      <div class="form-group">
+        <label class="text-white-50" for="timestampInput">Timestamp (Optional)</label>
+        <input class="form-control" id="timestampInput" name="timestamp" type="date" data-value="None">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="PreSynapsesCheckbox" name="pre_synapses" value=True checked>
+        <label class="text-white-50" for="PreSynapsesCheckbox">Pre-Synapses</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="PostSynapsesCheckbox" name="post_synapses" value=True checked>
+        <label class="text-white-50" for="PostSynapsesCheckbox">Post-Synapses</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="CleftLayerCheckbox" name="cleft_layer" value=True checked>
+        <label class="text-white-50" for="CleftLayerCheckbox">Cleft Layer</label>
+      </div>
+      <br>
         <div class="d-flex">
           <input type="submit" class="btn btn-primary" value="Submit">
           <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
@@ -20,7 +39,6 @@
           <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
           {% endif %}
         </div>
-      </div>
     </form>
   </div>
 </div>
@@ -43,12 +61,16 @@
           <div class="sideContentInfo">             
               
               {% for root, stats in synapse_stats.items %}
-              Root ID <br> 
+              Root ID <br>
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-              Number of Presynaptic Connections <br> 
+              {% if stats.num_pre %}
+              Number of Presynaptic Connections <br>
               <span class ="code"> {{stats.num_pre}} </span> <br>
-              Number of Postsynaptic Connections <br> 
+              {% endif %}
+              {% if stats.num_post %}
+              Number of Postsynaptic Connections <br>
               <span class ="code">  {{stats.num_post}} </span> <br>
+              {% endif %}
               {% endfor %}
           </div>
       </div>
