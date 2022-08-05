@@ -528,12 +528,15 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     # Pre-synapses
     if flags['pre_synapses'] == 'True':
         if flags['timestamp'] != 'None':
-            pre_synapses = cave_client.materialize.query_table(
-                "synapses_pni_2",
-                filter_in_dict={"pre_pt_root_id": root_ids},
-                select_columns=['ctr_pt_position', 'pre_pt_root_id'],
-                timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
-            )
+            try:
+                pre_synapses = cave_client.materialize.query_table(
+                    "synapses_pni_2",
+                    filter_in_dict={"pre_pt_root_id": root_ids},
+                    select_columns=['ctr_pt_position', 'pre_pt_root_id'],
+                    timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
+                )
+            except Exception as index:
+                raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             pre_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
@@ -550,12 +553,15 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     # Post-synapses
     if flags['post_synapses'] == 'True':
         if flags['timestamp'] != 'None':
-            post_synapses = cave_client.materialize.query_table(
-                "synapses_pni_2",
-                filter_in_dict={"post_pt_root_id": root_ids},
-                select_columns=['ctr_pt_position', 'post_pt_root_id'],
-                timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
-            )
+            try:
+                post_synapses = cave_client.materialize.query_table(
+                    "synapses_pni_2",
+                    filter_in_dict={"post_pt_root_id": root_ids},
+                    select_columns=['ctr_pt_position', 'post_pt_root_id'],
+                    timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
+                )
+            except Exception as index:
+                raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             post_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
