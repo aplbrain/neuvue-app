@@ -196,12 +196,6 @@
             [10, 25, 50, 'All'],
         ],
         stateSave: true,
-        stateSaveCallback: function(settings,data) {
-            localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
-          },
-        stateLoadCallback: function(settings) {
-          return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
-          }
     });
 
     // Select all checkbox
