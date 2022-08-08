@@ -387,7 +387,6 @@
     }
         
     function saveState() {
-        console.log('saved state')
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
@@ -414,8 +413,8 @@
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);//Math.floor(Date.now()/1000) - startTime - totalIdleTime; ////////////////
-        console.log('duration: ', duration)
+        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
+ 
         let new_operation_ids = '[]';
         
         if (typeof operation_ids !== 'undefined') {
@@ -442,20 +441,19 @@
         const toast = new bootstrap.Toast(toastDiv);
         toast.show();
     }
-    
-    // Current time 
-    var startTime = Math.floor(Date.now()/1000); //////////
-    
-    // Inactivity Timer
-    var idleTime = 0; ////////
-    var totalIdleTime = 0; ////////
-    
 
+    // autoSave state
+    function autoSave() {
+        console.log("autosaved state")
+        saveState();
+    }
+
+    // create browser interaction timer
     const browserTimer = new browserInteractionTime({
             timeIntervalEllapsedCallbacks: [{
             timeInMilliseconds: 1000,
-            callback: () => saveState(),
-            multiplier: x => x + 300000
+            callback: () => autoSave(),
+            multiplier: x => x + 30000
         }],
         absoluteTimeEllapsedCallbacks: [],
         browserTabInactiveCallbacks: [() => $('#timeoutModal').modal('show')],
@@ -463,13 +461,7 @@
         idleTimeoutMs: 5000,
         checkCallbacksIntervalMs: 250
     })
-    browserTimer.startTimer()
-
-    // seconds to check for inactivity
-    var incrementAmount = 5;
-    
-    // Increment the idle time counter every minute.
-    setInterval(timerIncrement, incrementAmount*1000); 
+    browserTimer.startTimer();
 
     // Zero the idle timer on mouse movement or keypress.
     $(this).mousemove(function (e) {
@@ -479,14 +471,8 @@
         idleTime = 0;
     });
 
-    function timerIncrement() {
-        if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
-            $('#timeoutModal').modal('show');
-            totalIdleTime += incrementAmount;
-        }
-        idleTime += incrementAmount;
-    }
 
+    // forced choice button selection logic
     var current_button_selection = 'noneSelected'
 
     function updateButtonSelected(button_title){
@@ -593,12 +579,6 @@
         });
 
         show3DSlices();
-        
-        setInterval(autoSave, 300000);
-        function autoSave() {
-            console.log("autosaved state")
-            saveState();
-        }
 
         // additional hotkeys
         document.addEventListener("keydown", function(event) {
