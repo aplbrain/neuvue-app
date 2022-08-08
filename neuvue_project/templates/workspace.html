@@ -365,8 +365,9 @@
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
+<script type="text/javascript"  src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
     // Delete previous state info
     // window.localStorage.removeItem("ngState")
@@ -386,6 +387,7 @@
     }
         
     function saveState() {
+        console.log('saved state')
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
@@ -406,12 +408,14 @@
             viewer.showPerspectiveSliceViews.toggle();
          }
      }
-     
+    
+
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-        let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
+        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);//Math.floor(Date.now()/1000) - startTime - totalIdleTime; ////////////////
+        console.log('duration: ', duration)
         let new_operation_ids = '[]';
         
         if (typeof operation_ids !== 'undefined') {
@@ -420,7 +424,7 @@
 
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);//////////////////
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
         $(form).submit();
@@ -440,11 +444,26 @@
     }
     
     // Current time 
-    var startTime = Math.floor(Date.now()/1000);
+    var startTime = Math.floor(Date.now()/1000); //////////
     
     // Inactivity Timer
-    var idleTime = 0;
-    var totalIdleTime = 0;
+    var idleTime = 0; ////////
+    var totalIdleTime = 0; ////////
+    
+
+    const browserTimer = new browserInteractionTime({
+            timeIntervalEllapsedCallbacks: [{
+            timeInMilliseconds: 1000,
+            callback: () => saveState(),
+            multiplier: x => x + 300000
+        }],
+        absoluteTimeEllapsedCallbacks: [],
+        browserTabInactiveCallbacks: [() => $('#timeoutModal').modal('show')],
+        browserTabActiveCallbacks: [],
+        idleTimeoutMs: 5000,
+        checkCallbacksIntervalMs: 250
+    })
+    browserTimer.startTimer()
 
     // seconds to check for inactivity
     var incrementAmount = 5;
