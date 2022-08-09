@@ -21,8 +21,11 @@ logger = logging.getLogger(__name__)
 
 # Convenience functions
 def _get_users_from_group(group:str): 
-    users = Group.objects.get(name=group).user_set.all() 
-    return [x.username for x in users]
+    if group == 'See All Users':  # case if all users are queried
+        return []
+    else: # case if group is provided
+        users = Group.objects.get(name=group).user_set.all() 
+        return [x.username for x in users]
 
 def _format_time(x):
     try:
@@ -98,16 +101,27 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         table_rows = []
         # Counts
         tc = tp = to = te = 0
-        task_df = self.client.get_tasks(
-            sieve={
-                'assignee': users,
-                'namespace': namespace
-            },
-            return_metadata=False,
-            return_states=False
-        )
-        for user in users:
 
+        if users: # case if `group` of users was selected
+            task_df = self.client.get_tasks(
+                sieve={
+                    'assignee': users,
+                    'namespace': namespace
+                },
+                return_metadata=False,
+                return_states=False
+            )
+        else: # case if `All Users` was selected
+            task_df = self.client.get_tasks(
+                sieve={
+                    'namespace': namespace
+                },
+                return_metadata=False,
+                return_states=False
+            ) 
+            users = list(User.objects.all().values_list('username', flat=True).distinct()) # retrieve all usernames
+
+        for user in users:
             user_df = task_df[task_df['assignee'] == user]
             user_df= user_df.sort_values('created', ascending=False)
             last_closed = _format_time(user_df['closed'].max())
