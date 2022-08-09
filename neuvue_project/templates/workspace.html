@@ -458,19 +458,10 @@
         absoluteTimeEllapsedCallbacks: [],
         browserTabInactiveCallbacks: [() => $('#timeoutModal').modal('show')],
         browserTabActiveCallbacks: [],
-        idleTimeoutMs: 5000,
+        idleTimeoutMs: 6e5,
         checkCallbacksIntervalMs: 250
     })
     browserTimer.startTimer();
-
-    // Zero the idle timer on mouse movement or keypress.
-    $(this).mousemove(function (e) {
-        idleTime = 0;
-    });
-    $(this).keypress(function (e) {
-        idleTime = 0;
-    });
-
 
     // forced choice button selection logic
     var current_button_selection = 'noneSelected'
