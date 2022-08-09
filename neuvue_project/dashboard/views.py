@@ -103,19 +103,12 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
                 'assignee': users,
                 'namespace': namespace
             },
-            return_metadata=False,
-            return_states=False
+            select=['assignee', 'status', 'closed']
         )
         for user in users:
 
             user_df = task_df[task_df['assignee'] == user]
-            user_df= user_df.sort_values('created', ascending=False)
             last_closed = _format_time(user_df['closed'].max())
-            user_df['task_id'] = user_df.index
-            user_df['opened'] = user_df['opened'].apply(_format_time)
-            user_df['closed'] = user_df['closed'].apply(_format_time)
-            user_df['created'] = user_df['created'].apply(_format_time)
-            user_df['duration'] = (user_df['duration']/60).round(1)
             # Append row info 
             row = {
                 'username': user,
@@ -123,8 +116,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
                 'open': _get_status_count(user_df, 'open'),
                 'closed': _get_status_count(user_df, 'closed'),
                 'errored': _get_status_count(user_df, 'errored'),
-                'last_closed': last_closed,
-                'user_tasks': user_df.to_dict('records')
+                'last_closed': last_closed
             }
 
             table_rows.append(row)
