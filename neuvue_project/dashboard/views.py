@@ -102,25 +102,16 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         # Counts
         tc = tp = to = te = 0
 
+        sieve = {'namespace':namespace}
         if users: # case if `group` of users was selected
-            task_df = self.client.get_tasks(
-                sieve={
-                    'assignee': users,
-                    'namespace': namespace
-                },
-                return_metadata=False,
-                return_states=False
-            )
+            sieve['assignee'] = users
         else: # case if `All Users` was selected
-            task_df = self.client.get_tasks(
-                sieve={
-                    'namespace': namespace
-                },
+            users = list(User.objects.all().values_list('username', flat=True).distinct()) # retrieve all usernames
+        task_df = self.client.get_tasks(
+                sieve=sieve,
                 return_metadata=False,
                 return_states=False
             ) 
-            users = list(User.objects.all().values_list('username', flat=True).distinct()) # retrieve all usernames
-
         for user in users:
             user_df = task_df[task_df['assignee'] == user]
             user_df= user_df.sort_values('created', ascending=False)
