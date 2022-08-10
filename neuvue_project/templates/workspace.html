@@ -414,7 +414,7 @@
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
- 
+        console.log("Duration: " + duration);
         let new_operation_ids = '[]';
         
         if (typeof operation_ids !== 'undefined') {
@@ -451,14 +451,14 @@
     // create browser interaction timer
     const browserTimer = new browserInteractionTime({
             timeIntervalEllapsedCallbacks: [{
-            timeInMilliseconds: 1000,
+            timeInMilliseconds: 5000,
             callback: () => autoSave(),
-            multiplier: x => x + 30000
+            multiplier: x => x + 3e5
         }],
         absoluteTimeEllapsedCallbacks: [],
         browserTabInactiveCallbacks: [() => $('#timeoutModal').modal('show')],
         browserTabActiveCallbacks: [],
-        idleTimeoutMs: 6e5,
+        idleTimeoutMs: 10000,
         checkCallbacksIntervalMs: 250
     })
     browserTimer.startTimer();
