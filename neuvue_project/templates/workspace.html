@@ -24,7 +24,7 @@
                     Instructions
                 </div>
                 <div class="sideContentInfo">
-                    {{ instructions.prompt }}
+                    {{ instructions.prompt | linebreaksbr }}
                     {% if instructions.media %} 
                         <br>
                         <div style="display:flex; justify-content: center; margin:1vh 0vh;">
