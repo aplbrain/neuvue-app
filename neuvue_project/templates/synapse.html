@@ -58,28 +58,43 @@
           <div class="sideContentTitle">
               Segment Information
           </div>
-          <div class="sideContentInfo">             
-              
-              {% for root, stats in synapse_stats.items %}
-              Root ID <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-              {% if stats.pre_synapses %}
-              Number of Presynaptic Connections <br>
-              <span class ="code"> {{stats.num_pre_synapses}} </span> <br>
-              Number of Presynaptic Targets <br>
-              <span class ="code"> {{stats.num_pre_targets}} </span> <br>
-              Presynapses to Targets <br>
-              <span class ="code"> {{stats.pre_synapses_reduced}}:{{stats.pre_targets_reduced}} </span> <br>
-              {% endif %}
-              {% if stats.post_synapses %}
-              Number of Postsynaptic Connections <br>
-              <span class ="code">  {{stats.num_post_synapses}} </span> <br>
-              Number of Postsynaptic Targets <br>
-              <span class ="code"> {{stats.num_post_targets}} </span> <br>
-              Postsynapses to Targets <br>
-              <span class ="code"> {{stats.post_synapses_reduced}}:{{stats.post_targets_reduced}} </span> <br>
-              {% endif %}
-              {% endfor %}
+          <div class="sideContentInfo">
+              <table class="table table-dark table-bordered table-hover">
+              <thead>
+                <tr>
+                {% for root, stats in synapse_stats.items %}
+                  <th scope="col">Root ID</th>
+                  {% if stats.pre_synapses %}
+                  <th scope="col">Presynaptic Connections</th>
+                  <th scope="col">Presynaptic Targets</th>
+                  <th scope="col">Presynapses to Targets</th>
+                  {% endif %}
+                  {% if stats.post_synapses %}
+                  <th scope="col">Postsynaptic Connections</th>
+                  <th scope="col">Postsynaptic Targets</th>
+                  <th scope="col">Postsynapses to Targets</th>
+                  {% endif %}
+                {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for root, stats in synapse_stats.items %}
+                <tr>
+                  <th scope="row">{{root}}</th>
+                  {% if stats.pre_synapses %}
+                  <td>{{stats.num_pre_synapses}}</td>
+                  <td>{{stats.num_pre_targets}}</td>
+                  <td>{{stats.pre_synapses_reduced}}:{{stats.pre_targets_reduced}}</td>
+                  {% endif %}
+                  {% if stats.post_synapses %}
+                  <td>{{stats.num_post_synapses}}</td>
+                  <td>{{stats.num_post_targets}}</td>
+                  <td>{{stats.post_synapses_reduced}}:{{stats.post_targets_reduced}}</td>
+                  {% endif %}
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
           </div>
       </div>
       <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
@@ -123,9 +138,9 @@
     Root ID <br> 
     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
     Number of Presynaptic Connections <br> 
-    <span class ="code"> {{stats.num_pre}} </span> <br>
+    <span class ="code"> {{stats.num_pre_synapses}} </span> <br>
     Number of Postsynaptic Connections <br> 
-    <span class ="code">  {{stats.num_post}} </span> <br>
+    <span class ="code">  {{stats.num_post_synapses}} </span> <br>
     {% endfor %}
               **/
     const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
@@ -134,7 +149,6 @@
                     <thead>
                       <tr>
                         <th scope="col">Root ID</th>
-                        <th scope="col">Root ID: formatted</th>
                         <th scope="col">Number of Presynaptic Connections</th>
                         <th scope="col">Number of Postsynaptic Connections</th>
                       </tr>
@@ -142,10 +156,9 @@
                     <tbody>
                       {% for root, stats in synapse_stats.items %}
                         <tr>
-                          <td>{{root}}</td>
                           <td>#: {{root}}</td>
-                          <td>{{stats.num_pre}}</td>
-                          <td>{{stats.num_post}}</td>
+                          <td>{{stats.num_pre_synapses}}</td>
+                          <td>{{stats.num_post_synapses}}</td>
                         </tr>
                       {% endfor %}
                     </tbody>`
