@@ -63,21 +63,21 @@
               {% for root, stats in synapse_stats.items %}
               Root ID <br>
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-              {% if stats.num_pre_synapses %}
+              {% if stats.pre_synapses %}
               Number of Presynaptic Connections <br>
               <span class ="code"> {{stats.num_pre_synapses}} </span> <br>
-              {% endif %}
-              {% if stats.num_pre_targets %}
               Number of Presynaptic Targets <br>
               <span class ="code"> {{stats.num_pre_targets}} </span> <br>
+              Presynapses to Targets <br>
+              <span class ="code"> {{stats.pre_synapses_reduced}}:{{stats.pre_targets_reduced}} </span> <br>
               {% endif %}
-              {% if stats.num_post_synapses %}
+              {% if stats.post_synapses %}
               Number of Postsynaptic Connections <br>
               <span class ="code">  {{stats.num_post_synapses}} </span> <br>
-              {% endif %}
-              {% if stats.num_post_targets %}
               Number of Postsynaptic Targets <br>
               <span class ="code"> {{stats.num_post_targets}} </span> <br>
+              Postsynapses to Targets <br>
+              <span class ="code"> {{stats.post_synapses_reduced}}:{{stats.post_targets_reduced}} </span> <br>
               {% endif %}
               {% endfor %}
           </div>
