@@ -222,6 +222,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 metadata['operation_ids'] = new_operation_ids
 
+        # Add selected segments to task metadata
+        # Only if track_selected_segments is set to true at the namespace level
+        if namespace_obj.track_selected_segments:
+            ng_state_obj = json.loads(ng_state)
+            metadata['selected_segments'] = ng_state_obj['layers'][1]['segments']
+
         ### Forced Choice Button groups ###
         submission_method = namespace_obj.submission_method
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=submission_method).all()

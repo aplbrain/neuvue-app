@@ -89,6 +89,7 @@ class Namespace(models.Model):
     refresh_selected_root_ids = models.BooleanField(default=False)
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
+    track_selected_segments = models.BooleanField(default=False)
 
     """Pull From Push To Novice"""
     novice_pull_from = models.CharField(max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL)
