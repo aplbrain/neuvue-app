@@ -203,6 +203,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
         new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
+        selected_segments = json.loads(request.POST.get('selected_segments', '[]'))
     
         try:
             ng_state = post_to_state_server(ng_state)
@@ -224,9 +225,8 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # Add selected segments to task metadata
         # Only if track_selected_segments is set to true at the namespace level
-        if namespace_obj.track_selected_segments:
-            ng_state_obj = json.loads(ng_state)
-            metadata['selected_segments'] = ng_state_obj['layers'][1]['segments']
+        if selected_segments and namespace_obj.track_selected_segments:
+            metadata['selected_segments'] = selected_segments
 
         ### Forced Choice Button groups ###
         submission_method = namespace_obj.submission_method

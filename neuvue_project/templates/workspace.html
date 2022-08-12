@@ -416,6 +416,7 @@
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
         console.log("Duration: " + duration);
         let new_operation_ids = '[]';
+        const selected_segments = JSON.stringify(viewer.state.toJSON().layers[1].segments);
         
         if (typeof operation_ids !== 'undefined') {
             new_operation_ids = JSON.stringify(operation_ids);
@@ -426,6 +427,7 @@
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
         $(form).submit();
     }
 

@@ -20,7 +20,7 @@ class NamespaceAdmin(admin.ModelAdmin):
     list_display = ('namespace', 'namespace_enabled')
     fieldsets = [
         ('Namespace Information',               {'fields': ['namespace_enabled', 'namespace', 'display_name', 'ng_link_type', 'submission_method', 'pcg_source',
-                                                'img_source', 'track_operation_ids', 'refresh_selected_root_ids', 'number_of_tasks_users_can_self_assign', 'max_number_of_pending_tasks_per_user']}),
+                                                'img_source', 'track_operation_ids', 'refresh_selected_root_ids', 'number_of_tasks_users_can_self_assign', 'max_number_of_pending_tasks_per_user', 'track_selected_segments']}),
         ('Novice Fields', {'fields': ['novice_pull_from', 'novice_push_to']}),
         ('Intermediate Fields', {'fields': ['intermediate_pull_from', 'intermediate_push_to']}),
         ('Expert Fields', {'fields': ['expert_pull_from', 'expert_push_to']}),
