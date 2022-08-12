@@ -65,7 +65,6 @@ class WorkspaceView(LoginRequiredMixin, View):
             'instructions': '',
             'display_name': Namespace.objects.get(namespace = namespace).display_name,
             'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
-            'timeout': settings.TIMEOUT,
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
