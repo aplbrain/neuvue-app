@@ -54,21 +54,23 @@ class WorkspaceView(LoginRequiredMixin, View):
             return redirect(f'/static/workspace/{namespace}', content_type='application/javascript')
 
         session_task_count = request.session.get('session_task_count', 0)
+        namespace_obj = Namespace.objects.get(namespace = namespace)
+        submission_method = namespace_obj.submission_method
         context = {
             'ng_state': {},
-            'pcg_url': Namespace.objects.get(namespace = namespace).pcg_source,
+            'pcg_url': namespace_obj.pcg_source,
             'task_id': '',
             'seg_id': '',
             'is_open': False,
             'tasks_available': True,
             'skipable': True,
             'instructions': '',
-            'display_name': Namespace.objects.get(namespace = namespace).display_name,
-            'submission_method': Namespace.objects.get(namespace = namespace).submission_method,
+            'display_name': namespace_obj.display_name,
+            'submission_method': submission_method,
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
-            'tags': '',
+            'tags': ''
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
@@ -85,7 +87,14 @@ class WorkspaceView(LoginRequiredMixin, View):
                 button_list.append(button_item)
             context['button_list'] = button_list
 
-        context['submit_task_button'] = getattr(ForcedChoiceButtonGroup.objects.filter(group_name=context.get('submission_method')).first(), 'submit_task_button')
+        button_group_obj = ForcedChoiceButtonGroup.objects.get(group_name=submission_method)
+        context['submit_task_button'] = button_group_obj.submit_task_button
+
+        number_of_selected_segments_expected = button_group_obj.number_of_selected_segments_expected
+        if number_of_selected_segments_expected:
+            context['number_of_selected_segments_expected'] = number_of_selected_segments_expected
+        else:
+            context['number_of_selected_segments_expected'] = None
 
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
@@ -203,7 +212,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
         new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
-        selected_segments = json.loads(request.POST.get('selected_segments', '[]'))
+        selected_segments = request.POST.get('selected_segments').split(',')
     
         try:
             ng_state = post_to_state_server(ng_state)

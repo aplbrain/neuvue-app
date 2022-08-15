@@ -26,6 +26,7 @@ class NeuroglancerLinkType(models.TextChoices):
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
     submit_task_button = models.BooleanField(default=True)
+    number_of_selected_segments_expected = models.IntegerField(null=True, blank=True)
     def __str__(self):
         return self.group_name
     class Meta:
