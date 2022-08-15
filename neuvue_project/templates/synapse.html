@@ -62,31 +62,29 @@
               <table id="synapse-table" class="table table-dark table-bordered table-hover">
               <thead>
                 <tr>
-                {% for root, stats in synapse_stats.items %}
                   <th scope="col">Root ID</th>
-                  {% if stats.pre_synapses %}
+                  {% if pre_synapses == 'True' %}
                   <th scope="col">Presynaptic Connections</th>
                   <th scope="col">Presynaptic Targets</th>
                   <th scope="col">Presynapses to Targets</th>
                   {% endif %}
-                  {% if stats.post_synapses %}
+                  {% if post_synapses == 'True' %}
                   <th scope="col">Postsynaptic Connections</th>
                   <th scope="col">Postsynaptic Targets</th>
                   <th scope="col">Postsynapses to Targets</th>
                   {% endif %}
-                {% endfor %}
                 </tr>
               </thead>
               <tbody>
                 {% for root, stats in synapse_stats.items %}
                 <tr>
-                  <th scope="row">{{root}}</th>
-                  {% if stats.pre_synapses %}
+                  <td>{{root}}</td>
+                  {% if pre_synapses == 'True' %}
                   <td>{{stats.num_pre_synapses}}</td>
                   <td>{{stats.num_pre_targets}}</td>
                   <td>{{stats.pre_synapses_reduced}}:{{stats.pre_targets_reduced}}</td>
                   {% endif %}
-                  {% if stats.post_synapses %}
+                  {% if post_synapses == 'True' %}
                   <td>{{stats.num_post_synapses}}</td>
                   <td>{{stats.num_post_targets}}</td>
                   <td>{{stats.post_synapses_reduced}}:{{stats.post_targets_reduced}}</td>
@@ -138,31 +136,29 @@
       let tableContents = `
               <thead>
                 <tr>
-                {% for root, stats in synapse_stats.items %}
                   <th scope="col">Root ID</th>
-                  {% if stats.pre_synapses %}
+                  {% if pre_synapses == 'True' %}
                   <th scope="col">Presynaptic Connections</th>
                   <th scope="col">Presynaptic Targets</th>
                   <th scope="col">Presynapses to Targets</th>
                   {% endif %}
-                  {% if stats.post_synapses %}
+                  {% if post_synapses == 'True' %}
                   <th scope="col">Postsynaptic Connections</th>
                   <th scope="col">Postsynaptic Targets</th>
                   <th scope="col">Postsynapses to Targets</th>
                   {% endif %}
-                {% endfor %}
                 </tr>
               </thead>
               <tbody>
                 {% for root, stats in synapse_stats.items %}
                  <tr>
                   <td>#{{root}}</td>
-                  {% if stats.pre_synapses %}
+                  {% if pre_synapses == 'True' %}
                   <td>{{stats.num_pre_synapses}}</td>
                   <td>{{stats.num_pre_targets}}</td>
                   <td>{{stats.pre_synapses_reduced}} to {{stats.pre_targets_reduced}}</td>
                   {% endif %}
-                  {% if stats.post_synapses %}
+                  {% if post_synapses == 'True' %}
                   <td>{{stats.num_post_synapses}}</td>
                   <td>{{stats.num_post_targets}}</td>
                   <td>{{stats.post_synapses_reduced}} to {{stats.post_targets_reduced}}</td>
