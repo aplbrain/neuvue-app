@@ -532,7 +532,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 pre_synapses = cave_client.materialize.query_table(
                     "synapses_pni_2",
                     filter_in_dict={"pre_pt_root_id": root_ids},
-                    select_columns=['ctr_pt_position', 'pre_pt_root_id'],
+                    select_columns=['ctr_pt_position', 'pre_pt_root_id', 'post_pt_root_id'],
                     timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
                 )
             except Exception as index:
@@ -541,10 +541,11 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             pre_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
                 filter_in_dict={"pre_pt_root_id": root_ids},
-                select_columns=['ctr_pt_position', 'pre_pt_root_id']
+                select_columns=['ctr_pt_position', 'pre_pt_root_id', 'post_pt_root_id'],
             )
         pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
         pre_synapses['pre_pt_root_id'] = pre_synapses['pre_pt_root_id'].astype(str)
+        pre_synapses['post_pt_root_id'] = pre_synapses['post_pt_root_id'].astype(str)
 
         if len(pre_synapses['ctr_pt_position']) == 0:
             raise Exception('No pre-synapses found for root ids.')
@@ -557,7 +558,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 post_synapses = cave_client.materialize.query_table(
                     "synapses_pni_2",
                     filter_in_dict={"post_pt_root_id": root_ids},
-                    select_columns=['ctr_pt_position', 'post_pt_root_id'],
+                    select_columns=['ctr_pt_position', 'post_pt_root_id', 'pre_pt_root_id'],
                     timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
                 )
             except Exception as index:
@@ -566,10 +567,11 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             post_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
                 filter_in_dict={"post_pt_root_id": root_ids},
-                select_columns=['ctr_pt_position', 'post_pt_root_id']
+                select_columns=['ctr_pt_position', 'post_pt_root_id', 'pre_pt_root_id'],
             )
         post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
         post_synapses['post_pt_root_id'] = post_synapses['post_pt_root_id'].astype(str)
+        post_synapses['pre_pt_root_id'] = post_synapses['pre_pt_root_id'].astype(str)
 
         if len(post_synapses['ctr_pt_position']) == 0:
             raise Exception('No post-synapses found for root ids.')
@@ -600,23 +602,63 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
 
+    # Metrics for each root_id
     synapse_stats = {}
 
     if flags['pre_synapses'] == flags['post_synapses'] == 'True':
         for root_id in root_ids:
+            # Pre-Synaptic Metrics
+            pre_synapses_slice = pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]
+            num_pre_synapses = len(pre_synapses_slice)
+            num_pre_targets = len(np.unique(pre_synapses_slice['post_pt_root_id']))
+            pre_synapses_to_targets = round(num_pre_synapses/num_pre_targets, ndigits=3)
+
+            # Post-Synaptic Metrics
+            post_synapses_slice = post_synapses[post_synapses['post_pt_root_id'] == root_id]
+            num_post_synapses = len(post_synapses_slice)
+            num_post_targets = len(np.unique(post_synapses['pre_pt_root_id']))
+            post_synapses_to_targets = round(num_post_synapses/num_post_targets, ndigits=3)
+
+            # Output to dict
             synapse_stats[root_id] = {
-                "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]),
-                "num_post": len(post_synapses[post_synapses['post_pt_root_id'] == root_id])
+                "pre_synapses": True,
+                "num_pre_synapses": num_pre_synapses,
+                "num_pre_targets": num_pre_targets,
+                "pre_synapses_to_targets": pre_synapses_to_targets,
+                "post_synapses": True,
+                "num_post_synapses": num_post_synapses,
+                "num_post_targets": num_post_targets,
+                "post_synapses_to_targets": post_synapses_to_targets
             }
+    # Only Pre-Synaptic Metrics
     elif flags['pre_synapses'] == 'True':
         for root_id in root_ids:
+            pre_synapses_slice = pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]
+            num_pre_synapses = len(pre_synapses_slice)
+            num_pre_targets = len(np.unique(pre_synapses_slice['post_pt_root_id']))
+            pre_synapses_to_targets = round(num_pre_synapses/num_pre_targets, ndigits=3)
+
+            # Output to dict
             synapse_stats[root_id] = {
-                "num_pre": len(pre_synapses[pre_synapses['pre_pt_root_id'] == root_id])
+                "pre_synapses": True,
+                "num_pre_synapses": num_pre_synapses,
+                "num_pre_targets": num_pre_targets,
+                "pre_synapses_to_targets": pre_synapses_to_targets
             }
+    # Only Post-Synaptic Metrics
     else:
         for root_id in root_ids:
+            post_synapses_slice = post_synapses[post_synapses['post_pt_root_id'] == root_id]
+            num_post_synapses = len(post_synapses_slice)
+            num_post_targets = len(np.unique(post_synapses['pre_pt_root_id']))
+            post_synapses_to_targets = round(num_post_synapses/num_post_targets, ndigits=3)
+
+            # Output to dict
             synapse_stats[root_id] = {
-                "num_post": len(post_synapses[post_synapses['post_pt_root_id'] == root_id])
+                "post_synapses": True,
+                "num_post_synapses": num_post_synapses,
+                "num_post_targets": num_post_targets,
+                "post_synapses_to_targets": post_synapses_to_targets
             }
     # Append clefts layers to state
     if flags['cleft_layer'] == 'True':

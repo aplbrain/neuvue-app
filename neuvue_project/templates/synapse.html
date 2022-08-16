@@ -58,20 +58,41 @@
           <div class="sideContentTitle">
               Segment Information
           </div>
-          <div class="sideContentInfo">             
-              
-              {% for root, stats in synapse_stats.items %}
-              Root ID <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-              {% if stats.num_pre %}
-              Number of Presynaptic Connections <br>
-              <span class ="code"> {{stats.num_pre}} </span> <br>
-              {% endif %}
-              {% if stats.num_post %}
-              Number of Postsynaptic Connections <br>
-              <span class ="code">  {{stats.num_post}} </span> <br>
-              {% endif %}
-              {% endfor %}
+          <div class="sideContentInfo">
+              <table id="synapse-table" class="table table-dark table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Root ID</th>
+                  {% if pre_synapses == 'True' %}
+                  <th scope="col">Presynaptic Connections</th>
+                  <th scope="col">Presynaptic Targets</th>
+                  <th scope="col">Presynapses to Targets</th>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <th scope="col">Postsynaptic Connections</th>
+                  <th scope="col">Postsynaptic Targets</th>
+                  <th scope="col">Postsynapses to Targets</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for root, stats in synapse_stats.items %}
+                <tr>
+                  <td>{{root}}</td>
+                  {% if pre_synapses == 'True' %}
+                  <td>{{stats.num_pre_synapses}}</td>
+                  <td>{{stats.num_pre_targets}}</td>
+                  <td>{{stats.pre_synapses_to_targets}}</td>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <td>{{stats.num_post_synapses}}</td>
+                  <td>{{stats.num_post_targets}}</td>
+                  <td>{{stats.post_synapses_to_targets}}</td>
+                  {% endif %}
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
           </div>
       </div>
       <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
@@ -81,9 +102,9 @@
             <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
           </div>
       </div>
-      
+
   </div>
-</div> 
+</div>
 
 <div id="neuroglancer" class="leftFormatting">
   <div class="left">    
@@ -110,39 +131,43 @@
 <script type="text/javascript">
   // Neuroglancer State Load 
 
-  /**
-   {% for root, stats in synapse_stats.items %}
-    Root ID <br> 
-    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-    Number of Presynaptic Connections <br> 
-    <span class ="code"> {{stats.num_pre}} </span> <br>
-    Number of Postsynaptic Connections <br> 
-    <span class ="code">  {{stats.num_post}} </span> <br>
-    {% endfor %}
-              **/
     const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
     exportButton_userTable.addEventListener('click', (e) => {
       let tableContents = `
-                    <thead>
-                      <tr>
-                        <th scope="col">Root ID</th>
-                        <th scope="col">Root ID: formatted</th>
-                        <th scope="col">Number of Presynaptic Connections</th>
-                        <th scope="col">Number of Postsynaptic Connections</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for root, stats in synapse_stats.items %}
-                        <tr>
-                          <td>{{root}}</td>
-                          <td>#: {{root}}</td>
-                          <td>{{stats.num_pre}}</td>
-                          <td>{{stats.num_post}}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>`
+              <thead>
+                <tr>
+                  <th scope="col">Root ID</th>
+                  {% if pre_synapses == 'True' %}
+                  <th scope="col">Presynaptic Connections</th>
+                  <th scope="col">Presynaptic Targets</th>
+                  <th scope="col">Presynapses to Targets</th>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <th scope="col">Postsynaptic Connections</th>
+                  <th scope="col">Postsynaptic Targets</th>
+                  <th scope="col">Postsynapses to Targets</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for root, stats in synapse_stats.items %}
+                 <tr>
+                  <td>#{{root}}</td>
+                  {% if pre_synapses == 'True' %}
+                  <td>{{stats.num_pre_synapses}}</td>
+                  <td>{{stats.num_pre_targets}}</td>
+                  <td>{{stats.pre_synapses_to_targets}}</td>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <td>{{stats.num_post_synapses}}</td>
+                  <td>{{stats.num_post_targets}}</td>
+                  <td>{{stats.post_synapses_to_targets}}</td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>`
         $('#hiddenTable').html(`
-            <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>  
+            <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>
         `);
         // Construct filename
         const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';

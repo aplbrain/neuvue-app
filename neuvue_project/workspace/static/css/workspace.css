@@ -701,6 +701,7 @@ font-size: 25px;
   padding: 0px 10px;
   position:relative;
   font-size: 1.4vh;
+  overflow-y: scroll;
   color: var(--primary-accent);
   width: 100%;
   border-radius: 4px;
