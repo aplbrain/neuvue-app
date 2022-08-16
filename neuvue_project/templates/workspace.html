@@ -424,12 +424,27 @@
         });
     }
      
-     function show3DSlices() {
+    function show3DSlices() {
         let slices = '{{show_slices}}';
         if (slices == 'True' && !viewer.showPerspectiveSliceViews.value_){
             viewer.showPerspectiveSliceViews.toggle();
-         }
-     }
+        }
+    }
+
+    function getSelectedSegments(state) {
+        selectedSegments = [];
+        // Pull selected segments from segmentation layers
+        viewer.state.toJSON().layers.forEach( layer => {
+            if (layer.type === "segmentation_with_graph" || layer.type === "segmentation") {
+                layer.segments.forEach( (segment) => {
+                    selectedSegments.push(segment);
+                })
+            }
+        })
+        // Return only unique ids
+        selectedSegments = [...new Set(selectedSegments)]
+        return selectedSegments;
+    }
     
 
     function submitForm(value, form='#mainForm') {
@@ -439,7 +454,7 @@
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
         console.log("Duration: " + duration);
         let new_operation_ids = '[]';
-        const selected_segments = viewer.state.toJSON().layers[1].segments;
+        const selected_segments = getSelectedSegments(viewer.state);
         
         if (typeof operation_ids !== 'undefined') {
             new_operation_ids = JSON.stringify(operation_ids);
@@ -562,7 +577,8 @@
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    const num_selected_segments = viewer.state.toJSON().layers[1].segments.length;
+                    const selected_segments = getSelectedSegments(viewer.state);
+                    const num_selected_segments = selected_segments.length;
                     if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
                         showConfirmSelectedSegmentsModal("{{button.submission_value}}", "{{button.display_name}}", num_selected_segments)
                     } else {
