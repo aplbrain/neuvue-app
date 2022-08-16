@@ -484,7 +484,7 @@ def apply_state_config(state:str, username:str):
         # handle mesh layer colors
         if 'segmentation' in layer.get('type', '') and config.mesh_color_palette_switch:
             mesh_color_palette_list = mesh_color_palette_dict[mesh_color_palette]
-            segments = layer['segments']
+            segments = layer.get('segments', [])
             segmentColors = {}
 
             # populate segment colors dictionary
