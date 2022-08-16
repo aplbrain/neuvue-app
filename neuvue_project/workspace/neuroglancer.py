@@ -611,30 +611,24 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             pre_synapses_slice = pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]
             num_pre_synapses = len(pre_synapses_slice)
             num_pre_targets = len(np.unique(pre_synapses_slice['post_pt_root_id']))
-            pre_synapses_per_target_denom = np.gcd(num_pre_synapses, num_pre_targets)
-            pre_synapses_reduced = round(num_pre_synapses/pre_synapses_per_target_denom)
-            pre_targets_reduced = round(num_pre_targets/pre_synapses_per_target_denom)
+            pre_synapses_to_targets = round(num_pre_synapses/num_pre_targets, ndigits=3)
 
             # Post-Synaptic Metrics
             post_synapses_slice = post_synapses[post_synapses['post_pt_root_id'] == root_id]
             num_post_synapses = len(post_synapses_slice)
             num_post_targets = len(np.unique(post_synapses['pre_pt_root_id']))
-            post_synapses_per_target_denom = np.gcd(num_post_synapses, num_post_targets)
-            post_synapses_reduced = round(num_post_synapses/post_synapses_per_target_denom)
-            post_targets_reduced = round(num_post_targets/post_synapses_per_target_denom)
+            post_synapses_to_targets = round(num_post_synapses/num_post_targets, ndigits=3)
 
             # Output to dict
             synapse_stats[root_id] = {
                 "pre_synapses": True,
                 "num_pre_synapses": num_pre_synapses,
-                "pre_synapses_reduced": pre_synapses_reduced,
                 "num_pre_targets": num_pre_targets,
-                "pre_targets_reduced": pre_targets_reduced,
+                "pre_synapses_to_targets": pre_synapses_to_targets,
                 "post_synapses": True,
                 "num_post_synapses": num_post_synapses,
-                "post_synapses_reduced": post_synapses_reduced,
                 "num_post_targets": num_post_targets,
-                "post_targets_reduced": post_targets_reduced
+                "post_synapses_to_targets": post_synapses_to_targets
             }
     # Only Pre-Synaptic Metrics
     elif flags['pre_synapses'] == 'True':
@@ -642,17 +636,14 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             pre_synapses_slice = pre_synapses[pre_synapses['pre_pt_root_id'] == root_id]
             num_pre_synapses = len(pre_synapses_slice)
             num_pre_targets = len(np.unique(pre_synapses_slice['post_pt_root_id']))
-            pre_synapses_per_target_denom = np.gcd(num_pre_synapses, num_pre_targets)
-            pre_synapses_reduced = round(num_pre_synapses / pre_synapses_per_target_denom)
-            pre_targets_reduced = round(num_pre_targets / pre_synapses_per_target_denom)
+            pre_synapses_to_targets = round(num_pre_synapses/num_pre_targets, ndigits=3)
 
             # Output to dict
             synapse_stats[root_id] = {
                 "pre_synapses": True,
                 "num_pre_synapses": num_pre_synapses,
-                "pre_synapses_reduced": pre_synapses_reduced,
                 "num_pre_targets": num_pre_targets,
-                "pre_targets_reduced": pre_targets_reduced
+                "pre_synapses_to_targets": pre_synapses_to_targets
             }
     # Only Post-Synaptic Metrics
     else:
@@ -660,17 +651,14 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             post_synapses_slice = post_synapses[post_synapses['post_pt_root_id'] == root_id]
             num_post_synapses = len(post_synapses_slice)
             num_post_targets = len(np.unique(post_synapses['pre_pt_root_id']))
-            post_synapses_per_target_denom = np.gcd(num_post_synapses, num_post_targets)
-            post_synapses_reduced = round(num_post_synapses / post_synapses_per_target_denom)
-            post_targets_reduced = round(num_post_targets / post_synapses_per_target_denom)
+            post_synapses_to_targets = round(num_post_synapses/num_post_targets, ndigits=3)
 
             # Output to dict
             synapse_stats[root_id] = {
                 "post_synapses": True,
                 "num_post_synapses": num_post_synapses,
-                "post_synapses_reduced": post_synapses_reduced,
                 "num_post_targets": num_post_targets,
-                "post_targets_reduced": post_targets_reduced
+                "post_synapses_to_targets": post_synapses_to_targets
             }
     # Append clefts layers to state
     if flags['cleft_layer'] == 'True':

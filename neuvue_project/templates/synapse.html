@@ -82,12 +82,12 @@
                   {% if pre_synapses == 'True' %}
                   <td>{{stats.num_pre_synapses}}</td>
                   <td>{{stats.num_pre_targets}}</td>
-                  <td>{{stats.pre_synapses_reduced}}:{{stats.pre_targets_reduced}}</td>
+                  <td>{{stats.pre_synapses_to_targets}}</td>
                   {% endif %}
                   {% if post_synapses == 'True' %}
                   <td>{{stats.num_post_synapses}}</td>
                   <td>{{stats.num_post_targets}}</td>
-                  <td>{{stats.post_synapses_reduced}}:{{stats.post_targets_reduced}}</td>
+                  <td>{{stats.post_synapses_to_targets}}</td>
                   {% endif %}
                 {% endfor %}
                 </tr>
@@ -156,12 +156,12 @@
                   {% if pre_synapses == 'True' %}
                   <td>{{stats.num_pre_synapses}}</td>
                   <td>{{stats.num_pre_targets}}</td>
-                  <td>{{stats.pre_synapses_reduced}} to {{stats.pre_targets_reduced}}</td>
+                  <td>{{stats.pre_synapses_to_targets}}</td>
                   {% endif %}
                   {% if post_synapses == 'True' %}
                   <td>{{stats.num_post_synapses}}</td>
                   <td>{{stats.num_post_targets}}</td>
-                  <td>{{stats.post_synapses_reduced}} to {{stats.post_targets_reduced}}</td>
+                  <td>{{stats.post_synapses_to_targets}}</td>
                   {% endif %}
                 </tr>
                 {% endfor %}
