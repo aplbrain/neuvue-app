@@ -432,17 +432,14 @@
     }
 
     function getSelectedSegments(state) {
-        selectedSegments = [];
-        // Pull selected segments from segmentation layers
+        selectedSegments = new Set();
         viewer.state.toJSON().layers.forEach( layer => {
             if (layer.type === "segmentation_with_graph" || layer.type === "segmentation") {
                 layer.segments.forEach( (segment) => {
-                    selectedSegments.push(segment);
+                    selectedSegments.add(segment);
                 })
             }
         })
-        // Return only unique ids
-        selectedSegments = [...new Set(selectedSegments)]
         return selectedSegments;
     }
     
@@ -577,8 +574,7 @@
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    const selected_segments = getSelectedSegments(viewer.state);
-                    const num_selected_segments = selected_segments.length;
+                    const num_selected_segments = getSelectedSegments(viewer.state).size;
                     if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
                         showConfirmSelectedSegmentsModal("{{button.submission_value}}", "{{button.display_name}}", num_selected_segments)
                     } else {
