@@ -26,6 +26,7 @@ class NeuroglancerLinkType(models.TextChoices):
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
     submit_task_button = models.BooleanField(default=True)
+    number_of_selected_segments_expected = models.IntegerField(null=True, blank=True)
     def __str__(self):
         return self.group_name
     class Meta:
@@ -89,6 +90,7 @@ class Namespace(models.Model):
     refresh_selected_root_ids = models.BooleanField(default=False)
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
+    track_selected_segments = models.BooleanField(default=False)
 
     """Pull From Push To Novice"""
     novice_pull_from = models.CharField(max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL)

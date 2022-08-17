@@ -300,13 +300,13 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" style="color: black;">Flagging Task #{{task_id}}</h5>
+                    <h5 class="modal-title text-dark">Flagging Task #{{task_id}}</h5>
                     <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="" method="post" role="form">
                         <div class="form-group">
-                            <label for="flag" style="color: black;">Please select a reason for flagging this task:</label>
+                            <label for="flag" class="text-dark">Please select a reason for flagging this task:</label>
                             <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
                                 <option value="unknown">Select reason</option>
                                 <option value="artifact in the data">Artifact in the data</option>
@@ -337,7 +337,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color: black; text-align: center;">Are you sure you want to remove this task from your queue?</h5>
+                <h5 class="modal-title text-dark" style="text-align: center;">Are you sure you want to remove this task from your queue?</h5>
                 <button type="button" class="btn-close" id="btnRemoveClose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
@@ -348,11 +348,12 @@
     </div>
 </div> 
 
+<!-- Timeout Modal -->
 <div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color: black;">Continue proofreading?</h5>
+                <h5 class="modal-title text-dark">Continue proofreading?</h5>
                 <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
@@ -362,6 +363,28 @@
         </div>
     </div>
 </div> 
+
+<!-- Confirm Selected Segments Modal -->
+<div id="confirmSelectedSegments" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Confirm Submit</h5>
+                <button type="button" class="btn-close" id="btnSelectedSegmentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark">
+                <div>The number of selected segments expected for this task is: <b>{{number_of_selected_segments_expected}}</b></div>
+                <div>You have selected: <b id="selectedSegmentsDynamicField"><!-- js will fill this in --></b></div>
+                <div>Are you sure you want to submit this task?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnSelectedSegmentsClose" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="flag-submit btn btn-primary" id="btnSelectedSegmentsSubmit" onclick="/* js will fill this in*/">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -401,12 +424,24 @@
         });
     }
      
-     function show3DSlices() {
+    function show3DSlices() {
         let slices = '{{show_slices}}';
         if (slices == 'True' && !viewer.showPerspectiveSliceViews.value_){
             viewer.showPerspectiveSliceViews.toggle();
-         }
-     }
+        }
+    }
+
+    function getSelectedSegments(state) {
+        selectedSegments = new Set();
+        viewer.state.toJSON().layers.forEach( layer => {
+            if (layer.type === "segmentation_with_graph" || layer.type === "segmentation") {
+                layer.segments.forEach( (segment) => {
+                    selectedSegments.add(segment);
+                })
+            }
+        })
+        return selectedSegments;
+    }
     
 
     function submitForm(value, form='#mainForm') {
@@ -416,6 +451,7 @@
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
         console.log("Duration: " + duration);
         let new_operation_ids = '[]';
+        const selected_segments = getSelectedSegments(viewer.state);
         
         if (typeof operation_ids !== 'undefined') {
             new_operation_ids = JSON.stringify(operation_ids);
@@ -426,6 +462,7 @@
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
         $(form).submit();
     }
 
@@ -478,6 +515,16 @@
         selected_button.classList.toggle("active");
     }
 
+    function showConfirmSelectedSegmentsModal(buttonSubmissionValue, buttonDisplayName, num_selected_segments) {
+        removeLoadingSpinner(buttonSubmissionValue + '_load', buttonDisplayName);
+        document.getElementById("selectedSegmentsDynamicField").innerHTML = num_selected_segments;
+        document.getElementById("btnSelectedSegmentsSubmit").onclick = function() {
+            triggerLoadingSpinner('btnSelectedSegmentsSubmit');
+            submitForm(buttonSubmissionValue);
+        };
+        $('#confirmSelectedSegments').modal('show');
+    }
+
     // Button Submission
     $(document).ready(function() {
         var received_data = {{ ng_state|safe }};
@@ -527,7 +574,12 @@
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    submitForm("{{button.submission_value}}");
+                    const num_selected_segments = getSelectedSegments(viewer.state).size;
+                    if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
+                        showConfirmSelectedSegmentsModal("{{button.submission_value}}", "{{button.display_name}}", num_selected_segments)
+                    } else {
+                        submitForm("{{button.submission_value}}");
+                    }
                 });
             {% endfor %}
         {% endif %}
