@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.6.5",
+            "update_date":"August 17th, 2022",
+            "update_description": "Adds completeness metrics to synapse viewer. Records selected segments on task submission."
+        },
+        {
             "update_name": "v1.6.4",
             "update_date":"August 10th, 2022",
             "update_description": "Adds additional options to synapse viewer. Speeds up pages. Squashes summer bugs."
