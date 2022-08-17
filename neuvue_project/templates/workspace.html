@@ -440,9 +440,10 @@
                 })
             }
         })
-        return selectedSegments;
+        return Array.from(selectedSegments);;
     }
     
+
 
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
