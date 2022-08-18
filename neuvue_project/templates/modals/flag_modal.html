@@ -1,0 +1,38 @@
+<form id="flagForm" method="post">
+    {% csrf_token %}
+    <!-- Modal -->
+    <div id="flagModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark">Flagging Task #{{task_id}}</h5>
+                    <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" role="form">
+                        <div class="form-group">
+                            <label for="flag" class="text-dark">Please select a reason for flagging this task:</label>
+                            <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
+                                <option value="unknown">Select reason</option>
+                                <option value="artifact in the data">Artifact in the data</option>
+                                <option value="wrong location">Wrong location</option>
+                                <option value="data unable to load">Data unable to load</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: none;" id="text">
+                            <label for="flag-other">Other reason*</label>
+                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100" placeholder="Enter reason" validate></textarea>
+                            <small class="form-text text-muted">*100 character limit.</small>
+                            <div class="invalid-feedback">Please enter a reason.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="triggerLoadingSpinner('btnFlagSubmit')">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+</form>

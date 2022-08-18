@@ -294,63 +294,10 @@
     </div>
 </div>
 
-<form id="flagForm" method="post">
-    {% csrf_token %}
-    <!-- Modal -->
-    <div id="flagModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-dark">Flagging Task #{{task_id}}</h5>
-                    <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="post" role="form">
-                        <div class="form-group">
-                            <label for="flag" class="text-dark">Please select a reason for flagging this task:</label>
-                            <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
-                                <option value="unknown">Select reason</option>
-                                <option value="artifact in the data">Artifact in the data</option>
-                                <option value="wrong location">Wrong location</option>
-                                <option value="data unable to load">Data unable to load</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: none;" id="text">
-                            <label for="flag-other">Other reason*</label>
-                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100" placeholder="Enter reason" validate></textarea>
-                            <small class="form-text text-muted">*100 character limit.</small>
-                            <div class="invalid-feedback">Please enter a reason.</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="triggerLoadingSpinner('btnFlagSubmit')">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-</form>
-
+<!-- Modals -->
+{% flag_modal task_id %}
 {% remove_task_modal %}
-
-<!-- Timeout Modal -->
-<div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark">Continue proofreading?</h5>
-                <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="timeoutModalNo" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="timeoutModalYes" data-bs-dismiss="modal">Yes</button>
-            </div>
-        </div>
-    </div>
-</div> 
-
+{% timeout_modal %}
 {% confirm_selected_segments_modal number_of_selected_segments_expected %}
 
 <style> .overlay-hidden { display:none; } </style>
@@ -510,33 +457,37 @@
                 forced_choice_hotkey_hints.item(i).style.display = 'block';
             }
         }
-        
-        // add specific class to save state overlay
 
+        // If number_of_selected_segments_expected is set at the namespace level,
+        // show a modal if the user has selected more
+        function submitWithSelectedSegmentsCheck(buttonId, buttonSubmissionValue, buttonDisplayName) {
+            const num_selected_segments = getSelectedSegments(viewer.state).length;
+            if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
+                showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
+            } else {
+                submitForm(buttonSubmissionValue);
+            }
+        }
+        
         {% if submit_task_button %}
             {% if button_list %}
                 $('#btnSubmit').click(function(){
                     if (current_button_selection != 'noneSelected'){
                         triggerLoadingSpinner('submit_task_load');
-                        submitForm(current_button_selection);
+                        submitWithSelectedSegmentsCheck('submit_task_load', current_button_selection, 'Submit Task');
                     } else {
                         alert("Please select a decision!");
                     }
                 });
             {% else %}
                 $('#btnSubmit').click(function(){
-                    submitForm('submit');
+                    submitWithSelectedSegmentsCheck('submit_task_load', 'submit', 'Submit Task');
                 });
             {% endif %}
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    const num_selected_segments = getSelectedSegments(viewer.state).size;
-                    if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
-                        showConfirmSelectedSegmentsModal("{{button.submission_value}}", "{{button.display_name}}", num_selected_segments)
-                    } else {
-                        submitForm("{{button.submission_value}}");
-                    }
+                    submitWithSelectedSegmentsCheck("{{button.submission_value}}" + "_load", "{{button.submission_value}}", "{{button.display_name}}");
                 });
             {% endfor %}
         {% endif %}

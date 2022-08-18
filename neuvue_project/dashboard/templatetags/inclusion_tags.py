@@ -20,8 +20,18 @@ def metrics_card(title, value, color):
         "color": color     # should be a bootstrap color utility, e.g. primary, secondary
     }
 
+@register.inclusion_tag('modals/flag_modal.html')
+def flag_modal(task_id):
+    return {
+        "task_id": task_id
+    }
+
 @register.inclusion_tag('modals/remove_task_modal.html')
 def remove_task_modal():
+    return {}
+
+@register.inclusion_tag('modals/timeout_modal.html')
+def timeout_modal():
     return {}
 
 @register.inclusion_tag('modals/confirm_selected_segments_modal.html')

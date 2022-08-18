@@ -19,8 +19,8 @@
 </div>
 
 <script type="text/javascript"> 
-    function showConfirmSelectedSegmentsModal(buttonSubmissionValue, buttonDisplayName, num_selected_segments) {
-        removeLoadingSpinner(buttonSubmissionValue + '_load', buttonDisplayName);
+    function showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments) {
+        removeLoadingSpinner(buttonId, buttonDisplayName);
         document.getElementById("selectedSegmentsDynamicField").innerHTML = num_selected_segments;
         document.getElementById("btnSelectedSegmentsSubmit").onclick = function() {
             triggerLoadingSpinner('btnSelectedSegmentsSubmit');
