@@ -575,7 +575,7 @@
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    const num_selected_segments = getSelectedSegments(viewer.state).size;
+                    const num_selected_segments = getSelectedSegments(viewer.state).length;
                     if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
                         showConfirmSelectedSegmentsModal("{{button.submission_value}}", "{{button.display_name}}", num_selected_segments)
                     } else {
