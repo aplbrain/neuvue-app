@@ -1,0 +1,31 @@
+<div id="confirmSelectedSegments" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Confirm Submit</h5>
+                <button type="button" class="btn-close" id="btnSelectedSegmentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark">
+                <div>The number of selected segments expected for this task is: <b>{{number_of_selected_segments_expected}}</b></div>
+                <div>You have selected: <b id="selectedSegmentsDynamicField"><!-- js will fill this in --></b></div>
+                <div>Are you sure you want to submit this task?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnSelectedSegmentsClose" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="flag-submit btn btn-primary" id="btnSelectedSegmentsSubmit" onclick="/* js will fill this in*/">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"> 
+    function showConfirmSelectedSegmentsModal(buttonSubmissionValue, buttonDisplayName, num_selected_segments) {
+        removeLoadingSpinner(buttonSubmissionValue + '_load', buttonDisplayName);
+        document.getElementById("selectedSegmentsDynamicField").innerHTML = num_selected_segments;
+        document.getElementById("btnSelectedSegmentsSubmit").onclick = function() {
+            triggerLoadingSpinner('btnSelectedSegmentsSubmit');
+            submitForm(buttonSubmissionValue);
+        };
+        $('#confirmSelectedSegments').modal('show');
+    }
+</script>

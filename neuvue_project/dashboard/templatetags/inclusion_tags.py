@@ -19,3 +19,13 @@ def metrics_card(title, value, color):
         "value": value,
         "color": color     # should be a bootstrap color utility, e.g. primary, secondary
     }
+
+@register.inclusion_tag('modals/remove_task_modal.html')
+def remove_task_modal():
+    return {}
+
+@register.inclusion_tag('modals/confirm_selected_segments_modal.html')
+def confirm_selected_segments_modal(number_of_selected_segments_expected):
+    return {
+        "number_of_selected_segments_expected": number_of_selected_segments_expected
+    }
