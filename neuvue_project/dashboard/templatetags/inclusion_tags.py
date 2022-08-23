@@ -39,3 +39,7 @@ def confirm_selected_segments_modal(number_of_selected_segments_expected):
     return {
         "number_of_selected_segments_expected": number_of_selected_segments_expected
     }
+
+@register.inclusion_tag('modals/distribute_task_modal.html')
+def distribute_task_modal():
+    return {}

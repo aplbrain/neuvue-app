@@ -82,7 +82,6 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         Namespaces = apps.get_model('workspace', 'Namespace')
         
         context = {}
-
         users = _get_users_from_group(group)
         table, counts = self._generate_table_and_counts(namespace, users)
         
@@ -95,7 +94,40 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
 
+        if group == 'unassigned':
+            context['user_groups'] = sorted([x.name for x in Group.objects.all()])
+            n_users_per_group = {}
+            for user_group in context['user_groups']:
+                 n_users_per_group[user_group] = len(_get_users_from_group(user_group))
+            context['user_group_counts'] = n_users_per_group
+
         return render(request, "admin_dashboard/dashboard-namespace-view.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        unassigned_group = request.POST.get("unassigned-group")
+        namespace = request.POST.get("namespace") ## GET THIS
+
+        namespace_df = self.client.get_tasks(
+            sieve={
+                'assignee': unassigned_group,
+                'namespace': namespace,
+            },
+            return_metadata=False,
+            return_states=False
+        )
+
+        assignee_group = request.POST.get("assignee-group")
+        assignee_group_usernames = _get_users_from_group(assignee_group)
+        n_tasks = int(request.POST.get("n-tasks"))
+
+        for i in range(len(assignee_group_usernames)):
+            user = assignee_group_usernames[i]
+            user_tasks = namespace_df.iloc[(i*n_tasks):(n_tasks+(i*n_tasks))]
+            for task in user_tasks.index:
+                self.client.patch_task(task, assignee=user) 
+
+        
+        return redirect(reverse('dashboard', kwargs={"namespace":namespace,"group": 'unassigned'}))
 
     def _generate_table_and_counts(self, namespace: str, users: List):
         table_rows = []
