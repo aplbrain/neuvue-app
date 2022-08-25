@@ -73,8 +73,8 @@
                                     </tr>
                                     {% for row in  context.pending %}
                                     <tr>
-                                        <td scope="row"><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td> {{ row.seg_id }} </td>
+                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
+                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
                                         <td> {{ row.created }} </td>
                                         <td> {{ row.priority }} </td>
                                         <td> {{ row.status }} </td>
@@ -96,10 +96,10 @@
                                         <th>Status</th>
                                         <th>Tags</th>
                                     </tr>
-                                    {% for row in  context.closed %}
+                                    {% for row in context.closed %}
                                     <tr>
-                                        <td scope="row"><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td> {{ row.seg_id }} </td>
+                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
+                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
                                         <td> {{ row.opened }} </td>
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
