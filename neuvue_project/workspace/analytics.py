@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta, timezone
 from pytz import timezone
 import pytz
 import numpy as np
+import pandas as pd
 
 # import the logging library
 import logging
@@ -66,3 +67,27 @@ def user_stats(table):
         }
     
     return stats
+
+def create_stats_table(pending_tasks, closed_tasks):
+
+    all_user_tasks = pd.concat([pending_tasks,closed_tasks])
+    all_user_tasks = all_user_tasks[~all_user_tasks.index.duplicated(keep='first')].reset_index(drop=True)
+
+    twentyFour_hrs_ago = datetime.now() - timedelta(days=1)
+
+    closed_df = all_user_tasks[all_user_tasks.closed >= twentyFour_hrs_ago]
+    created_df = all_user_tasks[all_user_tasks.created >= twentyFour_hrs_ago]
+
+    changelog_text = '<ul>'
+
+    for namespace, namespace_df in closed_df.groupby('namespace'):
+        n_tasks_closed = len(namespace_df)
+        changelog_text += '<li><code>' + str(n_tasks_closed) + '</code> tasks closed from <code> ' + namespace + '</code></li>'
+    
+    for namespace, namespace_df in created_df.groupby('namespace'):
+        n_tasks_created = len(namespace_df)
+        changelog_text += '<li><code>' + str(n_tasks_created) + '</code> tasks added to <code> ' + namespace + '</code></li>'
+
+    changelog_text += '</ul>'
+    
+    return changelog_text
