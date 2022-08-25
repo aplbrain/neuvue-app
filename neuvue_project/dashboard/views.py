@@ -125,7 +125,6 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
             user_tasks = namespace_df.iloc[(i*n_tasks):(n_tasks+(i*n_tasks))]
             for task in user_tasks.index:
                 self.client.patch_task(task, assignee=user) 
-
         
         return redirect(reverse('dashboard', kwargs={"namespace":namespace,"group": 'unassigned'}))
 

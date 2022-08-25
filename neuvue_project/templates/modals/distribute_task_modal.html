@@ -38,22 +38,27 @@
 </div>
 
 <script type="text/javascript"> 
-    function showConfirmDistributeTasksModal(sufficient_tasks_bool, n_tasks, n_assignees, assignee_group, unassigned_group) {
-        if ((n_tasks == false)|(n_tasks == false)|(n_tasks == false)){
-            $("#alertNoFields").modal('show');
+    function showConfirmDistributeTasksModal(n_tasks, unassigned_group, assignee_group,  user_table, user_group_count_dict) {
+
+        let n_assignees = user_group_count_dict[assignee_group];
+        for (let row of user_table){
+          if (row.username == unassigned_group){
+            var n_pending = row.pending;
+          }
+        }
+        $('.n_tasks').each(function(){$(this).text(n_tasks)});
+        $('.n_assignees').each(function(){$(this).text(n_assignees)});
+        $('.assignee_group').each(function(){$(this).text(assignee_group)});
+        $('.unassigned_group').each(function(){$(this).text(unassigned_group)});
+
+        if ((n_tasks*n_assignees) < n_pending) {
+            document.getElementById("btnDistributeTasksSubmit").onclick = function() {
+                triggerLoadingSpinner('btnDistributeTasksSubmit');
+            };
+            $('#confirmDistributeTasks').modal('show');
         } else {
-            $('.n_tasks').each(function(){$(this).text(n_tasks)});
-            $('.n_assignees').each(function(){$(this).text(n_assignees)});
-            $('.assignee_group').each(function(){$(this).text(assignee_group)});
-            $('.unassigned_group').each(function(){$(this).text(unassigned_group)});
-            if (sufficient_tasks_bool) {
-                document.getElementById("btnDistributeTasksSubmit").onclick = function() {
-                    triggerLoadingSpinner('btnDistributeTasksSubmit');
-                };
-                $('#confirmDistributeTasks').modal('show');
-            } else {
-                $("#alertInsufficientTasks").modal('show');
-            }
-        } 
+            $("#alertInsufficientTasks").modal('show');
+        }
+        
     }
 </script>
