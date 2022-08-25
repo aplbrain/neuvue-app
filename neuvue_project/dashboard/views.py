@@ -112,8 +112,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
                 'assignee': unassigned_group,
                 'namespace': namespace,
             },
-            return_metadata=False,
-            return_states=False
+            select=['_id']
         )
 
         assignee_group = request.POST.get("assignee-group")
@@ -138,10 +137,12 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
             sieve['assignee'] = users
         else: # case if `All Users` was selected
             users = list(User.objects.all().values_list('username', flat=True).distinct()) # retrieve all usernames
+        
         task_df = self.client.get_tasks(
                 sieve=sieve,
                 select=['assignee', 'status', 'closed']
-            ) 
+            )
+ 
         for user in users:
             user_df = task_df[task_df['assignee'] == user]
             last_closed = _format_time(user_df['closed'].max())
@@ -194,8 +195,7 @@ class DashboardUserView(View, LoginRequiredMixin):
             sieve={
                 'assignee': user,
             },
-            return_metadata=False,
-            return_states=False
+            select= ['opened', 'closed', 'created', 'duration', 'status', 'namespace', 'priority', 'seg_id', 'tags']
         )
 
         user_df= user_df.sort_values('created', ascending=False)
