@@ -363,7 +363,6 @@
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-        console.log("Duration: " + duration);
         let new_operation_ids = '[]';
         const selected_segments = getSelectedSegments(viewer.state);
         
@@ -395,14 +394,13 @@
 
     // autoSave state
     function autoSave() {
-        console.log("autosaved state")
         saveState();
     }
 
     // create browser interaction timer
     const browserTimer = new browserInteractionTime({
             timeIntervalEllapsedCallbacks: [{
-            timeInMilliseconds: 5000,
+            timeInMilliseconds: 60000,
             callback: () => autoSave(),
             multiplier: x => x + 3e5
         }],
