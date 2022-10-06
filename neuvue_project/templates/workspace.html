@@ -61,6 +61,10 @@
                     Skipped <br> 
                     <span class ="code">{{was_skipped}}</span><br>
                     {% endif %}
+                    {% if num_edits %}
+                    Number of Edits <br> 
+                    <span class ="code">{{num_edits}}</span><br>
+                    {% endif %}
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 

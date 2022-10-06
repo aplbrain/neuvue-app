@@ -127,6 +127,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
+            if task_df['metadata'].get('operation_ids'):
+                context['num_edits'] = len(task_df['metadata'].get('operation_ids'))
             if task_df.get('tags'):
                 context['tags'] = ','.join(task_df['tags'])
             if task_df['priority'] < 2:
@@ -715,6 +717,8 @@ class InspectTaskView(View):
         metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
+        if metadata.get('operation_ids'):
+            context['num_edits'] = len(metadata['operation_ids'])
         if task_df.get('tags'):
             context['tags'] = ','.join(task_df['tags'])
         return render(request, "inspect.html", context)
