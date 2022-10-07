@@ -144,10 +144,13 @@
 
         <div class="analytics">
             <div class="sideContentTitle">
-                Stats in the Last 24 Hours
+                Activity Log
             </div>
             <div class="sideContentInfo">
-                {{ data.changelog | safe }}
+                <span class = "analyticsSubHeader"> Last 24 hours </span>
+                {{ data.daily_changelog | safe }}
+                <span class = "analyticsSubHeader"> Older </span>
+                {{ data.full_changelog | safe }}
             </div>
         </div>
     </div>

@@ -508,9 +508,11 @@ class TaskView(LoginRequiredMixin, View):
 
         # create settings and context dicts
         settings_dict = {'SANDBOX_ID' : settings.SANDBOX_ID}
+        daily_changelog, full_changelog = create_stats_table(pending_tasks, closed_tasks)
         data_dict = {'settings' : settings_dict,
                     'namespaces' : context,
-                    'changelog':create_stats_table(pending_tasks, closed_tasks)
+                    'daily_changelog': daily_changelog,
+                    'full_changelog': full_changelog
         }
 
         return render(request, "tasks.html", {'data' : data_dict})

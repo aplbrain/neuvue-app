@@ -74,20 +74,31 @@ def create_stats_table(pending_tasks, closed_tasks):
     all_user_tasks = all_user_tasks[~all_user_tasks.index.duplicated(keep='first')].reset_index(drop=True)
 
     twentyFour_hrs_ago = datetime.now() - timedelta(days=1)
+    daily_changelog_items = []
+    full_changelog_items = []
+    frames = [
+        (daily_changelog_items, 'closed', all_user_tasks[all_user_tasks.closed >= twentyFour_hrs_ago]),
+        (daily_changelog_items, 'created', all_user_tasks[all_user_tasks.created >= twentyFour_hrs_ago]),
+        (full_changelog_items, 'closed', all_user_tasks[all_user_tasks.closed < twentyFour_hrs_ago]),
+        (full_changelog_items, 'created', all_user_tasks[all_user_tasks.created < twentyFour_hrs_ago])
+    ]
 
-    closed_df = all_user_tasks[all_user_tasks.closed >= twentyFour_hrs_ago]
-    created_df = all_user_tasks[all_user_tasks.created >= twentyFour_hrs_ago]
-
-    changelog_text = '<ul>'
-
-    for namespace, namespace_df in closed_df.groupby('namespace'):
-        n_tasks_closed = len(namespace_df)
-        changelog_text += '<li><code>' + str(n_tasks_closed) + '</code> tasks closed from <code> ' + namespace + '</code></li>'
+    for changelog, status, df in frames:
+        for namespace, namespace_df in df.groupby('namespace'):
+            n_tasks = len(namespace_df)
+            m = namespace_df[status].min()
+            average_event_time = (m + (namespace_df[status]-m)).mean().to_pydatetime()
+            changelog.append((average_event_time, n_tasks, status, namespace))
     
-    for namespace, namespace_df in created_df.groupby('namespace'):
-        n_tasks_created = len(namespace_df)
-        changelog_text += '<li><code>' + str(n_tasks_created) + '</code> tasks added to <code> ' + namespace + '</code></li>'
-
-    changelog_text += '</ul>'
+    # Sort changelogs by datetime
+    daily_changelog_items = sorted(daily_changelog_items, key=lambda x: x[0], reverse=True)
+    full_changelog_items = sorted(full_changelog_items, key=lambda x: x[0], reverse=True)
     
-    return changelog_text
+    def generate_changelog_text(changelog_items):
+        changelog_strings = [
+            f"<li>{x[0].strftime('%m/%d/%Y, %H:%M:%S')}: <code>{x[1]}</code> tasks {x[2]} from <code>{x[3]}</code></li>" 
+            for x in changelog_items
+            ]
+        return '<ul>' + "\n".join(changelog_strings) + '</ul>'
+
+    return generate_changelog_text(daily_changelog_items), generate_changelog_text(full_changelog_items)
