@@ -148,8 +148,11 @@
             </div>
             <div class="sideContentInfo">
                 <span class = "analyticsSubHeader"> Last 24 hours </span>
+                </br>
                 {{ data.daily_changelog | safe }}
+                </br>
                 <span class = "analyticsSubHeader"> Older </span>
+                </br>
                 {{ data.full_changelog | safe }}
             </div>
         </div>
