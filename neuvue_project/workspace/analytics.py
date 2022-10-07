@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta, timezone
 from pytz import timezone
 import pytz
 import numpy as np
+import pandas as pd
 
 # import the logging library
 import logging
@@ -66,3 +67,38 @@ def user_stats(table):
         }
     
     return stats
+
+def create_stats_table(pending_tasks, closed_tasks):
+
+    all_user_tasks = pd.concat([pending_tasks,closed_tasks])
+    all_user_tasks = all_user_tasks[~all_user_tasks.index.duplicated(keep='first')].reset_index(drop=True)
+
+    twentyFour_hrs_ago = datetime.now() - timedelta(days=1)
+    daily_changelog_items = []
+    full_changelog_items = []
+    frames = [
+        (daily_changelog_items, 'closed', all_user_tasks[all_user_tasks.closed >= twentyFour_hrs_ago]),
+        (daily_changelog_items, 'created', all_user_tasks[all_user_tasks.created >= twentyFour_hrs_ago]),
+        (full_changelog_items, 'closed', all_user_tasks[all_user_tasks.closed < twentyFour_hrs_ago]),
+        (full_changelog_items, 'created', all_user_tasks[all_user_tasks.created < twentyFour_hrs_ago])
+    ]
+
+    for changelog, status, df in frames:
+        for namespace, namespace_df in df.groupby('namespace'):
+            n_tasks = len(namespace_df)
+            m = namespace_df[status].min()
+            average_event_time = (m + (namespace_df[status]-m)).mean().to_pydatetime()
+            changelog.append((average_event_time, n_tasks, status, namespace))
+    
+    # Sort changelogs by datetime
+    daily_changelog_items = sorted(daily_changelog_items, key=lambda x: x[0], reverse=True)
+    full_changelog_items = sorted(full_changelog_items, key=lambda x: x[0], reverse=True)
+    
+    def generate_changelog_text(changelog_items):
+        changelog_strings = [
+            f"<span class='changelog'><b>{x[0].strftime('%m/%d/%Y, %H:%M:%S')}</b>: <code>{x[1]}</code> tasks {x[2]} from <code>{x[3]}</code></span><br><hr class=class='changelogLine'>" 
+            for x in changelog_items
+            ]
+        return '<div>' + "\n".join(changelog_strings) + '</div>'
+
+    return generate_changelog_text(daily_changelog_items), generate_changelog_text(full_changelog_items)

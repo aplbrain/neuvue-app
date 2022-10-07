@@ -24,7 +24,7 @@ from .neuroglancer import (
     refresh_ids
     )
 
-from .analytics import user_stats
+from .analytics import create_stats_table
 from .utils import utc_to_eastern, is_url, is_json, is_member, is_authorized
 import json
 import os
@@ -490,8 +490,7 @@ class TaskView(LoginRequiredMixin, View):
             context[namespace]['total_closed'] = len(context[namespace]['closed'])
             context[namespace]['total_pending'] = len(context[namespace]['pending'])
             context[namespace]["total_tasks"] = context[namespace]['total_closed'] + context[namespace]['total_pending']
-            context[namespace]['stats'] = user_stats(context[namespace]['closed'])
-        
+
         # Reorder context dict by total pending tasks (descending order)
         context = dict(sorted(context.items(), key=lambda x: x[1]['total_pending'], reverse=True))
 
@@ -509,9 +508,13 @@ class TaskView(LoginRequiredMixin, View):
 
         # create settings and context dicts
         settings_dict = {'SANDBOX_ID' : settings.SANDBOX_ID}
+        daily_changelog, full_changelog = create_stats_table(pending_tasks, closed_tasks)
         data_dict = {'settings' : settings_dict,
-                    'namespaces' : context
+                    'namespaces' : context,
+                    'daily_changelog': daily_changelog,
+                    'full_changelog': full_changelog
         }
+
         return render(request, "tasks.html", {'data' : data_dict})
 
 
