@@ -10,8 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
-from pathlib import Path
-from glob import glob
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,14 +19,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x&k71)cwa@+a_0eg0sewzjwdyh!rzcy+$)c_e!f*-leem==lcf'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
-    'neuvue-env.eba-pjhtgcak.us-east-1.elasticbeanstalk.com', 
+    'neuvueapp-env.eba-ph8myjrq.us-east-1.elasticbeanstalk.com', 
     'localhost',
     '127.0.0.1'
 ]
@@ -42,7 +40,8 @@ if DEBUG is False:
     # Fix Health Check issues 
     import requests
     try:
-        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=3).text
+        token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds":"21600"}).text
+        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=3, headers={"X-aws-ec2-metadata-token": token}).text
     except requests.exceptions.ConnectionError:
         pass
     else:
@@ -102,8 +101,6 @@ TEMPLATES = [
 ]
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates") 
-
-
 
 
 WSGI_APPLICATION = 'neuvue.wsgi.application'
@@ -175,7 +172,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'workspace/static')
 ]   
 
-DATA_UPLOAD_MAX_MEMORY_SIZE=10485760
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 
 
 # Default primary key field type
@@ -230,6 +227,6 @@ VOXEL_RESOLUTION = (4, 4, 40)
 
 if DEBUG:
     import mimetypes
-    mimetypes.add_type("application/javascript", ".js",True)
+    mimetypes.add_type("application/javascript", ".js", True)
 
-STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR,'workspace','static','workspace'))
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, 'workspace', 'static', 'workspace'))
