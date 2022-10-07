@@ -96,9 +96,9 @@ def create_stats_table(pending_tasks, closed_tasks):
     
     def generate_changelog_text(changelog_items):
         changelog_strings = [
-            f"<li><b>{x[0].strftime('%m/%d/%Y, %H:%M:%S')}</b>: <code>{x[1]}</code> tasks {x[2]} from <code>{x[3]}</code></li>" 
+            f"<span class='changelog'><b>{x[0].strftime('%m/%d/%Y, %H:%M:%S')}</b>: <code>{x[1]}</code> tasks {x[2]} from <code>{x[3]}</code></span><br><hr class=class='changelogLine'>" 
             for x in changelog_items
             ]
-        return '<ul>' + "\n".join(changelog_strings) + '</ul>'
+        return '<div>' + "\n".join(changelog_strings) + '</div>'
 
     return generate_changelog_text(daily_changelog_items), generate_changelog_text(full_changelog_items)
