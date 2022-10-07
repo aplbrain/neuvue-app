@@ -700,7 +700,7 @@ font-size: 25px;
   font-family: var(--monospace-font);
   padding: 0px 10px;
   position:relative;
-  font-size: 1.4vh;
+  font-size: 1.6vh;
   overflow-y: scroll;
   color: var(--primary-accent);
   width: 100%;
