@@ -371,7 +371,6 @@
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-        let new_operation_ids = '[]';
         const selected_segments = getSelectedSegments(viewer.state);
         
         if (typeof operation_ids !== 'undefined') {
@@ -382,7 +381,6 @@
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
         $(form).submit();
     }
@@ -595,8 +593,7 @@
     function saveOperations() {
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
-            console.log('here they are: ', JSON.stringify({'testing': Array.from(tracked_new_operations)}));
-            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'operation_ids' : Array.from(tracked_new_operations)});
+            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'operation_ids' : Array.from(tracked_new_operations), 'namespace':'{{namespace}}'});
             fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
                 .then((response) => {
                     response.text()
@@ -617,7 +614,6 @@
                     saveOperations();
                     var num_edits_div = document.getElementById('num_edits');
                     num_edits_div.innerHTML = parseInt('{{num_edits}}',10) + tracked_new_operations.size;
-                    console.log('added! : ', tracked_new_operations)
                 }
             }
         }

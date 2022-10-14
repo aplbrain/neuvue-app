@@ -70,6 +70,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
+            'namespace':namespace,
             'tags': ''
         }
 
@@ -213,7 +214,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
-        new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
         selected_segments = request.POST.get('selected_segments').split(',')
     
         try:
@@ -227,12 +227,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Only if track_operation_ids is set to true at the namespace level
         # Make sure not to overwrite existing operation ids
         metadata = {}
-        if new_operation_ids and namespace_obj.track_operation_ids:
-            task_metadata = task_df['metadata']
-            if 'operation_ids' in task_metadata: 
-                metadata['operation_ids'] = task_metadata['operation_ids'] + new_operation_ids
-            else:
-                metadata['operation_ids'] = new_operation_ids
 
         # Add selected segments to task metadata
         # Only if track_selected_segments is set to true at the namespace level
@@ -891,33 +885,31 @@ class SaveOperationsView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print('in views!!')
-
-        # Current task that is opened in this namespace.
         
         data = str(request.body.decode('utf-8'))
         data = json.loads(data)
+        namespace = data.get('namespace')
+        namespace_obj = Namespace.objects.get(namespace = namespace)
         tracked_operation_ids = data.get('operation_ids')
-        print('tracked ids: ', tracked_operation_ids)
         task_id = data.get('task_id')
         task = self.client.get_task(task_id)
-        metadata = {}
-        if tracked_operation_ids and task:
-            task_metadata = task.get('metadata')
-            if 'operation_ids' in task_metadata: 
-                metadata['operation_ids'] = list(set(task_metadata['operation_ids']).union(set(tracked_operation_ids)))
-                print('in here: ', metadata['operation_ids'])
-            else:
-                metadata['operation_ids'] = list(tracked_operation_ids)
-                print('not in there: ', metadata['operation_ids'])
 
-        if (type(metadata) == dict) and (type(task_id) == str):
-            try:
-                logging.debug("Patching task operations")
-                self.client.patch_task(task_id,  metadata=metadata)
-                print('task patched!!')
-                return HttpResponse("Successfully saved operations", status=201, content_type="text/plain")
-            except:
-                return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
-        print('were all the way out here: ', type(metadata), ' and ',type(task_id))
-        return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
+        metadata = {}
+        # if edits are possible
+        if namespace_obj.track_operation_ids:
+            if tracked_operation_ids and task:
+                task_metadata = task.get('metadata')
+                if 'operation_ids' in task_metadata: 
+                    metadata['operation_ids'] = list(set(task_metadata['operation_ids']).union(set(tracked_operation_ids)))
+                else:
+                    metadata['operation_ids'] = list(tracked_operation_ids)
+
+            if (type(metadata) == dict) and (type(task_id) == str):
+                try:
+                    logging.debug("Patching task operations")
+                    self.client.patch_task(task_id,  metadata=metadata)
+                    return HttpResponse("Successfully saved operations", status=201, content_type="text/plain")
+                except:
+                    return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
+            return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
+        return HttpResponse("Operations not tracked in this namespace", status=201, content_type="text/plain")
