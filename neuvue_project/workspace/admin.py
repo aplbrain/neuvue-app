@@ -48,7 +48,7 @@ INTERMEDIATE = "intermediate"
 EXPERT = "expert"
 
 class SetExpertiseLevelForNamespaceForm(admin.helpers.ActionForm):
-    namespace = forms.ModelChoiceField(Namespace.objects, label=False, empty_label="Namespace", widget=forms.Select(attrs={"class": "mb-1"}))
+    namespace = forms.ModelChoiceField(Namespace.objects, label=False, empty_label="Namespace", widget=forms.Select(attrs={"class": "mb-1"}), required=False)
 
 class CustomGroupAdmin(GroupAdmin):
     action_form = SetExpertiseLevelForNamespaceForm
@@ -64,7 +64,14 @@ class CustomGroupAdmin(GroupAdmin):
         self.set_expertise_level_for_namespace(EXPERT, request, queryset)
     
     def set_expertise_level_for_namespace(self, level, request, queryset):
-        namespace = Namespace.objects.get(namespace = request.POST['namespace'])
+
+        namespace = ""
+        try:
+            namespace = Namespace.objects.get(namespace = request.POST['namespace'])
+        except:
+            messages.error(request, "Please select a namespace.")
+            return
+
         for group in queryset:
             users = Group.objects.get(name=group).user_set.all()
             for user in users:
