@@ -48,7 +48,7 @@ INTERMEDIATE = "intermediate"
 EXPERT = "expert"
 
 class SetExpertiseLevelForNamespaceForm(admin.helpers.ActionForm):
-    namespace = forms.ModelChoiceField(Namespace.objects, label=False, empty_label="Namespace", widget=forms.Select(attrs={"style": "margin-left:1em"}))
+    namespace = forms.ModelChoiceField(Namespace.objects, label=False, empty_label="Namespace", widget=forms.Select(attrs={"class": "mb-1"}))
 
 class CustomGroupAdmin(GroupAdmin):
     action_form = SetExpertiseLevelForNamespaceForm
