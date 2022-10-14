@@ -1,9 +1,12 @@
 from django.contrib import admin
 from .models import ForcedChoiceButtonGroup, ForcedChoiceButton, Namespace, UserProfile
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django import forms
+from django.contrib import messages
 
 admin.site.unregister(User)
+admin.site.unregister(Group)
 
 class ButtonsInline(admin.TabularInline):
     model = ForcedChoiceButton
@@ -40,8 +43,49 @@ class CustomUserAdmin(UserAdmin):
     ]
     inlines = [UserProfileInline]
 
+NOVICE = "novice"
+INTERMEDIATE = "intermediate"
+EXPERT = "expert"
+
+class SetExpertiseLevelForNamespaceForm(admin.helpers.ActionForm):
+    namespaces = [(ns, ns.display_name) for ns in Namespace.objects.all()]
+    namespace = forms.ChoiceField(choices=namespaces, label="Namespace:")
+
+class CustomGroupAdmin(GroupAdmin):
+    action_form = SetExpertiseLevelForNamespaceForm
+    actions = ['set_expertise_level_for_namespace_novice', 'set_expertise_level_for_namespace_intermediate', 'set_expertise_level_for_namespace_expert']
+
+    def set_expertise_level_for_namespace_novice(self, request, queryset):
+        self.set_expertise_level_for_namespace(NOVICE, request, queryset)
+
+    def set_expertise_level_for_namespace_intermediate(self, request, queryset):
+        self.set_expertise_level_for_namespace(INTERMEDIATE, request, queryset)
+
+    def set_expertise_level_for_namespace_expert(self, request, queryset):
+        self.set_expertise_level_for_namespace(EXPERT, request, queryset)
     
+    def set_expertise_level_for_namespace(self, level, request, queryset):
+        namespace = Namespace.objects.get(namespace = request.POST['namespace'])
+        for group in queryset:
+            users = Group.objects.get(name=group).user_set.all()
+            for user in users:
+                userProfile, _ = UserProfile.objects.get_or_create(user = user)
+                if level == NOVICE:
+                    userProfile.intermediate_namespaces.remove(namespace)
+                    userProfile.expert_namespaces.remove(namespace)
+                if level == INTERMEDIATE:
+                    userProfile.intermediate_namespaces.add(namespace)
+                    userProfile.expert_namespaces.remove(namespace)
+                if level == EXPERT:
+                    userProfile.intermediate_namespaces.remove(namespace)
+                    userProfile.expert_namespaces.add(namespace)
+        messages.success(request, "Successfully designated all members of {} as {} for {}".format(", ".join([q.name for q in queryset]), level, namespace))
+
+    set_expertise_level_for_namespace_novice.short_description = 'Assign all members of group as novice for namespace'
+    set_expertise_level_for_namespace_intermediate.short_description = 'Assign all members of group as intermediate for namespace'
+    set_expertise_level_for_namespace_expert.short_description = 'Assign all members of group as expert for namespace'
 
 # Register your models here.
 admin.site.register(Namespace, NamespaceAdmin)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Group, CustomGroupAdmin)
