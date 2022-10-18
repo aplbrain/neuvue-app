@@ -366,7 +366,40 @@
         return Array.from(selectedSegments);;
     }
 
+    function saveOperations() {
+        viewer.postJsonState(true, undefined, true, function() {
+            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'operation_ids' : Array.from(tracked_new_operations), 'namespace':'{{namespace}}'});
+            fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+                .then((response) => {
+                    response.text()
+                    .then((text) => {
+                        triggerToast(text)
+                    })
+                });
+        });
+    }
+
+    // Track operation ids
+    const tracked_new_operations = new Set();
+    function updateTrackedOperations(current_operation_ids){
+        if (typeof current_operation_ids !== 'undefined') {
+            for (const [idx, ele] of current_operation_ids.entries()){
+                if (!tracked_new_operations.has(ele)){
+                    tracked_new_operations.add(ele);
+                    saveOperations();
+                    var num_edits_div = document.getElementById('num_edits');
+                    num_edits_div.innerHTML = parseInt('{{num_edits}}',10) + tracked_new_operations.size;
+                }
+            }
+        }
+    }
+
+    window.setInterval(function() {
+        updateTrackedOperations(operation_ids);
+    }, 1000);
+
     function submitForm(value, form='#mainForm') {
+        saveOperations();
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
@@ -581,49 +614,6 @@
         }
     },
     { passive: false });
-
-    check3 = new Proxy({}, {
-        set: function(target, property, value) {
-            // do something
-            console.log("check3 value changed from" + target[property] + " to " + value);
-            target[property] = value;
-        }
-    });
-
-    function saveOperations() {
-        viewer.postJsonState(true, undefined, true, function() {
-            let state = viewer.saver.savedUrl;
-            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'operation_ids' : Array.from(tracked_new_operations), 'namespace':'{{namespace}}'});
-            fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
-                .then((response) => {
-                    response.text()
-                    .then((text) => {
-                        triggerToast(text)
-                    })
-                });
-        });
-    }
-
-    // Track operation ids
-    const tracked_new_operations = new Set();
-    function updateTrackedOperations(current_operation_ids){
-        if (typeof current_operation_ids !== 'undefined') {
-            for (const [idx, ele] of current_operation_ids.entries()){
-                if (!tracked_new_operations.has(ele)){
-                    tracked_new_operations.add(ele);
-                    saveOperations();
-                    var num_edits_div = document.getElementById('num_edits');
-                    num_edits_div.innerHTML = parseInt('{{num_edits}}',10) + tracked_new_operations.size;
-                }
-            }
-        }
-        console.log('tracking!')
-    }
-
-    window.setInterval(function() {
-        updateTrackedOperations(operation_ids);
-    }, 5000);
-
     
 
 </script>
