@@ -144,40 +144,17 @@
 
         <div class="analytics">
             <div class="sideContentTitle">
-                Stats
+                Activity Log
             </div>
-            
-            {% for namespace, context in data.namespaces.items %}
-                {% if context.total_tasks %}
-                    <div class="sideContentInfo">
-                        <span class = "analyticsSubHeader"> {{context.display_name}} </span>
-                            <table class="analyticsTable">
-                            <thead>
-                                <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Tasks Closed</th>
-                                <th scope="col">Task Time</th>
-                                <th scope="col">Rate (minutes)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Last Week</th>
-                                    <td>{{context.stats.weekly_tasks}}</td>
-                                    <td>{{context.stats.weekly_time}}</td>
-                                    <td>{{context.stats.weekly_rate}}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Total</th>
-                                    <td>{{context.stats.total_tasks}}</td>
-                                    <td>{{context.stats.total_time}}</td>
-                                    <td>{{context.stats.total_rate}}</td>
-                                </tr>
-                            </tbody>
-                            </table>
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <div class="sideContentInfo">
+                <span class = "analyticsSubHeader"> Last 24 hours </span>
+                </br>
+                {{ data.daily_changelog | safe }}
+                </br>
+                <span class = "analyticsSubHeader"> Older </span>
+                </br>
+                {{ data.full_changelog | safe }}
+            </div>
         </div>
     </div>
     <!-- Triggerable elements -->

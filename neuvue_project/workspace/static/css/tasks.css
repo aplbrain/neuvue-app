@@ -316,3 +316,13 @@ tbody.pending >:nth-child(2) {
   font-size: 20pt;
   font-weight: 400;
 }
+
+.changelog {
+  font-size: 12pt;
+}
+
+.changelogLine {
+  color: var(--transparent-analytics);
+  width: 90%;
+  left: 5%;
+}
