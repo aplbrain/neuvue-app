@@ -71,7 +71,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'was_skipped':False,
             'show_slices': False,
             'namespace':namespace,
-            'tags': ''
+            'tags': '',
+            'num_edits': 0
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
@@ -668,7 +669,8 @@ class InspectTaskView(View):
         context = {
             "task_id": task_id,
             "ng_state": None,
-            "error": None
+            "error": None,
+            "num_edits": 0
         }
         
         if not is_authorized(request.user):

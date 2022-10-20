@@ -57,18 +57,19 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-                    {% if was_skipped %}
-                    Skipped <br> 
-                    <span class ="code">{{was_skipped}}</span><br>
-                    {% endif %}
-                    {% if num_edits %}
-                    Number of Edits <br> 
-                    <span class ="code" id="num_edits">{{num_edits}}</span><br>
-                    {% endif %}
+
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    {% if was_skipped %}
+                    Skipped <br> 
+                    <span class ="code">{{was_skipped}}</span><br>
+                    {% endif %}
+
+                    Number of Edits <br> 
+                    <span class ="code" id="num_edits">{{num_edits}}</span><br>
+
                     Tasks Completed This Session <br> 
                     <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
@@ -130,30 +131,6 @@
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
-                    <! Save/Reload >
-                    {% comment %} 
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnSave" 
-                            type="button" 
-                            class="mainButton" 
-                            accesskey="s"
-                        >
-                            Save Checkpoint
-                        </button>
-                    </div>
-
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnReload" 
-                            type="button" 
-                            class="mainButton"
-                            accesskey="r"
-                        >
-                            Reload Checkpoint
-                        </button> 
-                    </div>
-                    {% endcomment %}
                     
                     <! Flag >
                     <div class="mainButtonWrapper">
@@ -311,26 +288,13 @@
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
-    // Delete previous state info
-    // window.localStorage.removeItem("ngState")
+
     function getLink() {
         viewer.postJsonState(true, undefined, true, function() {
-        let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-        copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
         });
     }
-
-    if (window.localStorage.getItem('sidebarStatus') == 'open') {
-        openSideMenu();
-    } else if (window.localStorage.getItem('sidebarStatus') == 'closed') {
-        closeSideMenu();
-    } else {
-        openSideMenu();
-    }
-
-    // function appendOperationID(){
-        
-    // }
         
     function saveState() {
         viewer.postJsonState(true, undefined, true, function() {
@@ -366,20 +330,22 @@
         return Array.from(selectedSegments);;
     }
 
+    // Track operation ids and save operation IDs
     function saveOperations() {
-        viewer.postJsonState(true, undefined, true, function() {
-            let post_body = JSON.stringify({'task_id':"{{task_id}}", 'operation_ids' : Array.from(tracked_new_operations), 'namespace':'{{namespace}}'});
-            fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
-                .then((response) => {
-                    response.text()
-                    .then((text) => {
-                        triggerToast(text)
-                    })
-                });
+        let post_body = JSON.stringify({
+            'task_id':"{{task_id}}", 
+            'operation_ids' : Array.from(tracked_new_operations), 
+            'namespace':'{{namespace}}'
         });
+        fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+            .then((response) => {
+                response.text()
+                .then((text) => {
+                    triggerToast(text)
+                })
+            });
     }
-
-    // Track operation ids
+    
     const tracked_new_operations = new Set();
     function updateTrackedOperations(current_operation_ids){
         if (typeof current_operation_ids !== 'undefined') {
@@ -393,10 +359,6 @@
             }
         }
     }
-
-    window.setInterval(function() {
-        updateTrackedOperations(operation_ids);
-    }, 1000);
 
     function submitForm(value, form='#mainForm') {
         saveOperations();
@@ -431,16 +393,11 @@
         toast.show();
     }
 
-    // autoSave state
-    function autoSave() {
-        saveState();
-    }
-
     // create browser interaction timer
     const browserTimer = new browserInteractionTime({
             timeIntervalEllapsedCallbacks: [{
             timeInMilliseconds: 60000,
-            callback: () => autoSave(),
+            callback: () => saveState(),
             multiplier: x => x + 3e5
         }],
         absoluteTimeEllapsedCallbacks: [],
@@ -449,7 +406,6 @@
         idleTimeoutMs: 10000,
         checkCallbacksIntervalMs: 250
     })
-    browserTimer.startTimer();
 
     // forced choice button selection logic
     var current_button_selection = 'noneSelected'
@@ -468,9 +424,24 @@
 
     // Button Submission
     $(document).ready(function() {
+        // Start Timer for duration tracking and auto-save 
+        browserTimer.startTimer();
+
+        // Sidebar Preference
+        if (window.localStorage.getItem('sidebarStatus') == 'closed') {
+            closeSideMenu();
+        } else {
+            openSideMenu();
+        }
+
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
         
+        // Track operation IDs every second
+        window.setInterval(function() {
+            updateTrackedOperations(operation_ids);
+        }, 1000);
+
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();
         var modifier = "Alt";
@@ -601,20 +572,18 @@
 
         });
 
-    });
-    
-    {% if is_open %}
-    window.addEventListener('beforeunload', exitAlert);
-    {% endif %}
+        // Disable ctrl + scroll zooming to deconflict with ngl keybinding
+        document.addEventListener("wheel", e => {
+            if(e.ctrlKey) {
+                e.preventDefault(); //prevent zoom
+            }
+        }, { passive: false });
 
-    // Disable ctrl + scroll zooming to deconflict with ngl keybinding
-    document.addEventListener("wheel", e => {
-        if(e.ctrlKey) {
-            e.preventDefault(); //prevent zoom
-        }
-    },
-    { passive: false });
-    
+        {% if is_open %}
+        window.addEventListener('beforeunload', exitAlert);
+        {% endif %}
+        
+    });
 
 </script>
 {% endblock %}
