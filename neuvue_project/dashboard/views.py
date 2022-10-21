@@ -94,12 +94,12 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         context['total_open'] = counts[2]
         context['total_errored'] = counts[3]
 
+        n_users_per_group = {}
         if group == 'unassigned':
             context['user_groups'] = sorted([x.name for x in Group.objects.all()])
-            n_users_per_group = {}
             for user_group in context['user_groups']:
-                 n_users_per_group[user_group] = len(_get_users_from_group(user_group))
-            context['user_group_counts'] = n_users_per_group
+                n_users_per_group[user_group] = len(_get_users_from_group(user_group))
+        context['user_group_counts'] = n_users_per_group
 
         return render(request, "admin_dashboard/dashboard-namespace-view.html", context)
     

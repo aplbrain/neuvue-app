@@ -191,17 +191,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 <script type="text/javascript">
-      // Export as CSV Button
+  // Export as CSV Button
+  {% if namespace and group %}
     const exportButton = document.getElementById("exportBtn");
     exportButton.addEventListener('click', (e) => {
-
-        // Construct filename
-        const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
-
-        // Perform download
-        $('#summary-table').table2csv('download', {'filename': filename});
-
+      // Construct filename
+      const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
+      // Perform download
+      $('#summary-table').table2csv('download', {'filename': filename});
     }); 
+  {% endif %}
 
 </script>
 {% endblock %}
