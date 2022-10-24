@@ -118,9 +118,17 @@
                     <td>{{taskrow.closed}}</td>
                     <td>{{taskrow.duration}}</td>
                     {% if taskrow.tags %}
-                      <td class="userTags">{{taskrow.tags|join:", "}}</td>
-                    {% else %}
-                      <td>None</td>
+                    <td class='userTags'> 
+                      <span 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="right" 
+                        data-bs-html="true"
+                        title="{{taskrow.tags|join:", "}}" >
+                        {{ taskrow.tags.0 }} 
+                      </span>
+                      </td>
+                      {% else %}
+                      <td> None </td>
                     {% endif %}
                   </tr>
                 {% endfor %}
