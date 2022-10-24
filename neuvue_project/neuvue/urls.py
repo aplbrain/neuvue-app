@@ -27,7 +27,8 @@ from workspace.views import (
     TokenView,
     SynapseView,
     GettingStartedView,
-    SaveStateView
+    SaveStateView,
+    SaveOperationsView
     )
 from preferences.views import PreferencesView
 from dashboard.views import DashboardView, DashboardNamespaceView, DashboardUserView, ReportView, UserNamespaceView
@@ -57,7 +58,8 @@ urlpatterns = [
     path('synapse/<str:root_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>', SynapseView.as_view(), name="synapse"),
     path('report/', ReportView.as_view(), name="report"),
     path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
-    path('save_state', SaveStateView.as_view(), name="save-state")
+    path('save_state', SaveStateView.as_view(), name="save-state"),
+    path('save_operations', SaveOperationsView.as_view(), name="save-operations")
 ]
 
 

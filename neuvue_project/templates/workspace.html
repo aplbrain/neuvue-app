@@ -57,14 +57,19 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-                    {% if was_skipped %}
-                    Skipped <br> 
-                    <span class ="code">{{was_skipped}}</span><br>
-                    {% endif %}
+
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    {% if was_skipped %}
+                    Skipped <br> 
+                    <span class ="code">{{was_skipped}}</span><br>
+                    {% endif %}
+
+                    Number of Edits <br> 
+                    <span class ="code" id="num_edits">{{num_edits}}</span><br>
+
                     Tasks Completed This Session <br> 
                     <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
@@ -126,30 +131,6 @@
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
-                    <! Save/Reload >
-                    {% comment %} 
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnSave" 
-                            type="button" 
-                            class="mainButton" 
-                            accesskey="s"
-                        >
-                            Save Checkpoint
-                        </button>
-                    </div>
-
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnReload" 
-                            type="button" 
-                            class="mainButton"
-                            accesskey="r"
-                        >
-                            Reload Checkpoint
-                        </button> 
-                    </div>
-                    {% endcomment %}
                     
                     <! Flag >
                     <div class="mainButtonWrapper">
@@ -307,21 +288,12 @@
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
-    // Delete previous state info
-    // window.localStorage.removeItem("ngState")
+
     function getLink() {
         viewer.postJsonState(true, undefined, true, function() {
-        let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-        copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
         });
-    }
-
-    if (window.localStorage.getItem('sidebarStatus') == 'open') {
-        openSideMenu();
-    } else if (window.localStorage.getItem('sidebarStatus') == 'closed') {
-        closeSideMenu();
-    } else {
-        openSideMenu();
     }
         
     function saveState() {
@@ -358,23 +330,49 @@
         return Array.from(selectedSegments);;
     }
 
+    // Track operation ids and save operation IDs
+    function saveOperations() {
+        let post_body = JSON.stringify({
+            'task_id':"{{task_id}}", 
+            'operation_ids' : Array.from(tracked_new_operations), 
+            'namespace':'{{namespace}}'
+        });
+        fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+            .then((response) => {
+                response.text()
+                .then((text) => {
+                    triggerToast(text)
+                })
+            });
+    }
+    
+    const tracked_new_operations = new Set();
+    function updateTrackedOperations(current_operation_ids){
+        if (typeof current_operation_ids !== 'undefined') {
+            for (const [idx, ele] of current_operation_ids.entries()){
+                if (!tracked_new_operations.has(ele)){
+                    tracked_new_operations.add(ele);
+                    saveOperations();
+                    var num_edits_div = document.getElementById('num_edits');
+                    num_edits_div.innerHTML = parseInt('{{num_edits}}',10) + tracked_new_operations.size;
+                }
+            }
+        }
+    }
+
     function submitForm(value, form='#mainForm') {
+        saveOperations();
         window.removeEventListener('beforeunload', exitAlert);
         let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-        let new_operation_ids = '[]';
         const selected_segments = getSelectedSegments(viewer.state);
         
-        if (typeof operation_ids !== 'undefined') {
-            new_operation_ids = JSON.stringify(operation_ids);
-        }
 
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
         $(form).submit();
     }
@@ -392,16 +390,11 @@
         toast.show();
     }
 
-    // autoSave state
-    function autoSave() {
-        saveState();
-    }
-
     // create browser interaction timer
     const browserTimer = new browserInteractionTime({
             timeIntervalEllapsedCallbacks: [{
             timeInMilliseconds: 60000,
-            callback: () => autoSave(),
+            callback: () => saveState(),
             multiplier: x => x + 3e5
         }],
         absoluteTimeEllapsedCallbacks: [],
@@ -410,7 +403,6 @@
         idleTimeoutMs: 10000,
         checkCallbacksIntervalMs: 250
     })
-    browserTimer.startTimer();
 
     // forced choice button selection logic
     var current_button_selection = 'noneSelected'
@@ -429,9 +421,24 @@
 
     // Button Submission
     $(document).ready(function() {
+        // Start Timer for duration tracking and auto-save 
+        browserTimer.startTimer();
+
+        // Sidebar Preference
+        if (window.localStorage.getItem('sidebarStatus') == 'closed') {
+            closeSideMenu();
+        } else {
+            openSideMenu();
+        }
+
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
         
+        // Track operation IDs every second
+        window.setInterval(function() {
+            updateTrackedOperations(operation_ids);
+        }, 1000);
+
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();
         var modifier = "Alt";
@@ -562,19 +569,18 @@
 
         });
 
-    });
-    
-    {% if is_open %}
-    window.addEventListener('beforeunload', exitAlert);
-    {% endif %}
+        // Disable ctrl + scroll zooming to deconflict with ngl keybinding
+        document.addEventListener("wheel", e => {
+            if(e.ctrlKey) {
+                e.preventDefault(); //prevent zoom
+            }
+        }, { passive: false });
 
-    // Disable ctrl + scroll zooming to deconflict with ngl keybinding
-    document.addEventListener("wheel", e => {
-        if(e.ctrlKey) {
-            e.preventDefault(); //prevent zoom
-        }
-    },
-    { passive: false });
+        {% if is_open %}
+        window.addEventListener('beforeunload', exitAlert);
+        {% endif %}
+        
+    });
 
 </script>
 {% endblock %}

@@ -70,7 +70,9 @@ class WorkspaceView(LoginRequiredMixin, View):
             'session_task_count' : session_task_count,
             'was_skipped':False,
             'show_slices': False,
-            'tags': ''
+            'namespace':namespace,
+            'tags': '',
+            'num_edits': 0
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
@@ -127,6 +129,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['seg_id'] = task_df['seg_id']
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
+            if task_df['metadata'].get('operation_ids'):
+                context['num_edits'] = len(task_df['metadata']['operation_ids'])
             if task_df.get('tags'):
                 context['tags'] = ','.join(task_df['tags'])
             if task_df['priority'] < 2:
@@ -211,7 +215,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
-        new_operation_ids = json.loads(request.POST.get('new_operation_ids', '[]'))
         selected_segments = request.POST.get('selected_segments').split(',')
     
         try:
@@ -225,12 +228,6 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Only if track_operation_ids is set to true at the namespace level
         # Make sure not to overwrite existing operation ids
         metadata = {}
-        if new_operation_ids and namespace_obj.track_operation_ids:
-            task_metadata = task_df['metadata']
-            if 'operation_ids' in task_metadata: 
-                metadata['operation_ids'] = task_metadata['operation_ids'] + new_operation_ids
-            else:
-                metadata['operation_ids'] = new_operation_ids
 
         # Add selected segments to task metadata
         # Only if track_selected_segments is set to true at the namespace level
@@ -672,7 +669,8 @@ class InspectTaskView(View):
         context = {
             "task_id": task_id,
             "ng_state": None,
-            "error": None
+            "error": None,
+            "num_edits": 0
         }
         
         if not is_authorized(request.user):
@@ -718,6 +716,8 @@ class InspectTaskView(View):
         metadata = task_df['metadata']
         if metadata.get('decision'):
             context['decision'] = metadata['decision']
+        if metadata.get('operation_ids'):
+            context['num_edits'] = len(metadata['operation_ids'])
         if task_df.get('tags'):
             context['tags'] = ','.join(task_df['tags'])
         return render(request, "inspect.html", context)
@@ -883,3 +883,38 @@ class SaveStateView(View):
                 return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
         
         return HttpResponse("Was unable to save state", status=400, content_type="text/plain")
+
+class SaveOperationsView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        
+        data = str(request.body.decode('utf-8'))
+        data = json.loads(data)
+        namespace = data.get('namespace')
+        namespace_obj = Namespace.objects.get(namespace = namespace)
+        tracked_operation_ids = data.get('operation_ids')
+        task_id = data.get('task_id')
+        task = self.client.get_task(task_id)
+
+        metadata = {}
+        # if edits are possible
+        if namespace_obj.track_operation_ids:
+            if tracked_operation_ids and task:
+                task_metadata = task.get('metadata')
+                if 'operation_ids' in task_metadata: 
+                    metadata['operation_ids'] = list(set(task_metadata['operation_ids']).union(set(tracked_operation_ids)))
+                else:
+                    metadata['operation_ids'] = list(tracked_operation_ids)
+
+            if (type(metadata) == dict) and (type(task_id) == str):
+                try:
+                    logging.debug("Patching task operations")
+                    self.client.patch_task(task_id,  metadata=metadata)
+                    return HttpResponse("Successfully saved operations", status=201, content_type="text/plain")
+                except:
+                    return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
+            return HttpResponse("Was unable to save operations", status=400, content_type="text/plain")
+        return HttpResponse("Operations not tracked in this namespace", status=201, content_type="text/plain")
