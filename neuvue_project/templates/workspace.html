@@ -368,9 +368,6 @@
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
         const selected_segments = getSelectedSegments(viewer.state);
         
-        if (typeof operation_ids !== 'undefined') {
-            new_operation_ids = JSON.stringify(operation_ids); 
-        }
 
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);

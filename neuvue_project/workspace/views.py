@@ -130,7 +130,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             context['instructions'] = task_df['instructions']
             context['was_skipped'] = task_df['metadata'].get('skipped')
             if task_df['metadata'].get('operation_ids'):
-                context['num_edits'] = len(task_df['metadata'].get('operation_ids'))
+                context['num_edits'] = len(task_df['metadata']['operation_ids'])
             if task_df.get('tags'):
                 context['tags'] = ','.join(task_df['tags'])
             if task_df['priority'] < 2:
