@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.6.7",
+            "update_date":"October 24th, 2022",
+            "update_description": "Adds group actions. Refactors operation ID tracking."
+        },
+        {
             "update_name": "v1.6.6",
             "update_date":"October 7th, 2022",
             "update_description": "Removes statistics sidebar and replaces it with the activity log."
