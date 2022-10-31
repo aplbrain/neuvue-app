@@ -326,3 +326,7 @@ tbody.pending >:nth-child(2) {
   width: 90%;
   left: 5%;
 }
+
+.bg-pink {
+  background-color: #d63384;
+}

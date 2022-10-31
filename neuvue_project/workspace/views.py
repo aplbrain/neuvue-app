@@ -431,6 +431,7 @@ class TaskView(LoginRequiredMixin, View):
             context[namespace]["end"] = ""
             context[namespace]["can_self_assign_tasks"] = is_member(request.user, self_assign_group)
             context[namespace]["max_pending_tasks_allowed"] = n_s.max_number_of_pending_tasks_per_user
+            context[namespace]["submission_method"] = str(n_s.submission_method)
 
             # get user profile
             userProfile, _ = UserProfile.objects.get_or_create(user = request.user)
