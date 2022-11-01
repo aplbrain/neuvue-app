@@ -13,8 +13,16 @@
             {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
-                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
-                            {{context.display_name}} ({{context.total_pending}})
+                        <div id="{{namespace}}Header" class="jobHeader active d-flex align-items-center" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
+                            {{context.display_name}}
+                            <span class="badge rounded-pill bg-pink ms-2">
+                                {{context.total_pending}} 
+                            </span>
+                            {% if context.submission_method != "SubmitButton" %}
+                                <span class="badge rounded-pill bg-secondary ms-1" >
+                                    Forced Choice
+                                </span>
+                            {% endif %}
                         </div>
                         {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
                             <div class="header-button">
