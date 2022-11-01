@@ -766,6 +766,8 @@ class SynapseView(View):
 
         if root_ids in settings.STATIC_NG_FILES:
             return redirect(f'/static/workspace/{root_ids}', content_type='application/javascript')
+        if timestamp in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{timestamp}', content_type='application/javascript')
 
         context = {
             "root_ids": None,
@@ -794,6 +796,7 @@ class SynapseView(View):
             context['timestamp'] = timestamp
             context['ng_state'], context['synapse_stats'] = construct_synapse_state(root_ids=root_ids, flags=flags)
         except Exception as e: 
+            print(e)
             context['error'] = e
 
         return render(request, "synapse.html", context)
@@ -805,7 +808,7 @@ class SynapseView(View):
         post_synapses = request.POST.get("post_synapses")
         cleft_layer = request.POST.get("cleft_layer")
         timestamp = request.POST.get("timestamp")
-        if not timestamp:
+        if not timestamp or timestamp in settings.STATIC_NG_FILES:
             timestamp = 'None'
 
         return redirect(reverse('synapse', kwargs={

@@ -520,6 +520,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         dict: synapse stats
     """
     cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
+    int_root_ids = [int(x) for x in root_ids]
 
     # Error checking
     if flags['pre_synapses'] != 'True' and flags['post_synapses'] != 'True':
@@ -531,7 +532,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             try:
                 pre_synapses = cave_client.materialize.query_table(
                     "synapses_pni_2",
-                    filter_in_dict={"pre_pt_root_id": root_ids},
+                    filter_in_dict={"pre_pt_root_id": int_root_ids},
                     select_columns=['ctr_pt_position', 'pre_pt_root_id', 'post_pt_root_id'],
                     timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
                 )
@@ -540,7 +541,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         else:
             pre_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
-                filter_in_dict={"pre_pt_root_id": root_ids},
+                filter_in_dict={"pre_pt_root_id": int_root_ids},
                 select_columns=['ctr_pt_position', 'pre_pt_root_id', 'post_pt_root_id'],
             )
         pre_synapses['ctr_pt_position'] = pre_synapses['ctr_pt_position'].apply(lambda x: x.tolist())
@@ -557,7 +558,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             try:
                 post_synapses = cave_client.materialize.query_table(
                     "synapses_pni_2",
-                    filter_in_dict={"post_pt_root_id": root_ids},
+                    filter_in_dict={"post_pt_root_id": int_root_ids},
                     select_columns=['ctr_pt_position', 'post_pt_root_id', 'pre_pt_root_id'],
                     timestamp=datetime.strptime(flags['timestamp'], '%Y-%m-%d')
                 )
@@ -566,7 +567,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         else:
             post_synapses = cave_client.materialize.query_table(
                 "synapses_pni_2",
-                filter_in_dict={"post_pt_root_id": root_ids},
+                filter_in_dict={"post_pt_root_id": int_root_ids},
                 select_columns=['ctr_pt_position', 'post_pt_root_id', 'pre_pt_root_id'],
             )
         post_synapses['ctr_pt_position'] = post_synapses['ctr_pt_position'].apply(lambda x: x.tolist())

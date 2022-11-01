@@ -131,18 +131,20 @@
 
   }); 
     // button is clicked
-    const distributeButton = document.getElementById("distribute-button");
-    distributeButton.addEventListener('click', (e) =>  {
-      // check if sufficient n tasks to submit
-      let n_tasks = $( "#n-tasks" ).val();
-      let unassigned_group = $( "#unassigned-group" ).val();
-      let assignee_group = $( "#assignee-group" ).val();
-      let user_table = {{table | safe}};
-      let user_group_count_dict = {{user_group_counts | safe}};
-      if ((n_tasks !== null) && (unassigned_group !== null) && (assignee_group !== null)){
-        showConfirmDistributeTasksModal(n_tasks, unassigned_group, assignee_group,  user_table, user_group_count_dict);
-      }
-    })
+    if ("{{group}}" === "unassigned") {
+      const distributeButton = document.getElementById("distribute-button");
+      distributeButton.addEventListener('click', (e) =>  {
+        // check if sufficient n tasks to submit
+        let n_tasks = $( "#n-tasks" ).val();
+        let unassigned_group = $( "#unassigned-group" ).val();
+        let assignee_group = $( "#assignee-group" ).val();
+        let user_table = {{table | safe}};
+        let user_group_count_dict = {{user_group_counts | safe}};
+        if ((n_tasks !== null) && (unassigned_group !== null) && (assignee_group !== null)){
+          showConfirmDistributeTasksModal(n_tasks, unassigned_group, assignee_group,  user_table, user_group_count_dict);
+        }
+      })
+    }
 </script>
 
 {% endblock %}
