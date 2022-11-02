@@ -586,9 +586,6 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     for root_id in root_ids:
         if flags['pre_synapses'] == 'True':
             pre_points = pre_synapses[pre_synapses["pre_pt_root_id"] == root_id]['ctr_pt_position'].to_numpy()
-            print(f'pre: points {pre_points}')
-            print(f'pre: points {type(pre_points)}')
-            print(f'pre: points {type(pre_points[0])}')
             data_list.append(generate_point_df(pre_points))
             states.append(
                 create_point_state(name=f'pre_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
@@ -598,8 +595,6 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             states.append(
                 create_point_state(name=f'post_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
 
-    print(f'dataList: {data_list}')
-    print(f'states: {states}')
     chained_state = ChainedStateBuilder(states)
 
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
