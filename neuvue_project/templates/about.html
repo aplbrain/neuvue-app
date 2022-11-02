@@ -2,13 +2,64 @@
 {% load static %}
 
 {% block content %}
-<div class="container text-light py-5">
-    <div class="navbar-text"> <h2> NeuVue: A Framework and Workflows for High-Throughput Electron Microscopy Connectomics Proofreading </h2>
-        NeuVue is a software platform created for large-scale proofreading of machine segmentation and neural circuit reconstruction in high-resolution electron microscopy connectomics datasets. The NeuVue platform provides a robust web-based interface for proofreaders to collaboratively view, annotate, and edit segmentation and connectivity data. A backend queuing service organizes proofreader tasks into purpose-driven task types and increases proofreader throughput by limiting proofreader actions to simple, atomic operations. A collection of analytical dashboards, data visualization tools, and Application Program Interface (API) capabilities provide stakeholders real-time access to proofreading progress at an individual proofreader level as well as insights on task generation priorities. NeuVue is agnostic to the underlying data being proofread and improves upon the traditional proofreader experience through quality-of-life features that streamline complex editing operations such as splitting and merging objects in dense nanoscale segmentation.
+<div class="basic">
+    <div class="container text-light pb-3">
+        <h2 class="pt-5 pb-3"> About Us </h2>
 
-        NeuVue heavily leverages cloud resources to enable proofreaders to simultaneously access and edit data on the platform. Production-quality features such as load-balancing, auto-scaling, and pre-deployment testing are all integrated into the platform’s cloud architecture. Additionally, NeuVue is powered by well-supported open-source connectomics tools from the community such as Neuroglancer, PyChunkedGraph, and Connectomics Annotation Versioning Engine (CAVE). The modular design of NeuVue facilitates easy integration and adoption of useful community tools to allow proofreaders to take advantage of the latest improvements in data visualization, processing, and analysis.
+        <p>
+            NeuVue is a software platform created for large-scale proofreading of machine segmentation and neural circuit 
+            reconstruction in high-resolution electron microscopy connectomics datasets. The NeuVue platform provides a robust 
+            web-based interface for proofreaders to collaboratively view, annotate, and edit segmentation and connectivity data.
+            A backend queuing service organizes proofreader tasks into purpose-driven task types and increases proofreader 
+            throughput by limiting proofreader actions to simple, atomic operations. A collection of analytical dashboards, data
+            visualization tools, and Application Program Interface (API) capabilities provide stakeholders real-time access to 
+            proofreading progress at an individual proofreader level as well as insights on task generation priorities. 
+            NeuVue is agnostic to the underlying data being proofread and improves upon the traditional proofreader experience 
+            through quality-of-life features that streamline complex editing operations such as splitting and merging objects in
+            dense nanoscale segmentation.
+        </p>
 
-        <hr class="row-divider">
+        <p class="fw-bold">
+            This research was enabled by the IARPA Machine Intelligence from Cortical Networks (MICrONS) program. 
+            <a class="text-secondary-color-activated" href="https://www.iarpa.gov/research-programs/microns">Learn more about MICrONS.</a>
+        </p>
+
+        <h2 class="pt-5 pb-3"> Publications </h2>
+
+        <p>
+            <a class="text-secondary-color-activated" href="https://www.biorxiv.org/content/10.1101/2022.07.18.500521v1" target="_blank" rel="noopener noreferrer">
+                NeuVue: A Framework and Workflows for High-Throughput Electron Microscopy Connectomics Proofreading
+            </a>
+        </p>
+        <p>
+            Check us out at <a class="text-secondary-color-activated" href="https://www.sfn.org/meetings/neuroscience-2022">SfN 2022</a>!
+        </p>
+
+        <h2 class="pt-5 pb-3"> Collaborators </h2>
+
+        <div class="logo-container">
+            <div class="logo bg-light">
+                <a href="https://bossdb.org">
+                    <img class="logo-img" src="{% static 'images/bossdb.png' %}"></img>
+                </a>
+            </div>
+            <div class="logo bg-light">
+                <a href="https://alleninstitute.org/what-we-do/brain-science/research/allen-institute-brain-science/">
+                    <img class="logo-img" src="{% static 'images/aibs.png' %}"></img>
+                </a>
+            </div>
+            <div class="logo bg-light">
+                <a href="https://www.bcm.edu/">
+                    <img class="logo-img" src="{% static 'images/Baylor_College_of_Medicine_Logo.png' %}"></img>
+                </a>
+            </div>
+            <div class="logo bg-light">
+                <a href="https://www.princeton.edu/">
+                    <img class="logo-img" src="{% static 'images/University-of-Princeton-Logo.png' %}"></img>
+                </a>
+            </div>
+        </div>
+
     </div>
 </div>
 <script>

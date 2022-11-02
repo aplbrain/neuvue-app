@@ -56,8 +56,11 @@ ul li {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
   background-size: 70vw;
   background-repeat: repeat;
-  height: 96vh;
+}
+
+.overflow-hidden {
   overflow: hidden;
+  height: 96vh;
 }
 
 .basic.workspace {
@@ -66,12 +69,10 @@ ul li {
 
 .basic.tasks {
   width: 100%;
-  overflow: visible;
 }
 
 .basic.dashboard {
   width: 100%;
-  overflow: visible;
 }
 
 .basic.interTask {
@@ -84,7 +85,7 @@ ul li {
 
 .basic.pref {
   width: 100%;
-  overflow-y: visible;
+  /* overflow-y: visible; */
 }
 
 .intro {
@@ -401,9 +402,6 @@ color: var(--primary-accent);
   min-width: 10%;
   max-width: 12%;
 }
-
-
-
 
 .copyButton{
   background-color: var(--secondary-accent);
@@ -1022,3 +1020,27 @@ input[type=radio]:checked + label > img {
   background-color: darkgray !important;
 }
 
+.text-secondary-color-activated {
+  color: var(--secondary-accent-activated);
+}
+
+/* Classes for styling logo cards */
+.logo-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(var(--max-width),1fr));
+  column-gap: 4px;
+  --max-width: 240px;
+}
+
+.logo {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 2px;
+  height: calc(var(--max-width) / 2 - 6px);
+}
+
+.logo-img {
+  max-width: calc(var(--max-width) - 30px);
+  max-height: calc(var(--max-width) / 2 - 20px);
+}
