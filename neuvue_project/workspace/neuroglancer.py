@@ -154,7 +154,7 @@ def create_path_state():
 
 def create_point_state(name='annotations', group=None, description=None, color=None):
     """Create the annotation state for points.
-    Dontt tuse linemapper, just creates a neuroglancer link that is just Points
+    Dont use linemapper, just creates a neuroglancer link that is just Points
     nglui statebuilder
     Returns:
         StateBuilder: Annotation State
@@ -323,11 +323,11 @@ def _get_soma_center(root_ids: List, cave_client):
         array: array for the position of the soma
     """
     try:
-        soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+        soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
             'pt_root_id': root_ids[:3]
         })
         if not len(soma_df):
-            soma_df = cave_client.materialize.query_table('nucleus_neuron_svm', filter_in_dict={
+            soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
             'pt_root_id': root_ids
             })
         if len(soma_df) > 3:
@@ -586,6 +586,9 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     for root_id in root_ids:
         if flags['pre_synapses'] == 'True':
             pre_points = pre_synapses[pre_synapses["pre_pt_root_id"] == root_id]['ctr_pt_position'].to_numpy()
+            print(f'pre: points {pre_points}')
+            print(f'pre: points {type(pre_points)}')
+            print(f'pre: points {type(pre_points[0])}')
             data_list.append(generate_point_df(pre_points))
             states.append(
                 create_point_state(name=f'pre_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
@@ -595,6 +598,8 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             states.append(
                 create_point_state(name=f'post_synapses_{root_id}', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
 
+    print(f'dataList: {data_list}')
+    print(f'states: {states}')
     chained_state = ChainedStateBuilder(states)
 
     state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
@@ -670,6 +675,79 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             "visible": False
         })
     return json.dumps(state_dict), synapse_stats
+
+def construct_nuclei_state(nuclei_ids: List):
+    """Construct state for the synapse viewer.
+
+    Args:
+        root_ids (list): segment root id
+        flags (dict): query parameters
+            - pre_synapses
+            - post_synapses
+            - cleft_layer
+            - timestamp
+
+    Returns:
+        string: json-formatted state
+        dict: synapse stats
+    """
+    cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
+    soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
+            'id': nuclei_ids
+            })
+    
+    root_ids = soma_df['pt_root_id'].values
+    nuclei_points = np.array(soma_df['pt_position'].values)
+    position = nuclei_points[0] if len(nuclei_points) else [] # check what happens when bad values are returned -- add an error case
+
+    data_list = [None]
+    base_state = create_base_state(root_ids, position)
+
+    # Random color generation
+    r = lambda: random.randint(0, 255)
+    states = [base_state]
+
+    def generate_cell_type_table(soma_df):
+        """Generates Cell type table
+        returns filtered list of valid ids (i.e. listed in NUCLEUS_NEURON_SVM table) and their cell types if available, else NaN
+        """
+        def get_cell_type(nuclei_id, cell_class_df):
+            filtered_row = cell_class_df[cell_class_df.id == nuclei_id]
+            cell_type = filtered_row.cell_type.values[0] if len(filtered_row) else "NaN"
+            return cell_type
+
+        cell_class_info_df = cave_client.materialize.query_table(settings.CELL_CLASS_MODEL, filter_in_dict={
+                'id': soma_df.id.values
+                })
+
+        updated_soma_df = pd.merge(soma_df, cell_class_info_df, on='id', how='outer')
+        updated_soma_df.cell_type_y = updated_soma_df.cell_type_y.fillna('unknown')
+
+        type_table = '<thead><tr><th>Nuclei ID</th><th>Type</th></tr></thead><tbody>'
+        for nucleus_id in updated_soma_df.id.values:
+            cell_type = get_cell_type(nucleus_id, cell_class_info_df)
+            type_table += '<tr><td>'+str(nucleus_id)+'</td><td>'+cell_type+'</td><tr>'
+        type_table += '</tbody>'
+
+        return type_table, updated_soma_df
+
+
+    cell_type_table, soma_df = generate_cell_type_table(soma_df)
+
+    for cell_type, type_df in soma_df.groupby('cell_type_y'):
+        data_list.append(generate_point_df(np.array(type_df['pt_position_x'].values)))
+        states.append(
+            create_point_state(name=f'{cell_type}_nuclei_points', color='#{:02x}{:02x}{:02x}'.format(r(), r(), r())))
+
+    chained_state = ChainedStateBuilder(states)
+
+    state_dict = chained_state.render_state(return_as='dict', data_list=data_list)
+    state_dict['layout'] = '3d'
+    state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
+    state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
+
+    return json.dumps(state_dict), cell_type_table
+
 
 def refresh_ids(ng_state:str, namespace:str): 
     namespace = Namespace.objects.get(namespace=namespace)

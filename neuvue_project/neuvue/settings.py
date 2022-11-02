@@ -208,6 +208,8 @@ SANDBOX_ID = '6269888a101fc4da81fdd410'
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True
 }
+NUCLEUS_NUERON_SVM = 'nucleus_neuron_svm'
+CELL_CLASS_MODEL = 'allen_soma_coarse_cell_class_model_v2'
 # Task Timeout in Seconds
 TIMEOUT = 900
 

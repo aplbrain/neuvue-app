@@ -17,6 +17,7 @@ from .neuroglancer import (
     construct_proofreading_state, 
     construct_lineage_state_and_graph,
     construct_synapse_state,
+    construct_nuclei_state,
     get_from_state_server, 
     post_to_state_server, 
     get_from_json,
@@ -815,6 +816,42 @@ class SynapseView(View):
             "cleft_layer": cleft_layer,
             "timestamp": timestamp
         }))
+
+class NucleiView(View):
+    def get(self, request, nuclei_ids=None, *args, **kwargs):
+        if not is_authorized(request.user):
+            logging.warning(f'Unauthorized requests from {request.user}.')
+            return redirect(reverse('index'))
+
+        if nuclei_ids in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{nuclei_ids}', content_type='application/javascript')
+
+        context = {
+            "nuclei_ids": None,
+            "error": None
+        }
+
+        if nuclei_ids is None:
+            return render(request, "nuclei.html", context)
+
+        nuclei_ids = [x.strip() for x in nuclei_ids.split(',')]
+
+        try:
+            context['nuclei_ids'] = nuclei_ids
+            context['ng_state'], context['cell_types'] = construct_nuclei_state(nuclei_ids=nuclei_ids)
+        except Exception as e: 
+            context['error'] = e
+
+        return render(request, "nuclei.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        nuclei_ids = request.POST.get("nuclei_ids")
+
+        return redirect(reverse('nuclei', kwargs={
+            "nuclei_ids": nuclei_ids,
+        }))
+
 
 
 #TODO: Move simple views to other file 
