@@ -22,6 +22,7 @@ from workspace.views import (
     TaskView,
     IndexView,
     AuthView,
+    AboutView,
     InspectTaskView,
     LineageView,
     TokenView,
@@ -59,7 +60,8 @@ urlpatterns = [
     path('report/', ReportView.as_view(), name="report"),
     path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
     path('save_state', SaveStateView.as_view(), name="save-state"),
-    path('save_operations', SaveOperationsView.as_view(), name="save-operations")
+    path('save_operations', SaveOperationsView.as_view(), name="save-operations"),
+    path('about', AboutView.as_view(), name="about"),
 ]
 
 
