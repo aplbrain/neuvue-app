@@ -1024,15 +1024,15 @@ input[type=radio]:checked + label > img {
   color: var(--secondary-accent-activated);
 }
 
-/* Classes for styling logo cards */
-.logo-container {
+/* Small logo classes */
+.small-logo-container {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(var(--max-width),1fr));
   column-gap: 4px;
   --max-width: 240px;
 }
 
-.logo {
+.logo-card {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -1040,7 +1040,19 @@ input[type=radio]:checked + label > img {
   height: calc(var(--max-width) / 2 - 6px);
 }
 
-.logo-img {
+.small-logo-img {
   max-width: calc(var(--max-width) - 30px);
   max-height: calc(var(--max-width) / 2 - 20px);
+}
+
+/* Medium logo classes */
+.medium-logo-container {
+  display: flex;
+  flex-wrap: wrap;
+  --max-height: 200px;
+}
+
+.medium-logo-img {
+  max-width: calc(var(--max-height)*4);
+  max-height: var(--max-height);
 }

@@ -3,8 +3,23 @@
 
 {% block content %}
 <div class="basic">
-    <div class="container text-light pb-3">
-        <h2 class="pt-5 pb-3"> About Us </h2>
+    <div class="container text-light pb-5">
+        <h2 class="pt-5 pb-3" role="heading" aria-level="1"> About Us </h2>
+
+        <p>
+            NeuVue is developed and maintained at the Johns Hopkins Applied Physics Laboratory with the help of a friendly <em>axon</em>olotl.
+        </p>
+
+        <div class="medium-logo-container my-3">
+            <a href="https://jhuapl.edu" title="JHU/APL">
+                <div class="logo-card justify-content-start">
+                    <img class="medium-logo-img px-3 py-5" src="{% static "images/apl_small_vertical_white.png" %}" alt="JHU/APL"></img>
+                </div>
+            </a>
+            <div class="logo-card justify-content-start">
+                <img class="medium-logo-img" src="{% static "images/axonolotl.png" %}" title="Axonolotl" alt="Axonolotl"></img>
+            </div>
+        </div>
 
         <p>
             NeuVue is a software platform created for large-scale proofreading of machine segmentation and neural circuit 
@@ -37,27 +52,27 @@
 
         <h2 class="pt-5 pb-3"> Collaborators </h2>
 
-        <div class="logo-container">
-            <div class="logo bg-light">
-                <a href="https://bossdb.org">
-                    <img class="logo-img" src="{% static 'images/bossdb.png' %}"></img>
-                </a>
-            </div>
-            <div class="logo bg-light">
-                <a href="https://alleninstitute.org/what-we-do/brain-science/research/allen-institute-brain-science/">
-                    <img class="logo-img" src="{% static 'images/aibs.png' %}"></img>
-                </a>
-            </div>
-            <div class="logo bg-light">
-                <a href="https://www.bcm.edu/">
-                    <img class="logo-img" src="{% static 'images/Baylor_College_of_Medicine_Logo.png' %}"></img>
-                </a>
-            </div>
-            <div class="logo bg-light">
-                <a href="https://www.princeton.edu/">
-                    <img class="logo-img" src="{% static 'images/University-of-Princeton-Logo.png' %}"></img>
-                </a>
-            </div>
+        <div class="small-logo-container">
+            <a href="https://bossdb.org" title="BossDB">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/bossdb.png' %}" alt="BossDB"></img>
+                </div>
+            </a>
+            <a href="https://alleninstitute.org/what-we-do/brain-science/research/allen-institute-brain-science/" title="Allen Institute for Brain Science">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/aibs.png' %}" alt="Allen Institute for Brain Science"></img>
+                </div>
+            </a>
+            <a href="https://www.bcm.edu/" title="Baylor College of Medicine">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/Baylor_College_of_Medicine_Logo.png' %}" alt="Baylor College of Medicine"></img>
+                </div>
+            </a>
+            <a href="https://www.princeton.edu/" title="Princeton University">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/University-of-Princeton-Logo.png' %}" alt="Princeton University"></img>
+                </div>
+            </a>
         </div>
 
     </div>
