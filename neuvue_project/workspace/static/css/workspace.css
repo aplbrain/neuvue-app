@@ -88,14 +88,12 @@ ul li {
 }
 
 .intro {
-  background-image: url('/static/images/xrayneuron01-compressed.png'); 
+  background-image: url('/static/images/xray-neuron.jpg'); 
   background-size: cover;
   background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  height: 95vh;
-  width: 100vw;
 }
 
 
