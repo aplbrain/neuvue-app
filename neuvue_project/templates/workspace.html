@@ -361,19 +361,23 @@
     }
 
     function submitForm(value, form='#mainForm') {
-        saveOperations();
+        updateTrackedOperations(operation_ids)
+        saveState();
+        console.log("submitting form ")
         window.removeEventListener('beforeunload', exitAlert);
-        let data = JSON.stringify(viewer.state.toJSON());
         let ng_differ_stack = JSON.stringify(viewer.differ.stack);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-        const selected_segments = getSelectedSegments(viewer.state);
-        
 
-        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
+        // $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+        
+        {% if track_selected_segments %}
+        const selected_segments = getSelectedSegments(viewer.state);
         $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
+        {% endif %}
+        
         $(form).submit();
     }
 
@@ -466,12 +470,16 @@
         // If number_of_selected_segments_expected is set at the namespace level,
         // show a modal if the user has selected more
         function submitWithSelectedSegmentsCheck(buttonId, buttonSubmissionValue, buttonDisplayName) {
-            const num_selected_segments = getSelectedSegments(viewer.state).length;
-            if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
-                showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
-            } else {
-                submitForm(buttonSubmissionValue);
-            }
+            {% if number_of_selected_segments_expected %}
+                const num_selected_segments = getSelectedSegments(viewer.state).length;
+                if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
+                    showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
+                } else {
+                    submitForm(buttonSubmissionValue);
+                }
+            {% else %}
+            submitForm(buttonSubmissionValue);
+            {% endif %}
         }
         
         {% if submit_task_button %}
