@@ -35,7 +35,9 @@
                         Admin Tools
                     </a>
                     <ul class="dropdown-menu me-2 dropdown-menu-dark preferences" aria-labelledby="navbarDropdown">
-                        <li> <a class="nav-link" href="{% url "dashboard" %}">Admin Dashboard</a></li>
+                        <li> <a class="nav-link" href="{% url "admin:index" %}">Console</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li> <a class="nav-link" href="{% url "dashboard" %}">Dashboard</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="nav-link" href="{% url "lineage" %}">Lineage Viewer</a></li>
                         <li><hr class="dropdown-divider"></li>
