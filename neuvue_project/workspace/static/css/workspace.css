@@ -1056,3 +1056,9 @@ input[type=radio]:checked + label > img {
   max-width: calc(var(--max-height)*4);
   max-height: var(--max-height);
 }
+
+@media(max-width: 500px) {
+  .medium-logo-container {
+    display: block;
+  }
+}
