@@ -56,11 +56,11 @@ ul li {
   background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
   background-size: 70vw;
   background-repeat: repeat;
+  min-height: 96vh;
 }
 
 .overflow-hidden {
   overflow: hidden;
-  height: 96vh;
 }
 
 .basic.workspace {
@@ -85,7 +85,7 @@ ul li {
 
 .basic.pref {
   width: 100%;
-  /* overflow-y: visible; */
+  overflow-y: visible;
 }
 
 .intro {
@@ -1052,13 +1052,14 @@ input[type=radio]:checked + label > img {
   --max-height: 200px;
 }
 
-.medium-logo-img {
-  max-width: calc(var(--max-height)*4);
-  max-height: var(--max-height);
-}
-
+/* center medium logos only on mobile */
 @media(max-width: 500px) {
   .medium-logo-container {
     display: block;
   }
+}
+
+.medium-logo-img {
+  max-width: calc(var(--max-height)*4);
+  max-height: var(--max-height);
 }
