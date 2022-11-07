@@ -881,6 +881,10 @@ class AuthView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "auth_redirect.html")
 
+class AboutView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "about.html")
+
 class TokenView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "token.html", context={'code': request.GET.get('code')})

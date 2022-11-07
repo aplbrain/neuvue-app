@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="basic">
+    <div class="container text-light pb-5">
+        <h2 class="pt-5 pb-3" role="heading" aria-level="1"> About Us </h2>
+
+        <p>
+            We are a team of research scientists and engineers from the Johns Hopkins Applied Physics 
+            Laboratory that developed NeuVue with the help of a friendly <em>axon</em>olotl!
+        </p>
+
+        <div class="medium-logo-container my-3">
+            <a href="https://jhuapl.edu" title="JHU/APL">
+                <div class="logo-card">
+                    <img class="medium-logo-img px-3 py-5" src="{% static "images/apl_small_vertical_white.png" %}" alt="JHU/APL"></img>
+                </div>
+            </a>
+            <div class="logo-card">
+                <img class="medium-logo-img" src="{% static "images/axonolotl.png" %}" title="Axonolotl" alt="Axonolotl"></img>
+            </div>
+        </div>
+
+        <p>
+            NeuVue is a software platform created for large-scale proofreading of machine segmentation and neural 
+            circuit reconstruction in high-resolution electron microscopy connectomics datasets. NeuVue provides an 
+            intuitive interface for proofreaders to collaboratively view, annotate, and edit segmentation and 
+            connectivity data.
+            
+            NeuVue has everything you need for a high-throughput proofreading workflow! Analytical dashboards, data 
+            visualization tools, and simple API enables stakeholders real-time access to proofreading progress at an 
+            individual proofreader level as well as global reconstruction quality insights. NeuVue is intentionally 
+            agnostic to the underlying data management backend and can be easily deployed in an AWS environment. 
+            Proofreaders can work with powerful streamlined tools for splitting and merging connectivity data in 
+            dense nano-scale reconstruction better than ever before. 
+        </p>
+
+        <p class="fw-bold">
+            This research was enabled by the IARPA Machine Intelligence from Cortical Networks (MICrONS) program. 
+            <a class="text-secondary-color-activated" href="https://www.iarpa.gov/research-programs/microns">Learn more about MICrONS.</a>
+        </p>
+
+        <h2 class="pt-5 pb-3"> Publications </h2>
+
+        <p>
+            <a class="text-secondary-color-activated" href="https://www.biorxiv.org/content/10.1101/2022.07.18.500521v1" target="_blank" rel="noopener noreferrer">
+                NeuVue: A Framework and Workflows for High-Throughput Electron Microscopy Connectomics Proofreading
+            </a>
+        </p>
+        <p>
+            Check us out at the Computational Tools and Other Resources: Microscopy and Imaging session at <a class="text-secondary-color-activated" href="https://www.sfn.org/meetings/neuroscience-2022">SfN 2022</a>!
+        </p>
+
+        <h2 class="pt-5 pb-3"> Collaborators </h2>
+
+        <div class="small-logo-container">
+            <a href="https://bossdb.org" title="BossDB">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/bossdb.png' %}" alt="BossDB"></img>
+                </div>
+            </a>
+            <a href="https://alleninstitute.org/what-we-do/brain-science/research/allen-institute-brain-science/" title="Allen Institute for Brain Science">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/aibs.png' %}" alt="Allen Institute for Brain Science"></img>
+                </div>
+            </a>
+            <a href="https://toliaslab.org/" title="Baylor College of Medicine">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/Baylor_College_of_Medicine_Logo.png' %}" alt="Baylor College of Medicine"></img>
+                </div>
+            </a>
+            <a href="https://seunglab.org/" title="Princeton University">
+                <div class="logo-card bg-light">
+                    <img class="small-logo-img" src="{% static 'images/University-of-Princeton-Logo.png' %}" alt="Princeton University"></img>
+                </div>
+            </a>
+        </div>
+
+        <h2 class="pt-5 pb-3"> Contact Us </h2>
+
+        <p>
+            We'd love to hear from you! Reach out at <a class="text-secondary-color-activated" href="mailto:info@neuvue.io">info@neuvue.io</a> with questions or if you are interested in collaborating with us.
+        </p>
+
+    </div>
+</div>
+<script>
+
+</script>
+{% endblock %}
