@@ -348,7 +348,7 @@
     
     const tracked_new_operations = new Set();
     function updateTrackedOperations(current_operation_ids){
-        if (typeof current_operation_ids !== 'undefined') {
+        if (current_operation_ids.length > 0) {
             for (const [idx, ele] of current_operation_ids.entries()){
                 if (!tracked_new_operations.has(ele)){
                     tracked_new_operations.add(ele);
@@ -361,24 +361,25 @@
     }
 
     function submitForm(value, form='#mainForm') {
-        updateTrackedOperations(operation_ids)
-        saveState();
-        console.log("submitting form ")
         window.removeEventListener('beforeunload', exitAlert);
-        let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-
-        // $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
-        
-        {% if track_selected_segments %}
-        const selected_segments = getSelectedSegments(viewer.state);
-        $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
-        {% endif %}
-        
-        $(form).submit();
+        updateTrackedOperations(operation_ids)
+        viewer.postJsonState(true, undefined, true, function() {
+            let state = viewer.saver.savedUrl;
+            let ng_differ_stack = JSON.stringify(viewer.differ.stack);
+            let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
+    
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+            
+            {% if track_selected_segments %}
+            const selected_segments = getSelectedSegments(viewer.state);
+            $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
+            {% endif %}
+            
+            $(form).submit();
+        })
     }
 
     function exitAlert(e) {
@@ -425,6 +426,7 @@
 
     // Button Submission
     $(document).ready(function() {
+
         // Start Timer for duration tracking and auto-save 
         browserTimer.startTimer();
 
@@ -441,7 +443,7 @@
         // Track operation IDs every second
         window.setInterval(function() {
             updateTrackedOperations(operation_ids);
-        }, 1000);
+        }, 3000);
 
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();

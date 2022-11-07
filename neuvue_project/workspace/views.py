@@ -212,7 +212,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # All form submissions include button name and ng state
         button = request.POST.get('button')
-        #ng_state = request.POST.get('ngState')
+        ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
@@ -247,7 +247,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                #ng_state=ng_state,
+                ng_state=ng_state,
                 tags=tags,
                 metadata=metadata)
             # Add new differ stack entry
@@ -266,7 +266,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 status="closed",
-                #ng_state=ng_state,
+                ng_state=ng_state,
                 metadata=metadata,
                 tags=tags)
             # Add new differ stack entry
@@ -294,7 +294,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     priority=task_df['priority']-1, 
                     status="pending",
                     metadata=metadata,
-                    #ng_state=ng_state,
+                    ng_state=ng_state,
                     tags=tags)
                 # Add new differ stack entry
                 if ng_differ_stack != []:
@@ -310,7 +310,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     status="pending",
                     metadata=metadata,
-                    #ng_state=ng_state
+                    ng_state=ng_state
                     )
         
         elif button == 'flag':
@@ -329,7 +329,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 task_df["_id"], 
                 duration=duration, 
                 status="errored", 
-                #ng_state=ng_state,
+                ng_state=ng_state,
                 metadata=metadata,
                 tags=tags,
                 )
@@ -390,7 +390,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             self.client.patch_task(
                 task_df["_id"], 
                 duration=duration, 
-                #ng_state=ng_state,
+                ng_state=ng_state,
                 metadata=metadata,
                 tags=tags)
             # Add new differ stack entry
@@ -401,9 +401,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 )
             return redirect(reverse('tasks'))
         
-        elif button == 'saveState':
-            pass
-    
         return redirect(reverse('workspace', args=[namespace]))
 
 class TaskView(LoginRequiredMixin, View):
