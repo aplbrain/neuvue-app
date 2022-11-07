@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.7.0",
+            "update_date":"November 7th, 2022",
+            "update_description": "Adds 'About us' page. Adds nuclei viewer. Visual changes."
+        },
+        {
             "update_name": "v1.6.8",
             "update_date":"November 1st, 2022",
             "update_description": "Visual changes to task page. Fixes bugs with the synapse viewer."
