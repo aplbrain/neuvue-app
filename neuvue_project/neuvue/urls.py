@@ -22,10 +22,12 @@ from workspace.views import (
     TaskView,
     IndexView,
     AuthView,
+    AboutView,
     InspectTaskView,
     LineageView,
     TokenView,
     SynapseView,
+    NucleiView,
     GettingStartedView,
     SaveStateView,
     SaveOperationsView
@@ -56,10 +58,13 @@ urlpatterns = [
     path('synapse/', SynapseView.as_view(), name="synapse"), 
     path('synapse/<str:root_ids>', SynapseView.as_view(), name="synapse"),
     path('synapse/<str:root_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>', SynapseView.as_view(), name="synapse"),
+    path('nuclei/', NucleiView.as_view(), name="nuclei"),
+    path('nuclei/<str:nuclei_ids>', NucleiView.as_view(), name="nuclei"),
     path('report/', ReportView.as_view(), name="report"),
     path('userNamespace/', UserNamespaceView.as_view(), name="user-namespace"),
     path('save_state', SaveStateView.as_view(), name="save-state"),
-    path('save_operations', SaveOperationsView.as_view(), name="save-operations")
+    path('save_operations', SaveOperationsView.as_view(), name="save-operations"),
+    path('about', AboutView.as_view(), name="about"),
 ]
 
 
