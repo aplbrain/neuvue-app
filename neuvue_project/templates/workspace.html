@@ -57,7 +57,6 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
@@ -440,7 +439,7 @@
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
         
-        // Track operation IDs every second
+        // Track operation IDs every three seconds
         window.setInterval(function() {
             updateTrackedOperations(operation_ids);
         }, 3000);
