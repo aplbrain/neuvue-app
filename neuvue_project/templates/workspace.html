@@ -41,9 +41,9 @@
                 </div>
                 <div class="sideContentInput" >
                     {% if tags %}
-                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" spellcheck="false"> {{tags}} </textarea>
+                        <input name='tags' class="sideContentTextArea" form="mainForm" value='{{tags}}' data-role="tagsinput" autofocus>
                     {% else %}
-                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma separated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                        <input name='tags' class="sideContentTextArea" form="mainForm" placeholder="Comma separated tags: glia, false split, etc. " data-role="tagsinput" autofocus>
                     {% endif %}
                 </div>
             </div>
@@ -284,10 +284,30 @@
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+<script src="https://unpkg.com/@yaireo/tagify"></script>
+<script src="https://unpkg.com/@yaireo/tagify@3.1.0/dist/tagify.polyfills.min.js"></script>
 <script type="text/javascript"  src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
+
+    let autofillOptions = {{instructions.tags | safe}};
+
+    // initialize Tagify on the above input node reference
+    let input = document.querySelector('input[name="tags"]'),
+        // init Tagify script on the above inputs
+        tagify = new Tagify(input, {
+        whitelist: autofillOptions,
+        maxTags: 10,
+        dropdown: {
+            maxItems: 20,           // <- mixumum allowed rendered suggestions
+            classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+            enabled: 0,             // <- show suggestions on focus
+            closeOnSelect: true,    // <- do not hide the suggestions dropdown once an item has been selected
+        }
+    })
 
     function getLink() {
         viewer.postJsonState(true, undefined, true, function() {
