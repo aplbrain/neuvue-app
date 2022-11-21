@@ -73,7 +73,8 @@ class WorkspaceView(LoginRequiredMixin, View):
             'show_slices': False,
             'namespace':namespace,
             'tags': '',
-            'num_edits': 0
+            'num_edits': 0,
+            'track_selected_segments': namespace_obj.track_selected_segments
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(set_name=context.get('submission_method')).all()
@@ -216,12 +217,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         duration = int(request.POST.get('duration', 0))
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
-        selected_segments = request.POST.get('selected_segments').split(',')
+        selected_segments = request.POST.get('selected_segments', "")
     
-        try:
-            ng_state = post_to_state_server(ng_state)
-        except:
-            logger.warning("Unable to post state to JSON State Server")
+        # try:
+        #     ng_state = post_to_state_server(ng_state)
+        # except:
+        #     logger.warning("Unable to post state to JSON State Server")
             
         tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
 
@@ -233,7 +234,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         # Add selected segments to task metadata
         # Only if track_selected_segments is set to true at the namespace level
         if selected_segments and namespace_obj.track_selected_segments:
-            metadata['selected_segments'] = selected_segments
+            metadata['selected_segments'] = selected_segments.split(',')
 
         ### Forced Choice Button groups ###
         submission_method = namespace_obj.submission_method
@@ -310,7 +311,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                     duration=duration,
                     status="pending",
                     metadata=metadata,
-                    ng_state=ng_state)
+                    ng_state=ng_state
+                    )
         
         elif button == 'flag':
             logger.info('Flagging task')
@@ -400,9 +402,6 @@ class WorkspaceView(LoginRequiredMixin, View):
                 )
             return redirect(reverse('tasks'))
         
-        elif button == 'saveState':
-            print("button: saveState")
-    
         return redirect(reverse('workspace', args=[namespace]))
 
 class TaskView(LoginRequiredMixin, View):

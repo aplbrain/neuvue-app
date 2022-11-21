@@ -57,7 +57,6 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
@@ -348,7 +347,7 @@
     
     const tracked_new_operations = new Set();
     function updateTrackedOperations(current_operation_ids){
-        if (typeof current_operation_ids !== 'undefined') {
+        if (current_operation_ids.length > 0) {
             for (const [idx, ele] of current_operation_ids.entries()){
                 if (!tracked_new_operations.has(ele)){
                     tracked_new_operations.add(ele);
@@ -361,20 +360,31 @@
     }
 
     function submitForm(value, form='#mainForm') {
-        saveOperations();
         window.removeEventListener('beforeunload', exitAlert);
-        let data = JSON.stringify(viewer.state.toJSON());
-        let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
-        const selected_segments = getSelectedSegments(viewer.state);
-        
+        updateTrackedOperations(operation_ids)
+        viewer.postJsonState(true, undefined, true, function() {
+            let state = viewer.saver.savedUrl;
 
-        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
-        $(form).submit();
+            // Check if state successfully saved. If not use the raw JSON state 
+            if (!state) {
+                state = JSON.stringify(viewer.state.toJSON());
+            }
+
+            let ng_differ_stack = JSON.stringify(viewer.differ.stack);
+            let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
+    
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+            
+            {% if track_selected_segments %}
+            const selected_segments = getSelectedSegments(viewer.state);
+            $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
+            {% endif %}
+            
+            $(form).submit();
+        })
     }
 
     function exitAlert(e) {
@@ -421,6 +431,7 @@
 
     // Button Submission
     $(document).ready(function() {
+
         // Start Timer for duration tracking and auto-save 
         browserTimer.startTimer();
 
@@ -434,10 +445,10 @@
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
         
-        // Track operation IDs every second
+        // Track operation IDs every three seconds
         window.setInterval(function() {
             updateTrackedOperations(operation_ids);
-        }, 1000);
+        }, 3000);
 
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();
@@ -466,12 +477,16 @@
         // If number_of_selected_segments_expected is set at the namespace level,
         // show a modal if the user has selected more
         function submitWithSelectedSegmentsCheck(buttonId, buttonSubmissionValue, buttonDisplayName) {
-            const num_selected_segments = getSelectedSegments(viewer.state).length;
-            if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
-                showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
-            } else {
-                submitForm(buttonSubmissionValue);
-            }
+            {% if number_of_selected_segments_expected %}
+                const num_selected_segments = getSelectedSegments(viewer.state).length;
+                if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
+                    showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
+                } else {
+                    submitForm(buttonSubmissionValue);
+                }
+            {% else %}
+            submitForm(buttonSubmissionValue);
+            {% endif %}
         }
         
         {% if submit_task_button %}
