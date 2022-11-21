@@ -364,6 +364,12 @@
         updateTrackedOperations(operation_ids)
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
+
+            // Check if state successfully saved. If not use the raw JSON state 
+            if (!state) {
+                state = JSON.stringify(viewer.state.toJSON());
+            }
+
             let ng_differ_stack = JSON.stringify(viewer.differ.stack);
             let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
     
