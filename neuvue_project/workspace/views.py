@@ -7,7 +7,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton
 from django.views.decorators.csrf import csrf_exempt
-import ast
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
@@ -222,8 +221,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             ng_state = post_to_state_server(ng_state)
         except:
             logger.warning("Unable to post state to JSON State Server")
-
-        tags = [tag.get('value') for tag in ast.literal_eval(request.POST.get('tags')) if (type(tag)==dict)]
+        tags = [tag.get('value') for tag in json.loads(request.POST.get('tags')) if (type(tag)==dict)]
 
         # Add operation ids to task metadata
         # Only if track_operation_ids is set to true at the namespace level
