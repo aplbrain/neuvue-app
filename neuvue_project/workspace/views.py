@@ -7,7 +7,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton
 from django.views.decorators.csrf import csrf_exempt
-
 from neuvueclient import NeuvueQueue
 import pandas as pd
 import json
@@ -218,13 +217,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
         selected_segments = request.POST.get('selected_segments', "")
-    
+        tags = [tag.get('value') for tag in json.loads(request.POST.get('tags')) if (type(tag)==dict)]
+        
         # try:
         #     ng_state = post_to_state_server(ng_state)
         # except:
         #     logger.warning("Unable to post state to JSON State Server")
-            
-        tags = [tag.strip() for tag in set(request.POST.get('tags', '').split(',')) if tag]
 
         # Add operation ids to task metadata
         # Only if track_operation_ids is set to true at the namespace level
