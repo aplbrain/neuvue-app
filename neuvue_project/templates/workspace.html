@@ -43,7 +43,7 @@
                     {% if tags %}
                         <input name='tags' class="sideContentTextArea" form="mainForm" value='{{tags}}' data-role="tagsinput" autofocus>
                     {% else %}
-                        <input name='tags' class="sideContentTextArea" form="mainForm" placeholder="Comma separated tags: glia, false split, etc. " data-role="tagsinput" autofocus>
+                        <input name='tags' class="sideContentTextArea" form="mainForm" data-role="tagsinput" autofocus>
                     {% endif %}
                 </div>
             </div>
@@ -293,13 +293,13 @@
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
 
-    let autofillOptions = {{instructions.tags | safe}};
-
     // initialize Tagify on the above input node reference
     let input = document.querySelector('input[name="tags"]'),
         // init Tagify script on the above inputs
         tagify = new Tagify(input, {
-        whitelist: autofillOptions,
+        {% if instructions.tags %}
+        whitelist: {{instructions.tags | safe}},
+        {% endif %}
         maxTags: 10,
         dropdown: {
             maxItems: 20,           // <- mixumum allowed rendered suggestions
