@@ -214,11 +214,17 @@ class WorkspaceView(LoginRequiredMixin, View):
         button = request.POST.get('button')
         ng_state = request.POST.get('ngState')
         duration = int(request.POST.get('duration', 0))
+        tags = request.POST.get('tags')
         session_task_count = request.session.get('session_task_count', 0)
         ng_differ_stack = json.loads(request.POST.get('ngDifferStack', '[]'), strict=False)
         selected_segments = request.POST.get('selected_segments', "")
-        tags = [tag.get('value') for tag in json.loads(request.POST.get('tags')) if (type(tag)==dict)]
-        
+
+        # Parse tags 
+        if tags:
+            tags = tags.split(',')
+        else:
+            tags = None
+
         # try:
         #     ng_state = post_to_state_server(ng_state)
         # except:

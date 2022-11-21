@@ -299,6 +299,7 @@
         {% if instructions.tags %}
         whitelist: {{instructions.tags | safe}},
         {% endif %}
+        originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(','),
         maxTags: 10,
         dropdown: {
             maxItems: 20,           // <- mixumum allowed rendered suggestions
