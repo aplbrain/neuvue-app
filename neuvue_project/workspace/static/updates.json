@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.7.1",
+            "update_date":"November 21st, 2022",
+            "update_description": "New nuclei viewer. Bug fixes with flagging tasks. Redesigned tags widget."
+        },
+        {
             "update_name": "v1.6.8",
             "update_date":"November 1st, 2022",
             "update_description": "Visual changes to task page. Fixes bugs with the synapse viewer."
