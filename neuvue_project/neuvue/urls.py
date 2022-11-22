@@ -33,7 +33,13 @@ from workspace.views import (
     SaveOperationsView
     )
 from preferences.views import PreferencesView
-from dashboard.views import DashboardView, DashboardNamespaceView, DashboardUserView, ReportView, UserNamespaceView
+from dashboard.views import (
+        DashboardView, 
+        DashboardNamespaceView, 
+        DashboardUserView, 
+        ReportView, 
+        UserNamespaceView
+)
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
