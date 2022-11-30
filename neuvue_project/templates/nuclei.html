@@ -4,15 +4,15 @@
 
 {% block content %}
 
-{% if not nuclei_ids or error %}
+{% if not given_ids or error %}
 
 <div class="basic workspace">
   <div class="inspect-container">
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
-        <label class="text-white-50" for="rootIDInput">Nuclei ID (Enter Nuclei ID (s) separated by commas)</label>
-        <input class="form-control" id="rootIDInput" name="nuclei_ids" required="true">
+        <label class="text-white-50" for="rootIDInput">Nuclei ID and/or Seg ID (Enter ID (s) separated by commas)</label>
+        <input class="form-control" id="rootIDInput" name="given_ids" required="true">
       </div>
       <br>
         <div class="d-flex">
@@ -45,6 +45,9 @@
             <table class="table table-dark table-bordered table-hover">
               {{cell_types|safe}}
             </table>
+            {% if ids_not_found %}
+              <span> <code> IDs not found: </code>{{ids_not_found}}</span>
+            {% endif %}
         </div>
     </div>
     <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">

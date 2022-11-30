@@ -825,27 +825,27 @@ class SynapseView(View):
         }))
 
 class NucleiView(View):
-    def get(self, request, nuclei_ids=None, *args, **kwargs):
+    def get(self, request, given_ids=None, *args, **kwargs):
         if not is_authorized(request.user):
             logging.warning(f'Unauthorized requests from {request.user}.')
             return redirect(reverse('index'))
 
-        if nuclei_ids in settings.STATIC_NG_FILES:
-            return redirect(f'/static/workspace/{nuclei_ids}', content_type='application/javascript')
+        if given_ids in settings.STATIC_NG_FILES:
+            return redirect(f'/static/workspace/{given_ids}', content_type='application/javascript')
 
         context = {
-            "nuclei_ids": None,
+            "given_ids": None,
             "error": None
         }
 
-        if nuclei_ids is None:
+        if given_ids is None:
             return render(request, "nuclei.html", context)
 
-        nuclei_ids = [x.strip() for x in nuclei_ids.split(',')]
+        given_ids = [x.strip() for x in given_ids.split(',')]
 
         try:
-            context['nuclei_ids'] = nuclei_ids
-            context['ng_state'], context['cell_types'] = construct_nuclei_state(nuclei_ids=nuclei_ids)
+            context['given_ids'] = given_ids
+            context['ng_state'], context['cell_types'], context['ids_not_found'] = construct_nuclei_state(given_ids=given_ids)
         except Exception as e: 
             context['error'] = e
 
@@ -853,10 +853,10 @@ class NucleiView(View):
 
 
     def post(self, request, *args, **kwargs):
-        nuclei_ids = request.POST.get("nuclei_ids")
+        given_ids = request.POST.get("given_ids")
 
         return redirect(reverse('nuclei', kwargs={
-            "nuclei_ids": nuclei_ids,
+            "given_ids": given_ids,
         }))
 
 

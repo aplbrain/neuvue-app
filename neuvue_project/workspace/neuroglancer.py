@@ -6,6 +6,7 @@ from caveclient import CAVEclient
 from typing import List
 from datetime import datetime
 import json
+import glob
 import requests
 import os
 import backoff
@@ -30,6 +31,21 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 Config = apps.get_model('preferences', 'Config')
+
+
+def get_df_from_static(cave_client, table_type):
+    supported_tables = {'NUCLEUS_NUERON_SVM': settings.NUCLEUS_NUERON_SVM,
+                        'CELL_CLASS_MODEL': settings.CELL_CLASS_MODEL}
+    if table_type in supported_tables.keys():
+        cached_tables = glob.glob(settings.STATIC_ROOT+'/'+supported_tables.get(table_type)+'.pkl')
+        if len(cached_tables):
+            df = pd.read_pickle(cached_tables[0])
+        else:
+            df = cave_client.materialize.query_table(supported_tables.get(table_type))
+            df.to_pickle(settings.STATIC_ROOT+'/'+supported_tables.get(table_type)+'.pkl')
+        return df
+    else:
+        return float('NaN')
 
 def create_base_state(seg_ids, coordinate, namespace=None):
     """Generates a base state containing imagery and segmentation layers. 
@@ -672,26 +688,26 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         })
     return json.dumps(state_dict), synapse_stats
 
-def construct_nuclei_state(nuclei_ids: List):
+def construct_nuclei_state(given_ids: List):
     """Construct state for the synapse viewer.
 
     Args:
-        root_ids (list): segment root id
-        flags (dict): query parameters
-            - pre_synapses
-            - post_synapses
-            - cleft_layer
-            - timestamp
+        given_ids (list): nuclei and/or pt_root_ids
 
     Returns:
         string: json-formatted state
         dict: synapse stats
     """
+    given_ids = [int(x) for x in given_ids]
     cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
-    soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
-            'id': nuclei_ids
-            })
     
+    soma_df = get_df_from_static(cave_client, 'NUCLEUS_NUERON_SVM')
+    soma_df_of_selected_ids = soma_df[(soma_df.id.isin(given_ids))|(soma_df.pt_root_id.isin(given_ids))]
+    
+    # identify inputs that were not found in the table and format to display to user
+    ids_not_found = list(set(given_ids) - set().union(soma_df_of_selected_ids.id,soma_df_of_selected_ids.pt_root_id))
+    formatted_not_found_ids = ', '.join([str(id) for id in ids_not_found]) if len(ids_not_found) else float("NaN")
+
     root_ids = soma_df['pt_root_id'].values
     nuclei_points = np.array(soma_df['pt_position'].values)
     position = nuclei_points[0] if len(nuclei_points) else [] # check what happens when bad values are returned -- add an error case
@@ -712,23 +728,23 @@ def construct_nuclei_state(nuclei_ids: List):
             cell_type = filtered_row.cell_type.values[0] if len(filtered_row) else "NaN"
             return cell_type
 
-        cell_class_info_df = cave_client.materialize.query_table(settings.CELL_CLASS_MODEL, filter_in_dict={
-                'id': soma_df.id.values
-                })
+        cell_class_info_df = get_df_from_static(cave_client, 'CELL_CLASS_MODEL')
+        cell_class_info_df = cell_class_info_df[cell_class_info_df.id.isin(soma_df.id.values)]
+
 
         updated_soma_df = pd.merge(soma_df, cell_class_info_df, on='id', how='outer')
         updated_soma_df.cell_type_y = updated_soma_df.cell_type_y.fillna('unknown')
 
-        type_table = '<thead><tr><th>Nuclei ID</th><th>Type</th></tr></thead><tbody>'
-        for nucleus_id in updated_soma_df.id.values:
+        type_table = '<thead><tr><th>Nuclei ID</th><th>Seg ID</th><th>Type</th></tr></thead><tbody>'
+        for nucleus_id, seg_id in zip(updated_soma_df.id.values, updated_soma_df.pt_root_id_x.values):
             cell_type = get_cell_type(nucleus_id, cell_class_info_df)
-            type_table += '<tr><td>'+str(nucleus_id)+'</td><td>'+cell_type+'</td><tr>'
+            type_table += '<tr><td>'+str(nucleus_id)+'</td><td>'+str(seg_id)+'</td><td>'+cell_type+'</td><tr>'
         type_table += '</tbody>'
 
         return type_table, updated_soma_df
 
 
-    cell_type_table, soma_df = generate_cell_type_table(soma_df)
+    cell_type_table, soma_df = generate_cell_type_table(soma_df_of_selected_ids)
 
     for cell_type, type_df in soma_df.groupby('cell_type_y'):
         data_list.append(generate_point_df(np.array(type_df['pt_position_x'].values)))
@@ -742,7 +758,7 @@ def construct_nuclei_state(nuclei_ids: List):
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     state_dict['jsonStateServer'] = settings.JSON_STATE_SERVER
 
-    return json.dumps(state_dict), cell_type_table
+    return json.dumps(state_dict), cell_type_table, formatted_not_found_ids
 
 
 def refresh_ids(ng_state:str, namespace:str): 
