@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 from caveclient import CAVEclient
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 import json
 import glob
 import requests
@@ -33,19 +34,27 @@ logger = logging.getLogger(__name__)
 Config = apps.get_model('preferences', 'Config')
 
 
-def get_df_from_static(cave_client, table_type):
-    supported_tables = {'NUCLEUS_NUERON_SVM': settings.NUCLEUS_NUERON_SVM,
-                        'CELL_CLASS_MODEL': settings.CELL_CLASS_MODEL}
-    if table_type in supported_tables.keys():
-        cached_tables = glob.glob(settings.STATIC_ROOT+'/'+supported_tables.get(table_type)+'.pkl')
-        if len(cached_tables):
-            df = pd.read_pickle(cached_tables[0])
-        else:
-            df = cave_client.materialize.query_table(supported_tables.get(table_type))
-            df.to_pickle(settings.STATIC_ROOT+'/'+supported_tables.get(table_type)+'.pkl')
+def get_df_from_static(cave_client, table_name, refresh_timedelta = timedelta(days=3)):
+    def query_new_table(table_name):
+        df = cave_client.materialize.query_table(table_name)
+        df.to_pickle(settings.STATIC_ROOT+'/'+str(round(time.time()))+'_' + table_name+'.pkl')
         return df
-    else:
-        return float('NaN')
+    try:
+        cached_tables = glob.glob(settings.STATIC_ROOT+'/*_'+table_name+'.pkl')
+        # filter to table of interest
+        if len(cached_tables):
+            file_name = cached_tables[0]
+            file_date = int(file_name.replace(settings.STATIC_ROOT+'/','',1).replace('_'+table_name+'.pkl','',1))
+            if (datetime.fromtimestamp(file_date) - datetime.fromtimestamp(time.time())) < refresh_timedelta:
+                df = pd.read_pickle(cached_tables[0])
+            else:
+                os.remove(file_name)
+                df = query_new_table(table_name)
+        else:
+            df = query_new_table(table_name)
+        return df
+    except: 
+        logger.error('Resource table cannot be queried.')
 
 def create_base_state(seg_ids, coordinate, namespace=None):
     """Generates a base state containing imagery and segmentation layers. 
@@ -701,12 +710,12 @@ def construct_nuclei_state(given_ids: List):
     given_ids = [int(x) for x in given_ids]
     cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
     
-    soma_df = get_df_from_static(cave_client, 'NUCLEUS_NUERON_SVM')
+    soma_df = get_df_from_static(cave_client, settings.NUCLEUS_NUERON_SVM)
     soma_df_of_selected_ids = soma_df[(soma_df.id.isin(given_ids))|(soma_df.pt_root_id.isin(given_ids))]
     
     # identify inputs that were not found in the table and format to display to user
     ids_not_found = list(set(given_ids) - set().union(soma_df_of_selected_ids.id,soma_df_of_selected_ids.pt_root_id))
-    formatted_not_found_ids = ', '.join([str(id) for id in ids_not_found]) if len(ids_not_found) else float("NaN")
+    formatted_not_found_ids = ', '.join([str(id) for id in ids_not_found]) if len(ids_not_found) else ''
 
     root_ids = soma_df['pt_root_id'].values
     nuclei_points = np.array(soma_df['pt_position'].values)
@@ -728,7 +737,7 @@ def construct_nuclei_state(given_ids: List):
             cell_type = filtered_row.cell_type.values[0] if len(filtered_row) else "NaN"
             return cell_type
 
-        cell_class_info_df = get_df_from_static(cave_client, 'CELL_CLASS_MODEL')
+        cell_class_info_df = get_df_from_static(cave_client, settings.CELL_CLASS_MODEL)
         cell_class_info_df = cell_class_info_df[cell_class_info_df.id.isin(soma_df.id.values)]
 
 
