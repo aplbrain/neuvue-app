@@ -6,7 +6,7 @@ from django.apps import apps
 from django.views.generic.base import View
 from django.conf import settings
 
-from neuvueclient import NeuvueQueue
+from neuvue.client import client
 
 from ..models import Namespace
 
@@ -19,11 +19,6 @@ Config = apps.get_model("preferences", "Config")
 
 
 class SaveStateView(View):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(
-            settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS
-        )
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         data = str(request.body.decode("utf-8"))
@@ -39,7 +34,7 @@ class SaveStateView(View):
         ):
             try:
                 logging.debug("Patching task state")
-                self.client.patch_task(task_id, ng_state=ng_state)
+                client.patch_task(task_id, ng_state=ng_state)
                 return HttpResponse(
                     "Successfully saved state", status=201, content_type="text/plain"
                 )
@@ -54,11 +49,6 @@ class SaveStateView(View):
 
 
 class SaveOperationsView(View):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(
-            settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS
-        )
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
 
@@ -68,7 +58,7 @@ class SaveOperationsView(View):
         namespace_obj = Namespace.objects.get(namespace=namespace)
         tracked_operation_ids = data.get("operation_ids")
         task_id = data.get("task_id")
-        task = self.client.get_task(task_id)
+        task = client.get_task(task_id)
 
         metadata = {}
         # if edits are possible
@@ -87,7 +77,7 @@ class SaveOperationsView(View):
             if (type(metadata) == dict) and (type(task_id) == str):
                 try:
                     logging.debug("Patching task operations")
-                    self.client.patch_task(task_id, metadata=metadata)
+                    client.patch_task(task_id, metadata=metadata)
                     return HttpResponse(
                         "Successfully saved operations",
                         status=201,

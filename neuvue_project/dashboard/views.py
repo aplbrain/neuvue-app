@@ -8,10 +8,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group, User
 from django.apps import apps
 
-from neuvueclient import NeuvueQueue
 from typing import List
 from datetime import datetime 
 import plotly.graph_objects as go
+
+from neuvue.client import client
 
 # import the logging library
 import logging
@@ -37,9 +38,6 @@ def _get_status_count(task_df, status):
     return task_df['status'].value_counts().get(status, 0)
 
 class DashboardView(View, LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -71,9 +69,6 @@ class DashboardView(View, LoginRequiredMixin):
             return redirect(reverse('dashboard'))
 
 class DashboardNamespaceView(View, LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, group=None, namespace=None, *args, **kwargs):
         if not request.user.is_staff:
@@ -107,7 +102,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         unassigned_group = request.POST.get("unassigned-group")
         namespace = request.POST.get("namespace") ## GET THIS
 
-        namespace_df = self.client.get_tasks(
+        namespace_df = client.get_tasks(
             sieve={
                 'assignee': unassigned_group,
                 'namespace': namespace,
@@ -123,7 +118,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
             user = assignee_group_usernames[i]
             user_tasks = namespace_df.iloc[(i*n_tasks):(n_tasks+(i*n_tasks))]
             for task in user_tasks.index:
-                self.client.patch_task(task, assignee=user) 
+                client.patch_task(task, assignee=user) 
         
         return redirect(reverse('dashboard', kwargs={"namespace":namespace,"group": 'unassigned'}))
 
@@ -138,7 +133,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         else: # case if `All Users` was selected
             users = list(User.objects.all().values_list('username', flat=True).distinct()) # retrieve all usernames
         
-        task_df = self.client.get_tasks(
+        task_df = client.get_tasks(
                 sieve=sieve,
                 select=['assignee', 'status', 'closed']
             )
@@ -166,9 +161,6 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
 
 
 class DashboardUserView(View, LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, username=None, filter=None, *args, **kwargs):
         if not request.user.is_staff:
@@ -191,7 +183,7 @@ class DashboardUserView(View, LoginRequiredMixin):
         table_rows = []
         # Counts
         tc = tp = to = te = 0
-        user_df = self.client.get_tasks(
+        user_df = client.get_tasks(
             sieve={
                 'assignee': user,
             },
@@ -232,24 +224,21 @@ class DashboardUserView(View, LoginRequiredMixin):
             for task in selected_tasks:
                 if selected_action == 'delete':
                     logging.debug(f"Delete task: {task}")
-                    self.client.delete_task(task)
+                    client.delete_task(task)
                 elif selected_action == "assignee":
-                    self.client.patch_task(task,assignee=new_assignee)
+                    client.patch_task(task,assignee=new_assignee)
                     logging.debug(f"Resassigning task {task} to {new_assignee}")
                 elif selected_action == "priority":
-                    self.client.patch_task(task, priority=new_priority)
+                    client.patch_task(task, priority=new_priority)
                     logging.debug(f"Reprioritizing task {task} to {new_priority}")
                 elif selected_action == "status":
-                    self.client.patch_task(task, status=new_status)
+                    client.patch_task(task, status=new_status)
                     logging.debug(f"Updating task {task} to {new_status}")
 
         # Redirect to dashboard page from splashpage or modal
         return redirect(reverse('dashboard', kwargs={"username": username}))
 
 class ReportView(View, LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -312,7 +301,7 @@ class ReportView(View, LoginRequiredMixin):
                 '$lt': end_dt
             }
         
-        task_df = self.client.get_tasks(
+        task_df = client.get_tasks(
             sieve=sieve, 
             select=['assignee', 'status', 'duration','metadata','closed','opened']
             )
@@ -396,9 +385,6 @@ class ReportView(View, LoginRequiredMixin):
         return render(request,'report.html',context)
 
 class UserNamespaceView(View, LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -464,7 +450,7 @@ class UserNamespaceView(View, LoginRequiredMixin):
                 '$lt': end_dt
             }
             
-        task_df = self.client.get_tasks(
+        task_df = client.get_tasks(
             sieve=sieve, 
             select=['assignee', 'status', 'duration','metadata','closed','opened','namespace']
             )
