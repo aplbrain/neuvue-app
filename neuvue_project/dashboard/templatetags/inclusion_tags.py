@@ -43,3 +43,9 @@ def confirm_selected_segments_modal(number_of_selected_segments_expected):
 @register.inclusion_tag('modals/distribute_task_modal.html')
 def distribute_task_modal():
     return {}
+
+@register.inclusion_tag('reusable_components/instructions.html')
+def processed_instructions(instructions):
+    return {
+        "instructions": instructions
+    }

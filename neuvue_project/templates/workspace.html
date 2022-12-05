@@ -20,20 +20,8 @@
         <div id="neuVue-sidecontent" class="sidecontent">
             
             <! Instructions >
-            <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
-                <div class="sideContentTitle">
-                    Instructions
-                </div>
-                <div class="sideContentInfo">
-                    {{ instructions.prompt | linebreaksbr }}
-                    {% if instructions.media %} 
-                        <br>
-                        <div style="display:flex; justify-content: center; margin:1vh 0vh;">
-                            <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            {% processed_instructions instructions %}
+            
             <! Task Notes >
             <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
                 <div class="sideContentTitle">
