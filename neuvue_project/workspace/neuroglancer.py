@@ -57,6 +57,7 @@ def get_df_from_static(cave_client, table_name):
             file_name = os.path.split(file_path)[1]
             file_date = int(file_name.split('_')[0])
             if (datetime.fromtimestamp(file_date) - datetime.fromtimestamp(time.time())) < timedelta(days=settings.DAYS_UNTIL_EXPIRED):
+                logging.info(f'Using cached table for {table_name}.')
                 df = pd.read_pickle(file_path)
             else:
                 os.remove(file_path)
@@ -724,14 +725,14 @@ def construct_nuclei_state(given_ids: List):
     
     
     soma_df = get_df_from_static(cave_client, settings.NEURON_TABLE)
-    soma_df_of_selected_ids = soma_df[(soma_df.id.isin(given_ids))|(soma_df.pt_root_id.isin(given_ids))]
+    soma_df = soma_df[(soma_df.id.isin(given_ids))|(soma_df.pt_root_id.isin(given_ids))]
     
     # identify inputs that were not found in the table and format to display to user
-    ids_not_found = list(set(given_ids) - set().union(soma_df_of_selected_ids.id,soma_df_of_selected_ids.pt_root_id))
+    ids_not_found = list(set(given_ids) - set().union(soma_df.id,soma_df.pt_root_id))
     formatted_not_found_ids = ', '.join([str(id) for id in ids_not_found]) if len(ids_not_found) else ''
 
-    root_ids = soma_df_of_selected_ids['pt_root_id'].values
-    nuclei_points = np.array(soma_df_of_selected_ids['pt_position'].values)
+    root_ids = soma_df['pt_root_id'].values
+    nuclei_points = np.array(soma_df['pt_position'].values)
     position = nuclei_points[0] if len(nuclei_points) else [] # check what happens when bad values are returned -- add an error case
 
     if not len(root_ids):
@@ -769,7 +770,7 @@ def construct_nuclei_state(given_ids: List):
         return type_table, updated_soma_df
 
 
-    cell_type_table, soma_df = generate_cell_type_table(soma_df_of_selected_ids)
+    cell_type_table, soma_df = generate_cell_type_table(soma_df)
 
     for cell_type, type_df in soma_df.groupby('cell_type_y'):
         data_list.append(generate_point_df(np.array(type_df['pt_position_x'].values)))
