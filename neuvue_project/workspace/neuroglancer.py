@@ -727,8 +727,8 @@ def construct_nuclei_state(given_ids: List):
     ids_not_found = list(set(given_ids) - set().union(soma_df_of_selected_ids.id,soma_df_of_selected_ids.pt_root_id))
     formatted_not_found_ids = ', '.join([str(id) for id in ids_not_found]) if len(ids_not_found) else ''
 
-    root_ids = soma_df['pt_root_id'].values
-    nuclei_points = np.array(soma_df['pt_position'].values)
+    root_ids = soma_df_of_selected_ids['pt_root_id'].values
+    nuclei_points = np.array(soma_df_of_selected_ids['pt_position'].values)
     position = nuclei_points[0] if len(nuclei_points) else [] # check what happens when bad values are returned -- add an error case
 
     data_list = [None]
