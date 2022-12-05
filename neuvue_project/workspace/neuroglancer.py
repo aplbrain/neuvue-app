@@ -45,6 +45,9 @@ def get_df_from_static(cave_client, table_name):
         return df
     
     try:
+        if not os.path.exists(settings.CACHED_TABLES_PATH):
+            os.makedirs(settings.CACHED_TABLES_PATH)
+
         cached_tables = glob.glob(
             os.path.join(settings.CACHED_TABLES_PATH, '*_'+table_name+'.pkl')
         )
@@ -52,18 +55,18 @@ def get_df_from_static(cave_client, table_name):
         if len(cached_tables):
             file_path = cached_tables[0]
             file_name = os.path.split(file_path)[1]
-            file_date = int(file_name.replace('_'+table_name+'.pkl', '', 1))
+            file_date = int(file_name.split('_')[0])
             if (datetime.fromtimestamp(file_date) - datetime.fromtimestamp(time.time())) < timedelta(days=settings.DAYS_UNTIL_EXPIRED):
-                df = pd.read_pickle(cached_tables[0])
+                df = pd.read_pickle(file_path)
             else:
                 os.remove(file_path)
                 df = query_new_table(table_name)
         else:
             df = query_new_table(table_name)
         return df
-    except Exception as e: 
+    except Exception: 
         logger.error('Resource table cannot be queried.')
-        raise e
+        raise Exception(f'Table {table_name} unavailable.')
 
 def create_base_state(seg_ids, coordinate, namespace=None):
     """Generates a base state containing imagery and segmentation layers. 
@@ -730,6 +733,9 @@ def construct_nuclei_state(given_ids: List):
     root_ids = soma_df_of_selected_ids['pt_root_id'].values
     nuclei_points = np.array(soma_df_of_selected_ids['pt_position'].values)
     position = nuclei_points[0] if len(nuclei_points) else [] # check what happens when bad values are returned -- add an error case
+
+    if not len(root_ids):
+        raise Exception("ID is outdated or does not exist.")
 
     data_list = [None]
     base_state = create_base_state(root_ids, position)
