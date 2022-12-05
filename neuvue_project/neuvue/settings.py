@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'app.neuvue.io',
@@ -204,12 +204,16 @@ LOGOUT_REDIRECT_URL = '/'
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
 SANDBOX_ID = '6269888a101fc4da81fdd410'
-# NEUVUE_QUEUE_ADDR = "http://localhost:9005"
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True
 }
-NUCLEUS_NUERON_SVM = 'nucleus_neuron_svm'
-CELL_CLASS_MODEL = 'allen_soma_coarse_cell_class_model_v2'
+
+# Annotation Tables
+NEURON_TABLE = 'nucleus_neuron_svm'
+CELL_CLASS_TABLE = 'allen_soma_coarse_cell_class_model_v2'
+DAYS_UNTIL_EXPIRED = 3
+CACHED_TABLES_PATH = os.path.join(STATIC_ROOT, "tables")
+
 # Task Timeout in Seconds
 TIMEOUT = 900
 

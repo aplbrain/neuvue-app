@@ -1,20 +1,20 @@
-from django.conf import settings
-from django.apps import apps
-import pandas as pd
-import numpy as np
-from caveclient import CAVEclient
-from typing import List
-from datetime import datetime, timedelta
 import time
 import json
 import glob
+import random
+import logging
+from typing import List
+from datetime import datetime, timedelta
+
+from django.conf import settings
+from django.apps import apps
+
 import requests
 import os
 import backoff
-import random
-from .models import ImageChoices, PcgChoices
-
-
+import pandas as pd
+import numpy as np
+from caveclient import CAVEclient
 from nglui.statebuilder import (
     ImageLayerConfig, 
     SegmentationLayerConfig, 
@@ -25,36 +25,45 @@ from nglui.statebuilder import (
     ChainedStateBuilder
     )
 
-from .models import Namespace, NeuroglancerLinkType, PcgChoices
+from .models import Namespace, NeuroglancerLinkType, PcgChoices, ImageChoices
 
-import logging
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 Config = apps.get_model('preferences', 'Config')
 
 
-def get_df_from_static(cave_client, table_name, refresh_timedelta = timedelta(days=3)):
+def get_df_from_static(cave_client, table_name):
+    
+    @backoff.on_exception(backoff.expo, Exception, max_tries=3)
     def query_new_table(table_name):
+        logging.info(f'Downloading new table for {table_name}.')
         df = cave_client.materialize.query_table(table_name)
-        df.to_pickle(settings.STATIC_ROOT+'/'+str(round(time.time()))+'_' + table_name+'.pkl')
+        fn = str(round(time.time()))+ '_' + table_name+'.pkl'
+        df.to_pickle(os.path.join(settings.CACHED_TABLES_PATH, fn))
         return df
+    
     try:
-        cached_tables = glob.glob(settings.STATIC_ROOT+'/*_'+table_name+'.pkl')
+        cached_tables = glob.glob(
+            os.path.join(settings.CACHED_TABLES_PATH, '*_'+table_name+'.pkl')
+        )
         # filter to table of interest
         if len(cached_tables):
-            file_name = cached_tables[0]
-            file_date = int(file_name.replace(settings.STATIC_ROOT+'/','',1).replace('_'+table_name+'.pkl','',1))
-            if (datetime.fromtimestamp(file_date) - datetime.fromtimestamp(time.time())) < refresh_timedelta:
+            file_path = cached_tables[0]
+            file_name = os.path.split(file_path)[1]
+            file_date = int(file_name.replace('_'+table_name+'.pkl', '', 1))
+            if (datetime.fromtimestamp(file_date) - datetime.fromtimestamp(time.time())) < timedelta(days=settings.DAYS_UNTIL_EXPIRED):
                 df = pd.read_pickle(cached_tables[0])
             else:
-                os.remove(file_name)
+                os.remove(file_path)
                 df = query_new_table(table_name)
         else:
             df = query_new_table(table_name)
         return df
-    except: 
+    except Exception as e: 
         logger.error('Resource table cannot be queried.')
+        raise e
 
 def create_base_state(seg_ids, coordinate, namespace=None):
     """Generates a base state containing imagery and segmentation layers. 
@@ -348,11 +357,11 @@ def _get_soma_center(root_ids: List, cave_client):
         array: array for the position of the soma
     """
     try:
-        soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
+        soma_df = cave_client.materialize.query_table(settings.NEURON_TABLE, filter_in_dict={
             'pt_root_id': root_ids[:3]
         })
         if not len(soma_df):
-            soma_df = cave_client.materialize.query_table(settings.NUCLEUS_NUERON_SVM, filter_in_dict={
+            soma_df = cave_client.materialize.query_table(settings.NEURON_TABLE, filter_in_dict={
             'pt_root_id': root_ids
             })
         if len(soma_df) > 3:
@@ -710,7 +719,8 @@ def construct_nuclei_state(given_ids: List):
     given_ids = [int(x) for x in given_ids]
     cave_client = CAVEclient('minnie65_phase3_v1', auth_token=os.environ['CAVECLIENT_TOKEN'])
     
-    soma_df = get_df_from_static(cave_client, settings.NUCLEUS_NUERON_SVM)
+    
+    soma_df = get_df_from_static(cave_client, settings.NEURON_TABLE)
     soma_df_of_selected_ids = soma_df[(soma_df.id.isin(given_ids))|(soma_df.pt_root_id.isin(given_ids))]
     
     # identify inputs that were not found in the table and format to display to user
@@ -737,7 +747,7 @@ def construct_nuclei_state(given_ids: List):
             cell_type = filtered_row.cell_type.values[0] if len(filtered_row) else "NaN"
             return cell_type
 
-        cell_class_info_df = get_df_from_static(cave_client, settings.CELL_CLASS_MODEL)
+        cell_class_info_df = get_df_from_static(cave_client, settings.CELL_CLASS_TABLE)
         cell_class_info_df = cell_class_info_df[cell_class_info_df.id.isin(soma_df.id.values)]
 
 
