@@ -1,64 +1,134 @@
-<div id="confirmDistributeTasks" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark">Confirm Distribute</h5>
-                <button type="button" class="btn-close" id="btnSelectedSegmentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-dark">
-                <div>You are about to distribute <b class="n_tasks"> </b> task(s) to each of the <b class="n_assignees"> </b> members of 
-                    <b class="assignee_group"> </b> from the <b class="unassigned_group"></b> bin</div>
-                <div>Are you sure you want to distribute these tasks?</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnDistributeTasksClose" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="flag-submit btn btn-primary" id="btnDistributeTasksSubmit" form="taskPatchForm" onClick="triggerLoadingSpinner('distribute-modal-spinner')">Submit</button>
-            </div>
+<div
+  id="confirmDistributeTasks"
+  class="modal"
+  name="flag"
+  tabindex="-1"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark">Confirm Distribute</h5>
+        <button
+          type="button"
+          class="btn-close"
+          id="btnSelectedSegmentsClose"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-dark">
+        <div>
+          You are about to distribute <b class="n_tasks"> </b> task(s) to each
+          of the <b class="n_assignees"> </b> members of
+          <b class="assignee_group"> </b> from the
+          <b class="unassigned_group"></b> bin
         </div>
+        <div>Are you sure you want to distribute these tasks?</div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="btnDistributeTasksClose"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button
+          type="submit"
+          class="flag-submit btn btn-primary"
+          id="btnDistributeTasksSubmit"
+          form="taskPatchForm"
+          onClick="triggerLoadingSpinner('distribute-modal-spinner')"
+        >
+          Submit
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
-<div id="alertInsufficientTasks" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark">Insufficient Number Of Tasks to Distribute</h5>
-                <button type="button" class="btn-close" id="btnSelectedSegmentsClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-dark">
-                <div>There are not enough pending tasks in <b class="unassigned_group"> </b> to distribute <b class="n_tasks"> </b> task(s) to each of the 
-                    <b class="n_assignees"> </b> members of <b class="assignee_group"> </b>
-                <div>Please retry with valid values or add more tasks.</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnDistributeTasksClose" data-bs-dismiss="modal">Close</button>
-            </div>
+<div
+  id="alertInsufficientTasks"
+  class="modal"
+  name="flag"
+  tabindex="-1"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark">
+          Insufficient Number Of Tasks to Distribute
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          id="btnSelectedSegmentsClose"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-dark">
+        <div>
+          There are not enough pending tasks in
+          <b class="unassigned_group"> </b> to distribute
+          <b class="n_tasks"> </b> task(s) to each of the
+          <b class="n_assignees"> </b> members of
+          <b class="assignee_group"> </b>
+          <div>Please retry with valid values or add more tasks.</div>
         </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            id="btnDistributeTasksClose"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<script type="text/javascript"> 
-    function showConfirmDistributeTasksModal(n_tasks, unassigned_group, assignee_group,  user_table, user_group_count_dict) {
-
-        let n_assignees = user_group_count_dict[assignee_group];
-        for (let row of user_table){
-          if (row.username == unassigned_group){
-            var n_pending = row.pending;
-          }
+  <script type="text/javascript">
+    function showConfirmDistributeTasksModal(
+      n_tasks,
+      unassigned_group,
+      assignee_group,
+      user_table,
+      user_group_count_dict
+    ) {
+      let n_assignees = user_group_count_dict[assignee_group];
+      for (let row of user_table) {
+        if (row.username == unassigned_group) {
+          var n_pending = row.pending;
         }
-        $('.n_tasks').each(function(){$(this).text(n_tasks)});
-        $('.n_assignees').each(function(){$(this).text(n_assignees)});
-        $('.assignee_group').each(function(){$(this).text(assignee_group)});
-        $('.unassigned_group').each(function(){$(this).text(unassigned_group)});
+      }
+      $(".n_tasks").each(function () {
+        $(this).text(n_tasks);
+      });
+      $(".n_assignees").each(function () {
+        $(this).text(n_assignees);
+      });
+      $(".assignee_group").each(function () {
+        $(this).text(assignee_group);
+      });
+      $(".unassigned_group").each(function () {
+        $(this).text(unassigned_group);
+      });
 
-        if ((n_tasks*n_assignees) < n_pending) {
-            document.getElementById("btnDistributeTasksSubmit").onclick = function() {
-                triggerLoadingSpinner('btnDistributeTasksSubmit');
-            };
-            $('#confirmDistributeTasks').modal('show');
-        } else {
-            $("#alertInsufficientTasks").modal('show');
-        }
-        
+      if (n_tasks * n_assignees < n_pending) {
+        document.getElementById("btnDistributeTasksSubmit").onclick =
+          function () {
+            triggerLoadingSpinner("btnDistributeTasksSubmit");
+          };
+        $("#confirmDistributeTasks").modal("show");
+      } else {
+        $("#alertInsufficientTasks").modal("show");
+      }
     }
-</script>
+  </script>
+</div>

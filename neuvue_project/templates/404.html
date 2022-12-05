@@ -1,165 +1,160 @@
-{% extends "base.html" %}
-{% load static %}
-
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
 
 <script type="text/javascript">
-    var address_to_model = "{% static 'mesh/axolotl2.glb' %}";
+  var address_to_model = "{% static 'mesh/axolotl2.glb' %}";
 </script>
 
 <div class="container">
-    <p class='text'> Just keep swimming, this page doesn't exist</p>
-    <div class='main' id='main'></div>
+  <p class="text">Just keep swimming, this page doesn't exist</p>
+  <div class="main" id="main"></div>
 </div>
 
 <script type="module">
-    import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/build/three.module.js';
-    import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/loaders/GLTFLoader.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
-    import { EffectComposer } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/RenderPass.js';
-    import { OutlinePass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/OutlinePass.js';
-    import { ShaderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/ShaderPass.js';
-    import { FXAAShader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/shaders/FXAAShader.js';
+  import * as THREE from "https://threejsfundamentals.org/threejs/resources/threejs/r127/build/three.module.js";
+  import { GLTFLoader } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/loaders/GLTFLoader.js";
+  import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
+  import { EffectComposer } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/EffectComposer.js";
+  import { RenderPass } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/RenderPass.js";
+  import { OutlinePass } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/OutlinePass.js";
+  import { ShaderPass } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/postprocessing/ShaderPass.js";
+  import { FXAAShader } from "https://threejsfundamentals.org/threejs/resources/threejs/r127/examples/jsm/shaders/FXAAShader.js";
 
+  var renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+  });
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  var clock = new THREE.Clock();
 
+  document.getElementById("main").appendChild(renderer.domElement);
 
+  window.addEventListener(
+    "resize",
+    () => {
+      OnWindowResize();
+    },
+    false
+  );
 
-    var renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
+  const fov = 60;
+  const aspect = 1920 / 1080;
+  const near = 0.1;
+  const far = 1000.0;
+  var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.set(75, 20, 0);
+
+  var scene = new THREE.Scene();
+
+  let light = new THREE.DirectionalLight(0xffffff, 0.9);
+  light.position.set(20, 100, 10);
+  light.target.position.set(0, 0, 0);
+  light.castShadow = true;
+  light.shadow.bias = -0.001;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = 500.0;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 500.0;
+  light.shadow.camera.left = 100;
+  light.shadow.camera.right = -100;
+  light.shadow.camera.top = 100;
+  light.shadow.camera.bottom = -100;
+  scene.add(light);
+
+  var raycaster = new THREE.Raycaster();
+  var mouse = new THREE.Vector2();
+
+  let light2 = new THREE.AmbientLight(0xffffff, 3.0);
+  scene.add(light2);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 20, 0);
+  controls.update();
+  const lightPurple = new THREE.MeshToonMaterial({ color: 0x67547a });
+  const darkPurple = new THREE.MeshToonMaterial({ color: 0x371e50 });
+
+  let mixer;
+  var loader = new GLTFLoader();
+  var model;
+
+  animate();
+
+  loader.load(address_to_model, function (glb) {
+    model = glb.scene;
+
+    model.scale.multiplyScalar(20);
+
+    model.traverse(function (child) {
+      if (child instanceof THREE.Mesh) {
+        var newMat = new THREE.MeshToonMaterial();
+        newMat.color = child.material.color;
+        child.material = newMat;
+        child.material.skinning = true;
+
+        child.castShadow = true;
+        child.frustumCulled = false;
+      }
     });
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setPixelRatio(window.devicePixelRatio);
+
+    mixer = new THREE.AnimationMixer(model);
+    var clip1 = glb.animations[0];
+    var action1 = mixer.clipAction(clip1);
+
+    action1.play();
+    scene.add(model);
+  });
+
+  //ANIMATE
+  function animate() {
+    requestAnimationFrame(animate);
+
+    if (mixer) mixer.update(clock.getDelta());
+    renderer.render(scene, camera);
+  }
+
+  function OnWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    var clock = new THREE.Clock();
-
-    document.getElementById("main").appendChild(renderer.domElement);
-
-    window.addEventListener('resize', () => {
-        OnWindowResize();
-    }, false);
-
-    const fov = 60;
-    const aspect = 1920 / 1080;
-    const near = 0.1;
-    const far = 1000.0;
-    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(75, 20, 0);
-
-    var scene = new THREE.Scene();
-
-    let light = new THREE.DirectionalLight(0xFFFFFF, .9);
-    light.position.set(20, 100, 10);
-    light.target.position.set(0, 0, 0);
-    light.castShadow = true;
-    light.shadow.bias = -0.001;
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
-    light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 500.0;
-    light.shadow.camera.near = 0.5;
-    light.shadow.camera.far = 500.0;
-    light.shadow.camera.left = 100;
-    light.shadow.camera.right = -100;
-    light.shadow.camera.top = 100;
-    light.shadow.camera.bottom = -100;
-    scene.add(light);
-
-    var raycaster = new THREE.Raycaster();
-    var mouse = new THREE.Vector2();
-
-
-    let light2 = new THREE.AmbientLight(0xFFFFFF, 3.0);
-    scene.add(light2);
-
-    const controls = new OrbitControls(
-        camera, renderer.domElement
-    );
-    controls.target.set(0, 20, 0);
-    controls.update();
-    const lightPurple = new THREE.MeshToonMaterial({ color: 0x67547A })
-    const darkPurple = new THREE.MeshToonMaterial({ color: 0x371E50 })
-
-    let mixer;
-    var loader = new GLTFLoader();
-    var model;
-
-    animate();
-
-    loader.load(address_to_model, function (glb) {
-        model = glb.scene;
-
-        model.scale.multiplyScalar(20);
-
-        model.traverse(function (child) {
-            if (child instanceof THREE.Mesh) {
-                var newMat = new THREE.MeshToonMaterial()
-                newMat.color = child.material.color;
-                child.material = newMat;
-                child.material.skinning = true
-
-                child.castShadow = true;
-                child.frustumCulled = false;
-            }
-        })
-
-        mixer = new THREE.AnimationMixer(model);
-        var clip1 = glb.animations[0];
-        var action1 = mixer.clipAction(clip1);
-
-        action1.play();
-        scene.add(model)
-
-    })
-
-    //ANIMATE
-    function animate() {
-        requestAnimationFrame(animate);
-
-        if (mixer) mixer.update(clock.getDelta());
-        renderer.render(scene, camera);
-    }
-
-
-    function OnWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+  }
 </script>
 
 <style>
-    .container {
-        display: flex;
-        width: 100%;
-        position: relative;
-        margin: auto;
-        top: 50%;
-        align-items: center;
-        flex-direction: column;
-        gap: .5%;
-    }
-    .main {
-        width: 25%;
-        position: relative;
-        order: 2;
-        transform:translateY(-20%);
-        margin-right: 74vw;
-    }
+  .container {
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin: auto;
+    top: 50%;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5%;
+  }
+  .main {
+    width: 25%;
+    position: relative;
+    order: 2;
+    transform: translateY(-20%);
+    margin-right: 74vw;
+  }
 
-    .text {
-        font-size: 3vw;
-        width: 100%;
-        margin-left: 30%;
-        transform:translateY(15vh);
-        position: relative;
-        order: 1;
-        color:aliceblue;
-    }
-    canvas { outline: none; border: none; }
+  .text {
+    font-size: 3vw;
+    width: 100%;
+    margin-left: 30%;
+    transform: translateY(15vh);
+    position: relative;
+    order: 1;
+    color: aliceblue;
+  }
+  canvas {
+    outline: none;
+    border: none;
+  }
 </style>
 
 {% endblock %}
