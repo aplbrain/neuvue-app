@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 
 class InspectTaskView(View):
-
     def get(self, request, task_id=None, *args, **kwargs):
         if task_id in settings.STATIC_NG_FILES:
             return redirect(
@@ -207,35 +206,41 @@ class SynapseView(View):
 class NucleiView(View):
     def get(self, request, given_ids=None, *args, **kwargs):
         if not is_authorized(request.user):
-            logging.warning(f'Unauthorized requests from {request.user}.')
-            return redirect(reverse('index'))
+            logging.warning(f"Unauthorized requests from {request.user}.")
+            return redirect(reverse("index"))
 
         if given_ids in settings.STATIC_NG_FILES:
-            return redirect(f'/static/workspace/{given_ids}', content_type='application/javascript')
+            return redirect(
+                f"/static/workspace/{given_ids}", content_type="application/javascript"
+            )
 
-        context = {
-            "given_ids": None,
-            "error": None
-        }
+        context = {"given_ids": None, "error": None}
 
         if given_ids is None:
             return render(request, "nuclei.html", context)
 
-        given_ids = [x.strip() for x in given_ids.split(',')]
+        given_ids = [x.strip() for x in given_ids.split(",")]
 
         try:
-            context['given_ids'] = given_ids
-            context['ng_state'], context['cell_types'], context['ids_not_found'] = construct_nuclei_state(given_ids=given_ids)
-        except Exception as e: 
-            context['error'] = e
+            context["given_ids"] = given_ids
+            (
+                context["ng_state"],
+                context["cell_types"],
+                context["ids_not_found"],
+            ) = construct_nuclei_state(given_ids=given_ids)
+        except Exception as e:
+            context["error"] = e
 
         return render(request, "nuclei.html", context)
-
 
     def post(self, request, *args, **kwargs):
         given_ids = request.POST.get("given_ids")
 
-        return redirect(reverse('nuclei', kwargs={
-            "given_ids": given_ids,
-        }))
-
+        return redirect(
+            reverse(
+                "nuclei",
+                kwargs={
+                    "given_ids": given_ids,
+                },
+            )
+        )

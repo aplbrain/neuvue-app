@@ -7,19 +7,26 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Config',
+            name="Config",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.CharField(default=None, max_length=50)),
-                ('enabled', models.BooleanField(default=False)),
-                ('alpha_selected', models.CharField(default='0.85', max_length=10)),
-                ('alpha_3d', models.CharField(default='0.5', max_length=10)),
-                ('layout', models.CharField(default='xy-3d', max_length=10)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("user", models.CharField(default=None, max_length=50)),
+                ("enabled", models.BooleanField(default=False)),
+                ("alpha_selected", models.CharField(default="0.85", max_length=10)),
+                ("alpha_3d", models.CharField(default="0.5", max_length=10)),
+                ("layout", models.CharField(default="xy-3d", max_length=10)),
             ],
         ),
     ]

@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0001_initial'),
+        ("preferences", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='chunk_requests',
-            field=models.CharField(default='32', max_length=10),
+            model_name="config",
+            name="chunk_requests",
+            field=models.CharField(default="32", max_length=10),
         ),
         migrations.AddField(
-            model_name='config',
-            name='gpu_limit',
-            field=models.CharField(default='1.0', max_length=10),
+            model_name="config",
+            name="gpu_limit",
+            field=models.CharField(default="1.0", max_length=10),
         ),
         migrations.AddField(
-            model_name='config',
-            name='sys_limit',
-            field=models.CharField(default='2.0', max_length=10),
+            model_name="config",
+            name="sys_limit",
+            field=models.CharField(default="2.0", max_length=10),
         ),
     ]
