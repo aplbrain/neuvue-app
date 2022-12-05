@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from ..models import Namespace, UserProfile
 
-from neuvueclient import NeuvueQueue
+from neuvue.client import client
 
 from ..analytics import create_stats_table
 from ..utils import utc_to_eastern, is_member, is_authorized
@@ -22,11 +22,6 @@ logger = logging.getLogger(__name__)
 
 
 class TaskView(LoginRequiredMixin, View):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(
-            settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS
-        )
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         context = {}
@@ -87,7 +82,7 @@ class TaskView(LoginRequiredMixin, View):
             logging.warning(f"Unauthorized requests from {request.user}.")
             return redirect(reverse("index"))
 
-        pending_tasks = self.client.get_tasks(
+        pending_tasks = client.get_tasks(
             sieve={"status": ["open", "pending"], "assignee": str(request.user)},
             select=[
                 "seg_id",
@@ -100,7 +95,7 @@ class TaskView(LoginRequiredMixin, View):
             ],
         )
 
-        closed_tasks = self.client.get_tasks(
+        closed_tasks = client.get_tasks(
             sieve={
                 "status": ["closed", "errored"],
                 "assignee": str(request.user),
@@ -264,7 +259,7 @@ class TaskView(LoginRequiredMixin, View):
                 # get all the users tasks in this namespace
                 # run through all of them to see if they have been skipped
                 # if they've been skipped, reassign to the correct group with the appropriate priority
-                tasks = self.client.get_tasks(
+                tasks = client.get_tasks(
                     sieve={
                         "assignee": username,
                         "namespace": namespace,
@@ -284,7 +279,7 @@ class TaskView(LoginRequiredMixin, View):
                         metadata[skipped_keyword] > 0
                     ):
                         original_priority = row["priority"] + metadata[skipped_keyword]
-                        self.client.patch_task(
+                        client.patch_task(
                             row["task_id"],
                             assignee=group_to_push_to,
                             status="pending",
@@ -301,7 +296,7 @@ class TaskView(LoginRequiredMixin, View):
 
         else:
             # Get x unassigned tasks to assign. Return if none
-            unassigned_tasks = self.client.get_tasks(
+            unassigned_tasks = client.get_tasks(
                 sieve={"assignee": group_to_pull_from, "namespace": namespace},
                 limit=num_tasks,
                 select=["_id"],
@@ -314,7 +309,7 @@ class TaskView(LoginRequiredMixin, View):
                 )
 
             # Get tasks currently assigned to user to make sure we don't exceed the limit
-            assigned_tasks = self.client.get_tasks(
+            assigned_tasks = client.get_tasks(
                 sieve={
                     "assignee": username,
                     "namespace": namespace,
@@ -328,6 +323,6 @@ class TaskView(LoginRequiredMixin, View):
             # Assign the tasks
             ids = unassigned_tasks.index.tolist()
             for id in ids:
-                self.client.patch_task(id, assignee=username)
+                client.patch_task(id, assignee=username)
 
             return HttpResponse()

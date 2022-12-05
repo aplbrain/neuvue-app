@@ -7,7 +7,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from neuvueclient import NeuvueQueue
+from neuvue.client import client
 
 from ..models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton
 from ..neuroglancer import (
@@ -28,11 +28,6 @@ Config = apps.get_model("preferences", "Config")
 
 
 class WorkspaceView(LoginRequiredMixin, View):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(
-            settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS
-        )
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, namespace=None, **kwargs):
         # TODO:
@@ -109,7 +104,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = self.client.get_next_task(str(request.user), namespace)
+        task_df = client.get_next_task(str(request.user), namespace)
 
         if not task_df:
             context["tasks_available"] = False
@@ -117,7 +112,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         else:
             if task_df["status"] == "pending":
 
-                self.client.patch_task(
+                client.patch_task(
                     task_df["_id"],
                     status="open",
                     overwrite_opened=not task_df.get("opened"),
@@ -163,7 +158,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             else:
                 # Manually get the points for now, populate in client later.
                 points = [
-                    self.client.get_point(x)["coordinate"] for x in task_df["points"]
+                    client.get_point(x)["coordinate"] for x in task_df["points"]
                 ]
                 context["ng_state"] = construct_proofreading_state(
                     task_df, points, return_as="json"
@@ -214,7 +209,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         namespace_obj = Namespace.objects.get(namespace=namespace)
 
         # Current task that is opened in this namespace.
-        task_df = self.client.get_next_task(str(request.user), namespace)
+        task_df = client.get_next_task(str(request.user), namespace)
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
@@ -258,7 +253,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info("Submitting task")
             request.session["session_task_count"] = session_task_count + 1
             # Update task data
-            self.client.patch_task(
+            client.patch_task(
                 task_df["_id"],
                 duration=duration,
                 status="closed",
@@ -268,14 +263,14 @@ class WorkspaceView(LoginRequiredMixin, View):
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
-                self.client.post_differ_stack(task_df["_id"], ng_differ_stack)
+                client.post_differ_stack(task_df["_id"], ng_differ_stack)
 
         elif button in [x.submission_value for x in forced_choice_buttons]:
             logger.info("Submitting task")
             request.session["session_task_count"] = session_task_count + 1
             metadata["decision"] = button
             # Update task data
-            self.client.patch_task(
+            client.patch_task(
                 task_df["_id"],
                 duration=duration,
                 status="closed",
@@ -285,7 +280,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
-                self.client.post_differ_stack(task_df["_id"], ng_differ_stack)
+                client.post_differ_stack(task_df["_id"], ng_differ_stack)
 
         elif button == "skip":
             logger.info("Skipping task")
@@ -299,7 +294,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata["skipped"] = 1
 
             try:
-                self.client.patch_task(
+                client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     priority=task_df["priority"] - 1,
@@ -310,13 +305,13 @@ class WorkspaceView(LoginRequiredMixin, View):
                 )
                 # Add new differ stack entry
                 if ng_differ_stack != []:
-                    self.client.post_differ_stack(task_df["_id"], ng_differ_stack)
+                    client.post_differ_stack(task_df["_id"], ng_differ_stack)
             except Exception:
                 logging.warning(
                     f'Unable to lower priority for current task: {task_df["_id"]}'
                 )
                 logging.warning(f"This task has reached the maximum number of skips.")
-                self.client.patch_task(
+                client.patch_task(
                     task_df["_id"],
                     duration=duration,
                     status="pending",
@@ -336,7 +331,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             request.session["session_task_count"] = session_task_count + 1
 
             # Update task data
-            self.client.patch_task(
+            client.patch_task(
                 task_df["_id"],
                 duration=duration,
                 status="errored",
@@ -346,7 +341,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
-                self.client.post_differ_stack(task_df["_id"], ng_differ_stack)
+                client.post_differ_stack(task_df["_id"], ng_differ_stack)
         elif button == "remove":
             # get user profile object
             userProfile = UserProfile.objects.get(user=request.user)
@@ -377,7 +372,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             if "skipped" in task_metadata.keys():
                 num_skipped = task_metadata["skipped"]
 
-            self.client.patch_task(
+            client.patch_task(
                 task_df["_id"],
                 assignee=new_assignee,
                 status="pending",
@@ -390,12 +385,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             if not task_df:
                 logging.warning("Cannot start task, no tasks available.")
             else:
-                self.client.patch_task(task_df["_id"], status="open")
+                client.patch_task(task_df["_id"], status="open")
 
         elif button == "stop":
             logger.info("Stopping proofreading app")
             # Update task data
-            self.client.patch_task(
+            client.patch_task(
                 task_df["_id"],
                 duration=duration,
                 ng_state=ng_state,
@@ -404,7 +399,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
-                self.client.post_differ_stack(task_df["_id"], ng_differ_stack)
+                client.post_differ_stack(task_df["_id"], ng_differ_stack)
             return redirect(reverse("tasks"))
 
         return redirect(reverse("workspace", args=[namespace]))

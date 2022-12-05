@@ -3,7 +3,7 @@ import logging
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
-from neuvueclient import NeuvueQueue
+from neuvue.client import client
 
 from ..models import Namespace
 from ..neuroglancer import (
@@ -24,11 +24,6 @@ logger = logging.getLogger(__name__)
 
 
 class InspectTaskView(View):
-    def dispatch(self, request, *args, **kwargs):
-        self.client = NeuvueQueue(
-            settings.NEUVUE_QUEUE_ADDR, **settings.NEUVUE_CLIENT_SETTINGS
-        )
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, task_id=None, *args, **kwargs):
         if task_id in settings.STATIC_NG_FILES:
@@ -46,7 +41,7 @@ class InspectTaskView(View):
             return render(request, "inspect.html", context)
 
         try:
-            task_df = self.client.get_task(task_id)
+            task_df = client.get_task(task_id)
         except Exception as e:
             context["error"] = e
             return render(request, "inspect.html", context)
@@ -65,7 +60,7 @@ class InspectTaskView(View):
 
         else:
             # Manually get the points for now, populate in client later.
-            points = [self.client.get_point(x)["coordinate"] for x in task_df["points"]]
+            points = [client.get_point(x)["coordinate"] for x in task_df["points"]]
             context["ng_state"] = construct_proofreading_state(
                 task_df, points, return_as="json"
             )
