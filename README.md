@@ -11,13 +11,29 @@ Clone this repository recursively so that the neuvue-client submodule will also 
 git clone https://github.com/aplbrain/neuvue-app.git --recursive
 ```
 
-Create a python3 virtual environment and install the requirements in neuvue_project/requirements.txt. 
+Create a python3 virtual environment and install the requirements in neuvue_project/requirements.txt.
 
 ```shell
 python3 -m venv venv
 source  venv/bin/activate
 cd neuvue_project
 pip install -r requirements.txt
+```
+
+## Development Installation
+
+Install developer python requirements and set up pre-commit enviroment.
+
+```
+source  venv/bin/activate
+pip install -r requirements-dev.txt
+pre-commit install
+```
+
+Once changes are staged. Run pre-commit to automatically remove trailing whitespaces, check YAML files, and run black formatting on all python files.
+
+```
+pre-commit
 ```
 
 ## (Optional) Compiling the neuroglancer project
@@ -43,7 +59,7 @@ Requirements: [nvm](https://github.com/nvm-sh/nvm)
 	npm i
 	npm link neuroglancer
 	npm run build
-	``` 
+	```
 3. Copy the built files to static
 	```
 	cd neuvue_project/workspace/static/ts/wrapper
@@ -52,7 +68,7 @@ Requirements: [nvm](https://github.com/nvm-sh/nvm)
 
 ## Running a development environment
 
-There is an included `neuvueDB.sqlite3` database file containing the tables needed to run the Django app. By default, the settings are configured for production which uses a cloud-enabled MySQL database server. To enable development mode: 
+There is an included `neuvueDB.sqlite3` database file containing the tables needed to run the Django app. By default, the settings are configured for production which uses a cloud-enabled MySQL database server. To enable development mode:
 
 Run the following convenience script:
 ```
@@ -63,9 +79,9 @@ Or perform each step individually:
 
 1. Open `neuvue_project/neuvue/settings.py` and set `DEBUG=True`
 
-2. In the same file, modify `NEUVUE_QUEUE_ADDR` variable to the Nuevue-Queue endpoint you would like to use. 
+2. In the same file, modify `NEUVUE_QUEUE_ADDR` variable to the Nuevue-Queue endpoint you would like to use.
 
-3. Get the recent migrations to the database by running 
+3. Get the recent migrations to the database by running
 
 	`python manage.py migrate`
 
@@ -77,11 +93,11 @@ Or perform each step individually:
 
 	`python manage.py collectstatic --no-input`
 
-6. Run the app with the `runserver` command to start a development instance. Run on the localhost:8000 address and port to allow OAuth client to properly authenticate user. 
+6. Run the app with the `runserver` command to start a development instance. Run on the localhost:8000 address and port to allow OAuth client to properly authenticate user.
 
 	`python manage.py runserver localhost:8000`
 
-7. Open your app on http://localhost:8000 
+7. Open your app on http://localhost:8000
 
 
 ## OAuth Set-up
@@ -92,7 +108,7 @@ We use `django-allauth` to connect Google OAuth to the Django environment. Users
 
 http://localhost:8000/accounts/login/
 
-Django users, OAuth settings, and site configuration can be modified in the admin console. 
+Django users, OAuth settings, and site configuration can be modified in the admin console.
 
 http://localhost:8000/admin
 
