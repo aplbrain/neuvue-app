@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.7.2",
+            "update_date":"December 6th, 2022",
+            "update_description": "Adds ability to input root IDs in nuclei viewer. Updates to instructions panel."
+        },
+        {
             "update_name": "v1.7.1",
             "update_date":"November 21st, 2022",
             "update_description": "New nuclei viewer. Bug fixes with flagging tasks. Redesigned tags widget."
