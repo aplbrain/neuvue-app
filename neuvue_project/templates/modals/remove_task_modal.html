@@ -1,43 +1,15 @@
 <!-- Remove task Modal -->
-<div
-  id="removeModal"
-  class="modal"
-  name="remove"
-  tabindex="-1"
-  data-bs-backdrop="static"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-dark" style="text-align: center">
-          Are you sure you want to remove this task from your queue?
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          id="btnRemoveClose"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          id="btnRemoveClose"
-          data-bs-dismiss="modal"
-        >
-          No
-        </button>
-        <button
-          type="button"
-          class="remove-yes btn btn-primary"
-          id="btnRemoveSubmit"
-          onclick="triggerLoadingSpinner('btnRemoveSubmit')"
-        >
-          Yes
-        </button>
-      </div>
+<div id="removeModal" class="modal" name="remove" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" style="text-align: center;">Are you sure you want to remove this task from your queue?</h5>
+                <button type="button" class="btn-close" id="btnRemoveClose" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
+                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="triggerLoadingSpinner('btnRemoveSubmit')" >Yes</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+</div> 

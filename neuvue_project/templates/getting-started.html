@@ -1,78 +1,56 @@
-{% extends "base.html" %} {% load static %} {% load socialaccount %} {% block
-header_includes %}
-<link rel="stylesheet" href="{% static 'css/tasks.css' %}" />
-{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block header_includes %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+{% endblock %}
+
+
+{% block content %}
 <div class="basic workspace">
-  <div class="d-flex justify-content-center">
-    <div class="container-and-tabs">
-      <div class="getting-started-container">
-        <div class="getting-started-content">
-          {{ getting_started_text|safe }}
+    <div class="d-flex justify-content-center">
+        <div class="container-and-tabs">
+            <div class="getting-started-container" >
+                <div class="getting-started-content" >
+                    {{ getting_started_text|safe }}
+                </div>
+            </div>
+            <div id="tabContainer" class="tab-holder">
+            </div>
         </div>
-      </div>
-      <div id="tabContainer" class="tab-holder"></div>
     </div>
-  </div>
 </div>
 
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"
-></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script>
-  // get all headers
-  var headers = document.querySelectorAll("h1, h2, h3");
-  // make a tab for them
-  // Index tab scrolls to top of the information div
-  var tabItems =
-    "<button class='tab-item tab-header' onclick='scrolling(0,1)'>Index</button><br>";
-  for (var i = 0; i < headers.length; i++) {
-    var header = headers[i].innerHTML;
-    if (headers[i].localName == "h1") {
-      tabItems +=
-        `<button class="tab-item" onclick="scrolling(` +
-        i +
-        `)">` +
-        header +
-        `</button><br>`;
-    } else if (headers[i].localName == "h2") {
-      tabItems +=
-        `<button class="tab-item sub-h2" onclick="scrolling(` +
-        i +
-        `)">` +
-        header +
-        `</button><br>`;
-    } else {
-      tabItems +=
-        `<button class="tab-item sub-h3" onclick="scrolling(` +
-        i +
-        `)">` +
-        header +
-        `</button><br>`;
+    // get all headers
+    var headers = document.querySelectorAll("h1, h2, h3");
+    // make a tab for them
+    // Index tab scrolls to top of the information div
+    var tabItems = "<button class='tab-item tab-header' onclick='scrolling(0,1)'>Index</button><br>";
+    for (var i=0;i< headers.length;i++){
+        var header = headers[i].innerHTML;
+        if (headers[i].localName == "h1") {
+            tabItems += `<button class="tab-item" onclick="scrolling(`+i+`)">`+header+`</button><br>`;
+        } else if (headers[i].localName == "h2") {
+            tabItems += `<button class="tab-item sub-h2" onclick="scrolling(`+i+`)">`+header+`</button><br>`;
+        } else {
+            tabItems += `<button class="tab-item sub-h3" onclick="scrolling(`+i+`)">`+header+`</button><br>`;
+        }
     }
-  }
-  var tabContainer = document.getElementById("tabContainer");
-  tabContainer.innerHTML = tabItems;
+    var tabContainer = document.getElementById("tabContainer");
+    tabContainer.innerHTML = tabItems;
 
-  function scrolling(headerIndex, indexItem = 0) {
-    if (indexItem === 0) {
-      var scrollLocation = headers[headerIndex];
-    } else {
-      var scrollLocation = document.getElementsByClassName(
-        "getting-started-content"
-      )[0];
+    function scrolling(headerIndex, indexItem=0){
+        if (indexItem === 0){
+            var scrollLocation = headers[headerIndex]
+        } else {
+            var scrollLocation = document.getElementsByClassName('getting-started-content')[0];
+        } 
+        scrollLocation.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
     }
-    scrollLocation.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
-    });
-  }
+
 </script>
 {% endblock %}
