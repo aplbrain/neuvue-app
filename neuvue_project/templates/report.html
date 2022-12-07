@@ -10,7 +10,7 @@
           {% csrf_token %}
           <h3 style="color: white"> Generate Task Report</h3>
           <div style="margin: 20px"class="form-group">
-
+            
             <label style="color: white" for="namespaceSelect">Namespace</label>
             <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
                 <option value="" selected disabled>Please select</option>
@@ -18,8 +18,8 @@
                 <option>{{namespace_opt}} </option>
                 {% endfor %}
             </select>
-            <br>
-
+            </br>
+        
 
             <label style="color: white" for="groupSelect">Group</label>
             <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
@@ -27,28 +27,28 @@
                 {% for group_opt in all_groups %}
                 <option>{{group_opt}} </option>
                 {% endfor %}
-            </select>
-            <br>
+            </select> 
+            </br>
 
             <label style="color: white" for="startSelect">From</label>
             <select name="start_field" class="form-select" id="startSelect" required="true">
               <option value="created">Created After</option>
               <option value="opened">Opened After</option>
               <option value="closed">Closed After</option>
-            </select>
+            </select> 
 
             <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true">
-            <br>
-
+            </br>
+            
             <label style="color: white" for="endSelect">To</label>
             <select name="end_field" class="form-select" id="endSelect" required="true">
               <option value="created">Created Before</option>
               <option value="opened">Opened Before</option>
               <option value="closed">Closed Before</option>
-            </select>
+            </select> 
 
             <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true">
-            <br>
+            </br>
 
             <div class="d-flex">
               <input type="submit" class="btn btn-primary" value="Generate Report">
@@ -57,7 +57,7 @@
               <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
               {% endif %}
             </div>
-
+            
           </div>
         </form>
       </div>
@@ -69,7 +69,7 @@
           {% csrf_token %}
           <h3 style="color: white"> Generate Task Report</h3>
           <div style="margin: 20px"class="form-group">
-
+            
             <label style="color: white" for="namespaceSelect">Namespace</label>
             <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
                 {% for namespace_opt in all_namespaces %}
@@ -80,8 +80,8 @@
                   {% endif %}
                 {% endfor %}
             </select>
-            <br>
-
+            </br>
+        
 
             <label style="color: white" for="groupSelect">Group</label>
             <select name="group" class="form-select" id="groupSelect" placeholder="Select one" required="true">
@@ -92,8 +92,8 @@
                     <option>{{group_opt}} </option>
                   {% endif %}
                 {% endfor %}
-            </select>
-            <br>
+            </select> 
+            </br>
 
             <label style="color: white" for="startSelect">From</label>
             <select name="start_field" class="form-select" id="startSelect" required="true">
@@ -104,11 +104,11 @@
                   <option value={{field}}>{{printed_name}}</option>
                 {% endif %}
               {% endfor %}
-            </select>
+            </select> 
 
             <input name="start_date" type="date" class="form-control" id="input_from" placeholder="Start Date" required="true" value="{{start_date}}">
-            <br>
-
+            </br>
+            
             <label style="color: white" for="endSelect">To</label>
             <select name="end_field" class="form-select" id="endSelect" required="true">
               {% for field, printed_name in fields.items %}
@@ -118,11 +118,11 @@
                   <option value={{field}}>{{printed_name}}</option>
                 {% endif %}
               {% endfor %}
-            </select>
+            </select> 
 
-
+            
             <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
-            <br>
+            </br>
 
             <div class="d-flex">
               <input type="submit" class="btn btn-primary" value="Generate Report">
@@ -131,7 +131,7 @@
               <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
               {% endif %}
             </div>
-
+            
           </div>
         </form>
         <div class="d-flex flex-column" style="width:100%; margin-left: 1vw;">
@@ -162,7 +162,7 @@
                   <table id="summary-table" class="table table-striped table-hover">
                     <thead>
                       <tr>
-                      {% for column in table_columns %}
+                      {% for column in table_columns %}   
                           <th scope="col">{{column}}</th>
                       {% endfor %}
                       </tr>
@@ -176,7 +176,7 @@
                       </tr>
                       {% endfor %}
                     </tbody>
-                  </table>
+                  </table>  
                 </div>
               </div>
             </div>
@@ -199,8 +199,9 @@
       const filename = '{{namespace}}' + '_' + '{{group}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
       // Perform download
       $('#summary-table').table2csv('download', {'filename': filename});
-    });
+    }); 
   {% endif %}
 
 </script>
 {% endblock %}
+

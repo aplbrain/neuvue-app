@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
-
+{% load inclusion_tags %}
 {% block content %}
 
 {% if not task_id or error%}
@@ -31,60 +31,60 @@
   <div id="neuVue-sidebar" class="sidebar">
       <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
           <i class="glyphicon glyphicon-list"></i>
-      </a>
+      </a>  
   </div>
   <div id="neuVue-sidecontent" class="sidecontent">
-
+      
       <! Instructions >
       {% processed_instructions instructions %}
-
+      
       <! Task Information >
       <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
           <div class="sideContentTitle">
               Task Information
           </div>
           <div class="sideContentInfo">
-              Namespace <br>
+              Namespace <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
-              Task ID <br>
+              Task ID <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
               Segmentation ID  <br>
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
-              PCG Endpoint  <br>
+              PCG Endpoint  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
-              Assignee  <br>
+              Assignee  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{assignee}}')"><i class="fa fa-copy"></i></button> {{assignee}}  </span>  <br>
-              Status  <br>
+              Status  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{status}}')"><i class="fa fa-copy"></i></button> {{status}}  </span>  <br>
-
+              
               {% if flag_reason %}
-              Flag Reason  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{flag_reason}}')"><i class="fa fa-copy"></i></button> {{flag_reason}}  </span>  <br>
+              Flag Reason  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{flag_reason}}')"><i class="fa fa-copy"></i></button> {{flag_reason}}  </span>  <br> 
               {% endif %}
-
+              
               {% if decision %}
-              Decision  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br>
+              Decision  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br> 
               {% endif %}
 
-              Number of Edits  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{num_edits}}')"><i class="fa fa-copy"></i></button> {{num_edits}}  </span>  <br>
-
+              Number of Edits  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{num_edits}}')"><i class="fa fa-copy"></i></button> {{num_edits}}  </span>  <br> 
+              
               {% if tags %}
-              Tags  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{tags}}')"><i class="fa fa-copy"></i></button> {{tags}}  </span>  <br>
+              Tags  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{tags}}')"><i class="fa fa-copy"></i></button> {{tags}}  </span>  <br> 
               {% endif %}
-
-              Neuroglancer Link <br>
-
-              <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  <br>
+              
+              Neuroglancer Link <br> 
+              
+              <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
           </div>
       </div>
   </div>
-</div>
+</div> 
 
 <div id="neuroglancer" class="leftFormatting">
-  <div class="left">
+  <div class="left">    
     <div id="neuroglancer-container" class="neuroglancer-container"></div>
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'inspect' %}'">
@@ -108,8 +108,8 @@
       copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
     });
   }
-
-  // Neuroglancer State Load
+  
+  // Neuroglancer State Load 
   $(document).ready(function() {
     {% if ng_state %}
     const state = {{ ng_state|safe }};

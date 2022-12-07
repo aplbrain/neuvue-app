@@ -1,923 +1,471 @@
-{% extends "base.html" %} {% load static %} {% block header_includes %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block header_includes %}
 <!--Add for Palette Dropdown-->
-<link
-  rel="stylesheet"
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-  integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-  crossorigin="anonymous"
-/>
-<script
-  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-  crossorigin="anonymous"
-></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src= "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <!--End Palette Dropdown-->
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
 <div class="basic pref">
-  <div class="pref_main_container mt-0 pt-4">
-    <form id="configForm" action="" method="post">
-      {% csrf_token %}
-      <div class="navbar-text" style="font-size: 1vw">
-        <h2>Neuroglancer Preferences</h2>
-        Neuroglancer preferences will overwrite all task states to the specified
-        configuration. Only settings that are enabled (checked) are actually
-        used.
-        <hr class="row-divider" />
+<div class="pref_main_container mt-0 pt-4">
+    <form id="configForm" action="" method="post" >
+    {% csrf_token %}
+    <div class="navbar-text" style='font-size:1vw;'> <h2> Neuroglancer Preferences </h2>
+        Neuroglancer preferences will overwrite all task states to the specified configuration. Only settings that are enabled 
+        (checked) are actually used. 
+        <hr class="row-divider">
         <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="configSwitch" />
-          <div class="form-check-label" for="configSwitch">
-            Enable/Disable Preferences
-          </div>
+            <input class="form-check-input" type="checkbox" id="configSwitch">
+            <div class="form-check-label" for="configSwitch"> Enable/Disable Preferences </div>
         </div>
-      </div>
-      <div id="neuroglancerConfig">
-        <hr class="row-divider" />
-
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="annotationColorPaletteSwitch"
-            />
-          </div>
-          <div>Annotation Color Palette</div>
-          <div class="dropdown">
-            <button
-              class="btn btn-light dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Palette Choices
-            </button>
-            <ul
-              class="dropdown-menu annotationChoiceMenu"
-              aria-labelledby="dropdownMenuButton"
-            >
-              <li class="dropdown-item" selected="selected">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice1"
-                  value="palette1"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice1">
-                  <img
-                    src="{% static 'images/annotation_palette1.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice2"
-                  value="palette2"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice2">
-                  <img
-                    src="{% static 'images/annotation_palette2.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice3"
-                  value="palette3"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice3">
-                  <img
-                    src="{% static 'images/annotation_palette3.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice4"
-                  value="palette4"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice4">
-                  <img
-                    src="{% static 'images/annotation_palette4.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice5"
-                  value="palette5"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice5">
-                  <img
-                    src="{% static 'images/annotation_palette5.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="annotationColorPalette"
-                  id="annotationChoice6"
-                  value="palette6"
-                  onClick="changeAnnotationImage(this.value);"
-                />
-                <label for="annotationChoice6">
-                  <img
-                    src="{% static 'images/annotation_palette6.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-            </ul>
-          </div>
-          <div id="selected_palette">
-            <img
-              id="selected_palette1"
-              src="{% static 'images/annotation_palette1.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_palette2"
-              src="{% static 'images/annotation_palette2.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_palette3"
-              src="{% static 'images/annotation_palette3.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_palette4"
-              src="{% static 'images/annotation_palette4.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_palette5"
-              src="{% static 'images/annotation_palette5.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_palette6"
-              src="{% static 'images/annotation_palette6.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-          </div>
-        </div>
-        <hr class="row-divider" />
-
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="meshColorPaletteSwitch"
-            />
-          </div>
-          <div>Mesh Color Palette</div>
-          <div class="dropdown">
-            <button
-              class="btn btn-light dropdown-toggle"
-              type="button"
-              id="meshPaletteDropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Palette Choices
-            </button>
-            <ul
-              class="dropdown-menu meshChoiceMenu"
-              aria-labelledby="dropdownMenuButton"
-            >
-              <li class="dropdown-item" selected="selected">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice1"
-                  value="palette1"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice1">
-                  <img
-                    src="{% static 'images/annotation_palette1.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice2"
-                  value="palette2"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice2">
-                  <img
-                    src="{% static 'images/annotation_palette2.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice3"
-                  value="palette3"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice3">
-                  <img
-                    src="{% static 'images/annotation_palette3.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice4"
-                  value="palette4"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice4">
-                  <img
-                    src="{% static 'images/annotation_palette4.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice5"
-                  value="palette5"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice5">
-                  <img
-                    src="{% static 'images/annotation_palette5.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-              <li class="dropdown-item">
-                <input
-                  type="radio"
-                  name="meshColorPalette"
-                  id="meshChoice6"
-                  value="palette6"
-                  onClick="changeMeshImage(this.value);"
-                />
-                <label for="meshChoice6">
-                  <img
-                    src="{% static 'images/annotation_palette6.png' %}"
-                    style="
-                      width: 150px;
-                      height: 45px;
-                      margin-top: 3px;
-                      border: 1px solid gray;
-                    "
-                  />
-                </label>
-              </li>
-            </ul>
-          </div>
-          <div id="selected_mesh_palette">
-            <img
-              id="selected_mesh_palette1"
-              src="{% static 'images/annotation_palette1.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_mesh_palette2"
-              src="{% static 'images/annotation_palette2.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_mesh_palette3"
-              src="{% static 'images/annotation_palette3.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_mesh_palette4"
-              src="{% static 'images/annotation_palette4.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_mesh_palette5"
-              src="{% static 'images/annotation_palette5.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-            <img
-              id="selected_mesh_palette6"
-              src="{% static 'images/annotation_palette6.png' %}"
-              style="
-                display: none;
-                width: 150px;
-                height: 45px;
-                border: 1px solid gray;
-              "
-            />
-          </div>
-        </div>
-
-        <hr class="row-divider" />
-
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="showSlicesSwitch"
-              value="{{showSlicesSwitch}}"
-            />
-          </div>
-          <div>
-            <span> Show Slices </span>
-            <input
-              id="showSlices"
-              class="form-check-input"
-              type="checkbox"
-              value="{{showSlices}}"
-              style="margin-left: 5px"
-            />
-          </div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="zoomLevelSwitch"
-            />
-          </div>
-          <div>Zoom Level</div>
-          <input
-            id="zoomLevel"
-            type="range"
-            class="form-range"
-            min="0"
-            max="100"
-            step="10"
-            value="{{ zoomLevel }}"
-          />
-
-          <div id="zoomLevelDisplay" class="form-label">"{{ zoomLevel }}"</div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="alphaSelectedSwitch"
-            />
-          </div>
-          <div>2D Segmentation Data Opacity</div>
-          <input
-            id="alphaSelected"
-            type="range"
-            class="form-range"
-            min="0"
-            max="1"
-            step="0.01"
-            value="{{ alphaSelected }}"
-          />
-
-          <div id="alphaSelectedDisplay" class="form-label">
-            "{{ alphaSelected }}"
-          </div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="alpha3DSwitch"
-            />
-          </div>
-          <div>3D Segmentation Data Opacity</div>
-
-          <input
-            id="alpha3D"
-            type="range"
-            class="form-range"
-            min="0"
-            max="1"
-            step="0.01"
-            value="{{alpha3D}}"
-          />
-
-          <div id="alpha3DDisplay" class="form-label">"{{alpha3D}}"</div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="layoutSwitch" />
-          </div>
-          <div>Panel Layout</div>
-          <select name="layout" class="form-select" id="layoutSelect">
-            <option>xy-3d</option>
-            <option>yz-3d</option>
-            <option>xz-3d</option>
-            <option>4panel</option>
-            <option>3d</option>
-          </select>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="gpuLimitSwitch"
-            />
-          </div>
-          <div>GPU Memory Limit (GB)</div>
-
-          <input
-            id="gpuLimit"
-            type="range"
-            class="form-range"
-            min="0.5"
-            max="4.0"
-            step="0.1"
-            value="{{gpuLimit}}"
-          />
-
-          <div id="gpuLimitDisplay" class="form-label">"{{gpuLimit}}"</div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="sysLimitSwitch"
-            />
-          </div>
-          <div>System Memory Limit (GB)</div>
-
-          <input
-            id="sysLimit"
-            type="range"
-            class="form-range"
-            min="0.5"
-            max="4.0"
-            step="0.1"
-            value="{{sysLimit}}"
-          />
-
-          <div id="sysLimitDisplay" class="form-label">"{{sysLimit}}"</div>
-        </div>
-
-        <hr class="row-divider" />
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="chunkReqSwitch"
-            />
-          </div>
-          <div>Concurrent Chunk Requests</div>
-
-          <input
-            id="chunkReq"
-            type="range"
-            class="form-range"
-            min="8"
-            max="64"
-            step="1"
-            value="{{chunkReq}}"
-          />
-
-          <div id="chunkReqDisplay" class="form-label">"{{chunkReq}}"</div>
-        </div>
-
-        <hr class="row-divider" />
-
-        <div class="row-container">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="enableSoundSwitch"
-              value="{{enableSoundSwitch}}"
-            />
-          </div>
-          <div>
-            <span> Enable Sound </span>
-            <input
-              id="enableSound"
-              class="form-check-input"
-              type="checkbox"
-              value="{{enableSound}}"
-              style="margin-left: 5px"
-            />
-          </div>
-        </div>
-
-        <hr class="row-divider" />
-      </div>
-      <div style="flex-direction: column">
-        <button
-          id="saveConfig"
-          type="button"
-          class="btn btn-primary"
-          style="width: 10vw"
-        >
-          Save
-        </button>
-        <button
-          id="resetConfig"
-          onClick="resetConfigs()"
-          type="button"
-          class="btn btn-secondary"
-          style="width: 10vw"
-        >
-          Reset To Default
-        </button>
-      </div>
-    </form>
-    <div style="display: none">
-      <form id="resetForm" action="" method="post">{% csrf_token %}</form>
     </div>
-    <br />
-  </div>
+    <div id="neuroglancerConfig">
+
+        <hr class="row-divider">
+
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="annotationColorPaletteSwitch"> </div>
+            <div> Annotation Color Palette </div>
+            <div class="dropdown">
+                <button class="btn btn-light
+                        dropdown-toggle" type="button" 
+                        id="dropdownMenuButton" 
+                        data-toggle="dropdown"
+                        aria-haspopup="true" 
+                        aria-expanded="false">
+                    Palette Choices
+                </button>
+                <ul class="dropdown-menu annotationChoiceMenu" 
+                    aria-labelledby="dropdownMenuButton">
+                    <li class="dropdown-item" selected="selected">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice1" value="palette1" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice1">
+                            <img src="{% static 'images/annotation_palette1.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice2" value="palette2" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice2">
+                            <img src="{% static 'images/annotation_palette2.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice3" value="palette3" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice3">
+                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice4" value="palette4" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice4">
+                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice5" value="palette5" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice5">
+                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="annotationColorPalette" id="annotationChoice6" value="palette6" onClick="changeAnnotationImage(this.value);">
+                        <label for="annotationChoice6">
+                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                </ul>
+            </div>
+            <div id="selected_palette">
+                <img id="selected_palette1" src="{% static 'images/annotation_palette1.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_palette2" src="{% static 'images/annotation_palette2.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_palette3" src="{% static 'images/annotation_palette3.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_palette4" src="{% static 'images/annotation_palette4.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_palette5" src="{% static 'images/annotation_palette5.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_palette6" src="{% static 'images/annotation_palette6.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+            </div>
+        </div>
+        <hr class="row-divider">
+
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="meshColorPaletteSwitch"> </div>
+            <div> Mesh Color Palette </div>
+            <div class="dropdown">
+                <button class="btn btn-light
+                        dropdown-toggle" type="button" 
+                        id="meshPaletteDropdownMenuButton" 
+                        data-toggle="dropdown"
+                        aria-haspopup="true" 
+                        aria-expanded="false">
+                    Palette Choices
+                </button>
+                <ul class="dropdown-menu meshChoiceMenu" 
+                    aria-labelledby="dropdownMenuButton">
+                    <li class="dropdown-item" selected="selected">
+                        <input type="radio" name="meshColorPalette" id="meshChoice1" value="palette1" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice1">
+                            <img src="{% static 'images/annotation_palette1.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="meshColorPalette" id="meshChoice2" value="palette2" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice2">
+                            <img src="{% static 'images/annotation_palette2.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="meshColorPalette" id="meshChoice3" value="palette3" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice3">
+                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="meshColorPalette" id="meshChoice4" value="palette4" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice4">
+                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="meshColorPalette" id="meshChoice5" value="palette5" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice5">
+                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
+                        </label>        
+                    </li>
+                    <li class="dropdown-item">
+                        <input type="radio" name="meshColorPalette" id="meshChoice6" value="palette6" onClick="changeMeshImage(this.value);">
+                        <label for="meshChoice6">
+                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
+                        </label>              
+                    </li>
+                </ul>
+            </div>
+            <div id="selected_mesh_palette">
+                <img id="selected_mesh_palette1" src="{% static 'images/annotation_palette1.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_mesh_palette2" src="{% static 'images/annotation_palette2.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_mesh_palette3" src="{% static 'images/annotation_palette3.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_mesh_palette4" src="{% static 'images/annotation_palette4.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_mesh_palette5" src="{% static 'images/annotation_palette5.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+                <img id="selected_mesh_palette6" src="{% static 'images/annotation_palette6.png' %}" style="display: none; width: 150px; height: 45px; border: 1px solid gray;">
+            </div>
+        </div>
+
+        <hr class="row-divider">
+        
+        <div class="row-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
+            </div>
+            <div>
+                <span> Show Slices </span>
+                <input id="showSlices" class="form-check-input" type="checkbox" value={{showSlices}} style="margin-left: 5px;">
+            </div>
+            
+        </div>
+
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="zoomLevelSwitch"> </div>
+            <div> Zoom Level </div>
+            <input id="zoomLevel" type="range" class="form-range" min="0" 
+                max="100" step="10" value="{{ zoomLevel }}" />
+            
+            <div id="zoomLevelDisplay" class="form-label">"{{ zoomLevel }}"</div>
+        </div>
+
+          
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
+            <div> 2D Segmentation Data Opacity </div>
+            <input id="alphaSelected" type="range" class="form-range" min="0" 
+                max="1" step="0.01" value="{{ alphaSelected }}" />
+            
+            <div id="alphaSelectedDisplay" class="form-label">"{{ alphaSelected }}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alpha3DSwitch"> </div>
+            <div> 3D Segmentation Data Opacity </div>
+            
+            <input id="alpha3D" type="range" class="form-range" min="0" 
+                max="1" step="0.01" value="{{alpha3D}}" />
+
+            <div id="alpha3DDisplay" class="form-label">"{{alpha3D}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="layoutSwitch"> </div>
+            <div> Panel Layout </div>
+            <select name="layout" class="form-select" id="layoutSelect" >
+                <option>xy-3d</option>
+                <option>yz-3d</option>
+                <option>xz-3d</option>
+                <option>4panel</option>
+                <option>3d</option>
+            </select> 
+        </div>
+        
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="gpuLimitSwitch"> </div>
+            <div> GPU Memory Limit (GB) </div>
+            
+            <input id="gpuLimit" type="range" class="form-range" min="0.5" 
+                max="4.0" step="0.1" value="{{gpuLimit}}" />
+
+            <div id="gpuLimitDisplay" class="form-label">"{{gpuLimit}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="sysLimitSwitch"> </div>
+            <div> System Memory Limit (GB) </div>
+            
+            <input id="sysLimit" type="range" class="form-range" min="0.5" 
+                max="4.0" step="0.1" value="{{sysLimit}}" />
+
+            <div id="sysLimitDisplay" class="form-label">"{{sysLimit}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        <div class="row-container">
+            <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="chunkReqSwitch"> </div>
+            <div> Concurrent Chunk Requests </div>
+            
+            <input id="chunkReq" type="range" class="form-range" min="8" 
+                max="64" step="1" value="{{chunkReq}}" />
+
+            <div id="chunkReqDisplay" class="form-label">"{{chunkReq}}"</div>
+        </div>
+
+        <hr class="row-divider">
+        
+        <div class="row-container">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="enableSoundSwitch" value={{enableSoundSwitch}}>  
+            </div>
+            <div>
+                <span> Enable Sound </span>
+                <input id="enableSound" class="form-check-input" type="checkbox" value={{enableSound}} style="margin-left: 5px;">
+            </div>
+            
+        </div>
+
+        <hr class="row-divider">
+    </div>
+    <div style="flex-direction:column;">
+        <button id="saveConfig" type="button" class="btn btn-primary" style="width:10vw;">Save</button>
+        <button id="resetConfig" onClick="resetConfigs()" type="button" class="btn btn-secondary" style="width:10vw;">Reset To Default</button>
+    </div>
+    </form>
+    <div style="display:none;">
+        <form id="resetForm" action="" method="post" >
+            {% csrf_token %}
+        </form>
+    </div>
+</br>
 </div>
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"
-></script>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script>
-  const preferenceFields = {
-    annotationColorPalette: "{{annotationColorPaletteSwitch}}",
-    meshColorPalette: "{{meshColorPaletteSwitch}}",
-    showSlices: "{{showSlicesSwitch}}",
-    alphaSelected: "{{alphaSelectedSwitch}}",
-    zoomLevel: "{{zoomLevelSwitch}}",
-    alpha3D: "{{alpha3DSwitch}}",
-    gpuLimit: "{{gpuLimitSwitch}}",
-    sysLimit: "{{sysLimitSwitch}}",
-    chunkReq: "{{chunkReqSwitch}}",
-    layout: "{{layoutSwitch}}",
-    enableSound: "{{enableSoundSwitch}}",
-  };
-  function resetConfigs() {
-    let form = "#resetForm";
-    $("<input>")
-      .attr("type", "hidden")
-      .attr("name", "reset")
-      .attr("value", true)
-      .appendTo(form);
-    $(form).submit();
-  }
-  function submitConfig() {
-    let form = "#configForm";
-    let enabled = $("#configSwitch").is(":checked");
-    $("<input>")
-      .attr("type", "hidden")
-      .attr("name", "enabled")
-      .attr("value", enabled)
-      .appendTo(form);
+    const preferenceFields = {
+        "annotationColorPalette": "{{annotationColorPaletteSwitch}}",
+        "meshColorPalette" : "{{meshColorPaletteSwitch}}",
+        "showSlices": "{{showSlicesSwitch}}", 
+        "alphaSelected": "{{alphaSelectedSwitch}}", 
+        "zoomLevel": "{{zoomLevelSwitch}}", 
+        "alpha3D": "{{alpha3DSwitch}}", 
+        "gpuLimit": "{{gpuLimitSwitch}}", 
+        "sysLimit": "{{sysLimitSwitch}}", 
+        "chunkReq": "{{chunkReqSwitch}}",
+        "layout": "{{layoutSwitch}}",
+        "enableSound": "{{enableSoundSwitch}}"
+    };
+    function resetConfigs() {
+        let form = '#resetForm'
+        $('<input>').attr('type', 'hidden').attr('name', 'reset').attr('value', true).appendTo(form);
+        $(form).submit();
+    };
+    function submitConfig() {
+        let form = '#configForm'
+        let enabled = $('#configSwitch').is(":checked");
+        $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
 
-    for (field in preferenceFields) {
-      let fieldSwitch = $(`#${field}Switch`).is(":checked");
-      let fieldValue = $(`#${field}`).val();
+        for (field in preferenceFields){          
+            let fieldSwitch = $(`#${field}Switch`).is(":checked");
+            let fieldValue = $(`#${field}`).val();
+            
+            if ($(`#${field}`).is(':checked')){
+                fieldValue = "true";
+            }
+            
+            if (field != "layout") {
+                $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
+            }
+            if (field == "annotationColorPalette") {
+                let radioButtons = document.getElementsByName(field);
+                let selected = '';
+                for(i = 0; i < radioButtons.length; i++) {
+                    if(radioButtons[i].checked) {
+                        selected = radioButtons[i].value;
+                    }
+                }   
+                $('<input>').attr('type', 'hidden').attr('name', field).attr('value', selected).appendTo(form);
 
-      if ($(`#${field}`).is(":checked")) {
-        fieldValue = "true";
-      }
+            }
+            if (field == "meshColorPalette") {
+                let meshRadioButtons = document.getElementsByName(field);
+                let selected = '';
+                for(i = 0; i < meshRadioButtons.length; i++) {
+                    if(meshRadioButtons[i].checked) {
+                        selected = meshRadioButtons[i].value;
+                    }
+                }   
+                $('<input>').attr('type', 'hidden').attr('name', field).attr('value', selected).appendTo(form);
 
-      if (field != "layout") {
-        $("<input>")
-          .attr("type", "hidden")
-          .attr("name", field)
-          .attr("value", fieldValue)
-          .appendTo(form);
-      }
-      if (field == "annotationColorPalette") {
-        let radioButtons = document.getElementsByName(field);
-        let selected = "";
-        for (i = 0; i < radioButtons.length; i++) {
-          if (radioButtons[i].checked) {
-            selected = radioButtons[i].value;
-          }
+            }
+            $('<input>').attr('type', 'hidden').attr('name', `${field}Switch`).attr('value', fieldSwitch).appendTo(form);
         }
-        $("<input>")
-          .attr("type", "hidden")
-          .attr("name", field)
-          .attr("value", selected)
-          .appendTo(form);
-      }
-      if (field == "meshColorPalette") {
-        let meshRadioButtons = document.getElementsByName(field);
-        let selected = "";
-        for (i = 0; i < meshRadioButtons.length; i++) {
-          if (meshRadioButtons[i].checked) {
-            selected = meshRadioButtons[i].value;
-          }
+        $(form).submit();
+    }
+    $(document).ready(function() {
+        $("#configSwitch").change(function() {
+            if ($("#configSwitch").is(':checked')) {
+
+                $("#neuroglancerConfig").show(100);
+            } else {
+                $("#neuroglancerConfig").hide(100);
+            }
+        });
+        
+        if ("{{enabled}}" == "True") {
+            $("#neuroglancerConfig").show();
+            $("#configSwitch").prop( "checked", true );
+        } else {
+            $("#neuroglancerConfig").hide();
+            $("#configSwitch").prop( "checked", false );
         }
-        $("<input>")
-          .attr("type", "hidden")
-          .attr("name", field)
-          .attr("value", selected)
-          .appendTo(form);
-      }
-      $("<input>")
-        .attr("type", "hidden")
-        .attr("name", `${field}Switch`)
-        .attr("value", fieldSwitch)
-        .appendTo(form);
-    }
-    $(form).submit();
-  }
-  $(document).ready(function () {
-    $("#configSwitch").change(function () {
-      if ($("#configSwitch").is(":checked")) {
-        $("#neuroglancerConfig").show(100);
-      } else {
-        $("#neuroglancerConfig").hide(100);
-      }
+
+        // Update switches 
+        for (field in preferenceFields){
+            if ($(`#${field}`).attr('type') == 'checkbox' && $(`#${field}`).val() == 'True' ){
+                $(`#${field}`).prop( "checked", true );
+            }
+
+            if (preferenceFields[field] == "True") {
+                $(`#${field}Switch`).prop( "checked", true );
+            } else {
+                $(`#${field}Switch`).prop( "checked", false );
+            }
+        }
+
+        // Display value on sliders
+        $("#alphaSelectedDisplay").html($("#alphaSelected").val() );
+        $("#zoomLevelDisplay").html($("#zoomLevel").val() );
+        $("#showSlicesDisplay").html($("#showSlices").val() );
+        $("#alpha3DDisplay").html($("#alpha3D").val() );
+        $("#gpuLimitDisplay").html($("#gpuLimit").val() );
+        $("#sysLimitDisplay").html($("#sysLimit").val() );
+        $("#chunkReqDisplay").html($("#chunkReq").val() );
+        $("#enableSoundDisplay").html($("#enableSound").val() );
+
+        // Update value on sliders
+        $("#alphaSelected").change(function( ){
+            $("#alphaSelectedDisplay").html($("#alphaSelected").val());
+        });
+
+        // Update value on sliders
+        $("#zoomLevel").change(function( ){
+            $("#zoomLevelDisplay").html($("#zoomLevel").val());
+        });
+
+        $("#alpha3D").change(function( ){
+            $("#alpha3DDisplay").html($("#alpha3D").val());
+        });
+
+        $("#gpuLimit").change(function( ){
+            $("#gpuLimitDisplay").html($("#gpuLimit").val());
+        });
+
+        $("#sysLimit").change(function( ){
+            $("#sysLimitDisplay").html($("#sysLimit").val());
+        });
+
+        $("#chunkReq").change(function( ){
+            $("#chunkReqDisplay").html($("#chunkReq").val());
+        });
+
+        // Select correct layout 
+        $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
+
+        // Select Annotation Color Palette 
+        let radios = document.getElementsByName("annotationColorPalette");
+        for (let i = 0, length = radios.length; i < length; i++) {
+        if (radios[i].value == "{{annotationColorPalette}}") {
+            radios[i].checked = true;
+            var icon_id = "selected_" + "{{annotationColorPalette}}";
+            var selected_icon = document.getElementById(icon_id);
+            selected_icon.style.display = "block";
+            break;
+        }
+        }
+
+        // Select Mesh Color Palette 
+        let meshRadios = document.getElementsByName("meshColorPalette");
+        for (let i = 0, length = meshRadios.length; i < length; i++) {
+        if (meshRadios[i].value == "{{meshColorPalette}}") {
+            meshRadios[i].checked = true;
+            var icon_id = "selected_mesh_" + "{{meshColorPalette}}";
+            var selected_icon = document.getElementById(icon_id);
+            selected_icon.style.display = "block";
+            break;
+        }
+        }
+
+        
+        // Submit Button
+        $('#saveConfig').click(function() {
+            submitConfig();
+        })
+
     });
-
-    if ("{{enabled}}" == "True") {
-      $("#neuroglancerConfig").show();
-      $("#configSwitch").prop("checked", true);
-    } else {
-      $("#neuroglancerConfig").hide();
-      $("#configSwitch").prop("checked", false);
-    }
-
-    // Update switches
-    for (field in preferenceFields) {
-      if (
-        $(`#${field}`).attr("type") == "checkbox" &&
-        $(`#${field}`).val() == "True"
-      ) {
-        $(`#${field}`).prop("checked", true);
-      }
-
-      if (preferenceFields[field] == "True") {
-        $(`#${field}Switch`).prop("checked", true);
-      } else {
-        $(`#${field}Switch`).prop("checked", false);
-      }
-    }
-
-    // Display value on sliders
-    $("#alphaSelectedDisplay").html($("#alphaSelected").val());
-    $("#zoomLevelDisplay").html($("#zoomLevel").val());
-    $("#showSlicesDisplay").html($("#showSlices").val());
-    $("#alpha3DDisplay").html($("#alpha3D").val());
-    $("#gpuLimitDisplay").html($("#gpuLimit").val());
-    $("#sysLimitDisplay").html($("#sysLimit").val());
-    $("#chunkReqDisplay").html($("#chunkReq").val());
-    $("#enableSoundDisplay").html($("#enableSound").val());
-
-    // Update value on sliders
-    $("#alphaSelected").change(function () {
-      $("#alphaSelectedDisplay").html($("#alphaSelected").val());
-    });
-
-    // Update value on sliders
-    $("#zoomLevel").change(function () {
-      $("#zoomLevelDisplay").html($("#zoomLevel").val());
-    });
-
-    $("#alpha3D").change(function () {
-      $("#alpha3DDisplay").html($("#alpha3D").val());
-    });
-
-    $("#gpuLimit").change(function () {
-      $("#gpuLimitDisplay").html($("#gpuLimit").val());
-    });
-
-    $("#sysLimit").change(function () {
-      $("#sysLimitDisplay").html($("#sysLimit").val());
-    });
-
-    $("#chunkReq").change(function () {
-      $("#chunkReqDisplay").html($("#chunkReq").val());
-    });
-
-    // Select correct layout
-    $('#layoutSelect option:contains("{{layout}}")').prop("selected", true);
-
-    // Select Annotation Color Palette
-    let radios = document.getElementsByName("annotationColorPalette");
-    for (let i = 0, length = radios.length; i < length; i++) {
-      if (radios[i].value == "{{annotationColorPalette}}") {
-        radios[i].checked = true;
-        var icon_id = "selected_" + "{{annotationColorPalette}}";
-        var selected_icon = document.getElementById(icon_id);
-        selected_icon.style.display = "block";
-        break;
-      }
-    }
-
-    // Select Mesh Color Palette
-    let meshRadios = document.getElementsByName("meshColorPalette");
-    for (let i = 0, length = meshRadios.length; i < length; i++) {
-      if (meshRadios[i].value == "{{meshColorPalette}}") {
-        meshRadios[i].checked = true;
-        var icon_id = "selected_mesh_" + "{{meshColorPalette}}";
-        var selected_icon = document.getElementById(icon_id);
-        selected_icon.style.display = "block";
-        break;
-      }
+    
+    // Change Selected Color Palette Icon
+    function changeAnnotationImage(imageName) {
+        let radios = document.getElementsByName("annotationColorPalette");
+        for (let i = 0, length = radios.length; i < length; i++) { 
+            var icon_id = "selected_" + radios[i].value;
+            var icon_element = document.getElementById(icon_id);
+            if (radios[i].checked == true) {
+                icon_element.style.display = "block";
+            }
+            else {
+                icon_element.style.display = "none";
+            }
+        }
     }
 
-    // Submit Button
-    $("#saveConfig").click(function () {
-      submitConfig();
-    });
-  });
-
-  // Change Selected Color Palette Icon
-  function changeAnnotationImage(imageName) {
-    let radios = document.getElementsByName("annotationColorPalette");
-    for (let i = 0, length = radios.length; i < length; i++) {
-      var icon_id = "selected_" + radios[i].value;
-      var icon_element = document.getElementById(icon_id);
-      if (radios[i].checked == true) {
-        icon_element.style.display = "block";
-      } else {
-        icon_element.style.display = "none";
-      }
+    // Change Mesh Color Palette Icon
+    function changeMeshImage(imageName) {
+        let radios = document.getElementsByName("meshColorPalette");
+        for (let i = 0, length = radios.length; i < length; i++) { 
+            var icon_id = "selected_mesh_" + radios[i].value;
+            var icon_element = document.getElementById(icon_id);
+            if (radios[i].checked == true) {
+                icon_element.style.display = "block";
+            }
+            else {
+                icon_element.style.display = "none";
+            }
+        }
     }
-  }
 
-  // Change Mesh Color Palette Icon
-  function changeMeshImage(imageName) {
-    let radios = document.getElementsByName("meshColorPalette");
-    for (let i = 0, length = radios.length; i < length; i++) {
-      var icon_id = "selected_mesh_" + radios[i].value;
-      var icon_element = document.getElementById(icon_id);
-      if (radios[i].checked == true) {
-        icon_element.style.display = "block";
-      } else {
-        icon_element.style.display = "none";
-      }
-    }
-  }
 </script>
 {% endblock %}
