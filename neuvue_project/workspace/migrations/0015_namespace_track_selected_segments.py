@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0014_forcedchoicebutton_hotkey'),
+        ("workspace", "0014_forcedchoicebutton_hotkey"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='namespace',
-            name='track_selected_segments',
+            model_name="namespace",
+            name="track_selected_segments",
             field=models.BooleanField(default=False),
         ),
     ]

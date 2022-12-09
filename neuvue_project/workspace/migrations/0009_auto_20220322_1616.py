@@ -9,47 +9,129 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('workspace', '0008_auto_20220314_2318'),
+        ("workspace", "0008_auto_20220314_2318"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='namespace',
-            name='expert_pull_from',
-            field=models.CharField(choices=[('Reassign Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Reassign Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="expert_pull_from",
+            field=models.CharField(
+                choices=[
+                    ("Reassign Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Reassign Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='expert_push_to',
-            field=models.CharField(choices=[('Queue Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Queue Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="expert_push_to",
+            field=models.CharField(
+                choices=[
+                    ("Queue Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Queue Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='intermediate_pull_from',
-            field=models.CharField(choices=[('Reassign Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Reassign Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="intermediate_pull_from",
+            field=models.CharField(
+                choices=[
+                    ("Reassign Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Reassign Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='intermediate_push_to',
-            field=models.CharField(choices=[('Queue Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Queue Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="intermediate_push_to",
+            field=models.CharField(
+                choices=[
+                    ("Queue Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Queue Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='novice_pull_from',
-            field=models.CharField(choices=[('Reassign Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Reassign Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="novice_pull_from",
+            field=models.CharField(
+                choices=[
+                    ("Reassign Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Reassign Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='novice_push_to',
-            field=models.CharField(choices=[('Queue Tasks Not Allowed', 'Null'), ('unassigned_novice', 'Novice'), ('unassigned_intermediate', 'Intermediate'), ('unassigned_expert', 'Expert')], default='Queue Tasks Not Allowed', max_length=50),
+            model_name="namespace",
+            name="novice_push_to",
+            field=models.CharField(
+                choices=[
+                    ("Queue Tasks Not Allowed", "Null"),
+                    ("unassigned_novice", "Novice"),
+                    ("unassigned_intermediate", "Intermediate"),
+                    ("unassigned_expert", "Expert"),
+                ],
+                default="Queue Tasks Not Allowed",
+                max_length=50,
+            ),
         ),
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('expert_namespaces', models.ManyToManyField(blank=True, related_name='expert_namespaces', to='workspace.Namespace')),
-                ('intermediate_namespaces', models.ManyToManyField(blank=True, related_name='intermediate_namespaces', to='workspace.Namespace')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "expert_namespaces",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="expert_namespaces",
+                        to="workspace.Namespace",
+                    ),
+                ),
+                (
+                    "intermediate_namespaces",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="intermediate_namespaces",
+                        to="workspace.Namespace",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

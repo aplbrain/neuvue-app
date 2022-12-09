@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0006_namespace_namespace_enabled'),
+        ("workspace", "0006_namespace_namespace_enabled"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='namespace',
-            name='refresh_selected_root_ids',
+            model_name="namespace",
+            name="refresh_selected_root_ids",
             field=models.BooleanField(default=False),
         ),
     ]

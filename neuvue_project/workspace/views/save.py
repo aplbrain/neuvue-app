@@ -19,7 +19,6 @@ Config = apps.get_model("preferences", "Config")
 
 
 class SaveStateView(View):
-
     def post(self, request, *args, **kwargs):
         data = str(request.body.decode("utf-8"))
         data = json.loads(data)
@@ -49,7 +48,6 @@ class SaveStateView(View):
 
 
 class SaveOperationsView(View):
-
     def post(self, request, *args, **kwargs):
 
         data = str(request.body.decode("utf-8"))

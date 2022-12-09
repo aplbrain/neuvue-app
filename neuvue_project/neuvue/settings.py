@@ -19,29 +19,34 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'app.neuvue.io',
-    'neuvueapp-env.eba-ph8myjrq.us-east-1.elasticbeanstalk.com', 
-    'localhost',
-    '127.0.0.1'
+    "app.neuvue.io",
+    "neuvueapp-env.eba-ph8myjrq.us-east-1.elasticbeanstalk.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
-INTERNAL_IPS = [
-    'localhost',
-    '127.0.0.1'
-]
+INTERNAL_IPS = ["localhost", "127.0.0.1"]
 
 if DEBUG is False:
-    # Fix Health Check issues 
+    # Fix Health Check issues
     import requests
+
     try:
-        token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds":"21600"}).text
-        internal_ip = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=3, headers={"X-aws-ec2-metadata-token": token}).text
+        token = requests.put(
+            "http://169.254.169.254/latest/api/token",
+            headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"},
+        ).text
+        internal_ip = requests.get(
+            "http://169.254.169.254/latest/meta-data/local-ipv4",
+            timeout=3,
+            headers={"X-aws-ec2-metadata-token": token},
+        ).text
     except requests.exceptions.ConnectionError:
         pass
     else:
@@ -51,80 +56,80 @@ if DEBUG is False:
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'workspace', 
-    'dashboard',
-    'webpack_loader',
-    'preferences',
-    'debug_toolbar',
-    'colorfield'
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "workspace",
+    "dashboard",
+    "webpack_loader",
+    "preferences",
+    "debug_toolbar",
+    "colorfield",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-ROOT_URLCONF = 'neuvue.urls'
+ROOT_URLCONF = "neuvue.urls"
 
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates") 
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 
-WSGI_APPLICATION = 'neuvue.wsgi.application'
+WSGI_APPLICATION = "neuvue.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'RDS_HOSTNAME' in os.environ and DEBUG is False:
+if "RDS_HOSTNAME" in os.environ and DEBUG is False:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ["RDS_DB_NAME"],
+            "USER": os.environ["RDS_USERNAME"],
+            "PASSWORD": os.environ["RDS_PASSWORD"],
+            "HOST": os.environ["RDS_HOSTNAME"],
+            "PORT": os.environ["RDS_PORT"],
         }
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'neuvueDB.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": "neuvueDB.sqlite3",
         }
     }
 
@@ -133,16 +138,16 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -150,9 +155,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'EST'
+TIME_ZONE = "EST"
 
 USE_I18N = True
 
@@ -164,13 +169,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'workspace/static')
-]   
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "workspace/static")]
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 
@@ -178,39 +181,39 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
     }
 }
 
-LOGIN_URL = 'index'
-LOGIN_REDIRECT_URL = '/tasks'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = "index"
+LOGIN_REDIRECT_URL = "/tasks"
+LOGOUT_REDIRECT_URL = "/"
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
-SANDBOX_ID = '6269888a101fc4da81fdd410'
+SANDBOX_ID = "6269888a101fc4da81fdd410"
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True
 }
 
 # Annotation Tables
-NEURON_TABLE = 'nucleus_neuron_svm'
-CELL_CLASS_TABLE = 'allen_soma_coarse_cell_class_model_v2'
+NEURON_TABLE = "nucleus_neuron_svm"
+CELL_CLASS_TABLE = "allen_soma_coarse_cell_class_model_v2"
 DAYS_UNTIL_EXPIRED = 3
 CACHED_TABLES_PATH = os.path.join(STATIC_ROOT, "tables")
 
@@ -223,16 +226,14 @@ NG_CLIENT = "https://neuroglancer.neuvue.io"
 JSON_STATE_SERVER = "https://global.daf-apis.com/nglstate/post"
 DATASET_VIEWER_OPTIONS = {
     "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em": {
-        "contrast": {
-            "black": 0.35, 
-            "white": 0.7
-        }
+        "contrast": {"black": 0.35, "white": 0.7}
     }
 }
 VOXEL_RESOLUTION = (4, 4, 40)
 
 if DEBUG:
     import mimetypes
+
     mimetypes.add_type("application/javascript", ".js", True)
 
-STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, 'workspace', 'static', 'workspace'))
+STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace"))

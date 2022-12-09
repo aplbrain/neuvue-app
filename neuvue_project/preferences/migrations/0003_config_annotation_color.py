@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0002_auto_20220222_1313'),
+        ("preferences", "0002_auto_20220222_1313"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='annotation_color',
-            field=models.CharField(default='#ffff00', max_length=10),
+            model_name="config",
+            name="annotation_color",
+            field=models.CharField(default="#ffff00", max_length=10),
         ),
     ]

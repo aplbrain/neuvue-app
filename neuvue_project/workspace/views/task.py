@@ -22,7 +22,6 @@ logger = logging.getLogger(__name__)
 
 
 class TaskView(LoginRequiredMixin, View):
-
     def get(self, request, *args, **kwargs):
         context = {}
         self_assign_group = "Can self assign tasks"

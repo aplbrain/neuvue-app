@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0004_auto_20220314_1514'),
+        ("preferences", "0004_auto_20220314_1514"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='show_slices',
+            model_name="config",
+            name="show_slices",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='show_slices_switch',
+            model_name="config",
+            name="show_slices_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='zoom_level',
-            field=models.CharField(default='20', max_length=10),
+            model_name="config",
+            name="zoom_level",
+            field=models.CharField(default="20", max_length=10),
         ),
         migrations.AddField(
-            model_name='config',
-            name='zoom_level_switch',
+            model_name="config",
+            name="zoom_level_switch",
             field=models.BooleanField(default=False),
         ),
     ]

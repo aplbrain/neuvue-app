@@ -28,7 +28,6 @@ Config = apps.get_model("preferences", "Config")
 
 
 class WorkspaceView(LoginRequiredMixin, View):
-
     def get(self, request, namespace=None, **kwargs):
         # TODO:
         # This redirects NG static files.  Currently, NG redirects directly to root in their js
@@ -157,9 +156,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             else:
                 # Manually get the points for now, populate in client later.
-                points = [
-                    client.get_point(x)["coordinate"] for x in task_df["points"]
-                ]
+                points = [client.get_point(x)["coordinate"] for x in task_df["points"]]
                 context["ng_state"] = construct_proofreading_state(
                     task_df, points, return_as="json"
                 )

@@ -6,18 +6,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0002_auto_20211206_0227'),
+        ("workspace", "0002_auto_20211206_0227"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='namespace',
-            name='ng_link_type',
-            field=models.CharField(choices=[('path', 'Path Layer'), ('point', 'Annotation Layer'), ('pregen', 'Pregenerated')], default='pregen', max_length=50),
+            model_name="namespace",
+            name="ng_link_type",
+            field=models.CharField(
+                choices=[
+                    ("path", "Path Layer"),
+                    ("point", "Annotation Layer"),
+                    ("pregen", "Pregenerated"),
+                ],
+                default="pregen",
+                max_length=50,
+            ),
         ),
         migrations.AlterField(
-            model_name='namespace',
-            name='pcg_source',
-            field=models.CharField(choices=[('https://minnie.microns-daf.com/segmentation/table/minnie3_v1', 'Minnie65'), ('https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox', 'Pinky')], default='https://minnie.microns-daf.com/segmentation/table/minnie3_v1', max_length=300),
+            model_name="namespace",
+            name="pcg_source",
+            field=models.CharField(
+                choices=[
+                    (
+                        "https://minnie.microns-daf.com/segmentation/table/minnie3_v1",
+                        "Minnie65",
+                    ),
+                    (
+                        "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
+                        "Pinky",
+                    ),
+                ],
+                default="https://minnie.microns-daf.com/segmentation/table/minnie3_v1",
+                max_length=300,
+            ),
         ),
     ]

@@ -6,18 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0006_auto_20220427_2149'),
+        ("preferences", "0006_auto_20220427_2149"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='mesh_color_palette',
-            field=models.CharField(blank=True, default='palette1', max_length=10, null=True),
+            model_name="config",
+            name="mesh_color_palette",
+            field=models.CharField(
+                blank=True, default="palette1", max_length=10, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='config',
-            name='mesh_color_palette_switch',
+            model_name="config",
+            name="mesh_color_palette_switch",
             field=models.BooleanField(default=False),
         ),
     ]
