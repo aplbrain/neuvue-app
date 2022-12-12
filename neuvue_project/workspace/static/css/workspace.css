@@ -53,10 +53,16 @@ ul li {
   left:0vw;
 }
 .basic {
-  background-image: url('/static/images/neuron_background_sketch-01-min.jpg'); 
-  background-size: 70vw;
-  background-repeat: repeat;
-  min-height: 96vh;
+  background: url('/static/images/neuron_background_sketch-01-min.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: calc(100vh - 50px);
+}
+
+nav {
+  max-height: 50px;
 }
 
 .overflow-hidden {
@@ -89,12 +95,12 @@ ul li {
 }
 
 .intro {
-  background-image: url('/static/images/xray-neuron.jpg'); 
+  background: url('/static/images/xray-neuron.jpg') no-repeat center center fixed; 
   background-size: cover;
-  background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
+  height: calc(100vh - 50px);
 }
 
 
@@ -476,7 +482,7 @@ margin-right: 7%;
 }
 
 .index-card-container {
-  height: 100vh;
+  height: calc(100vh - 50px);
 }
 
 .index-card-items {
@@ -1036,6 +1042,8 @@ input[type=radio]:checked + label > img {
   align-items: center;
   border-radius: 2px;
   height: calc(var(--max-width) / 2 - 6px);
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .small-logo-img {
