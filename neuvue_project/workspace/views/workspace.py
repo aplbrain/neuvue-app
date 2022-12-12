@@ -294,7 +294,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 client.patch_task(
                     task_df["_id"],
                     duration=duration,
-                    priority=task_df["priority"] - 1,
+                    priority=task_df["priority"] - 100,
                     status="pending",
                     metadata=metadata,
                     ng_state=ng_state,
