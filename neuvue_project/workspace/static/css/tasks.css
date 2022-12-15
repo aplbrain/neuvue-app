@@ -66,11 +66,16 @@
 }
 
 /* Task category header buttons */
-.header-button {
+.header-sizing {
   margin: 1% 0 1% 0.5%;
   background-color: transparent;
   right:0;
-  width: 12.5%;
+  height: 3.2vh;
+}
+
+.header-outline {
+  background-color: transparent;
+  right:0;
   height: 3.2vh;
   border: 1.5px solid var(--complete-color);
   padding: 0.2vh 0.2vw;
@@ -78,14 +83,16 @@
   font-family: var(--header-font);
   font-size: 1.5vh;
   cursor: pointer;
+  color: var(--complete-color);
 }
 
-.header-button:hover{
+.header-outline:hover{
   background: var(--primary-accent);
   border-color: transparent;
+  color: var(--background);
 }
 
-.header-button-text{
+.header-box-text{
   position: relative;
   width:100%;
   height:100%;
@@ -98,7 +105,7 @@
   color: var(--complete-color);
 }
 
-.header-button-text:hover {
+.header-box-text:hover {
   color: var(--background);
 }
 
