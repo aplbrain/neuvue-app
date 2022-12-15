@@ -58,11 +58,19 @@ ul li {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 52.5px);
+  overflow: auto;
 }
 
 nav {
-  max-height: 50px;
+  max-height: 52.5px;
+}
+
+/* if navbar menu is open, height must be much larger */
+@media(max-width: 992px) {
+  nav {
+    max-height: 275px;
+  }
 }
 
 .overflow-hidden {
@@ -100,7 +108,7 @@ nav {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 52.5px);
 }
 
 
@@ -476,14 +484,9 @@ border: 2px solid var(--secondary-accent) !important;
 background-color: var(--transparent-card-background) !important;
 border-radius: 8pt !important;
 width: 86%; 
-height: 60%; 
-margin-top: 25%;
-margin-right: 7%;
+height: 50vh; 
 }
 
-.index-card-container {
-  height: calc(100vh - 50px);
-}
 
 .index-card-items {
   overflow:scroll;
@@ -753,13 +756,12 @@ a.fill-div {
 
 /* the entire sidebar (content  + access bar) */
 .sidemenu {
-  height: 99%;
+  height: calc(100vh - 52.5px);
   width: 25%;
   position: fixed;
   z-index: 1;
   right: 0;
   background-color: var(--transparent-background);
-  top: 4vh;
 }
 
 
@@ -1112,7 +1114,6 @@ input[type=radio]:checked + label > img {
     border: 0;
 }
 
-.rounded-border {
-  border: 1px solid;
-  border-radius: 0.25rem;
+.inherit-height {
+  height: inherit;
 }
