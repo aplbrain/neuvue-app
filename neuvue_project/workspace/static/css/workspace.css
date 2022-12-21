@@ -69,7 +69,7 @@ nav {
 /* if navbar menu is open, height must be much larger */
 @media(max-width: 992px) {
   nav {
-    max-height: 275px;
+    max-height: 575px;
   }
 }
 
