@@ -2,29 +2,28 @@
 {% load static %}
 {% load socialaccount %}
 
+{% block title %}Welcome to NeuVue{% endblock %}
 {% block content %}
 
-
 <div class="intro">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="index-block  d-flex justify-content-center" style="margin-top: 50%;">
+  <div class="container-fluid inherit-height">
+    <div class="row inherit-height">
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center">
           <div class="title-container">
-            <div class="index-title-text ">Welcome to NeuVue</div>
+            <h1 class="index-title-text mt-4 my-1">Welcome to NeuVue</h1>
           {% if user.is_authenticated %}
             <div class="d-flex justify-content-center">
               <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
             </div>
           {% else %}
-            <a class="index-title-sub-text d-flex justify-content-center" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" ></a>
+            <a class="index-title-sub-text d-flex justify-content-center" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" alt="Sign in with Google"></a>
           {% endif %}
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="row">
-          <div class="index-card-container d-flex justify-content-center">
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+          <div class="index-card-container d-flex justify-content-center align-items-center">
             <div class="card index-card" id="bootstrap-overrides">
               <div class="index-card-header card-header text-center">
                 Recent Changes
@@ -34,7 +33,7 @@
                   {% for update in recent_updates %}
                   <div class="index-card-item">
                     <div class="index-card-item-title">{{update.update_name}}</div>
-                    <div class="index-card-item-date"><i>{{update.update_date}}</i></div>
+                    <div class="index-card-item-date fst-italic">{{update.update_date}}</div>
                     <div class="index-card-item-description">{{update.update_description}}</div>
                   </div>
                   {% endfor %}
@@ -44,7 +43,6 @@
               </div>
             </div>
           </div>
-        </div>
         <div class="index-card-column">        
         </div>
       </div>

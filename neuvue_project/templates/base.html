@@ -2,9 +2,10 @@
 {% load socialaccount %}
 {% load in_group %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     {% block header_includes %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/workspace.css' %}">
@@ -26,7 +27,7 @@
     <! Navigation Bar >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url "index" %}"> <img src="{% static 'images/axonolotl.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> NeuVue</a>
+        <a class="navbar-brand" href="{% url "index" %}"> <img src="{% static 'images/axonolotl.png' %}" alt="Home" width="30" height="24" class="d-inline-block align-text-top"> NeuVue</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -91,7 +92,7 @@
               <a class="nav-link", href="{% url "about" %}"> About</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-outline-secondary" href="{% provider_login_url 'google' %}">Sign In</a>
+              <a class="btn btn-outline-info" href="{% provider_login_url 'google' %}">Sign In</a>
             </li>
 
             {% endif %}
@@ -101,7 +102,9 @@
       </div>
     </nav>
 
-  {% block content %}{% endblock %}
+    <main>
+      {% block content %}{% endblock %}
+    </main>
 
   </body>
 </html>

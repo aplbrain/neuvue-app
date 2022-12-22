@@ -2,12 +2,14 @@
 {% load static %}
 {% load socialaccount %}
 
+{% block title %}Nuclei Viewer{% endblock %}
 {% block content %}
 
 {% if not given_ids or error %}
 
 <div class="basic workspace">
   <div class="inspect-container">
+    <h3 class="text-white mb-3"> Nuclei Viewer </h3>
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
