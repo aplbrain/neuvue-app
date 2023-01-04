@@ -48,7 +48,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             "seg_id": "",
             "is_open": False,
             "tasks_available": True,
-            "skipable": True,
+            "skipable": namespace_obj.allow_users_to_skip_tasks,
             "instructions": "",
             "display_name": namespace_obj.display_name,
             "submission_method": submission_method,
