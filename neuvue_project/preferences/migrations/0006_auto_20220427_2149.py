@@ -6,22 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0005_auto_20220420_1448'),
+        ("preferences", "0005_auto_20220420_1448"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='config',
-            old_name='annotation_color_switch',
-            new_name='annotation_color_palette_switch',
+            model_name="config",
+            old_name="annotation_color_switch",
+            new_name="annotation_color_palette_switch",
         ),
         migrations.RemoveField(
-            model_name='config',
-            name='annotation_color',
+            model_name="config",
+            name="annotation_color",
         ),
         migrations.AddField(
-            model_name='config',
-            name='annotation_color_palette',
-            field=models.CharField(blank=True, default='palette1', max_length=10, null=True),
+            model_name="config",
+            name="annotation_color_palette",
+            field=models.CharField(
+                blank=True, default="palette1", max_length=10, null=True
+            ),
         ),
     ]

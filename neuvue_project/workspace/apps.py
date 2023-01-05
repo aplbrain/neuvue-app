@@ -2,10 +2,11 @@ from django.apps import AppConfig
 
 
 class WorkspaceConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'workspace'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "workspace"
 
-#test
+
+# test
 class TestConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tests'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "tests"

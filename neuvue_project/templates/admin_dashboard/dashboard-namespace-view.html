@@ -6,6 +6,7 @@
 {% block header_includes %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
+{% block title %}Admin Dashboard: {{display_name}} in {{group}} {% endblock %}
 
 {% block content %}
 <div class="basic dashboard">
@@ -35,6 +36,42 @@
             </span>
           </div>
           <div class="card-body">
+            {% if group == "unassigned" %}
+              <div>
+                <div id="action-buttons" class="container-fluid">
+                  <form id="taskPatchForm" action="" method="POST" class="form-inline float-start" >{% csrf_token %}
+                    
+                    <input type="hidden" name="username" value="{{username}}" />
+                    <input type="hidden" name="namespace" value="{{namespace}}" />
+                    <label class="m-2"> Assign  </label>
+                    <input id="n-tasks" form="taskPatchForm" name="n-tasks" placeholder="1" class="input-small" type="number" min="1" required>
+                    <label class="m-2"> task(s) from </label>
+                    <select id="unassigned-group" form="taskPatchForm" name="unassigned-group" class="btn btn-default dropdown-toggle border border-secondary" required>
+                      <option value="" selected disabled>Unassigned Group</option>
+                      {% for row in table %}
+                        <option value="{{row.username}}">{{row.username}}</option>
+                      {% endfor %}
+                    </select>
+                    <label class="m-2"> to each member of </label>
+                    <select id="assignee-group" form="taskPatchForm" name="assignee-group" class="btn btn-default dropdown-toggle border border-secondary" required>
+                      <option value="" selected disabled>User Group</option>
+                      {% for group in user_groups %}
+                        {% if group != "unassigned" %}
+                          <option value="{{group}}">{{group}}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <button type="button" id="distribute-button" form="taskPatchForm" name="selected_action" value="distribute" class="btn btn-primary" >
+                      Distribute Tasks
+                    </button>
+                    
+                  </form>
+                </div>
+                <br><br>
+                <hr>  
+              </div>
+              
+            {% endif %}
             <table id="summary-table" class="table table-striped table-hover">
               <thead>
                 <tr>
@@ -67,6 +104,8 @@
 
 </div>
 
+{% distribute_task_modal %}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
@@ -81,7 +120,6 @@
     }
   })
 
-
   // Export as CSV Button
   const exportButton = document.getElementById("exportBtn");
   exportButton.addEventListener('click', (e) => {
@@ -93,7 +131,21 @@
     $('#summary-table').table2csv('download', {'filename': filename});
 
   }); 
-
+    // button is clicked
+    if ("{{group}}" === "unassigned") {
+      const distributeButton = document.getElementById("distribute-button");
+      distributeButton.addEventListener('click', (e) =>  {
+        // check if sufficient n tasks to submit
+        let n_tasks = $( "#n-tasks" ).val();
+        let unassigned_group = $( "#unassigned-group" ).val();
+        let assignee_group = $( "#assignee-group" ).val();
+        let user_table = {{table | safe}};
+        let user_group_count_dict = {{user_group_counts | safe}};
+        if ((n_tasks !== null) && (unassigned_group !== null) && (assignee_group !== null)){
+          showConfirmDistributeTasksModal(n_tasks, unassigned_group, assignee_group,  user_table, user_group_count_dict);
+        }
+      })
+    }
 </script>
 
 {% endblock %}

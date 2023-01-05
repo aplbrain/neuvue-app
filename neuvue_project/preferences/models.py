@@ -1,32 +1,38 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 # Create your models here.
 
+
 class Config(models.Model):
-    user = models.CharField(max_length=50, default = None)
+    user = models.CharField(max_length=50, default=None)
     enabled = models.BooleanField(default=False)
-    
+
     # Annotation Color Palette
-    annotation_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
+    annotation_color_palette = models.CharField(
+        max_length=10, default="palette1", null=True, blank=True
+    )
     annotation_color_palette_switch = models.BooleanField(default=False)
 
     # Mesh Color Palette
-    mesh_color_palette = models.CharField(max_length=10, default='palette1', null=True, blank=True)
+    mesh_color_palette = models.CharField(
+        max_length=10, default="palette1", null=True, blank=True
+    )
     mesh_color_palette_switch = models.BooleanField(default=False)
 
     # 2D Show Slices
     show_slices = models.BooleanField(default=False)
     show_slices_switch = models.BooleanField(default=False)
 
-   # Zoom Level
+    # Zoom Level
     zoom_level = models.CharField(max_length=10, default="20")
     zoom_level_switch = models.BooleanField(default=False)
 
-    # 2D Segmentation Opacity 
+    # 2D Segmentation Opacity
     alpha_selected = models.CharField(max_length=10, default="0.85")
     alpha_selected_switch = models.BooleanField(default=False)
 
-    # 3D Segmentation Opacity 
+    # 3D Segmentation Opacity
     alpha_3d = models.CharField(max_length=10, default="0.5")
     alpha_3d_switch = models.BooleanField(default=False)
 

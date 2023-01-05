@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0007_namespace_refresh_selected_root_ids'),
+        ("workspace", "0007_namespace_refresh_selected_root_ids"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='namespace',
-            name='max_number_of_pending_tasks_per_user',
+            model_name="namespace",
+            name="max_number_of_pending_tasks_per_user",
             field=models.IntegerField(default=200),
         ),
         migrations.AddField(
-            model_name='namespace',
-            name='number_of_tasks_users_can_self_assign',
+            model_name="namespace",
+            name="number_of_tasks_users_can_self_assign",
             field=models.IntegerField(default=10),
         ),
     ]

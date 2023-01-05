@@ -1,6 +1,41 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.7.2",
+            "update_date":"December 6th, 2022",
+            "update_description": "Adds ability to input root IDs in nuclei viewer. Updates to instructions panel."
+        },
+        {
+            "update_name": "v1.7.1",
+            "update_date":"November 21st, 2022",
+            "update_description": "New nuclei viewer. Bug fixes with flagging tasks. Redesigned tags widget."
+        },
+        {
+            "update_name": "v1.6.8",
+            "update_date":"November 1st, 2022",
+            "update_description": "Visual changes to task page. Fixes bugs with the synapse viewer."
+        },
+        {
+            "update_name": "v1.6.7",
+            "update_date":"October 24th, 2022",
+            "update_description": "Adds group actions. Refactors operation ID tracking."
+        },
+        {
+            "update_name": "v1.6.6",
+            "update_date":"October 7th, 2022",
+            "update_description": "Removes statistics sidebar and replaces it with the activity log."
+        },
+        {
+            "update_name": "v1.6.5",
+            "update_date":"August 17th, 2022",
+            "update_description": "Adds completeness metrics to synapse viewer. Records selected segments on task submission."
+        },
+        {
+            "update_name": "v1.6.4",
+            "update_date":"August 10th, 2022",
+            "update_description": "Adds additional options to synapse viewer. Speeds up pages. Squashes summer bugs."
+        },
+        {
             "update_name": "v1.6.2",
             "update_date":"June 30th, 2022",
             "update_description": "Allows tags to be saved when skipping, flagging, or exitting a task. Improved load times for admin tools."

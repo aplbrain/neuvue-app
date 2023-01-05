@@ -1,0 +1,22 @@
+<div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
+    <div class="sideContentTitle">
+        Instructions
+    </div>
+    <div class="sideContentInfo">
+        <div class="prompt">{{ instructions.prompt | safe | linebreaksbr }}</div>
+                        
+        {% if instructions.media %} 
+            <br>
+            <div style="display:flex; justify-content: center; margin:1vh 0vh;">
+                <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    // all hyperlinks open in new tab 
+    // $("#sideContentInfo a").attr({"target": "_blank", "rel":"noopener noreferrer"});
+    $("div.prompt a").attr({"target": "_blank", "rel":"noopener noreferrer"});
+</script>

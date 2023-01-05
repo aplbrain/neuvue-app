@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0009_auto_20220322_1616'),
+        ("workspace", "0009_auto_20220322_1616"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='namespace',
-            name='submission_method',
-            field=models.CharField(choices=[('submit', 'Submit Button'), ('forced_choice', 'Forced Choice'), ('yes_no_maybe', 'Y/N/M'), ('decide_and_submit', 'Decide and Submit Button')], default='submit', max_length=50),
+            model_name="namespace",
+            name="submission_method",
+            field=models.CharField(
+                choices=[
+                    ("submit", "Submit Button"),
+                    ("forced_choice", "Forced Choice"),
+                    ("yes_no_maybe", "Y/N/M"),
+                    ("decide_and_submit", "Decide and Submit Button"),
+                ],
+                default="submit",
+                max_length=50,
+            ),
         ),
     ]

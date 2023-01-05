@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}Nuclei Viewer{% endblock %}
+{% block content %}
+
+{% if not given_ids or error %}
+
+<div class="basic workspace">
+  <div class="inspect-container">
+    <h3 class="text-white mb-3"> Nuclei Viewer </h3>
+    <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="text-white-50" for="rootIDInput">Nuclei ID and/or Seg ID (Enter ID (s) separated by commas)</label>
+        <input class="form-control" id="rootIDInput" name="given_ids" required="true">
+      </div>
+      <br>
+        <div class="d-flex">
+          <input type="submit" class="btn btn-primary" value="Submit">
+          <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
+          {% if error%}
+          <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
+          {% endif %}
+        </div>
+    </form>
+  </div>
+</div>
+
+{% else %}
+
+<div id="neuVue-sidemenu" class="sidemenu">
+  <div id="neuVue-sidebar" class="sidebar">
+      <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
+          <i class="glyphicon glyphicon-list"></i>
+      </a>  
+  </div>
+  <div id="neuVue-sidecontent" class="sidecontent">
+      
+      <! Task Information >
+      <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
+        <div class="sideContentTitle">
+            Nuclei Information
+        </div>
+        <div class="sideContentInfo">
+            <table class="table table-dark table-bordered table-hover">
+              {{cell_types|safe}}
+            </table>
+            {% if ids_not_found %}
+              <span> <code> IDs not found: </code>{{ids_not_found}}</span>
+            {% endif %}
+        </div>
+    </div>
+    <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
+      <div class="sideContentInfo">     
+          <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
+          <button type="button" class="btn btn-info" id="exportBtn_nucleiIDs"> <i class="fa fa-download"></i> Export Nuclei Info </button></br>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="neuroglancer" class="leftFormatting">
+  <div class="left">    
+    <div id="neuroglancer-container" class="neuroglancer-container"></div>
+    <div class="bottomBar">
+      <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'nuclei' %}'">
+          Exit
+      </button>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
+{% endif%}
+
+<div id="hiddenTable" style="visibility: hidden;"> 
+</div>
+<style> .overlay-hidden { display:none; } </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+
+    const exportButton_userTable = document.getElementById("exportBtn_nucleiIDs");
+    exportButton_userTable.addEventListener('click', (e) => {
+      let tableContents = `
+            {{cell_types|safe}}`
+        $('#hiddenTable').html(`
+            <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>
+        `);
+        // Construct filename
+        const filename = 'Nuclei_IDs' + '_' +  + Date.now() + '.csv';
+        // Perform download
+        $('#hiddenIDTable').table2csv('download', {'filename': filename});
+    }); 
+
+  // Neuroglancer State Load 
+    
+  function getLink() {
+    viewer.postJsonState(true, undefined, true, function() {
+      let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+      copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+    });
+  }
+
+  function get_nuclei_info() {
+    const nuclei_info = `{{cell_types|safe}}`;
+    return nuclei_info;
+  }
+
+  $(document).ready(function() {
+    {% if ng_state %}
+    const state = {{ ng_state|safe }};
+      openSideMenu();
+      viewer.state.restoreState(state);
+    {% endif %}
+  })
+
+  // Remove loading spinner when page loads. This is important if the back button is clicked
+  window.addEventListener('pageshow', function(e) {
+    if (document.getElementById('submit-spinner') !== null) {
+      removeLoadingSpinner('submit-spinner');
+    }
+  })
+
+  </script>
+{% endblock %}

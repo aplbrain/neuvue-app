@@ -6,43 +6,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0003_config_annotation_color'),
+        ("preferences", "0003_config_annotation_color"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='alpha_3d_switch',
+            model_name="config",
+            name="alpha_3d_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='alpha_selected_switch',
+            model_name="config",
+            name="alpha_selected_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='annotation_color_switch',
+            model_name="config",
+            name="annotation_color_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='chunk_requests_switch',
+            model_name="config",
+            name="chunk_requests_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='gpu_limit_switch',
+            model_name="config",
+            name="gpu_limit_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='layout_switch',
+            model_name="config",
+            name="layout_switch",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='sys_limit_switch',
+            model_name="config",
+            name="sys_limit_switch",
             field=models.BooleanField(default=False),
         ),
     ]

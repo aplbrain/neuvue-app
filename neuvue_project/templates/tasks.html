@@ -4,7 +4,14 @@
 
 {% block header_includes %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+<!--Add for Palette Dropdown-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src= "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!--End Palette Dropdown-->
 {% endblock %}
+{% block title %}My Tasks{% endblock %}
 
 {% block content %}
 <div class="basic tasks">
@@ -13,12 +20,38 @@
             {% for namespace, context in data.namespaces.items %}
                 {% if context.total_tasks %}
                     <div class="neuvueRow">
-                        <div id="{{namespace}}Header" class="jobHeader active" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
-                            {{context.display_name}} ({{context.total_pending}})
+                        <div id="{{namespace}}Header" class="jobHeader active d-flex align-items-center" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
+                            {{context.display_name}}
+                            <span class="badge rounded-pill bg-pink ms-2">
+                                {{context.total_pending}} 
+                            </span>
+                            {% if context.submission_method != "SubmitButton" %}
+                                <span class="badge rounded-pill bg-secondary ms-1" >
+                                    Forced Choice
+                                </span>
+                            {% endif %}
                         </div>
-                        {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
-                            <div class="header-button">
-                                <button class="header-button-text"
+                        {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed or context.can_unassign_tasks %}
+                        <div class="header-sizing btn-toolbar">
+                            <button type="button" 
+                                    class="header-button header-outline dropdown-toggle dropdown-toggle-split" 
+                                    style="margin-right: 5pt"
+                                    data-toggle="dropdown" 
+                                    aria-haspopup="true" 
+                                    aria-expanded="false">
+                                <span class="sr-only header-box-text">Toggle Dropdown</span>
+                              </button>
+                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                                <button class="header-box-text"
+                                    onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
+                                    <div id='{{namespace}}NgSpinner'>
+                                        Start Proofreading
+                                    </div>
+                                </button>
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-dark">
+                                {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
+                                <button class="dropdown-item"
                                     data-bs-toggle="modal"
                                     data-bs-target="#confirmAddTasksModal"
                                     data-bs-display-name="{{context.display_name}}"
@@ -28,30 +61,31 @@
                                     </div>
                                     <input type="hidden" name="namespace" value="{{ namespace }}">
                                 </button>
+                                {% endif %}
+                                {% if context.can_unassign_tasks%}
+                                <button class="dropdown-item" style="font-size: 1.15vh;"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmReassignTasksModal"
+                                    data-bs-display-name="{{context.display_name}}"
+                                    data-bs-namespace="{{namespace}}">
+                                    <div id='{{namespace}}TasksSpinnerReassign'>
+                                        Remove Skipped Tasks
+                                    </div>
+                                    <input type="hidden" name="namespace" value="{{ namespace }}">
+                                </button>
+                                {% endif %} 
                             </div>
-                        {% endif %}
-                        {% if context.can_unassign_tasks%}
-                        <div class="header-button">
-                            <button class="header-button-text" style="font-size: 1.15vh;"
-                                data-bs-toggle="modal"
-                                data-bs-target="#confirmReassignTasksModal"
-                                data-bs-display-name="{{context.display_name}}"
-                                data-bs-namespace="{{namespace}}">
-                                <div id='{{namespace}}TasksSpinnerReassign'>
-                                    Remove Skipped Tasks
-                                </div>
-                                <input type="hidden" name="namespace" value="{{ namespace }}">
-                            </button>
                         </div>
-                        {% endif %}
-                        <div class="header-button rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
-                            <button class="header-button-text"
+                        {% else %}
+                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                            <button class="header-box-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                 <div id='{{namespace}}NgSpinner'>
                                     Start Proofreading
                                 </div>
                             </button>
                         </div>
+                        {% endif %}
                     </div>
                     <div id="{{namespace}}Table" class ="bin" style="display:none;">
                         <div class="tab">
@@ -73,8 +107,8 @@
                                     </tr>
                                     {% for row in  context.pending %}
                                     <tr>
-                                        <td scope="row"><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td> {{ row.seg_id }} </td>
+                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
+                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
                                         <td> {{ row.created }} </td>
                                         <td> {{ row.priority }} </td>
                                         <td> {{ row.status }} </td>
@@ -96,10 +130,10 @@
                                         <th>Status</th>
                                         <th>Tags</th>
                                     </tr>
-                                    {% for row in  context.closed %}
+                                    {% for row in context.closed %}
                                     <tr>
-                                        <td scope="row"><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td> {{ row.seg_id }} </td>
+                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
+                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
                                         <td> {{ row.opened }} </td>
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
@@ -130,8 +164,8 @@
                 <div id="pinkyHeader" class="pinkyHeader jobHeader active">
                     Pinky Sandbox
                 </div>
-                <div class="header-button rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'"> 
-                    <button class="header-button-text" id='pinkySandboxButton'
+                <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'"> 
+                    <button class="header-box-text" id='pinkySandboxButton'
                     onclick="triggerLoadingSpinner('PinkyNgSpinner')">
                         <div id='PinkyNgSpinner'>
                             Start Sandbox
@@ -139,45 +173,23 @@
                     </button>
                 </div>
             </div>
+
         </div>
 
 
         <div class="analytics">
             <div class="sideContentTitle">
-                Stats
+                Activity Log
             </div>
-            
-            {% for namespace, context in data.namespaces.items %}
-                {% if context.total_tasks %}
-                    <div class="sideContentInfo">
-                        <span class = "analyticsSubHeader"> {{context.display_name}} </span>
-                            <table class="analyticsTable">
-                            <thead>
-                                <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Tasks Closed</th>
-                                <th scope="col">Task Time</th>
-                                <th scope="col">Rate (minutes)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Last Week</th>
-                                    <td>{{context.stats.weekly_tasks}}</td>
-                                    <td>{{context.stats.weekly_time}}</td>
-                                    <td>{{context.stats.weekly_rate}}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Total</th>
-                                    <td>{{context.stats.total_tasks}}</td>
-                                    <td>{{context.stats.total_time}}</td>
-                                    <td>{{context.stats.total_rate}}</td>
-                                </tr>
-                            </tbody>
-                            </table>
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <div class="sideContentInfo">
+                <span class = "analyticsSubHeader"> Last 24 hours </span>
+                </br>
+                {{ data.daily_changelog | safe }}
+                </br>
+                <span class = "analyticsSubHeader"> Older </span>
+                </br>
+                {{ data.full_changelog | safe }}
+            </div>
         </div>
     </div>
     <!-- Triggerable elements -->

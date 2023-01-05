@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+{% load inclusion_tags %}
+{% block title %}{{display_name}} Workspace{% endblock %}
 
 {% block content %}
 
 <! Information Hidden Menu >
 
 {% if is_open %}
-<div class="basic workspace">
+<div class="basic workspace overflow-hidden">
 {% else %}
 <div class="basic interTask">
 {% endif %}
@@ -19,20 +21,8 @@
         <div id="neuVue-sidecontent" class="sidecontent">
             
             <! Instructions >
-            <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
-                <div class="sideContentTitle">
-                    Instructions
-                </div>
-                <div class="sideContentInfo">
-                    {{ instructions.prompt }}
-                    {% if instructions.media %} 
-                        <br>
-                        <div style="display:flex; justify-content: center; margin:1vh 0vh;">
-                            <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            {% processed_instructions instructions %}
+            
             <! Task Notes >
             <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
                 <div class="sideContentTitle">
@@ -40,9 +30,9 @@
                 </div>
                 <div class="sideContentInput" >
                     {% if tags %}
-                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" spellcheck="false"> {{tags}} </textarea>
+                        <input name='tags' class="sideContentTextArea" form="mainForm" value='{{tags}}' data-role="tagsinput" autofocus>
                     {% else %}
-                        <textarea class="sideContentTextArea" name="tags" form="mainForm" rows="1" cols="50" placeholder="Comma separated tags: glia, false split, etc. " spellcheck="false"></textarea>
+                        <input name='tags' class="sideContentTextArea" form="mainForm" data-role="tagsinput" autofocus>
                     {% endif %}
                 </div>
             </div>
@@ -56,14 +46,18 @@
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
                     Task ID <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-                    {% if was_skipped %}
-                    Skipped <br> 
-                    <span class ="code">{{was_skipped}}</span><br>
-                    {% endif %}
                     Segmentation ID  <br>
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
                     PCG Endpoint  <br> 
                     <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
+                    {% if was_skipped %}
+                    Skipped <br> 
+                    <span class ="code">{{was_skipped}}</span><br>
+                    {% endif %}
+
+                    Number of Edits <br> 
+                    <span class ="code" id="num_edits">{{num_edits}}</span><br>
+
                     Tasks Completed This Session <br> 
                     <span class ="code"> {{session_task_count}}  </span>  <br>
                     Neuroglancer Link <br> 
@@ -125,30 +119,6 @@
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
                     {% csrf_token %}
 
-                    <! Save/Reload >
-                    {% comment %} 
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnSave" 
-                            type="button" 
-                            class="mainButton" 
-                            accesskey="s"
-                        >
-                            Save Checkpoint
-                        </button>
-                    </div>
-
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnReload" 
-                            type="button" 
-                            class="mainButton"
-                            accesskey="r"
-                        >
-                            Reload Checkpoint
-                        </button> 
-                    </div>
-                    {% endcomment %}
                     
                     <! Flag >
                     <div class="mainButtonWrapper">
@@ -293,96 +263,45 @@
     </div>
 </div>
 
-<form id="flagForm" method="post">
-    {% csrf_token %}
-    <!-- Modal -->
-    <div id="flagModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" style="color: black;">Flagging Task #{{task_id}}</h5>
-                    <button type="button" class="btn-close" id="btnFlagClose" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="post" role="form">
-                        <div class="form-group">
-                            <label for="flag" style="color: black;">Please select a reason for flagging this task:</label>
-                            <select class="form-select" name="flag" id="select-flag" onchange=toggleTextbox()>
-                                <option value="unknown">Select reason</option>
-                                <option value="artifact in the data">Artifact in the data</option>
-                                <option value="wrong location">Wrong location</option>
-                                <option value="data unable to load">Data unable to load</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: none;" id="text">
-                            <label for="flag-other">Other reason*</label>
-                            <textarea class="form-control" name="flag-other" rows="2" maxlength="100" placeholder="Enter reason" validate></textarea>
-                            <small class="form-text text-muted">*100 character limit.</small>
-                            <div class="invalid-feedback">Please enter a reason.</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btnFlagClose" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="flag-submit btn btn-primary" id="btnFlagSubmit" onclick="triggerLoadingSpinner('btnFlagSubmit')">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-</form>
+<!-- Modals -->
+{% flag_modal task_id %}
+{% remove_task_modal %}
+{% timeout_modal %}
+{% confirm_selected_segments_modal number_of_selected_segments_expected %}
 
-<!-- Remove task Modal -->
-<div id="removeModal" class="modal" name="remove" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="color: black; text-align: center;">Are you sure you want to remove this task from your queue?</h5>
-                <button type="button" class="btn-close" id="btnRemoveClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btnRemoveClose" data-bs-dismiss="modal">No</button>
-                <button type="button" class="remove-yes btn btn-primary" id="btnRemoveSubmit" onclick="triggerLoadingSpinner('btnRemoveSubmit')" >Yes</button>
-            </div>
-        </div>
-    </div>
-</div> 
-
-<div id="timeoutModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="color: black;">Continue proofreading?</h5>
-                <button type="button" class="btn-close" id="btnTimeoutClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="timeoutModalNo" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="timeoutModalYes" data-bs-dismiss="modal">Yes</button>
-            </div>
-        </div>
-    </div>
-</div> 
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
+<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+<script src="https://unpkg.com/@yaireo/tagify"></script>
+<script src="https://unpkg.com/@yaireo/tagify@3.1.0/dist/tagify.polyfills.min.js"></script>
+<script type="text/javascript"  src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 <script type="text/javascript"> 
-    // Delete previous state info
-    // window.localStorage.removeItem("ngState")
+
+    // initialize Tagify on the above input node reference
+    let input = document.querySelector('input[name="tags"]'),
+        // init Tagify script on the above inputs
+        tagify = new Tagify(input, {
+        {% if instructions.tags %}
+        whitelist: {{instructions.tags | safe}},
+        {% endif %}
+        originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(','),
+        maxTags: 10,
+        dropdown: {
+            maxItems: 20,           // <- mixumum allowed rendered suggestions
+            classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+            enabled: 0,             // <- show suggestions on focus
+            closeOnSelect: true,    // <- do not hide the suggestions dropdown once an item has been selected
+        }
+    })
+
     function getLink() {
         viewer.postJsonState(true, undefined, true, function() {
-        let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-        copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
         });
-    }
-
-    if (window.localStorage.getItem('sidebarStatus') == 'open') {
-        openSideMenu();
-    } else if (window.localStorage.getItem('sidebarStatus') == 'closed') {
-        closeSideMenu();
-    } else {
-        openSideMenu();
     }
         
     function saveState() {
@@ -400,30 +319,81 @@
         });
     }
      
-     function show3DSlices() {
+    function show3DSlices() {
         let slices = '{{show_slices}}';
         if (slices == 'True' && !viewer.showPerspectiveSliceViews.value_){
             viewer.showPerspectiveSliceViews.toggle();
-         }
-     }
-     
+        }
+    }
+
+    function getSelectedSegments(state) {
+        selectedSegments = new Set();
+        viewer.state.toJSON().layers.forEach( layer => {
+            if (layer.type === "segmentation_with_graph" || layer.type === "segmentation") {
+                layer.segments.forEach( (segment) => {
+                    selectedSegments.add(segment);
+                })
+            }
+        })
+        return Array.from(selectedSegments);;
+    }
+
+    // Track operation ids and save operation IDs
+    function saveOperations() {
+        let post_body = JSON.stringify({
+            'task_id':"{{task_id}}", 
+            'operation_ids' : Array.from(tracked_new_operations), 
+            'namespace':'{{namespace}}'
+        });
+        fetch('/save_operations', {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"})
+            .then((response) => {
+                response.text()
+                .then((text) => {
+                    triggerToast(text)
+                })
+            });
+    }
+    
+    const tracked_new_operations = new Set();
+    function updateTrackedOperations(current_operation_ids){
+        if (current_operation_ids.length > 0) {
+            for (const [idx, ele] of current_operation_ids.entries()){
+                if (!tracked_new_operations.has(ele)){
+                    tracked_new_operations.add(ele);
+                    saveOperations();
+                    var num_edits_div = document.getElementById('num_edits');
+                    num_edits_div.innerHTML = parseInt('{{num_edits}}',10) + tracked_new_operations.size;
+                }
+            }
+        }
+    }
+
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
-        let data = JSON.stringify(viewer.state.toJSON());
-        let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-        let duration = Math.floor(Date.now()/1000) - startTime - totalIdleTime;
-        let new_operation_ids = '[]';
-        
-        if (typeof operation_ids !== 'undefined') {
-            new_operation_ids = JSON.stringify(operation_ids);
-        }
+        updateTrackedOperations(operation_ids)
+        viewer.postJsonState(true, undefined, true, function() {
+            let state = viewer.saver.savedUrl;
 
-        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', data).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
-        $('<input>').attr('type', 'hidden').attr('name', 'new_operation_ids').attr('value', new_operation_ids).appendTo(form);
-        $(form).submit();
+            // Check if state successfully saved. If not use the raw JSON state 
+            if (!state) {
+                state = JSON.stringify(viewer.state.toJSON());
+            }
+
+            let ng_differ_stack = JSON.stringify(viewer.differ.stack);
+            let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
+    
+            $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+            $('<input>').attr('type', 'hidden').attr('name', 'ngDifferStack').attr('value', ng_differ_stack).appendTo(form);
+            
+            {% if track_selected_segments %}
+            const selected_segments = getSelectedSegments(viewer.state);
+            $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
+            {% endif %}
+            
+            $(form).submit();
+        })
     }
 
     function exitAlert(e) {
@@ -438,36 +408,22 @@
         const toast = new bootstrap.Toast(toastDiv);
         toast.show();
     }
-    
-    // Current time 
-    var startTime = Math.floor(Date.now()/1000);
-    
-    // Inactivity Timer
-    var idleTime = 0;
-    var totalIdleTime = 0;
 
-    // seconds to check for inactivity
-    var incrementAmount = 5;
-    
-    // Increment the idle time counter every minute.
-    setInterval(timerIncrement, incrementAmount*1000); 
+    // create browser interaction timer
+    const browserTimer = new browserInteractionTime({
+            timeIntervalEllapsedCallbacks: [{
+            timeInMilliseconds: 60000,
+            callback: () => saveState(),
+            multiplier: x => x + 3e5
+        }],
+        absoluteTimeEllapsedCallbacks: [],
+        browserTabInactiveCallbacks: [],
+        browserTabActiveCallbacks: [],
+        idleTimeoutMs: 10000,
+        checkCallbacksIntervalMs: 250
+    })
 
-    // Zero the idle timer on mouse movement or keypress.
-    $(this).mousemove(function (e) {
-        idleTime = 0;
-    });
-    $(this).keypress(function (e) {
-        idleTime = 0;
-    });
-
-    function timerIncrement() {
-        if ('{{is_open}}' && idleTime >= '{{timeout}}') { 
-            $('#timeoutModal').modal('show');
-            totalIdleTime += incrementAmount;
-        }
-        idleTime += incrementAmount;
-    }
-
+    // forced choice button selection logic
     var current_button_selection = 'noneSelected'
 
     function updateButtonSelected(button_title){
@@ -484,9 +440,25 @@
 
     // Button Submission
     $(document).ready(function() {
+
+        // Start Timer for duration tracking and auto-save 
+        browserTimer.startTimer();
+
+        // Sidebar Preference
+        if (window.localStorage.getItem('sidebarStatus') == 'closed') {
+            closeSideMenu();
+        } else {
+            openSideMenu();
+        }
+
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
         
+        // Track operation IDs every three seconds
+        window.setInterval(function() {
+            updateTrackedOperations(operation_ids);
+        }, 3000);
+
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();
         var modifier = "Alt";
@@ -510,28 +482,41 @@
                 forced_choice_hotkey_hints.item(i).style.display = 'block';
             }
         }
-        
-        // add specific class to save state overlay
 
+        // If number_of_selected_segments_expected is set at the namespace level,
+        // show a modal if the user has selected more
+        function submitWithSelectedSegmentsCheck(buttonId, buttonSubmissionValue, buttonDisplayName) {
+            {% if number_of_selected_segments_expected %}
+                const num_selected_segments = getSelectedSegments(viewer.state).length;
+                if (num_selected_segments > "{{number_of_selected_segments_expected}}") {
+                    showConfirmSelectedSegmentsModal(buttonId, buttonSubmissionValue, buttonDisplayName, num_selected_segments)
+                } else {
+                    submitForm(buttonSubmissionValue);
+                }
+            {% else %}
+            submitForm(buttonSubmissionValue);
+            {% endif %}
+        }
+        
         {% if submit_task_button %}
             {% if button_list %}
                 $('#btnSubmit').click(function(){
                     if (current_button_selection != 'noneSelected'){
                         triggerLoadingSpinner('submit_task_load');
-                        submitForm(current_button_selection);
+                        submitWithSelectedSegmentsCheck('submit_task_load', current_button_selection, 'Submit Task');
                     } else {
                         alert("Please select a decision!");
                     }
                 });
             {% else %}
                 $('#btnSubmit').click(function(){
-                    submitForm('submit');
+                    submitWithSelectedSegmentsCheck('submit_task_load', 'submit', 'Submit Task');
                 });
             {% endif %}
         {% else %}
             {% for button in button_list %}
                 $("#{{button.submission_value}}").click(function(){
-                    submitForm("{{button.submission_value}}");
+                    submitWithSelectedSegmentsCheck("{{button.submission_value}}" + "_load", "{{button.submission_value}}", "{{button.display_name}}");
                 });
             {% endfor %}
         {% endif %}
@@ -574,12 +559,6 @@
         });
 
         show3DSlices();
-        
-        setInterval(autoSave, 300000);
-        function autoSave() {
-            console.log("autosaved state")
-            saveState();
-        }
 
         // additional hotkeys
         document.addEventListener("keydown", function(event) {
@@ -614,19 +593,18 @@
 
         });
 
-    });
-    
-    {% if is_open %}
-    window.addEventListener('beforeunload', exitAlert);
-    {% endif %}
+        // Disable ctrl + scroll zooming to deconflict with ngl keybinding
+        document.addEventListener("wheel", e => {
+            if(e.ctrlKey) {
+                e.preventDefault(); //prevent zoom
+            }
+        }, { passive: false });
 
-    // Disable ctrl + scroll zooming to deconflict with ngl keybinding
-    document.addEventListener("wheel", e => {
-        if(e.ctrlKey) {
-            e.preventDefault(); //prevent zoom
-        }
-    },
-    { passive: false });
+        {% if is_open %}
+        window.addEventListener('beforeunload', exitAlert);
+        {% endif %}
+        
+    });
 
 </script>
 {% endblock %}

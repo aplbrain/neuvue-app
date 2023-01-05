@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
-
+{% load inclusion_tags %}
+{% block title %}Inspect Task{% endblock %}
 {% block content %}
 
 {% if not task_id or error%}
 
 <div class="basic workspace">
   <div class="inspect-container">
+  <h3 class="text-white mb-3"> Inspect Task </h3>
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
@@ -36,20 +38,7 @@
   <div id="neuVue-sidecontent" class="sidecontent">
       
       <! Instructions >
-      <div id = "instruction-container" class ="sideContentBox" style="max-height:30%;">
-        <div class="sideContentTitle">
-            Instructions
-        </div>
-        <div class="sideContentInfo">
-            {{ instructions.prompt }}
-            {% if instructions.media %} 
-                <br>
-                <div style="display:flex; justify-content: center; margin:1vh 0vh;">
-                    <img src={{  instructions.media }} class="instruction-image" onclick="window.open('{{  instructions.media }}')">
-                </div>
-            {% endif %}
-        </div>
-      </div>
+      {% processed_instructions instructions %}
       
       <! Task Information >
       <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
@@ -79,6 +68,9 @@
               Decision  <br> 
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br> 
               {% endif %}
+
+              Number of Edits  <br> 
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{num_edits}}')"><i class="fa fa-copy"></i></button> {{num_edits}}  </span>  <br> 
               
               {% if tags %}
               Tags  <br> 

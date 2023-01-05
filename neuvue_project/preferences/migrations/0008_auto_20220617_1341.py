@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0007_auto_20220603_1425'),
+        ("preferences", "0007_auto_20220603_1425"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='config',
-            name='enable_sound',
+            model_name="config",
+            name="enable_sound",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='config',
-            name='enable_sound_switch',
+            model_name="config",
+            name="enable_sound_switch",
             field=models.BooleanField(default=False),
         ),
     ]

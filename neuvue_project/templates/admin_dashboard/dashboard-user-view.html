@@ -6,6 +6,7 @@
 {% block header_includes %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
+{% block title %}Admin Dashboard: {{username}}{% endblock %}
 
 {% block content %}
 <div class="basic dashboard">
@@ -95,6 +96,7 @@
                   <th scope="col">Segment ID</th>
                   <th scope="col">Status</th>
                   <th scope="col">Priority</th>
+                  <th scope="col">Seg ID</th>
                   <th scope="col">Created</th>
                   <th scope="col">Opened</th>
                   <th scope="col">Closed</th>
@@ -111,14 +113,23 @@
                     <td>{{taskrow.seg_id}}</td>
                     <td>{{taskrow.status}}</td>
                     <td>{{taskrow.priority}}</td>
+                    <td>{{taskrow.seg_id}}</td>
                     <td>{{taskrow.created}}</td>
                     <td>{{taskrow.opened}}</td>
                     <td>{{taskrow.closed}}</td>
                     <td>{{taskrow.duration}}</td>
                     {% if taskrow.tags %}
-                      <td class="userTags">{{taskrow.tags|join:", "}}</td>
-                    {% else %}
-                      <td>None</td>
+                    <td class='userTags'> 
+                      <span 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="right" 
+                        data-bs-html="true"
+                        title="{{taskrow.tags|join:", "}}" >
+                        {{ taskrow.tags.0 }} 
+                      </span>
+                      </td>
+                      {% else %}
+                      <td> None </td>
                     {% endif %}
                   </tr>
                 {% endfor %}
@@ -188,7 +199,12 @@
           "targets":3,
           "visible":false
         },
-      ]
+      ],
+      lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
     });
 
     // Select all checkbox

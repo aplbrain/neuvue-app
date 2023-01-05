@@ -53,10 +53,27 @@ ul li {
   left:0vw;
 }
 .basic {
-  background-image: url('/static/images/neuron_background_sketch-01-min.png'); 
-  background-size: 70vw;
-  background-repeat: repeat;
-  height: 96vh;
+  background: url('/static/images/neuron_background_sketch-01-min.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: calc(100vh - 52.5px);
+  overflow: auto;
+}
+
+nav {
+  max-height: 52.5px;
+}
+
+/* if navbar menu is open, height must be much larger */
+@media(max-width: 992px) {
+  nav {
+    max-height: 575px;
+  }
+}
+
+.overflow-hidden {
   overflow: hidden;
 }
 
@@ -66,12 +83,10 @@ ul li {
 
 .basic.tasks {
   width: 100%;
-  overflow: visible;
 }
 
 .basic.dashboard {
   width: 100%;
-  overflow: visible;
 }
 
 .basic.interTask {
@@ -88,14 +103,12 @@ ul li {
 }
 
 .intro {
-  background-image: url('/static/images/xrayneuron01-compressed.png'); 
+  background: url('/static/images/xray-neuron.jpg') no-repeat center center fixed; 
   background-size: cover;
-  background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  height: 95vh;
-  width: 100vw;
+  height: calc(100vh - 52.5px);
 }
 
 
@@ -402,9 +415,6 @@ color: var(--primary-accent);
   max-width: 12%;
 }
 
-
-
-
 .copyButton{
   background-color: var(--secondary-accent);
   display: flex;
@@ -474,14 +484,9 @@ border: 2px solid var(--secondary-accent) !important;
 background-color: var(--transparent-card-background) !important;
 border-radius: 8pt !important;
 width: 86%; 
-height: 60%; 
-margin-top: 25%;
-margin-right: 7%;
+height: 50vh; 
 }
 
-.index-card-container {
-  height: 100vh;
-}
 
 .index-card-items {
   overflow:scroll;
@@ -652,7 +657,7 @@ font-size: 25px;
   color: var(--primary-accent);
   overflow: scroll;
   border: 0px;
-  width: 100%;
+  width: 100% !important;
   resize: none;
 }
 /* Container for sidecontent item */
@@ -700,7 +705,8 @@ font-size: 25px;
   font-family: var(--monospace-font);
   padding: 0px 10px;
   position:relative;
-  font-size: 1.4vh;
+  font-size: 1.6vh;
+  overflow-y: scroll;
   color: var(--primary-accent);
   width: 100%;
   border-radius: 4px;
@@ -750,13 +756,12 @@ a.fill-div {
 
 /* the entire sidebar (content  + access bar) */
 .sidemenu {
-  height: 99%;
+  height: calc(100vh - 52.5px);
   width: 25%;
   position: fixed;
   z-index: 1;
   right: 0;
   background-color: var(--transparent-background);
-  top: 4vh;
 }
 
 
@@ -1021,3 +1026,94 @@ input[type=radio]:checked + label > img {
   background-color: darkgray !important;
 }
 
+.text-secondary-color-activated {
+  color: var(--secondary-accent-activated);
+}
+
+/* Small logo classes */
+.small-logo-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(var(--max-width),1fr));
+  column-gap: 4px;
+  --max-width: 240px;
+}
+
+.logo-card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 2px;
+  height: calc(var(--max-width) / 2 - 6px);
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.small-logo-img {
+  max-width: calc(var(--max-width) - 30px);
+  max-height: calc(var(--max-width) / 2 - 20px);
+}
+
+/* Medium logo classes */
+.medium-logo-container {
+  display: flex;
+  flex-wrap: wrap;
+  --max-height: 200px;
+}
+
+/* center medium logos only on mobile */
+@media(max-width: 500px) {
+  .medium-logo-container {
+    display: block;
+  }
+}
+
+.medium-logo-img {
+  max-width: calc(var(--max-height)*4);
+  max-height: var(--max-height);
+}
+
+/* autocomplete tags */
+.tagify{
+  overflow: auto;
+  flex-wrap: unset !important;
+}
+
+.tagify__tag-text, .tagify__input {
+	white-space: nowrap !important;
+}
+
+.tags-look .tagify__dropdown__item{
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 3px;
+  padding: .3em .5em;
+  border: 1px solid #CCC;
+  background: #F3F3F3;
+  margin: .2em;
+  font-size: .85em;
+  color: black;
+  transition: 0s;
+}
+
+.tags-look .tagify__dropdown__item--active{
+  color: black;
+}
+
+.tags-look .tagify__dropdown__item:hover{
+  background: lightyellow;
+  border-color: gold;
+}
+
+.tags-look .tagify__dropdown__item--hidden {
+    max-width: 0;
+    max-height: initial;
+    padding: .3em 0;
+    margin: .2em 0;
+    white-space: nowrap;
+    text-indent: -20px;
+    border: 0;
+}
+
+.inherit-height {
+  height: inherit;
+}

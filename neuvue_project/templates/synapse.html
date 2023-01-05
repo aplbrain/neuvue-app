@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
+{% block title %}Synapse Viewer{% endblock %}
 
 {% block content %}
 
@@ -8,11 +9,31 @@
 
 <div class="basic workspace">
   <div class="inspect-container">
+    <h3 class="text-white mb-3"> Synapse Viewer </h3>
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
-        <input class="form-control" id="rootIDInput" placeholder="Enter Root ID (s) separated by commas" name="root_ids" required="true">
-        <br>
+        <label class="text-white-50" for="rootIDInput">Root ID (Enter Root ID (s) separated by commas)</label>
+        <input class="form-control" id="rootIDInput" name="root_ids" required="true">
+      </div>
+      <br>
+      <div class="form-group">
+        <label class="text-white-50" for="timestampInput">Timestamp (Optional)</label>
+        <input class="form-control" id="timestampInput" name="timestamp" type="date" data-value="None">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="PreSynapsesCheckbox" name="pre_synapses" value=True checked>
+        <label class="text-white-50" for="PreSynapsesCheckbox">Pre-Synapses</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="PostSynapsesCheckbox" name="post_synapses" value=True checked>
+        <label class="text-white-50" for="PostSynapsesCheckbox">Post-Synapses</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="CleftLayerCheckbox" name="cleft_layer" value=True checked>
+        <label class="text-white-50" for="CleftLayerCheckbox">Cleft Layer</label>
+      </div>
+      <br>
         <div class="d-flex">
           <input type="submit" class="btn btn-primary" value="Submit">
           <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
@@ -20,7 +41,6 @@
           <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
           {% endif %}
         </div>
-      </div>
     </form>
   </div>
 </div>
@@ -40,16 +60,41 @@
           <div class="sideContentTitle">
               Segment Information
           </div>
-          <div class="sideContentInfo">             
-              
-              {% for root, stats in synapse_stats.items %}
-              Root ID <br> 
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-              Number of Presynaptic Connections <br> 
-              <span class ="code"> {{stats.num_pre}} </span> <br>
-              Number of Postsynaptic Connections <br> 
-              <span class ="code">  {{stats.num_post}} </span> <br>
-              {% endfor %}
+          <div class="sideContentInfo">
+              <table id="synapse-table" class="table table-dark table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Root ID</th>
+                  {% if pre_synapses == 'True' %}
+                  <th scope="col">Presynaptic Connections</th>
+                  <th scope="col">Presynaptic Targets</th>
+                  <th scope="col">Presynapses to Targets</th>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <th scope="col">Postsynaptic Connections</th>
+                  <th scope="col">Postsynaptic Targets</th>
+                  <th scope="col">Postsynapses to Targets</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for root, stats in synapse_stats.items %}
+                <tr>
+                  <td>{{root}}</td>
+                  {% if pre_synapses == 'True' %}
+                  <td>{{stats.num_pre_synapses}}</td>
+                  <td>{{stats.num_pre_targets}}</td>
+                  <td>{{stats.pre_synapses_to_targets}}</td>
+                  {% endif %}
+                  {% if post_synapses == 'True' %}
+                  <td>{{stats.num_post_synapses}}</td>
+                  <td>{{stats.num_post_targets}}</td>
+                  <td>{{stats.post_synapses_to_targets}}</td>
+                  {% endif %}
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
           </div>
       </div>
       <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
@@ -59,9 +104,9 @@
             <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
           </div>
       </div>
-      
+
   </div>
-</div> 
+</div>
 
 <div id="neuroglancer" class="leftFormatting">
   <div class="left">    
@@ -88,45 +133,51 @@
 <script type="text/javascript">
   // Neuroglancer State Load 
 
-  /**
-   {% for root, stats in synapse_stats.items %}
-    Root ID <br> 
-    <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root}}')"><i class="fa fa-copy"></i></button> {{root}} </span> <br>
-    Number of Presynaptic Connections <br> 
-    <span class ="code"> {{stats.num_pre}} </span> <br>
-    Number of Postsynaptic Connections <br> 
-    <span class ="code">  {{stats.num_post}} </span> <br>
-    {% endfor %}
-              **/
-    const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
-    exportButton_userTable.addEventListener('click', (e) => {
-      let tableContents = `
-                    <thead>
-                      <tr>
-                        <th scope="col">Root ID</th>
-                        <th scope="col">Root ID: formatted</th>
-                        <th scope="col">Number of Presynaptic Connections</th>
-                        <th scope="col">Number of Postsynaptic Connections</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for root, stats in synapse_stats.items %}
-                        <tr>
-                          <td>{{root}}</td>
-                          <td>#: {{root}}</td>
-                          <td>{{stats.num_pre}}</td>
-                          <td>{{stats.num_post}}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>`
-        $('#hiddenTable').html(`
-            <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>  
-        `);
-        // Construct filename
-        const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';
-        // Perform download
-        $('#hiddenIDTable').table2csv('download', {'filename': filename});
-    }); 
+    {% if root_ids %}
+      const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
+      exportButton_userTable.addEventListener('click', (e) => {
+        let tableContents = `
+                <thead>
+                  <tr>
+                    <th scope="col">Root ID</th>
+                    {% if pre_synapses == 'True' %}
+                    <th scope="col">Presynaptic Connections</th>
+                    <th scope="col">Presynaptic Targets</th>
+                    <th scope="col">Presynapses to Targets</th>
+                    {% endif %}
+                    {% if post_synapses == 'True' %}
+                    <th scope="col">Postsynaptic Connections</th>
+                    <th scope="col">Postsynaptic Targets</th>
+                    <th scope="col">Postsynapses to Targets</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for root, stats in synapse_stats.items %}
+                  <tr>
+                    <td>#{{root}}</td>
+                    {% if pre_synapses == 'True' %}
+                    <td>{{stats.num_pre_synapses}}</td>
+                    <td>{{stats.num_pre_targets}}</td>
+                    <td>{{stats.pre_synapses_to_targets}}</td>
+                    {% endif %}
+                    {% if post_synapses == 'True' %}
+                    <td>{{stats.num_post_synapses}}</td>
+                    <td>{{stats.num_post_targets}}</td>
+                    <td>{{stats.post_synapses_to_targets}}</td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>`
+          $('#hiddenTable').html(`
+              <table id='hiddenIDTable' class="table table-striped table-hover">${tableContents}</table>
+          `);
+          // Construct filename
+          const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';
+          // Perform download
+          $('#hiddenIDTable').table2csv('download', {'filename': filename});
+      }); 
+    {% endif %}
 
   function getLink() {
     viewer.postJsonState(true, undefined, true, function() {
