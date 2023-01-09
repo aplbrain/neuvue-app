@@ -756,7 +756,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         if flags["timestamp"] != "None":
             try:
                 pre_synapses = cave_client.materialize.query_table(
-                    "synapses_pni_2",
+                    settings.SYNAPSE_TABLE,
                     filter_in_dict={"pre_pt_root_id": int_root_ids},
                     select_columns=[
                         "ctr_pt_position",
@@ -769,7 +769,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             pre_synapses = cave_client.materialize.query_table(
-                "synapses_pni_2",
+                settings.SYNAPSE_TABLE,
                 filter_in_dict={"pre_pt_root_id": int_root_ids},
                 select_columns=["ctr_pt_position", "pre_pt_root_id", "post_pt_root_id"],
             )
@@ -788,7 +788,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         if flags["timestamp"] != "None":
             try:
                 post_synapses = cave_client.materialize.query_table(
-                    "synapses_pni_2",
+                    settings.SYNAPSE_TABLE,
                     filter_in_dict={"post_pt_root_id": int_root_ids},
                     select_columns=[
                         "ctr_pt_position",
@@ -801,7 +801,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             post_synapses = cave_client.materialize.query_table(
-                "synapses_pni_2",
+                settings.SYNAPSE_TABLE,
                 filter_in_dict={"post_pt_root_id": int_root_ids},
                 select_columns=["ctr_pt_position", "post_pt_root_id", "pre_pt_root_id"],
             )

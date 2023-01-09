@@ -214,6 +214,7 @@ NEUVUE_CLIENT_SETTINGS = {
 # Annotation Tables
 NEURON_TABLE = "nucleus_neuron_svm"
 CELL_CLASS_TABLE = "allen_soma_coarse_cell_class_model_v2"
+SYNAPSE_TABLE = "synapses_pni_2"
 DAYS_UNTIL_EXPIRED = 3
 CACHED_TABLES_PATH = os.path.join(STATIC_ROOT, "tables")
 
