@@ -325,6 +325,7 @@ class ReportView(View, LoginRequiredMixin):
             sieve=sieve,
             select=["assignee", "status", "duration", "metadata", "closed", "opened"],
         )
+        task_df['n_operation_ids'] = task_df['metadata'].apply(lambda x: len(x.get('operation_ids')) if isinstance(x.get('operation_ids'), list) else 0)
 
         if namespace in decision_namespaces:
             import plotly.express as px
@@ -384,6 +385,7 @@ class ReportView(View, LoginRequiredMixin):
             "Total Duration (h)",
             "Avg Closed Duration (m)",
             "Avg Duration (m)",
+            "Average Edits"
         ]
         status_states = ["pending", "open", "closed", "errored"]
         columns.extend(status_states)
@@ -399,7 +401,9 @@ class ReportView(View, LoginRequiredMixin):
                 )
             )
             avg_duration = str(round(assignee_df["duration"].mean() / 60, 2))
-            user_metrics = [assignee, total_duration, avg_closed_duration, avg_duration]
+            avg_edits = str(round(assignee_df["n_operation_ids"].mean(), 2))
+
+            user_metrics = [assignee, total_duration, avg_closed_duration, avg_duration, avg_edits]
             for status in status_states:
                 number_of_tasks = len(assignee_df[assignee_df["status"] == status])
                 user_metrics.append(number_of_tasks)
