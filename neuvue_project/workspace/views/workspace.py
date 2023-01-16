@@ -291,10 +291,12 @@ class WorkspaceView(LoginRequiredMixin, View):
                 metadata["skipped"] = 1
 
             try:
+                new_priority = task_df["priority"] - namespace_obj.decrement_priority
+                if new_priority < 0: new_priority = 0
                 client.patch_task(
                     task_df["_id"],
                     duration=duration,
-                    priority=task_df["priority"] - namespace_obj.decrement_priority, # change this number
+                    priority=new_priority,
                     status="pending",
                     metadata=metadata,
                     ng_state=ng_state,
