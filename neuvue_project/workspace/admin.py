@@ -41,7 +41,7 @@ class NamespaceAdmin(admin.ModelAdmin):
                     "number_of_tasks_users_can_self_assign",
                     "max_number_of_pending_tasks_per_user",
                     "track_selected_segments",
-                    "allow_users_to_skip_tasks"
+                    "decrement_priority"
                 ]
             },
         ),

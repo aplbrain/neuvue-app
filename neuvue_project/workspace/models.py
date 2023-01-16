@@ -135,7 +135,7 @@ class Namespace(models.Model):
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
     track_selected_segments = models.BooleanField(default=False)
-    allow_users_to_skip_tasks = models.BooleanField(default=True)
+    decrement_priority = models.IntegerField(default=100, verbose_name="When skipped, decrement priority by")
 
     """Pull From Push To Novice"""
     novice_pull_from = models.CharField(

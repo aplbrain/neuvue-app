@@ -48,7 +48,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             "seg_id": "",
             "is_open": False,
             "tasks_available": True,
-            "skipable": namespace_obj.allow_users_to_skip_tasks,
+            "skipable": True if namespace_obj.decrement_priority > 0 else False,
             "instructions": "",
             "display_name": namespace_obj.display_name,
             "submission_method": submission_method,
@@ -294,7 +294,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 client.patch_task(
                     task_df["_id"],
                     duration=duration,
-                    priority=task_df["priority"] - 100,
+                    priority=task_df["priority"] - namespace_obj.decrement_priority, # change this number
                     status="pending",
                     metadata=metadata,
                     ng_state=ng_state,
