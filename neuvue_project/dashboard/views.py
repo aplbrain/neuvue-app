@@ -328,7 +328,7 @@ class ReportView(View, LoginRequiredMixin):
         task_df['n_operation_ids'] = task_df['metadata'].apply(lambda x: len(x.get('operation_ids')) if isinstance(x.get('operation_ids'), list) else 0)
         task_has_edits = True if any(task_df['n_operation_ids'].to_list()) else False
 
-        if (namespace in decision_namespaces) & len(task_df):
+        if bool((namespace in decision_namespaces) & (len(task_df)>0)):
             import plotly.express as px
             from plotly.subplots import make_subplots
 
@@ -451,10 +451,8 @@ class ReportView(View, LoginRequiredMixin):
             "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
             "fig_time": fig_time.to_html(),
         }
-        print('all namespaces:', context['all_namespaces'])
-        print('display_namespace: ', context['display_name'])
 
-        if (namespace in decision_namespaces) & len(task_df):
+        if bool((namespace in decision_namespaces) & (len(task_df)>0)):
             context["fig_decision"] = fig_decision.to_html()
 
         return render(request, "report.html", context)
