@@ -280,7 +280,7 @@ class ReportView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
 
         Namespaces = apps.get_model("workspace", "Namespace")
-        Buttons = apps.get_model("workspace", "ForcedChoiceButton")
+        ForcedChoiceButton = apps.get_model("workspace", "ForcedChoiceButton")
 
         # Access POST fields
         display_name = request.POST.get("namespace")
@@ -299,7 +299,7 @@ class ReportView(View, LoginRequiredMixin):
         users = _get_users_from_group(group)
 
         button_sets = set()
-        for o in Buttons.objects.all():
+        for o in ForcedChoiceButton.objects.all():
             button_sets.add(str(o.set_name))
 
         # add bar chart
@@ -328,7 +328,7 @@ class ReportView(View, LoginRequiredMixin):
         task_df['n_operation_ids'] = task_df['metadata'].apply(lambda x: len(x.get('operation_ids')) if isinstance(x.get('operation_ids'), list) else 0)
         task_has_edits = True if any(task_df['n_operation_ids'].to_list()) else False
 
-        if namespace in decision_namespaces:
+        if (namespace in decision_namespaces) & len(task_df):
             import plotly.express as px
             from plotly.subplots import make_subplots
 
@@ -342,38 +342,41 @@ class ReportView(View, LoginRequiredMixin):
                 shared_yaxes=True,
                 horizontal_spacing=0.02,
             )
+
+            namespace_submission_method = Namespaces.objects.get(display_name=display_name).submission_method
+            decision_types = ForcedChoiceButton.objects.filter(set_name=namespace_submission_method).values_list('display_name','submission_value')
+    
             color_count = 0
-            for decision_type in task_df["decision"].unique():
-                if decision_type:
-                    decision_counts = dict(
-                        task_df[task_df["decision"] == decision_type].value_counts(
-                            "assignee"
-                        )
-                    )
-                    x = list(decision_counts.keys())
-                    y = list(decision_counts.values())
-                    fig_decision.add_trace(
-                        go.Bar(
-                            name=decision_type,
-                            x=x,
-                            y=y,
-                            marker_color=px.colors.qualitative.Plotly[color_count],
-                        ),
-                        row=1,
-                        col=2,
-                    )
-                    fig_decision.add_trace(
-                        go.Bar(
-                            name=decision_type,
-                            x=["total"],
-                            y=[sum(y)],
-                            marker_color=px.colors.qualitative.Plotly[color_count],
-                            showlegend=False,
-                        ),
-                        row=1,
-                        col=1,
-                    )
-                    color_count += 1
+            for namespace_display_name, submission_value in decision_types:
+                decision_counts = {}
+                for assignee in users:
+                    decision_counts[assignee] = len(task_df[task_df["decision"] == submission_value])
+
+                x = list(decision_counts.keys())
+                y = list(decision_counts.values())
+                fig_decision.add_trace(
+                    go.Bar(
+                        name=namespace_display_name,
+                        x=x,
+                        y=y,
+                        marker_color=px.colors.qualitative.Plotly[color_count],
+                    ),
+                    row=1,
+                    col=2,
+                )
+                fig_decision.add_trace(
+                    go.Bar(
+                        name=namespace_display_name,
+                        x=["total"],
+                        y=[sum(y)],
+                        marker_color=px.colors.qualitative.Plotly[color_count],
+                        showlegend=False,
+                    ),
+                    row=1,
+                    col=1,
+                )
+                color_count += 1
+
             fig_decision.update_layout(
                 title="Decisions for " + namespace + " by " + group,
                 yaxis_title="# of responses",
@@ -393,7 +396,8 @@ class ReportView(View, LoginRequiredMixin):
         columns.extend(status_states)
         table_rows = []
         fig_time = go.Figure()
-        for assignee, assignee_df in task_df.groupby("assignee"):
+        for assignee in users:
+            assignee_df = task_df[task_df.assignee == assignee].copy()
             total_duration = str(round(assignee_df["duration"].sum() / 3600, 2))
             avg_closed_duration = str(
                 round(
@@ -413,15 +417,16 @@ class ReportView(View, LoginRequiredMixin):
                 number_of_tasks = len(assignee_df[assignee_df["status"] == status])
                 user_metrics.append(number_of_tasks)
             table_rows.append(user_metrics)
-            assignee_df["last_interaction"] = assignee_df.apply(
-                lambda x: max(x.opened, x.closed).floor("d"), axis=1
-            )
-            daily_totals = (
-                assignee_df.groupby("last_interaction")["duration"].sum() / 3600
-            )
-            x = daily_totals.index
-            y = daily_totals.values
-            fig_time.add_trace(go.Scatter(x=x, y=y, name=assignee))
+            if len(assignee_df):
+                assignee_df["last_interaction"] = assignee_df.apply(
+                    lambda x: max(x.opened, x.closed).floor("d"), axis=1
+                )
+                daily_totals = (
+                    assignee_df.groupby("last_interaction")["duration"].sum() / 3600
+                )
+                x = daily_totals.index
+                y = daily_totals.values
+                fig_time.add_trace(go.Scatter(x=x, y=y, name=assignee))
         fig_time.update_layout(
             showlegend=True,
             title="Platform Time per User Grouped by Date of Last Interaction",
@@ -446,7 +451,10 @@ class ReportView(View, LoginRequiredMixin):
             "all_namespaces": [x.display_name for x in Namespaces.objects.all()],
             "fig_time": fig_time.to_html(),
         }
-        if namespace in decision_namespaces:
+        print('all namespaces:', context['all_namespaces'])
+        print('display_namespace: ', context['display_name'])
+
+        if (namespace in decision_namespaces) & len(task_df):
             context["fig_decision"] = fig_decision.to_html()
 
         return render(request, "report.html", context)
