@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "app.neuvue.io",
@@ -240,6 +240,6 @@ if DEBUG:
 STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace"))
 
 # PEAK EXPERIMENT
-PEAK_ADMIN = "AGTExpAdmins"
-PEAK_COHORT = "PeakCohort"
+PEAK_ADMIN = "PeakAdmins"
+PEAK_COHORT = "PeakParticipants"
 PEAK_NAMESPACE = "peakExtension"

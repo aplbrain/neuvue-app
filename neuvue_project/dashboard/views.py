@@ -44,14 +44,15 @@ def _get_status_count(task_df, status):
 class DashboardView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
-        if not request.user.is_staff and not peak_admin:
+        if not (request.user.is_staff or peak_admin):
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
         context = {}
         if peak_admin:
+            namespace = Namespaces.objects.filter(namespace=settings.PEAK_NAMESPACE).first().display_name
             context["all_groups"] = [settings.PEAK_COHORT]
-            context["all_namespaces"] = [settings.PEAK_NAMESPACE]
+            context["all_namespaces"] = [namespace]
             context["all_users"] = _get_users_from_group(settings.PEAK_COHORT)
         else:
             context["all_groups"] = sorted([x.name for x in Group.objects.all()])
@@ -84,10 +85,10 @@ class DashboardView(View, LoginRequiredMixin):
 class DashboardNamespaceView(View, LoginRequiredMixin):
     def get(self, request, group=None, namespace=None, *args, **kwargs):
         peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
-        if not request.user.is_staff and not peak_admin:
+        if not (request.user.is_staff or peak_admin):
             return redirect(reverse("index"))
-
-        if namespace != settings.PEAK_NAMESPACE:
+        
+        if peak_admin and namespace != settings.PEAK_NAMESPACE:
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
@@ -183,16 +184,17 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
 class DashboardUserView(View, LoginRequiredMixin):
     def get(self, request, username=None, filter=None, *args, **kwargs):
         peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
-        if not request.user.is_staff and not peak_admin:
+        if not (request.user.is_staff or peak_admin):
             return redirect(reverse("index"))
 
-        if username not in _get_users_from_group(settings.PEAK_COHORT):
+        if peak_admin and username not in _get_users_from_group(settings.PEAK_COHORT):
             return redirect(reverse("index"))
+        
         context = {}
         if peak_admin:
             table, counts = self._generate_table_and_counts(username, settings.PEAK_NAMESPACE)
         else:
-            table, counts = self._generate_table_and_counts(username, settings.PEAK_NAMESPACE)
+            table, counts = self._generate_table_and_counts(username)
 
         context["username"] = username
         context["table"] = table

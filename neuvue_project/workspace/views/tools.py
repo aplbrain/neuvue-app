@@ -43,7 +43,7 @@ class InspectTaskView(View):
             logging.warning(f"Unauthorized requests from {request.user}.")
             return redirect(reverse("index"))
 
-        if request.user.username in _get_users_from_group(settings.PEAK_NAMESPACE):
+        if request.user.username in _get_users_from_group(settings.PEAK_COHORT):
             return redirect(reverse("index"))
         
         if task_id is None:
