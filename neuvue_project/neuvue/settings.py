@@ -238,3 +238,8 @@ if DEBUG:
     mimetypes.add_type("application/javascript", ".js", True)
 
 STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace"))
+
+# PEAK EXPERIMENT
+PEAK_ADMIN = "AGTExpAdmins"
+PEAK_COHORT = "PeakCohort"
+PEAK_NAMESPACE = "peakExtension"

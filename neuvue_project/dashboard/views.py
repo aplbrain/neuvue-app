@@ -40,21 +40,26 @@ def _format_time(x):
 def _get_status_count(task_df, status):
     return task_df["status"].value_counts().get(status, 0)
 
-
+# DEV NOTE: Hacky way to restrict dashboard to other group.
 class DashboardView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
-        if not request.user.is_staff:
+        peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
+        if not request.user.is_staff and not peak_admin:
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
-
         context = {}
-        context["all_groups"] = sorted([x.name for x in Group.objects.all()])
-        context["all_groups"].append("See All Users")
-        context["all_namespaces"] = sorted(
-            [x.display_name for x in Namespaces.objects.all()]
-        )
-        context["all_users"] = sorted([x.username for x in User.objects.all()])
+        if peak_admin:
+            context["all_groups"] = [settings.PEAK_COHORT]
+            context["all_namespaces"] = [settings.PEAK_NAMESPACE]
+            context["all_users"] = _get_users_from_group(settings.PEAK_COHORT)
+        else:
+            context["all_groups"] = sorted([x.name for x in Group.objects.all()])
+            context["all_groups"].append("See All Users")
+            context["all_namespaces"] = sorted(
+                [x.display_name for x in Namespaces.objects.all()]
+            )
+            context["all_users"] = sorted([x.username for x in User.objects.all()])
 
         return render(request, "admin_dashboard/dashboard.html", context)
 
@@ -78,10 +83,15 @@ class DashboardView(View, LoginRequiredMixin):
 
 class DashboardNamespaceView(View, LoginRequiredMixin):
     def get(self, request, group=None, namespace=None, *args, **kwargs):
-        if not request.user.is_staff:
+        peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
+        if not request.user.is_staff and not peak_admin:
+            return redirect(reverse("index"))
+
+        if namespace != settings.PEAK_NAMESPACE:
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
+
 
         context = {}
         users = _get_users_from_group(group)
@@ -172,11 +182,17 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
 
 class DashboardUserView(View, LoginRequiredMixin):
     def get(self, request, username=None, filter=None, *args, **kwargs):
-        if not request.user.is_staff:
+        peak_admin = request.user.groups.filter(name=settings.PEAK_ADMIN).exists()
+        if not request.user.is_staff and not peak_admin:
             return redirect(reverse("index"))
 
+        if username not in _get_users_from_group(settings.PEAK_COHORT):
+            return redirect(reverse("index"))
         context = {}
-        table, counts = self._generate_table_and_counts(username)
+        if peak_admin:
+            table, counts = self._generate_table_and_counts(username, settings.PEAK_NAMESPACE)
+        else:
+            table, counts = self._generate_table_and_counts(username, settings.PEAK_NAMESPACE)
 
         context["username"] = username
         context["table"] = table
@@ -188,14 +204,17 @@ class DashboardUserView(View, LoginRequiredMixin):
 
         return render(request, "admin_dashboard/dashboard-user-view.html", context)
 
-    def _generate_table_and_counts(self, user: str):
+    def _generate_table_and_counts(self, user: str, namespace=None):
         table_rows = []
         # Counts
         tc = tp = to = te = 0
+        if namespace:
+            sieve =  {"assignee": user,"namespace": namespace}
+        else:
+            sieve = {"assignee": user}
+
         user_df = client.get_tasks(
-            sieve={
-                "assignee": user,
-            },
+            sieve=sieve,
             select=[
                 "opened",
                 "closed",

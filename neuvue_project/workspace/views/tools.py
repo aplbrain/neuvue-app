@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.models import Group, User
 from django.views.generic.base import View
 from django.conf import settings
 from neuvue.client import client
@@ -22,6 +23,12 @@ logging.basicConfig(level=logging.INFO)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+def _get_users_from_group(group: str):
+    if group == "See All Users":  # case if all users are queried
+        return []
+    else:  # case if group is provided
+        users = Group.objects.get(name=group).user_set.all()
+        return [x.username for x in users]
 
 class InspectTaskView(View):
     def get(self, request, task_id=None, *args, **kwargs):
@@ -36,6 +43,9 @@ class InspectTaskView(View):
             logging.warning(f"Unauthorized requests from {request.user}.")
             return redirect(reverse("index"))
 
+        if request.user.username in _get_users_from_group(settings.PEAK_NAMESPACE):
+            return redirect(reverse("index"))
+        
         if task_id is None:
             return render(request, "inspect.html", context)
 
