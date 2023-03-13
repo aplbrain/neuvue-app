@@ -412,7 +412,7 @@ class ReportView(View, LoginRequiredMixin):
             "Avg Duration (m)"
         ]
         if task_has_edits:
-            columns.append("Average Edits")
+            columns.extend(["Average Edits", "Total Edits"])
         status_states = ["pending", "open", "closed", "errored"]
         columns.extend(status_states)
         table_rows = []
@@ -432,7 +432,8 @@ class ReportView(View, LoginRequiredMixin):
 
             if task_has_edits:
                 avg_edits = str(round(assignee_df["n_operation_ids"].mean(), 2))
-                user_metrics.append(avg_edits)
+                total_edits = str(round(assignee_df["n_operation_ids"].sum(), 2))
+                user_metrics.extend([avg_edits, total_edits])
 
             for status in status_states:
                 number_of_tasks = len(assignee_df[assignee_df["status"] == status])
