@@ -113,136 +113,137 @@
                         </div>
                     {% endfor %}
             </form>   
-                   
-                <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            
+            <! Neuroglancer Container>
+            {% if ng_url %}
+            <iframe src="{{ng_url}}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
+            {% else %}
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% endif %}
             <! Buttons >
-                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
-                    {% csrf_token %}
-
-                    
-                    <! Flag >
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnFlag" 
-                            type="button" 
-                            class="mainButton flag"
-                            accesskey="f"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#flagModal">
-                            Flag Task
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span> + <kbd>f</kbd> </span>
-                        </div>
+            <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
+                {% csrf_token %}
+                <! Flag >
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnFlag" 
+                        type="button" 
+                        class="mainButton flag"
+                        accesskey="f"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span> + <kbd>f</kbd> </span>
                     </div>
+                </div>
 
 
-                    {% if allowed_to_reassgin%}
-                    <! Remove >
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnRemove" 
-                            type="button" 
-                            class="mainButton remove"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#removeModal"
-                            >
-                            Remove Task
-                        </button>
-                    </div>
-                    {% endif %}
-                    
-                    <! Skip >
-                    {% if skipable %}
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnSkipSubmit" 
-                            type="button" 
-                            class="mainButton skip"
-                            accesskey="k"
-                            onclick="triggerLoadingSpinner('skip_task_load')" 
+                {% if allowed_to_reassgin%}
+                <! Remove >
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnRemove" 
+                        type="button" 
+                        class="mainButton remove"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#removeModal"
                         >
-                            <div id = 'skip_task_load'>
-                                Skip Task
-                            </div>
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span> + <kbd>k</kbd></span>
+                        Remove Task
+                    </button>
+                </div>
+                {% endif %}
+                
+                <! Skip >
+                {% if skipable %}
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnSkipSubmit" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                        onclick="triggerLoadingSpinner('skip_task_load')" 
+                    >
+                        <div id = 'skip_task_load'>
+                            Skip Task
                         </div>
-
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span> + <kbd>k</kbd></span>
                     </div>
-                    {% endif %}
 
-                    <! Submit >
-                    {% if submit_task_button %}
+                </div>
+                {% endif %}
+
+                <! Submit >
+                {% if submit_task_button %}
+                <div class="mainButtonWrapper">
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit"
+                        onclick="triggerLoadingSpinner('submit_task_load')" 
+                    >
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
+                    </button>
+                </div>
+                {% endif %}
+
+                <! Save State > 
+                <div class="mainButtonWrapper">
+                    <button 
+                        id="btnSaveState"
+                        type="button"
+                        class="mainButton save_state"
+                        onclick="triggerLoadingSpinner('save_state')"
+                        >
+                        <div id = 'save_state'>
+                            Save State
+                        </div>
+                    </button>
+                </div>
+                
+                <! Stop >
+                <div class="mainButtonWrapper">
+                    <button 
+                        id="btnStop"
+                        type="button"
+                        class="mainButton pause"
+                        accesskey="e"
+                        onclick="triggerLoadingSpinner('exit_task_load')"
+                    >
+                        <div id = 'exit_task_load'>
+                            Save and Exit Task
+                        </div>
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
+                    </div>
+                </div>
+
+                {% else %}
+                <! In-between Tasks >
+                <div class="interTaskBox">
+                    <div class="interTaskTitle">
+                        Tasks Complete <br> {{display_name}} 
+                    </div>
                     <div class="mainButtonWrapper">
                         <button 
-                            name="btnSubmit"
-                            id="btnSubmit" 
                             type="button" 
-                            class="mainButton submit"
-                            onclick="triggerLoadingSpinner('submit_task_load')" 
-                        >
-                            <div id = 'submit_task_load'>
-                                Submit Task
+                            class="mainButton return" 
+                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                            <div id = 'exit_workspace'>
+                                Return to Task page
                             </div>
                         </button>
                     </div>
-                    {% endif %}
-
-                    <! Save State > 
-                    <div class="mainButtonWrapper">
-                        <button 
-                            id="btnSaveState"
-                            type="button"
-                            class="mainButton save_state"
-                            onclick="triggerLoadingSpinner('save_state')"
-                            >
-                            <div id = 'save_state'>
-                                Save State
-                            </div>
-                        </button>
-                    </div>
-                    
-                    <! Stop >
-                    <div class="mainButtonWrapper">
-                        <button 
-                            id="btnStop"
-                            type="button"
-                            class="mainButton pause"
-                            accesskey="e"
-                            onclick="triggerLoadingSpinner('exit_task_load')"
-                        >
-                            <div id = 'exit_task_load'>
-                                Save and Exit Task
-                            </div>
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
-                        </div>
-                    </div>
-
-
-                    {% else %}
-                    <! In-between Tasks >
-                    <div class="interTaskBox">
-                        <div class="interTaskTitle">
-                            Tasks Complete <br> {{display_name}} 
-                        </div>
-                        <div class="mainButtonWrapper">
-                            <button 
-                                type="button" 
-                                class="mainButton return" 
-                                onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                                <div id = 'exit_workspace'>
-                                    Return to Task page
-                                </div>
-                            </button>
-                        </div>
-                    {% endif %}
-                    </div>
-
-                </form>
+                {% endif %}
+                </div>
+            </form>
         </div>
     </div>
     <div style="display:none;">

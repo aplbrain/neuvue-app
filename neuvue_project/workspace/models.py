@@ -27,6 +27,23 @@ class NeuroglancerLinkType(models.TextChoices):
     PREGENERATED = "pregen", _("Pregenerated")
 
 
+class NeuroglancerHost(models.TextChoices):
+    """Enum for neuroglancer hosts
+
+    neuroglancer.neuvue.io (default) -> built-in neuroglancer forked from seung-lab
+    neuroglancer
+
+    neuroglancer.bossdb.io -> embedded-neuroglancer used by BossDB. Uses latest google
+    fork
+
+    clio-ng.janelia.org -> embedded neuroglancer used by Clio and Janelia.
+    """
+
+    NEUVUE = "neuvue", _("NeuVue Built-in")
+    BOSSDB = "https://neuroglancer.bossdb.io", _("neuroglancer.bossdb.io")
+    CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
+
+
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
     submit_task_button = models.BooleanField(default=True)
@@ -115,6 +132,11 @@ class Namespace(models.Model):
         max_length=50,
         choices=NeuroglancerLinkType.choices,
         default=NeuroglancerLinkType.PREGENERATED,
+    )
+    ng_host = models.CharField(
+        max_length=100,
+        choices=NeuroglancerHost.choices,
+        default=NeuroglancerHost.NEUVUE,
     )
     submission_method = models.ForeignKey(
         ForcedChoiceButtonGroup,
