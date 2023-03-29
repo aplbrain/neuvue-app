@@ -147,8 +147,12 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             if ng_state:
                 if is_url(ng_state):
-                    logging.debug("Getting state from JSON State Server")
-                    context["ng_state"] = get_from_state_server(ng_state)
+                    if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
+                        # Assume its a url to json state
+                        context['ng_state'] = ng_state
+                    else:
+                        logging.debug("Getting state from JSON State Server")
+                        context["ng_state"] = get_from_state_server(ng_state)
 
                 elif is_json(ng_state):
                     # NG State is already in JSON format
@@ -161,11 +165,12 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df, points, return_as="json"
                 )
 
-            # Apply configuration options.
-            context["ng_state"] = apply_state_config(
-                context["ng_state"], str(request.user)
-            )
-            context["ng_state"] = refresh_ids(context["ng_state"], namespace)
+            # Apply neuvue-specific configuration options.
+            if namespace_obj.ng_host == NeuroglancerHost.NEUVUE:
+                context["ng_state"] = apply_state_config(
+                    context["ng_state"], str(request.user)
+                )
+                context["ng_state"] = refresh_ids(context["ng_state"], namespace)
 
             #############################      NG HOST      ########################################
             if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:

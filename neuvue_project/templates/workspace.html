@@ -306,6 +306,7 @@
     }
         
     function saveState() {
+        {% if not ng_url %}
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
@@ -318,6 +319,9 @@
                     })
                 });
         });
+        {% else %}
+        triggerToast("Autosave disabled for embedded neuroglancer");
+        {% endif %}
     }
      
     function show3DSlices() {
@@ -542,7 +546,6 @@
         })
 
         $('#btnSaveState').click(function() {
-            console.log("button submission: savestate");
             saveState();
         })
 

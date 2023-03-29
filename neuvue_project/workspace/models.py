@@ -90,13 +90,9 @@ class ForcedChoiceButton(models.Model):
 
 
 class PcgChoices(models.TextChoices):
-    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _(
-        "Minnie65"
-    )
-    PINKY = (
-        "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
-        _("Pinky"),
-    )
+    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _("Minnie65")
+    PINKY = "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox", _("Pinky"),
+    OTHER = "N/A", _("Other")
 
 
 class ImageChoices(models.TextChoices):
@@ -108,6 +104,7 @@ class ImageChoices(models.TextChoices):
         "gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked",
         _("Pinky"),
     )
+    OTHER = "N/A", _("Other")
 
 
 class PushToChoices(models.TextChoices):
