@@ -165,15 +165,16 @@ class WorkspaceView(LoginRequiredMixin, View):
                     task_df, points, return_as="json"
                 )
 
-            # Apply neuvue-specific configuration options.
+            #############################      NG HOST      ########################################
+            # NOTE: State configs are only applied to neuvue NG states. If using an iframe
+            # url, we just load it as is.
             if namespace_obj.ng_host == NeuroglancerHost.NEUVUE:
                 context["ng_state"] = apply_state_config(
                     context["ng_state"], str(request.user)
                 )
                 context["ng_state"] = refresh_ids(context["ng_state"], namespace)
 
-            #############################      NG HOST      ########################################
-            if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
+            else:
                 context['ng_url'] = construct_url_from_existing(
                     context['ng_state'], namespace_obj.ng_host
                 )
@@ -221,7 +222,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
-        ng_state = request.POST.get("ngState")
+        ng_state = request.POST.get("ngState", task_df['ng_state'])
         duration = int(request.POST.get("duration", 0))
         tags = request.POST.get("tags")
         session_task_count = request.session.get("session_task_count", 0)
