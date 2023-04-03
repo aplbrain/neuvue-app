@@ -33,6 +33,7 @@ class NamespaceAdmin(admin.ModelAdmin):
                     "namespace",
                     "display_name",
                     "ng_link_type",
+                    "ng_host",
                     "submission_method",
                     "pcg_source",
                     "img_source",
