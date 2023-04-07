@@ -50,9 +50,8 @@ class DashboardView(View, LoginRequiredMixin):
         Namespaces = apps.get_model("workspace", "Namespace")
         context = {}
         if peak_admin:
-            namespace = Namespaces.objects.filter(namespace=settings.PEAK_NAMESPACE).first().display_name
             context["all_groups"] = [settings.PEAK_COHORT]
-            context["all_namespaces"] = [namespace]
+            context["all_namespaces"] = [x.display_name for x in Namespaces.objects.filter(namespace__in=settings.PEAK_NAMESPACE)]
             context["all_users"] = _get_users_from_group(settings.PEAK_COHORT)
         else:
             context["all_groups"] = sorted([x.name for x in Group.objects.all()])
@@ -88,7 +87,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
         if not (request.user.is_staff or peak_admin):
             return redirect(reverse("index"))
         
-        if peak_admin and namespace != settings.PEAK_NAMESPACE:
+        if peak_admin and namespace not in settings.PEAK_NAMESPACE:
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")

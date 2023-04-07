@@ -242,4 +242,13 @@ STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "work
 # PEAK EXPERIMENT
 PEAK_ADMIN = "PeakAdmins"
 PEAK_COHORT = "PeakParticipants"
-PEAK_NAMESPACE = "peakExtension"
+PEAK_NAMESPACE = [
+    "peakExtension",
+	"peak_tasks_general",	
+	"peak_training_2",
+	"peak_training_1",	
+	"peak_training_3",	
+	"peak_round_3",	
+	"peak_round_2",	
+	"peak_round_1"
+]
