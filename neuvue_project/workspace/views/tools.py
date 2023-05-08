@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from neuvue.client import client
 
-from ..models import Namespace
+from ..models import Namespace, NeuroglancerHost
 from ..neuroglancer import (
     construct_proofreading_state,
     construct_lineage_state_and_graph,
@@ -13,6 +13,7 @@ from ..neuroglancer import (
     construct_nuclei_state,
     get_from_state_server,
     get_from_json,
+    construct_url_from_existing
 )
 from ..utils import is_url, is_json, is_authorized
 
@@ -30,7 +31,13 @@ class InspectTaskView(View):
                 f"/static/workspace/{task_id}", content_type="application/javascript"
             )
 
-        context = {"task_id": task_id, "ng_state": None, "error": None, "num_edits": 0}
+        context = {
+            "task_id": task_id, 
+            "ng_state": None,
+            "ng_url": None, 
+            "error": None, 
+            "num_edits": 0,
+        }
 
         if not is_authorized(request.user):
             logging.warning(f"Unauthorized requests from {request.user}.")
@@ -47,11 +54,19 @@ class InspectTaskView(View):
 
         namespace = task_df["namespace"]
         ng_state = task_df.get("ng_state")
+        namespace_obj = Namespace.objects.get(namespace=namespace)
 
         if ng_state:
             if is_url(ng_state):
-                logging.debug("Getting state from JSON State Server")
-                context["ng_state"] = get_from_state_server(ng_state)
+                if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
+                    # Assume its a url to json state
+                    context['ng_state'] = ng_state
+                    context['ng_url'] = construct_url_from_existing(
+                        context['ng_state'], namespace_obj.ng_host
+                    )
+                else:
+                    logging.debug("Getting state from JSON State Server")
+                    context["ng_state"] = get_from_state_server(ng_state)
 
             elif is_json(ng_state):
                 # NG State is already in JSON format

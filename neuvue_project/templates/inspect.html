@@ -87,7 +87,13 @@
 
 <div id="neuroglancer" class="leftFormatting">
   <div class="left">    
+    <! Neuroglancer Container>
+    {% if ng_url %}
+    <iframe src="{{ng_url}}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
+    {% else %}
     <div id="neuroglancer-container" class="neuroglancer-container"></div>
+    {% endif %}
+    
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'inspect' %}'">
           Exit

@@ -272,8 +272,8 @@ def construct_proofreading_state(task_df, points, return_as="json"):
     )
 
 
-def construct_url_from_existing(state: str):
-    return settings.NG_CLIENT + "/#!" + state
+def construct_url_from_existing(state: str, ng_host: str):
+    return ng_host + "/#!" + state
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
