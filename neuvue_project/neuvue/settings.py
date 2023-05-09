@@ -26,7 +26,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "app.neuvue.io",
-    "neuvueapp-env.eba-ph8myjrq.us-east-1.elasticbeanstalk.com",
+    "bossdb-neuvue-env.eba-pychm3qe.us-east-1.elasticbeanstalk.com",
     "localhost",
     "127.0.0.1",
 ]
