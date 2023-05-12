@@ -113,136 +113,137 @@
                         </div>
                     {% endfor %}
             </form>   
-                   
-                <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            
+            <! Neuroglancer Container>
+            {% if ng_url %}
+            <iframe src="{{ng_url}}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
+            {% else %}
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% endif %}
             <! Buttons >
-                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
-                    {% csrf_token %}
-
-                    
-                    <! Flag >
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnFlag" 
-                            type="button" 
-                            class="mainButton flag"
-                            accesskey="f"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#flagModal">
-                            Flag Task
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span> + <kbd>f</kbd> </span>
-                        </div>
+            <form id="mainForm" action="" method="post" class="bottomBar justify-content-center">
+                {% csrf_token %}
+                <! Flag >
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnFlag" 
+                        type="button" 
+                        class="mainButton flag"
+                        accesskey="f"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#flagModal">
+                        Flag Task
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span> + <kbd>f</kbd> </span>
                     </div>
+                </div>
 
 
-                    {% if allowed_to_reassgin%}
-                    <! Remove >
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnRemove" 
-                            type="button" 
-                            class="mainButton remove"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#removeModal"
-                            >
-                            Remove Task
-                        </button>
-                    </div>
-                    {% endif %}
-                    
-                    <! Skip >
-                    {% if skipable %}
-                    <div class="mainButtonWrapper">
-                        <button
-                            id="btnSkipSubmit" 
-                            type="button" 
-                            class="mainButton skip"
-                            accesskey="k"
-                            onclick="triggerLoadingSpinner('skip_task_load')" 
+                {% if allowed_to_reassgin%}
+                <! Remove >
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnRemove" 
+                        type="button" 
+                        class="mainButton remove"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#removeModal"
                         >
-                            <div id = 'skip_task_load'>
-                                Skip Task
-                            </div>
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span> + <kbd>k</kbd></span>
+                        Remove Task
+                    </button>
+                </div>
+                {% endif %}
+                
+                <! Skip >
+                {% if skipable %}
+                <div class="mainButtonWrapper">
+                    <button
+                        id="btnSkipSubmit" 
+                        type="button" 
+                        class="mainButton skip"
+                        accesskey="k"
+                        onclick="triggerLoadingSpinner('skip_task_load')" 
+                    >
+                        <div id = 'skip_task_load'>
+                            Skip Task
                         </div>
-
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span> + <kbd>k</kbd></span>
                     </div>
-                    {% endif %}
 
-                    <! Submit >
-                    {% if submit_task_button %}
+                </div>
+                {% endif %}
+
+                <! Submit >
+                {% if submit_task_button %}
+                <div class="mainButtonWrapper">
+                    <button 
+                        name="btnSubmit"
+                        id="btnSubmit" 
+                        type="button" 
+                        class="mainButton submit"
+                        onclick="triggerLoadingSpinner('submit_task_load')" 
+                    >
+                        <div id = 'submit_task_load'>
+                            Submit Task
+                        </div>
+                    </button>
+                </div>
+                {% endif %}
+
+                <! Save State > 
+                <div class="mainButtonWrapper">
+                    <button 
+                        id="btnSaveState"
+                        type="button"
+                        class="mainButton save_state"
+                        onclick="triggerLoadingSpinner('save_state')"
+                        >
+                        <div id = 'save_state'>
+                            Save State
+                        </div>
+                    </button>
+                </div>
+                
+                <! Stop >
+                <div class="mainButtonWrapper">
+                    <button 
+                        id="btnStop"
+                        type="button"
+                        class="mainButton pause"
+                        accesskey="e"
+                        onclick="triggerLoadingSpinner('exit_task_load')"
+                    >
+                        <div id = 'exit_task_load'>
+                            Save and Exit Task
+                        </div>
+                    </button>
+                    <div class="hotkeyHint">                            
+                        <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
+                    </div>
+                </div>
+
+                {% else %}
+                <! In-between Tasks >
+                <div class="interTaskBox">
+                    <div class="interTaskTitle">
+                        Tasks Complete <br> {{display_name}} 
+                    </div>
                     <div class="mainButtonWrapper">
                         <button 
-                            name="btnSubmit"
-                            id="btnSubmit" 
                             type="button" 
-                            class="mainButton submit"
-                            onclick="triggerLoadingSpinner('submit_task_load')" 
-                        >
-                            <div id = 'submit_task_load'>
-                                Submit Task
+                            class="mainButton return" 
+                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                            <div id = 'exit_workspace'>
+                                Return to Task page
                             </div>
                         </button>
                     </div>
-                    {% endif %}
-
-                    <! Save State > 
-                    <div class="mainButtonWrapper">
-                        <button 
-                            id="btnSaveState"
-                            type="button"
-                            class="mainButton save_state"
-                            onclick="triggerLoadingSpinner('save_state')"
-                            >
-                            <div id = 'save_state'>
-                                Save State
-                            </div>
-                        </button>
-                    </div>
-                    
-                    <! Stop >
-                    <div class="mainButtonWrapper">
-                        <button 
-                            id="btnStop"
-                            type="button"
-                            class="mainButton pause"
-                            accesskey="e"
-                            onclick="triggerLoadingSpinner('exit_task_load')"
-                        >
-                            <div id = 'exit_task_load'>
-                                Save and Exit Task
-                            </div>
-                        </button>
-                        <div class="hotkeyHint">                            
-                            <span class="modifier"></span><span class="hotkey_button"> + <kbd>e</kbd></span>
-                        </div>
-                    </div>
-
-
-                    {% else %}
-                    <! In-between Tasks >
-                    <div class="interTaskBox">
-                        <div class="interTaskTitle">
-                            Tasks Complete <br> {{display_name}} 
-                        </div>
-                        <div class="mainButtonWrapper">
-                            <button 
-                                type="button" 
-                                class="mainButton return" 
-                                onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                                <div id = 'exit_workspace'>
-                                    Return to Task page
-                                </div>
-                            </button>
-                        </div>
-                    {% endif %}
-                    </div>
-
-                </form>
+                {% endif %}
+                </div>
+            </form>
         </div>
     </div>
     <div style="display:none;">
@@ -305,6 +306,7 @@
     }
         
     function saveState() {
+        {% if not ng_url %}
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
@@ -317,6 +319,9 @@
                     })
                 });
         });
+        {% else %}
+        triggerToast("Autosave disabled for embedded neuroglancer");
+        {% endif %}
     }
      
     function show3DSlices() {
@@ -370,17 +375,25 @@
 
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
+        let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
+        
+        {% if ng_url %}
+
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+        $(form).submit();
+
+        {% else %}
+        
         updateTrackedOperations(operation_ids)
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
-
             // Check if state successfully saved. If not use the raw JSON state 
             if (!state) {
                 state = JSON.stringify(viewer.state.toJSON());
             }
 
             let ng_differ_stack = JSON.stringify(viewer.differ.stack);
-            let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
     
             $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
             $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
@@ -394,6 +407,8 @@
             
             $(form).submit();
         })
+
+        {% endif %}
     }
 
     function exitAlert(e) {
@@ -451,13 +466,17 @@
             openSideMenu();
         }
 
+        // Specific to built-in NG
+        {% if not ng_url%}
         var received_data = {{ ng_state|safe }};
         viewer.state.restoreState(received_data);
-        
+
+
         // Track operation IDs every three seconds
         window.setInterval(function() {
             updateTrackedOperations(operation_ids);
         }, 3000);
+        {% endif %}
 
         // alter hotkey hints based on operating system
         var os = navigator.platform.toLowerCase();
@@ -541,7 +560,6 @@
         })
 
         $('#btnSaveState').click(function() {
-            console.log("button submission: savestate");
             saveState();
         })
 

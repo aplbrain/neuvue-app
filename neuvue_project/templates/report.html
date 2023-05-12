@@ -74,7 +74,7 @@
             <label style="color: white" for="namespaceSelect">Namespace</label>
             <select name="namespace" class="form-select" id="namespaceSelect" placeholder="Select one" required="true">
                 {% for namespace_opt in all_namespaces %}
-                  {% if namespace_opt == namespace %}
+                  {% if namespace_opt == display_name %}
                     <option selected>{{namespace_opt}} </option>
                   {% else %}
                     <option>{{namespace_opt}} </option>

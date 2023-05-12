@@ -27,6 +27,23 @@ class NeuroglancerLinkType(models.TextChoices):
     PREGENERATED = "pregen", _("Pregenerated")
 
 
+class NeuroglancerHost(models.TextChoices):
+    """Enum for neuroglancer hosts
+
+    neuroglancer.neuvue.io (default) -> built-in neuroglancer forked from seung-lab
+    neuroglancer
+
+    neuroglancer.bossdb.io -> embedded-neuroglancer used by BossDB. Uses latest google
+    fork
+
+    clio-ng.janelia.org -> embedded neuroglancer used by Clio and Janelia.
+    """
+
+    NEUVUE = "neuvue", _("NeuVue Built-in")
+    BOSSDB = "https://neuroglancer.bossdb.io", _("neuroglancer.bossdb.io")
+    CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
+
+
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
     submit_task_button = models.BooleanField(default=True)
@@ -73,13 +90,9 @@ class ForcedChoiceButton(models.Model):
 
 
 class PcgChoices(models.TextChoices):
-    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _(
-        "Minnie65"
-    )
-    PINKY = (
-        "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
-        _("Pinky"),
-    )
+    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _("Minnie65")
+    PINKY = "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox", _("Pinky"),
+    OTHER = "N/A", _("Other")
 
 
 class ImageChoices(models.TextChoices):
@@ -91,6 +104,7 @@ class ImageChoices(models.TextChoices):
         "gs://microns_public_datasets/pinky100_v0/son_of_alignment_v15_rechunked",
         _("Pinky"),
     )
+    OTHER = "N/A", _("Other")
 
 
 class PushToChoices(models.TextChoices):
@@ -116,6 +130,11 @@ class Namespace(models.Model):
         choices=NeuroglancerLinkType.choices,
         default=NeuroglancerLinkType.PREGENERATED,
     )
+    ng_host = models.CharField(
+        max_length=100,
+        choices=NeuroglancerHost.choices,
+        default=NeuroglancerHost.NEUVUE,
+    )
     submission_method = models.ForeignKey(
         ForcedChoiceButtonGroup,
         on_delete=models.PROTECT,
@@ -135,6 +154,7 @@ class Namespace(models.Model):
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
     track_selected_segments = models.BooleanField(default=False)
+    decrement_priority = models.IntegerField(default=100, verbose_name="When skipped, decrement priority by")
 
     """Pull From Push To Novice"""
     novice_pull_from = models.CharField(

@@ -1,6 +1,16 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v1.7.7",
+            "update_date":"January 31st, 2023",
+            "update_description": "Neuroglancer change: red/blue points automatically removed after a successful split."
+        },
+        {
+            "update_name": "v1.7.3",
+            "update_date":"January 18th, 2023",
+            "update_description": "Various bug fixes and improvements."
+        },
+        {
             "update_name": "v1.7.2",
             "update_date":"December 6th, 2022",
             "update_description": "Adds ability to input root IDs in nuclei viewer. Updates to instructions panel."
