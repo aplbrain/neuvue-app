@@ -76,6 +76,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -203,6 +204,10 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_URL = "index"
 LOGIN_REDIRECT_URL = "/tasks"
 LOGOUT_REDIRECT_URL = "/"
+SOCIALACCOUNT_LOGIN_ON_GET = True 
+
+# Needed for NeuroGlancer Popups
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
