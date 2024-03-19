@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v2.0.0",
+            "update_date":"March 19th, 2024",
+            "update_description": "Updates backend to Python 3.9 runtime."
+        },
+        {
             "update_name": "v1.7.7",
             "update_date":"January 31st, 2023",
             "update_description": "Neuroglancer change: red/blue points automatically removed after a successful split."

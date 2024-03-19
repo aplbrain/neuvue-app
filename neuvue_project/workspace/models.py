@@ -36,13 +36,13 @@ class NeuroglancerHost(models.TextChoices):
     neuroglancer.bossdb.io -> embedded-neuroglancer used by BossDB. Uses latest google
     fork
 
-    clio-ng.janelia.org -> embedded neuroglancer used by Clio and Janelia.
+    spelunker.cave-explorer.org -> embedded neuroglancer developed by AIBS.
     """
 
     NEUVUE = "neuvue", _("NeuVue Built-in")
     BOSSDB = "https://neuroglancer.bossdb.io", _("neuroglancer.bossdb.io")
-    CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
-
+    #CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
+    SPELUNKER = "https://spelunker.cave-explorer.org/", _("spelunker.cave-explorer.org")
 
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")

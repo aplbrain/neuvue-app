@@ -50,7 +50,6 @@ mysqlclient==2.2.4
 ndindex==1.8
 networkx==3.2.1
 neuroglancer==2.36
-neuvueclient @ file:///Users/xenesd1/Projects/MICrONS/neuvue-app/neuvue_project/deps/neuvue-client
 nglui==3.0.2
 numexpr==2.9.0
 numpy==1.26.4
@@ -99,3 +98,4 @@ urllib3==1.26.18
 wcwidth==0.1.9
 webcolors==1.13
 zipp==3.18.1
+./deps/neuvue-client 
