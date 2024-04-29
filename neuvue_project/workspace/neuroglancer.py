@@ -475,8 +475,7 @@ def construct_lineage_state_and_graph(root_id: str):
             layer["hiddenSegments"] = [
                 root_id for root_id in root_ids if root_id not in selected_segments
             ]
-
-    return json.dumps(base_state_dict), graph_image
+    return json.dumps(base_state_dict, default = lambda x: [str(y) for y in x]), graph_image
 
 
 def apply_state_config(state: str, username: str):
@@ -933,7 +932,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 "visible": False,
             }
         )
-    return json.dumps(state_dict), synapse_stats
+    return json.dumps(state_dict, default = lambda x: [str(y) for y in x]), synapse_stats
 
 
 def construct_nuclei_state(given_ids: List):

@@ -25,8 +25,8 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "app.neuvue.io",
-    "bossdb-neuvue-env.eba-pychm3qe.us-east-1.elasticbeanstalk.com",
+    ".neuvue.io",
+    ".elasticbeanstalk.com",
     "localhost",
     "127.0.0.1",
 ]
@@ -84,6 +84,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "neuvue.urls"
@@ -203,6 +204,10 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_URL = "index"
 LOGIN_REDIRECT_URL = "/tasks"
 LOGOUT_REDIRECT_URL = "/"
+SOCIALACCOUNT_LOGIN_ON_GET = True 
+
+# Needed for NeuroGlancer Popups
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Neuvue Specific Settings
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
