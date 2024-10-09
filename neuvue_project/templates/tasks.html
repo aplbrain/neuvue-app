@@ -23,7 +23,7 @@
                         <div id="{{namespace}}Header" class="jobHeader active d-flex align-items-center" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
                             {{context.display_name}}
                             <span class="badge rounded-pill bg-pink ms-2">
-                                {{context.total_pending}} 
+                                {{context.total_pending}}
                             </span>
                             {% if context.submission_method != "SubmitButton" %}
                                 <span class="badge rounded-pill bg-secondary ms-1" >
@@ -33,15 +33,15 @@
                         </div>
                         {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed or context.can_unassign_tasks %}
                         <div class="header-sizing btn-toolbar">
-                            <button type="button" 
-                                    class="header-button header-outline dropdown-toggle dropdown-toggle-split" 
+                            <button type="button"
+                                    class="header-button header-outline dropdown-toggle dropdown-toggle-split"
                                     style="margin-right: 5pt"
-                                    data-toggle="dropdown" 
-                                    aria-haspopup="true" 
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
                                     aria-expanded="false">
                                 <span class="sr-only header-box-text">Toggle Dropdown</span>
                               </button>
-                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'">
                                 <button class="header-box-text"
                                     onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                     <div id='{{namespace}}NgSpinner'>
@@ -73,11 +73,11 @@
                                     </div>
                                     <input type="hidden" name="namespace" value="{{ namespace }}">
                                 </button>
-                                {% endif %} 
+                                {% endif %}
                             </div>
                         </div>
                         {% else %}
-                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'">
                             <button class="header-box-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                 <div id='{{namespace}}NgSpinner'>
@@ -138,13 +138,13 @@
                                         <td> {{ row.closed }} </td>
                                         <td> {{ row.status }} </td>
                                         {% if row.tags %}
-                                        <td class='userTags'> 
-                                        <span 
-                                          data-bs-toggle="tooltip" 
-                                          data-bs-placement="right" 
+                                        <td class='userTags'>
+                                        <span
+                                          data-bs-toggle="tooltip"
+                                          data-bs-placement="right"
                                           data-bs-html="true"
                                           title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" >
-                                          {{ row.tags.0 }} 
+                                          {{ row.tags.0 }}
                                         </span>
                                         </td>
                                         {% else %}
@@ -164,7 +164,7 @@
                 <div id="pinkyHeader" class="pinkyHeader jobHeader active">
                     Pinky Sandbox
                 </div>
-                <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'"> 
+                <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'">
                     <button class="header-box-text" id='pinkySandboxButton'
                     onclick="triggerLoadingSpinner('PinkyNgSpinner')">
                         <div id='PinkyNgSpinner'>
@@ -219,7 +219,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <div id="confirmReassignTasksModal" class="modal" name="reassign" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
@@ -235,7 +235,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
@@ -255,7 +255,7 @@
                 tableHide("{{namespace}}Header","{{namespace}}Table");
                 // {% if not context.total_pending %}
                 //    document.getElementById("{{namespace}}Header").click();
-                // {% endif %}   
+                // {% endif %}
             }
         {% endfor %}
     };
@@ -288,9 +288,9 @@
         const reassignYesButton = document.getElementById("reassignModalYes");
         reassignYesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinnerReassign'); reassignTasks('" + namespace + "')");
     })
-    
+
     function tabToggle(evt, timeframe,start,end,buttonid) {
-        
+
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = start; i < end; i++) {

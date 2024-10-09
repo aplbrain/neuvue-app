@@ -325,10 +325,14 @@ class ReportView(View, LoginRequiredMixin):
             sieve=sieve,
             select=["assignee", "status", "duration", "metadata", "closed", "opened"],
         )
-        task_df['n_operation_ids'] = task_df['metadata'].apply(lambda x: len(x.get('operation_ids')) if isinstance(x.get('operation_ids'), list) else 0)
-        task_has_edits = True if any(task_df['n_operation_ids'].to_list()) else False
+        task_df["n_operation_ids"] = task_df["metadata"].apply(
+            lambda x: len(x.get("operation_ids"))
+            if isinstance(x.get("operation_ids"), list)
+            else 0
+        )
+        task_has_edits = True if any(task_df["n_operation_ids"].to_list()) else False
 
-        if bool((namespace in decision_namespaces) & (len(task_df)>0)):
+        if bool((namespace in decision_namespaces) & (len(task_df) > 0)):
             import plotly.express as px
             from plotly.subplots import make_subplots
 
@@ -343,14 +347,20 @@ class ReportView(View, LoginRequiredMixin):
                 horizontal_spacing=0.02,
             )
 
-            namespace_submission_method = Namespaces.objects.get(display_name=display_name).submission_method
-            decision_types = ForcedChoiceButton.objects.filter(set_name=namespace_submission_method).values_list('display_name','submission_value')
-    
+            namespace_submission_method = Namespaces.objects.get(
+                display_name=display_name
+            ).submission_method
+            decision_types = ForcedChoiceButton.objects.filter(
+                set_name=namespace_submission_method
+            ).values_list("display_name", "submission_value")
+
             color_count = 0
             for namespace_display_name, submission_value in decision_types:
                 decision_counts = {}
                 for assignee in users:
-                    decision_counts[assignee] = len(task_df[task_df["decision"] == submission_value])
+                    decision_counts[assignee] = len(
+                        task_df[task_df["decision"] == submission_value]
+                    )
 
                 x = list(decision_counts.keys())
                 y = list(decision_counts.values())
@@ -388,7 +398,7 @@ class ReportView(View, LoginRequiredMixin):
             "Username",
             "Total Duration (h)",
             "Avg Closed Duration (m)",
-            "Avg Duration (m)"
+            "Avg Duration (m)",
         ]
         if task_has_edits:
             columns.extend(["Average Edits", "Total Edits"])
@@ -453,7 +463,7 @@ class ReportView(View, LoginRequiredMixin):
             "fig_time": fig_time.to_html(),
         }
 
-        if bool((namespace in decision_namespaces) & (len(task_df)>0)):
+        if bool((namespace in decision_namespaces) & (len(task_df) > 0)):
             context["fig_decision"] = fig_decision.to_html()
 
         return render(request, "report.html", context)

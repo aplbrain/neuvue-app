@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0016_forcedchoicebuttongroup_number_of_selected_segments_expected'),
+        (
+            "workspace",
+            "0016_forcedchoicebuttongroup_number_of_selected_segments_expected",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='namespace',
-            name='decrement_priority',
-            field=models.IntegerField(default=100, verbose_name='When skipped, decrement priority by'),
+            model_name="namespace",
+            name="decrement_priority",
+            field=models.IntegerField(
+                default=100, verbose_name="When skipped, decrement priority by"
+            ),
         ),
     ]

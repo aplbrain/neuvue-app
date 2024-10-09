@@ -47,13 +47,13 @@
   --code-font:"Fira Mono", serif;
 }
 
-/* Media */ 
+/* Media */
 ul li {
   padding: 0vh 0.5vw;
   left:0vw;
 }
 .basic {
-  background: url('/static/images/neuron_background_sketch-01-min.jpg') no-repeat center center fixed; 
+  background: url('/static/images/neuron_background_sketch-01-min.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -103,7 +103,7 @@ nav {
 }
 
 .intro {
-  background: url('/static/images/watercolor-neuron.png') no-repeat center center fixed; 
+  background: url('/static/images/watercolor-neuron.png') no-repeat center center fixed;
   background-size: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -382,23 +382,23 @@ color: var(--primary-accent);
 .mainButton.yesBut{
   min-width: 15%;
   max-width: 18%;
-  background-color: var(--yesBut);  
+  background-color: var(--yesBut);
 }
 .mainButton.yesBut:hover{
   border: 3px solid var(--yesBut-activated);
-  background-color: var(--yesBut-activated);  
-  
+  background-color: var(--yesBut-activated);
+
 }
 
 .mainButton.noBut{
   min-width: 15%;
   max-width: 18%;
-  background-color: var(--noBut); 
+  background-color: var(--noBut);
 }
 .mainButton.noBut:hover{
   border: 3px solid var(--noBut-activated);
-  background-color: var(--noBut-activated);  
-  
+  background-color: var(--noBut-activated);
+
 }
 
 .mainButton.flag.quad{
@@ -446,7 +446,7 @@ color: var(--primary-accent);
 
 .instruction-image{
   max-width: 80%;
-  max-height: 15vh; 
+  max-height: 15vh;
   overflow: hidden;
 }
 .instruction-image:hover{
@@ -483,8 +483,8 @@ order: 1;
 border: 2px solid var(--secondary-accent) !important;
 background-color: var(--transparent-card-background) !important;
 border-radius: 8pt !important;
-width: 86%; 
-height: 50vh; 
+width: 86%;
+height: 50vh;
 }
 
 
@@ -494,7 +494,7 @@ height: 50vh;
 
 .index-card-header {
 color: var(--primary-accent);
-font-family: var(--header-font); 
+font-family: var(--header-font);
 font-size: 3vh;
 background-color: var(--header-background) !important;
 }
@@ -998,8 +998,8 @@ background: transparent;
 }
 
 .userTags{
-  max-width:3vw; 
-  overflow:hidden; 
+  max-width:3vw;
+  overflow:hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

@@ -299,7 +299,7 @@ class TaskView(LoginRequiredMixin, View):
                 sieve={"assignee": group_to_pull_from, "namespace": namespace},
                 limit=num_tasks,
                 select=["_id"],
-                sort="-priority"
+                sort="-priority",
             )
             if len(unassigned_tasks) == 0:
                 # Warn the user that no tasks are left in the queue

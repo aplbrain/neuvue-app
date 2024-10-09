@@ -13,7 +13,7 @@ from ..neuroglancer import (
     construct_nuclei_state,
     get_from_state_server,
     get_from_json,
-    construct_url_from_existing
+    construct_url_from_existing,
 )
 from ..utils import is_url, is_json, is_authorized
 
@@ -32,10 +32,10 @@ class InspectTaskView(View):
             )
 
         context = {
-            "task_id": task_id, 
+            "task_id": task_id,
             "ng_state": None,
-            "ng_url": None, 
-            "error": None, 
+            "ng_url": None,
+            "error": None,
             "num_edits": 0,
         }
 
@@ -60,9 +60,9 @@ class InspectTaskView(View):
             if is_url(ng_state):
                 if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
                     # Assume its a url to json state
-                    context['ng_state'] = ng_state
-                    context['ng_url'] = construct_url_from_existing(
-                        context['ng_state'], namespace_obj.ng_host
+                    context["ng_state"] = ng_state
+                    context["ng_url"] = construct_url_from_existing(
+                        context["ng_state"], namespace_obj.ng_host
                     )
                 else:
                     logging.debug("Getting state from JSON State Server")

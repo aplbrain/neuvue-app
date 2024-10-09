@@ -37,10 +37,10 @@ function makeDefaultViewer(options?: Partial<ViewerOptions>) {
     throw error;
   }
 }
-  
+
 
 window.addEventListener('DOMContentLoaded', () => {
-  
+
   const viewer = (<any>window)['viewer'] = makeDefaultViewer({showLayerDialog : false});
   setDefaultInputEventBindings(viewer.inputEventBindings);
 
@@ -53,5 +53,3 @@ window.addEventListener('DOMContentLoaded', () => {
   makeExtraKeyBindings(viewer.inputEventMap);
   registerActionListener(viewer.element, 'navigate-to-origin', () => navigateToOrigin(viewer));
 });
-
-
