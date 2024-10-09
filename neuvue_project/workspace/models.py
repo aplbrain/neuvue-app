@@ -15,7 +15,7 @@ class NeuroglancerLinkType(models.TextChoices):
     Draws a path between all coordinates.
 
     point -> expects a list of coordinates (metadata), description (metadata), and
-    group (metadata). Needs atleast one seed point (points). Places dot points for
+    group (metadata). Needs at least one seed point (points). Places dot points for
     all coordinates listed.
 
     pregenerated -> neuroglancer state already added to task. Useful for external
