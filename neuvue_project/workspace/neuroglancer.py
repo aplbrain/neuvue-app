@@ -25,7 +25,7 @@ from nglui.statebuilder import (
     ChainedStateBuilder,
 )
 
-from .models import Namespace, NeuroglancerLinkType, PcgChoices, ImageChoices
+from .models import Namespace, NeuroglancerLinkType, PcgChoices, ImageChoices, NeuroglancerHost
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -273,7 +273,10 @@ def construct_proofreading_state(task_df, points, return_as="json"):
 
 
 def construct_url_from_existing(state: str, ng_host: str):
-    return ng_host + "/#!" + state
+    if ng_host == NeuroglancerHost.SPELUNKER:
+        return ng_host + "/#!middleauth+" + state
+    else:
+        return ng_host + "/#!" + state
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
