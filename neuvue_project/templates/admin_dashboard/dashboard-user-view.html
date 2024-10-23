@@ -119,13 +119,13 @@
                     <td>{{taskrow.closed}}</td>
                     <td>{{taskrow.duration}}</td>
                     {% if taskrow.tags %}
-                    <td class='userTags'> 
-                      <span 
-                        data-bs-toggle="tooltip" 
-                        data-bs-placement="right" 
+                    <td class='userTags'>
+                      <span
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
                         data-bs-html="true"
                         title="{{taskrow.tags|join:", "}}" >
-                        {{ taskrow.tags.0 }} 
+                        {{ taskrow.tags.0 }}
                       </span>
                       </td>
                       {% else %}
@@ -142,7 +142,7 @@
     </div>
 
   </div>
-  <div id="hiddenSelectedTable" style="visibility: none;"> 
+  <div id="hiddenSelectedTable" style="visibility: none;">
 </div>
 
 <!-- Confirm action modals -->
@@ -213,13 +213,13 @@
         $('#summary-table input[name=selected_tasks]').each(function(){
           if ($(this).is(':checkbox') && !$(this).is(":checked")) {
             $(this).prop( "checked", true );
-          } 
+          }
         })
       } else {
         $('#summary-table input[name=selected_tasks]').each(function(ele){
           if ($(this).is(':checkbox') && $(this).is(":checked")) {
             $(this).prop( "checked", false );
-          } 
+          }
         })
       }
     });
@@ -239,7 +239,7 @@
       // Otherwise, download only the tasks that were selected
       } else {
         let filteredTable = $('#summary-table').clone()[0] // make a copy of the visible table to edit and export
-        filteredTable.id = 'userSelectedTable'; 
+        filteredTable.id = 'userSelectedTable';
         const selectedRows = $( '#summary-table' ).find( 'tbody' ) // select table body and
             .find( 'tr' ) // select all rows that has
             .has( 'input[type=checkbox]:checked' ); // checked checkbox element

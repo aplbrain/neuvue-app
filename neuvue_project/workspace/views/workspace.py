@@ -9,7 +9,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from neuvue.client import client
 
-from ..models import Namespace, UserProfile, ForcedChoiceButtonGroup, ForcedChoiceButton, NeuroglancerHost
+from ..models import (
+    Namespace,
+    UserProfile,
+    ForcedChoiceButtonGroup,
+    ForcedChoiceButton,
+    NeuroglancerHost,
+)
 from ..neuroglancer import (
     construct_proofreading_state,
     construct_url_from_existing,
@@ -134,7 +140,9 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             # Pass User configs to Neuroglancer
             try:
-                config = Config.objects.filter(user=str(request.user)).order_by("-id")[0]
+                config = Config.objects.filter(user=str(request.user)).order_by("-id")[
+                    0
+                ]
                 context["show_slices"] = config.show_slices
             except Exception as e:
                 logging.error(e)
@@ -149,7 +157,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 if is_url(ng_state):
                     if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
                         # Assume its a url to json state
-                        context['ng_state'] = ng_state
+                        context["ng_state"] = ng_state
                     else:
                         logging.debug("Getting state from JSON State Server")
                         context["ng_state"] = get_from_state_server(ng_state)
@@ -175,8 +183,8 @@ class WorkspaceView(LoginRequiredMixin, View):
                 context["ng_state"] = refresh_ids(context["ng_state"], namespace)
 
             else:
-                context['ng_url'] = construct_url_from_existing(
-                    context['ng_state'], namespace_obj.ng_host
+                context["ng_url"] = construct_url_from_existing(
+                    context["ng_state"], namespace_obj.ng_host
                 )
 
             ############################# ALLOW TO REASSIGN ########################################
@@ -222,7 +230,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
-        ng_state = request.POST.get("ngState", task_df['ng_state'])
+        ng_state = request.POST.get("ngState", task_df["ng_state"])
         duration = int(request.POST.get("duration", 0))
         tags = request.POST.get("tags")
         session_task_count = request.session.get("session_task_count", 0)
@@ -304,7 +312,8 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             try:
                 new_priority = task_df["priority"] - namespace_obj.decrement_priority
-                if new_priority < 0: new_priority = 0
+                if new_priority < 0:
+                    new_priority = 0
                 client.patch_task(
                     task_df["_id"],
                     duration=duration,

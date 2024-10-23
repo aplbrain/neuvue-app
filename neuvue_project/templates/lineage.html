@@ -33,30 +33,30 @@
   <div id="neuVue-sidebar" class="sidebar">
       <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
           <i class="glyphicon glyphicon-list"></i>
-      </a>  
+      </a>
   </div>
   <div id="neuVue-sidecontent" class="sidecontent">
-      
+
       <! Task Information >
       <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
           <div class="sideContentTitle">
               Segment Information
           </div>
           <div class="sideContentInfo">
-              Root ID <br> 
+              Root ID <br>
               <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{root_id}}')"><i class="fa fa-copy"></i></button> {{root_id}} </span> <br>
           </div>
           <div class="sideContentInfo">
-            
+
             <span><button class="clipboard" id="downloadPNG" onclick="downloadSVGAsPNG()"><i class="fa fa-download"></i></button> Lineage Graph</span><br>
-            <div id='svg_graph' style="margin: auto; top:0; left:0; height: 90%; width:90%; position:relative;"> {{ graph|safe }}</div> 
+            <div id='svg_graph' style="margin: auto; top:0; left:0; height: 90%; width:90%; position:relative;"> {{ graph|safe }}</div>
         </div>
       </div>
   </div>
-</div> 
+</div>
 
 <div id="neuroglancer" class="leftFormatting">
-  <div class="left">    
+  <div class="left">
     <div id="neuroglancer-container" class="neuroglancer-container"></div>
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'lineage' %}'">
@@ -91,13 +91,13 @@
   function downloadSVGAsPNG(e){
     const canvas = document.createElement("canvas");
     const svg = document.querySelector('svg');
-    var box = svg.viewBox.baseVal; 
+    var box = svg.viewBox.baseVal;
     const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
     const w = parseInt(box.width)*10;
     const h = parseInt(box.height)*10;
     const img_to_download = document.createElement('img');
     img_to_download.src = 'data:image/svg+xml;base64,' + base64doc;
-    img_to_download.onload = function () {    
+    img_to_download.onload = function () {
       canvas.setAttribute('width', w);
       canvas.setAttribute('height', h);
       const context = canvas.getContext("2d");
@@ -116,15 +116,15 @@
         a.href = dataURL;
         a.dispatchEvent(my_evt);
       }
-    }  
+    }
   }
-  // Neuroglancer State Load 
+  // Neuroglancer State Load
   $(document).ready(function() {
     {% if ng_state %}
     const state = {{ ng_state|safe }};
       openSideMenu();
       viewer.state.restoreState(state);
-    
+
     {% endif %}
 
     $("svg").attr('width', '100%');
@@ -137,7 +137,7 @@
         $(element).attr('class', `child`);
     });
   });
- 
+
   // Remove loading spinner when page loads. This is important if the back button is clicked
   window.addEventListener('pageshow', function(e) {
     if (document.getElementById('submit-spinner') !== null) {

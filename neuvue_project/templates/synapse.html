@@ -51,10 +51,10 @@
   <div id="neuVue-sidebar" class="sidebar">
       <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
           <i class="glyphicon glyphicon-list"></i>
-      </a>  
+      </a>
   </div>
   <div id="neuVue-sidecontent" class="sidecontent">
-      
+
       <! Task Information >
       <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
           <div class="sideContentTitle">
@@ -98,8 +98,8 @@
           </div>
       </div>
       <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
-        <div class="sideContentInfo">     
-            <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
+        <div class="sideContentInfo">
+            <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
             <button type="button" class="btn btn-info" onclick="copyToClipboard(get_synapse_info())"> <i class="fa fa-copy"></i> Copy Synapse Info </button></br>
             <button type="button" class="btn btn-info" id="exportBtn_rootIDs"> <i class="fa fa-download"></i> Export Synapse Info </button></br>
           </div>
@@ -109,7 +109,7 @@
 </div>
 
 <div id="neuroglancer" class="leftFormatting">
-  <div class="left">    
+  <div class="left">
     <div id="neuroglancer-container" class="neuroglancer-container"></div>
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'synapse' %}'">
@@ -122,7 +122,7 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 {% endif%}
 
-<div id="hiddenTable" style="visibility: hidden;"> 
+<div id="hiddenTable" style="visibility: hidden;">
 </div>
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -131,7 +131,7 @@
 <script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
-  // Neuroglancer State Load 
+  // Neuroglancer State Load
 
     {% if root_ids %}
       const exportButton_userTable = document.getElementById("exportBtn_rootIDs");
@@ -176,7 +176,7 @@
           const filename = 'Root_IDs' + '_' +  + Date.now() + '.csv';
           // Perform download
           $('#hiddenIDTable').table2csv('download', {'filename': filename});
-      }); 
+      });
     {% endif %}
 
   function getLink() {

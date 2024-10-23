@@ -41,8 +41,9 @@ class NeuroglancerHost(models.TextChoices):
 
     NEUVUE = "neuvue", _("NeuVue Built-in")
     BOSSDB = "https://neuroglancer.bossdb.io", _("neuroglancer.bossdb.io")
-    #CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
+    # CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
     SPELUNKER = "https://spelunker.cave-explorer.org/", _("spelunker.cave-explorer.org")
+
 
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
@@ -90,8 +91,13 @@ class ForcedChoiceButton(models.Model):
 
 
 class PcgChoices(models.TextChoices):
-    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _("Minnie65")
-    PINKY = "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox", _("Pinky"),
+    MINNIE = "https://minnie.microns-daf.com/segmentation/table/minnie3_v1", _(
+        "Minnie65"
+    )
+    PINKY = (
+        "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
+        _("Pinky"),
+    )
     OTHER = "N/A", _("Other")
 
 
@@ -154,7 +160,9 @@ class Namespace(models.Model):
     number_of_tasks_users_can_self_assign = models.IntegerField(default=10)
     max_number_of_pending_tasks_per_user = models.IntegerField(default=200)
     track_selected_segments = models.BooleanField(default=False)
-    decrement_priority = models.IntegerField(default=100, verbose_name="When skipped, decrement priority by")
+    decrement_priority = models.IntegerField(
+        default=100, verbose_name="When skipped, decrement priority by"
+    )
 
     """Pull From Push To Novice"""
     novice_pull_from = models.CharField(

@@ -40,7 +40,7 @@
               <div>
                 <div id="action-buttons" class="container-fluid">
                   <form id="taskPatchForm" action="" method="POST" class="form-inline float-start" >{% csrf_token %}
-                    
+
                     <input type="hidden" name="username" value="{{username}}" />
                     <input type="hidden" name="namespace" value="{{namespace}}" />
                     <label class="m-2"> Assign  </label>
@@ -64,13 +64,13 @@
                     <button type="button" id="distribute-button" form="taskPatchForm" name="selected_action" value="distribute" class="btn btn-primary" >
                       Distribute Tasks
                     </button>
-                    
+
                   </form>
                 </div>
                 <br><br>
-                <hr>  
+                <hr>
               </div>
-              
+
             {% endif %}
             <table id="summary-table" class="table table-striped table-hover">
               <thead>
@@ -130,7 +130,7 @@
     // Perform download
     $('#summary-table').table2csv('download', {'filename': filename});
 
-  }); 
+  });
     // button is clicked
     if ("{{group}}" === "unassigned") {
       const distributeButton = document.getElementById("distribute-button");
