@@ -42,7 +42,8 @@ class WorkspaceView(LoginRequiredMixin, View):
         # This hacky solution works.
         if namespace in settings.STATIC_NG_FILES:
             return redirect(
-                f"/static/{request.path.split('/')[1]}/{namespace}", content_type="application/javascript"
+                f"/static/{request.path.split('/')[1]}/{namespace}",
+                content_type="application/javascript",
             )
 
         session_task_count = request.session.get("session_task_count", 0)
@@ -178,14 +179,14 @@ class WorkspaceView(LoginRequiredMixin, View):
             # NOTE: State configs are only applied to neuvue NG states. If using an iframe or Spelunker
             # url, we just load it as is.
             if namespace_obj.ng_host in [NeuroglancerHost.NEUVUE]:
-                #TODO: Apply middleauth config to spelunker states
+                # TODO: Apply middleauth config to spelunker states
                 context["ng_state"] = apply_state_config(
                     context["ng_state"], str(request.user)
                 )
                 context["ng_state"] = refresh_ids(context["ng_state"], namespace)
 
             elif namespace_obj.ng_host in [NeuroglancerHost.SPELUNKER]:
-                #TODO: Add Spelunker NG configuration here
+                # TODO: Add Spelunker NG configuration here
                 pass
             else:
                 context["ng_url"] = construct_url_from_existing(

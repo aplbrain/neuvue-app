@@ -42,8 +42,9 @@ class NeuroglancerHost(models.TextChoices):
     NEUVUE = "neuvue", _("NeuVue Legacy")
     SPELUNKER = "spelunker", _("Spelunker Native")
     BOSSDB = "https://neuroglancer.bossdb.io", _("neuroglancer.bossdb.io")
-    #CLIO = "https://clio-ng.janelia.org", _("clio-ng.janelia.org")
-    SPELUNKER_URL = "https://spelunker.cave-explorer.org/", _("spelunker.cave-explorer.org")
+    SPELUNKER_URL = "https://spelunker.cave-explorer.org/", _(
+        "spelunker.cave-explorer.org"
+    )
 
 
 class ForcedChoiceButtonGroup(models.Model):

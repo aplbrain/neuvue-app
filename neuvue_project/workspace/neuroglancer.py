@@ -25,7 +25,13 @@ from nglui.statebuilder import (
     ChainedStateBuilder,
 )
 
-from .models import Namespace, NeuroglancerLinkType, PcgChoices, ImageChoices, NeuroglancerHost
+from .models import (
+    Namespace,
+    NeuroglancerLinkType,
+    PcgChoices,
+    ImageChoices,
+    NeuroglancerHost,
+)
 
 
 logging.basicConfig(level=logging.DEBUG)

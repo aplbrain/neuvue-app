@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0021_alter_namespace_ng_host'),
+        ("workspace", "0021_alter_namespace_ng_host"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='namespace',
-            name='ng_host',
-            field=models.CharField(choices=[('neuvue', 'NeuVue Legacy'), ('spelunker', 'Spelunker Native'), ('https://neuroglancer.bossdb.io', 'neuroglancer.bossdb.io'), ('https://spelunker.cave-explorer.org/', 'spelunker.cave-explorer.org')], default='neuvue', max_length=100),
+            model_name="namespace",
+            name="ng_host",
+            field=models.CharField(
+                choices=[
+                    ("neuvue", "NeuVue Legacy"),
+                    ("spelunker", "Spelunker Native"),
+                    ("https://neuroglancer.bossdb.io", "neuroglancer.bossdb.io"),
+                    (
+                        "https://spelunker.cave-explorer.org/",
+                        "spelunker.cave-explorer.org",
+                    ),
+                ],
+                default="neuvue",
+                max_length=100,
+            ),
         ),
     ]
