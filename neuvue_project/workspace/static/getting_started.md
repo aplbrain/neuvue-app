@@ -26,8 +26,8 @@ Clicking on the blue row header for a task type will expand it to show a table w
 
 The pending table will show tasks for that task type ordered by descending priority level. The number in the tab after "Pending" show how many pending tasks are available. The columns are described below:
 
-* **Task ID** - The unique identifer for this task. Useful for referencing task to NeuVue admins or developers as well as for inspecting the task in the "Inspect Task" page. Click on the task ID in this table will redirect you to the "Inspect Task" page for the task ID you clicked on.
-* **Seg ID** - The unique identifier for the neuron in the volume that is the primary target for this proofreading task. Seg IDs will sometimes be repeated across many tasks or even users. Seg IDs also change after edits so a seg ID listed in the task page may be outdated by the time a user opens that task. More info here.
+* **Task ID** - The unique identifier for this task. Useful for referencing task to NeuVue admins or developers as well as for inspecting the task in the "Inspect Task" page. Click on the task ID in this table will redirect you to the "Inspect Task" page for the task ID you clicked on. 
+* **Seg ID** - The unique identifier for the neuron in the volume that is the primary target for this proofreading task. Seg IDs will sometimes be repeated across many tasks or even users. Seg IDs also change after edits so a seg ID listed in the task page may be outdated by the time a user opens that task. More info here. 
 * **Created** - EST Datetime of creation for this task.
 * **Priority** - Numerical priority of this task. Higher priority means that task will be provided to the user earlier in the queue. Skipping a task reduces the task priority by 1.
 * **Status** - Current status of the task. Four possible statuses: "open", "pending", "closed", "errored". Only "open" and "pending" tasks are shown in this table.
@@ -46,9 +46,10 @@ The closed tab is slightly different than the pending tab. This table is sorted 
 
 In addition to the task tables, you will also see buttons on the right side of the task type headers. These buttons are described below:
 
-* **Start Proofreading** - This button exists for all task types with pending tasks available and assigned to you. Click this will nagivate you to the Workspace page, where the next task will automatically be queued up and displayed.
-* **Add More Tasks** - Available for some task types only. Clicking this will allow additional tasks to be assigned to your user in cases where you deplete your queue or would like fresh tasks to work on. The number of tasks added to your user depends on the task type and there are certain limits set on how many tasks can be assigned to one user at a time.
-* **Remove Skipped Tasks** - Available for some task types only. Clicking this will remove all tasks that have been skipped once or more from your queue permanently.
+
+* **Start Proofreading** - This button exists for all task types with pending tasks available and assigned to you. Click this will navigate you to the Workspace page, where the next task will automatically be queued up and displayed. 
+* **Add More Tasks** - Available for some task types only. Clicking this will allow additional tasks to be assigned to your user in cases where you deplete your queue or would like fresh tasks to work on. The number of tasks added to your user depends on the task type and there are certain limits set on how many tasks can be assigned to one user at a time. 
+* **Remove Skipped Tasks** - Available for some task types only. Clicking this will remove all tasks that have been skipped once or more from your queue permanently. 
 
 From this point you can begin proofreading by deciding on which task types you would like to work on and then clicking "Start Proofreading" for that task type. This will navigate you to the workspace page, which is the main interface for proofreading work.
 
@@ -88,7 +89,8 @@ Here is a great instructional video on how to operate Neuroglancer for basic nav
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/TwBTyWWnbxc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-[This cheatsheet](https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing) (credit to flywire.ai) has additional useful information thats specific to this proofreading effort!
+[This cheatsheet](https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing) (credit to flywire.ai) has additional useful information that's specific to this proofreading effort! 
+
 
 ## Additional Pages and Tools
 
@@ -104,7 +106,8 @@ The inspect task page has a similar layout to the workspace except it does not c
 
 <img src="https://i.imgur.com/a29xKER.png" alt="Synapse Viewer Page" width="800"/>
 
-The synapse viewer page is a visualization tool which means it can be accessed by any user with a valid root ID. It displays all presynaptic and postsynaptic locations for a valid root ID or multiple IDs. The pre and post annotations for each root ID are placed in an individual Neuroglancer layer so colors and sizes can be indepedently set. The sidebar displays information of on the number of connections for each root ID. This information can be copied or downloaded with the buttons below the table in the sidebar as well. To use the synaptic viewer, copy the list of root IDs (comma-separated) you want to visualize and paste them in the input box at app.neuvue.io/synapse.
+
+The synapse viewer page is a visualization tool which means it can be accessed by any user with a valid root ID. It displays all presynaptic and postsynaptic locations for a valid root ID or multiple IDs. The pre and post annotations for each root ID are placed in an individual Neuroglancer layer so colors and sizes can be independently set. The sidebar displays information of on the number of connections for each root ID. This information can be copied or downloaded with the buttons below the table in the sidebar as well. To use the synaptic viewer, copy the list of root IDs (comma-separated) you want to visualize and paste them in the input box at app.neuvue.io/synapse. 
 
 Be aware that visualizing more than 10 root IDs at a time in the synpase viewer may cause Neuroglancer or your browser to crash!
 
@@ -125,7 +128,7 @@ When a Neuroglancer link is copied from the app, it will use our externally host
 
 Any modern OS should work with NeuVue. To lower the chances of crashes or missing functionality, we recommend all users proofreading using Google Chrome. There have been compatibility issues with Safari and Firefox in the past.
 
-### What should I do if I'm having a techical issue?
+### What should I do if I'm having a technical issue?
 
 Copy the task ID and paste in the proofreading slack channel. Describe your issue in detail and paste your task ID, browser and OS as well. A NeuVue developer will then provide more specific instructions on how to troubleshoot or fix the issue.
 
@@ -135,7 +138,7 @@ We recommend you do not refresh your browser when on the workspace page. This ca
 
 ### Is there an undo for Neuroglancer?
 
-Yes, on the top right there will be an "undo/redo" arrow buttons that can be used to undo layer/ID selects, pans, zooms, and any changes to the Neuroglancer state. ** However, you cannot undo direct edits (i.e. splits/merges). ** To undo these, you can do the inverse operation for the undo, such as merging two accidently split IDs or splitting two accidently merged IDs.
+Yes, on the top right there will be an "undo/redo" arrow buttons that can be used to undo layer/ID selects, pans, zooms, and any changes to the Neuroglancer state. ** However, you cannot undo direct edits (i.e. splits/merges). ** To undo these, you can do the inverse operation for the undo, such as merging two accidentally split IDs or splitting two accidentally merged IDs. 
 
 ### How do I stop Neuroglancer from lagging/slowing down?
 

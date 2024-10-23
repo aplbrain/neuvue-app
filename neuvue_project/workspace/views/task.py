@@ -213,7 +213,7 @@ class TaskView(LoginRequiredMixin, View):
         max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
 
         # Dev Note: Below is the logic for handling re-assignment of tasks. User levels default to novice and
-        # can be overriden by the user profile in the admin page. How levels affect what group the namespace
+        # can be overridden by the user profile in the admin page. How levels affect what group the namespace
         # belongs to depends on how the namespace configures the push to and pull from attributes.
         # By default, namespaces do not allow for reassignment.
 
