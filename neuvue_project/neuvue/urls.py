@@ -47,6 +47,7 @@ urlpatterns = [
     path("tasks/", TaskView.as_view(), name="tasks"),
     path("getting-started/", GettingStartedView.as_view(), name="getting-started"),
     path("workspace/<str:namespace>", WorkspaceView.as_view(), name="workspace"),
+    path("spelunker-workspace/<str:namespace>", WorkspaceView.as_view(), name="spelunker-workspace"),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
     path("accounts/", include("allauth.urls")),

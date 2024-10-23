@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
+SITE_ID = 2
 
 ALLOWED_HOSTS = [
     ".neuvue.io",
@@ -204,7 +207,7 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_URL = "index"
 LOGIN_REDIRECT_URL = "/tasks"
 LOGOUT_REDIRECT_URL = "/"
-SOCIALACCOUNT_LOGIN_ON_GET = True 
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Needed for NeuroGlancer Popups
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
@@ -242,4 +245,7 @@ if DEBUG:
 
     mimetypes.add_type("application/javascript", ".js", True)
 
-STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace"))
+STATIC_NG_FILES = os.listdir(
+    os.path.join(BASE_DIR, "workspace", "static", "workspace")
+) + os.listdir(os.path.join(BASE_DIR, "workspace", "static", "spelunker-workspace"))
+# STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace-spelunker"))

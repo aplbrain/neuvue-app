@@ -273,7 +273,7 @@ def construct_proofreading_state(task_df, points, return_as="json"):
 
 
 def construct_url_from_existing(state: str, ng_host: str):
-    if ng_host == NeuroglancerHost.SPELUNKER:
+    if ng_host in [NeuroglancerHost.SPELUNKER, NeuroglancerHost.SPELUNKER_URL]:
         return ng_host + "/#!middleauth+" + state
     else:
         return ng_host + "/#!" + state
@@ -288,6 +288,7 @@ def get_from_state_server(url: str):
     Returns:
         (str): JSON String
     """
+    url = url.replace("middleauth+", "")
     headers = {
         "content-type": "application/json",
         "Authorization": f"Bearer {os.environ['CAVECLIENT_TOKEN']}",

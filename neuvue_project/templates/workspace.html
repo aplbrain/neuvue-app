@@ -278,7 +278,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 <script type="text/javascript"  src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+
+{% if ng_host == "spelunker" %}
+<script type="module" src="562.1d0cecad9cc0725955f0.js"></script><script type="module" src="993.ca23372ceee17151541a.js"></script><script type="module" src="367.ad6071abcab399305157.js"></script><script type="module" src="main.cb26101b553ed6b82856.js"></script><link href="main.cb26101b553ed6b82856.css" rel="stylesheet">
+{% else %}
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
+{% endif %}
+
 <script type="text/javascript"> 
 
     // initialize Tagify on the above input node reference
@@ -306,7 +312,7 @@
     }
         
     function saveState() {
-        {% if not ng_url %}
+        {% if ng_host == "neuvue" %}
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             let post_body = JSON.stringify({'task_id':"{{task_id}}", 'ng_state' : state});
@@ -373,6 +379,16 @@
         }
     }
 
+    function getOperationIdsFromSpelunker(){
+        for (let i = 0; i < viewer.layerManager.managedLayers.length; i++) {
+            const layer = viewer.layerManager.managedLayers[i].layer_;
+            if (layer.type === 'segmentation') {
+                const operationIds = layer.graphConnection.value.operationIds.toString();
+                return operationIds.split(',').map(Number);
+            }
+        }
+    }
+
     function submitForm(value, form='#mainForm') {
         window.removeEventListener('beforeunload', exitAlert);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
@@ -383,8 +399,16 @@
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $(form).submit();
 
+        {% elif ng_host == "spelunker" %}
+        updateTrackedOperations(getOperationIdsFromSpelunker())
+        let state = JSON.stringify(viewer.state.toJSON());
+        $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
+        $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
+
+        $(form).submit();
+
         {% else %}
-        
         updateTrackedOperations(operation_ids)
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
@@ -453,6 +477,23 @@
         selected_button.classList.toggle("active");
     }
 
+    // Function to attempt restoring the viewer state
+    function tryRestoreState() {
+        if (typeof viewer !== 'undefined') {
+        // Viewer is defined, attempt to restore the state
+        try {
+            var received_data = {{ ng_state|safe }};
+            viewer.state.restoreState(received_data);
+            console.log('Viewer state restored successfully.');
+        } catch (error) {
+            console.error('Error restoring viewer state:', error);
+        }
+        } else {
+        // Viewer is not yet defined, retry after a short delay
+        setTimeout(tryRestoreState, 100); // Retry every 100 milliseconds
+        }
+    }
+
     // Button Submission
     $(document).ready(function() {
 
@@ -468,13 +509,14 @@
 
         // Specific to built-in NG
         {% if not ng_url%}
-        var received_data = {{ ng_state|safe }};
-        viewer.state.restoreState(received_data);
-
-
+        tryRestoreState()
         // Track operation IDs every three seconds
         window.setInterval(function() {
+            {% if ng_host == "spelunker" %}
+            updateTrackedOperations(getOperationIdsFromSpelunker());
+            {% else %}
             updateTrackedOperations(operation_ids);
+            {% endif %}
         }, 3000);
         {% endif %}
 

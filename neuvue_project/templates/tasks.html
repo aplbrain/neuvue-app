@@ -41,7 +41,11 @@
                                     aria-expanded="false">
                                 <span class="sr-only header-box-text">Toggle Dropdown</span>
                               </button>
+                            {% if context.ng_host == "spelunker" %}
+                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'spelunker-workspace' namespace=namespace %}'"> 
+                            {% else %}
                             <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                            {% endif %}
                                 <button class="header-box-text"
                                     onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                     <div id='{{namespace}}NgSpinner'>
@@ -77,7 +81,11 @@
                             </div>
                         </div>
                         {% else %}
-                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'"> 
+                        {% if context.ng_host == "spelunker" %}
+                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'spelunker-workspace' namespace=namespace %}'"> 
+                        {% else %}
+                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'">
+                        {% endif %} 
                             <button class="header-box-text"
                                 onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
                                 <div id='{{namespace}}NgSpinner'>
