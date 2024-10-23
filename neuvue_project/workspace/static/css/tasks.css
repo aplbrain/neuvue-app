@@ -20,7 +20,7 @@
     margin-right: 3.5%;
     height: 85vh;
     width: 22%;
-    
+
     overflow: auto;
     overflow-x: hidden;
 }
@@ -184,7 +184,7 @@ tbody.pending >:nth-child(2) {
   font-size: 1.5vh;
   border-radius: 8px 8px 0px 0px;
   min-width: 10%;
-  
+
 }
 
 /* Change background color of buttons on hover */
@@ -212,11 +212,11 @@ tbody.pending >:nth-child(2) {
   background-color: var(--table-background) !important;
   max-height: 30vh;
   min-height: 20vh;
-  overflow: -moz-scrollbars-vertical; 
+  overflow: -moz-scrollbars-vertical;
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
-  
+
 }
 
 .analyticsSubHeader {
@@ -296,7 +296,7 @@ tbody.pending >:nth-child(2) {
   margin-top: 2vh;
   margin-left: 3vw;
   width: 70vw;
-  right: 0;  
+  right: 0;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -306,7 +306,7 @@ tbody.pending >:nth-child(2) {
   padding: 20px 30px 20px 30px;
   background-color: var(--transparent-card-items-background);
   margin: 1%;
-  width: 98%; 
+  width: 98%;
   min-height: 97%;
   font-size: 14pt;
   color: var(--primary-accent);

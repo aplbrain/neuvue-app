@@ -16,8 +16,8 @@
     <form id="configForm" action="" method="post" >
     {% csrf_token %}
     <div class="navbar-text" style='font-size:1vw;'> <h2> Neuroglancer Preferences </h2>
-        Neuroglancer preferences will overwrite all task states to the specified configuration. Only settings that are enabled 
-        (checked) are actually used. 
+        Neuroglancer preferences will overwrite all task states to the specified configuration. Only settings that are enabled
+        (checked) are actually used.
         <hr class="row-divider">
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="configSwitch">
@@ -33,14 +33,14 @@
             <div> Annotation Color Palette </div>
             <div class="dropdown">
                 <button class="btn btn-light
-                        dropdown-toggle" type="button" 
-                        id="dropdownMenuButton" 
+                        dropdown-toggle" type="button"
+                        id="dropdownMenuButton"
                         data-toggle="dropdown"
-                        aria-haspopup="true" 
+                        aria-haspopup="true"
                         aria-expanded="false">
                     Palette Choices
                 </button>
-                <ul class="dropdown-menu annotationChoiceMenu" 
+                <ul class="dropdown-menu annotationChoiceMenu"
                     aria-labelledby="dropdownMenuButton">
                     <li class="dropdown-item" selected="selected">
                         <input type="radio" name="annotationColorPalette" id="annotationChoice1" value="palette1" onClick="changeAnnotationImage(this.value);">
@@ -57,26 +57,26 @@
                     <li class="dropdown-item">
                         <input type="radio" name="annotationColorPalette" id="annotationChoice3" value="palette3" onClick="changeAnnotationImage(this.value);">
                         <label for="annotationChoice3">
-                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
-                        </label>              
+                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="annotationColorPalette" id="annotationChoice4" value="palette4" onClick="changeAnnotationImage(this.value);">
                         <label for="annotationChoice4">
-                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
-                        </label>        
+                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="annotationColorPalette" id="annotationChoice5" value="palette5" onClick="changeAnnotationImage(this.value);">
                         <label for="annotationChoice5">
-                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
-                        </label>        
+                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="annotationColorPalette" id="annotationChoice6" value="palette6" onClick="changeAnnotationImage(this.value);">
                         <label for="annotationChoice6">
-                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
-                        </label>              
+                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                 </ul>
             </div>
@@ -96,14 +96,14 @@
             <div> Mesh Color Palette </div>
             <div class="dropdown">
                 <button class="btn btn-light
-                        dropdown-toggle" type="button" 
-                        id="meshPaletteDropdownMenuButton" 
+                        dropdown-toggle" type="button"
+                        id="meshPaletteDropdownMenuButton"
                         data-toggle="dropdown"
-                        aria-haspopup="true" 
+                        aria-haspopup="true"
                         aria-expanded="false">
                     Palette Choices
                 </button>
-                <ul class="dropdown-menu meshChoiceMenu" 
+                <ul class="dropdown-menu meshChoiceMenu"
                     aria-labelledby="dropdownMenuButton">
                     <li class="dropdown-item" selected="selected">
                         <input type="radio" name="meshColorPalette" id="meshChoice1" value="palette1" onClick="changeMeshImage(this.value);">
@@ -120,26 +120,26 @@
                     <li class="dropdown-item">
                         <input type="radio" name="meshColorPalette" id="meshChoice3" value="palette3" onClick="changeMeshImage(this.value);">
                         <label for="meshChoice3">
-                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
-                        </label>              
+                            <img src="{% static 'images/annotation_palette3.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="meshColorPalette" id="meshChoice4" value="palette4" onClick="changeMeshImage(this.value);">
                         <label for="meshChoice4">
-                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
-                        </label>        
+                            <img src="{% static 'images/annotation_palette4.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="meshColorPalette" id="meshChoice5" value="palette5" onClick="changeMeshImage(this.value);">
                         <label for="meshChoice5">
-                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">        
-                        </label>        
+                            <img src="{% static 'images/annotation_palette5.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                     <li class="dropdown-item">
                         <input type="radio" name="meshColorPalette" id="meshChoice6" value="palette6" onClick="changeMeshImage(this.value);">
                         <label for="meshChoice6">
-                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">  
-                        </label>              
+                            <img src="{% static 'images/annotation_palette6.png' %}" style="width: 150px; height: 45px; margin-top: 3px; border: 1px solid gray;">
+                        </label>
                     </li>
                 </ul>
             </div>
@@ -154,16 +154,16 @@
         </div>
 
         <hr class="row-divider">
-        
+
         <div class="row-container">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>  
+                <input class="form-check-input" type="checkbox" id="showSlicesSwitch" value={{showSlicesSwitch}}>
             </div>
             <div>
                 <span> Show Slices </span>
                 <input id="showSlices" class="form-check-input" type="checkbox" value={{showSlices}} style="margin-left: 5px;">
             </div>
-            
+
         </div>
 
 
@@ -171,20 +171,20 @@
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="zoomLevelSwitch"> </div>
             <div> Zoom Level </div>
-            <input id="zoomLevel" type="range" class="form-range" min="0" 
+            <input id="zoomLevel" type="range" class="form-range" min="0"
                 max="100" step="10" value="{{ zoomLevel }}" />
-            
+
             <div id="zoomLevelDisplay" class="form-label">"{{ zoomLevel }}"</div>
         </div>
 
-          
+
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alphaSelectedSwitch"> </div>
             <div> 2D Segmentation Data Opacity </div>
-            <input id="alphaSelected" type="range" class="form-range" min="0" 
+            <input id="alphaSelected" type="range" class="form-range" min="0"
                 max="1" step="0.01" value="{{ alphaSelected }}" />
-            
+
             <div id="alphaSelectedDisplay" class="form-label">"{{ alphaSelected }}"</div>
         </div>
 
@@ -192,8 +192,8 @@
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="alpha3DSwitch"> </div>
             <div> 3D Segmentation Data Opacity </div>
-            
-            <input id="alpha3D" type="range" class="form-range" min="0" 
+
+            <input id="alpha3D" type="range" class="form-range" min="0"
                 max="1" step="0.01" value="{{alpha3D}}" />
 
             <div id="alpha3DDisplay" class="form-label">"{{alpha3D}}"</div>
@@ -209,15 +209,15 @@
                 <option>xz-3d</option>
                 <option>4panel</option>
                 <option>3d</option>
-            </select> 
+            </select>
         </div>
-        
+
         <hr class="row-divider">
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="gpuLimitSwitch"> </div>
             <div> GPU Memory Limit (GB) </div>
-            
-            <input id="gpuLimit" type="range" class="form-range" min="0.5" 
+
+            <input id="gpuLimit" type="range" class="form-range" min="0.5"
                 max="4.0" step="0.1" value="{{gpuLimit}}" />
 
             <div id="gpuLimitDisplay" class="form-label">"{{gpuLimit}}"</div>
@@ -227,8 +227,8 @@
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="sysLimitSwitch"> </div>
             <div> System Memory Limit (GB) </div>
-            
-            <input id="sysLimit" type="range" class="form-range" min="0.5" 
+
+            <input id="sysLimit" type="range" class="form-range" min="0.5"
                 max="4.0" step="0.1" value="{{sysLimit}}" />
 
             <div id="sysLimitDisplay" class="form-label">"{{sysLimit}}"</div>
@@ -238,24 +238,24 @@
         <div class="row-container">
             <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="chunkReqSwitch"> </div>
             <div> Concurrent Chunk Requests </div>
-            
-            <input id="chunkReq" type="range" class="form-range" min="8" 
+
+            <input id="chunkReq" type="range" class="form-range" min="8"
                 max="64" step="1" value="{{chunkReq}}" />
 
             <div id="chunkReqDisplay" class="form-label">"{{chunkReq}}"</div>
         </div>
 
         <hr class="row-divider">
-        
+
         <div class="row-container">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="enableSoundSwitch" value={{enableSoundSwitch}}>  
+                <input class="form-check-input" type="checkbox" id="enableSoundSwitch" value={{enableSoundSwitch}}>
             </div>
             <div>
                 <span> Enable Sound </span>
                 <input id="enableSound" class="form-check-input" type="checkbox" value={{enableSound}} style="margin-left: 5px;">
             </div>
-            
+
         </div>
 
         <hr class="row-divider">
@@ -279,12 +279,12 @@
     const preferenceFields = {
         "annotationColorPalette": "{{annotationColorPaletteSwitch}}",
         "meshColorPalette" : "{{meshColorPaletteSwitch}}",
-        "showSlices": "{{showSlicesSwitch}}", 
-        "alphaSelected": "{{alphaSelectedSwitch}}", 
-        "zoomLevel": "{{zoomLevelSwitch}}", 
-        "alpha3D": "{{alpha3DSwitch}}", 
-        "gpuLimit": "{{gpuLimitSwitch}}", 
-        "sysLimit": "{{sysLimitSwitch}}", 
+        "showSlices": "{{showSlicesSwitch}}",
+        "alphaSelected": "{{alphaSelectedSwitch}}",
+        "zoomLevel": "{{zoomLevelSwitch}}",
+        "alpha3D": "{{alpha3DSwitch}}",
+        "gpuLimit": "{{gpuLimitSwitch}}",
+        "sysLimit": "{{sysLimitSwitch}}",
         "chunkReq": "{{chunkReqSwitch}}",
         "layout": "{{layoutSwitch}}",
         "enableSound": "{{enableSoundSwitch}}"
@@ -299,14 +299,14 @@
         let enabled = $('#configSwitch').is(":checked");
         $('<input>').attr('type', 'hidden').attr('name', 'enabled').attr('value', enabled).appendTo(form);
 
-        for (field in preferenceFields){          
+        for (field in preferenceFields){
             let fieldSwitch = $(`#${field}Switch`).is(":checked");
             let fieldValue = $(`#${field}`).val();
-            
+
             if ($(`#${field}`).is(':checked')){
                 fieldValue = "true";
             }
-            
+
             if (field != "layout") {
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', fieldValue).appendTo(form);
             }
@@ -317,7 +317,7 @@
                     if(radioButtons[i].checked) {
                         selected = radioButtons[i].value;
                     }
-                }   
+                }
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', selected).appendTo(form);
 
             }
@@ -328,7 +328,7 @@
                     if(meshRadioButtons[i].checked) {
                         selected = meshRadioButtons[i].value;
                     }
-                }   
+                }
                 $('<input>').attr('type', 'hidden').attr('name', field).attr('value', selected).appendTo(form);
 
             }
@@ -345,7 +345,7 @@
                 $("#neuroglancerConfig").hide(100);
             }
         });
-        
+
         if ("{{enabled}}" == "True") {
             $("#neuroglancerConfig").show();
             $("#configSwitch").prop( "checked", true );
@@ -354,7 +354,7 @@
             $("#configSwitch").prop( "checked", false );
         }
 
-        // Update switches 
+        // Update switches
         for (field in preferenceFields){
             if ($(`#${field}`).attr('type') == 'checkbox' && $(`#${field}`).val() == 'True' ){
                 $(`#${field}`).prop( "checked", true );
@@ -403,10 +403,10 @@
             $("#chunkReqDisplay").html($("#chunkReq").val());
         });
 
-        // Select correct layout 
+        // Select correct layout
         $('#layoutSelect option:contains("{{layout}}")').prop('selected', true)
 
-        // Select Annotation Color Palette 
+        // Select Annotation Color Palette
         let radios = document.getElementsByName("annotationColorPalette");
         for (let i = 0, length = radios.length; i < length; i++) {
         if (radios[i].value == "{{annotationColorPalette}}") {
@@ -418,7 +418,7 @@
         }
         }
 
-        // Select Mesh Color Palette 
+        // Select Mesh Color Palette
         let meshRadios = document.getElementsByName("meshColorPalette");
         for (let i = 0, length = meshRadios.length; i < length; i++) {
         if (meshRadios[i].value == "{{meshColorPalette}}") {
@@ -430,18 +430,18 @@
         }
         }
 
-        
+
         // Submit Button
         $('#saveConfig').click(function() {
             submitConfig();
         })
 
     });
-    
+
     // Change Selected Color Palette Icon
     function changeAnnotationImage(imageName) {
         let radios = document.getElementsByName("annotationColorPalette");
-        for (let i = 0, length = radios.length; i < length; i++) { 
+        for (let i = 0, length = radios.length; i < length; i++) {
             var icon_id = "selected_" + radios[i].value;
             var icon_element = document.getElementById(icon_id);
             if (radios[i].checked == true) {
@@ -456,7 +456,7 @@
     // Change Mesh Color Palette Icon
     function changeMeshImage(imageName) {
         let radios = document.getElementsByName("meshColorPalette");
-        for (let i = 0, length = radios.length; i < length; i++) { 
+        for (let i = 0, length = radios.length; i < length; i++) {
             var icon_id = "selected_mesh_" + radios[i].value;
             var icon_element = document.getElementById(icon_id);
             if (radios[i].checked == true) {

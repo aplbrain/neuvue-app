@@ -35,7 +35,7 @@ include the main neuroglancer source based on definitions in `tsconfig.json`.
 
    - From within the neuroglancer root directory, type:
      `npm link`
-  
+
    - From within this directory, type:
      `npm link neuroglancer`
 

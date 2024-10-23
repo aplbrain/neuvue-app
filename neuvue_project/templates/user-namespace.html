@@ -61,7 +61,7 @@
                             <option value={{field}}>{{printed_name}}</option>
                         {% endfor %}
                     {% endif %}
-                </select> 
+                </select>
 
                 {% if start_date %}
                     <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true" value="{{start_date}}">
@@ -69,7 +69,7 @@
                     <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true">
                 {% endif %}
                 </br>
-                
+
                 <label style="color: white" for="endSelect">To</label>
                 <select name="end_field" class="form-select" id="endSelect" required="true">
                     {% if end_field %}
@@ -85,8 +85,8 @@
                             <option value={{field}}>{{printed_name}}</option>
                         {% endfor %}
                     {% endif %}
-                </select> 
-                
+                </select>
+
                 {% if end_date %}
                     <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
                 {% else %}
@@ -101,7 +101,7 @@
                   <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
                   {% endif %}
                 </div>
-                
+
               </div>
             </form>
           </div>
@@ -127,7 +127,7 @@
                         {% endfor %}
                     {% endif %}
                 </select>
-                
+
 
                 <label style="color: white" for="startSelect">From</label>
                 <select name="start_field" class="form-select" id="startSelect" required="true">
@@ -144,7 +144,7 @@
                             <option value={{field}}>{{printed_name}}</option>
                         {% endfor %}
                     {% endif %}
-                </select> 
+                </select>
 
                 {% if start_date %}
                     <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true" value="{{start_date}}">
@@ -152,7 +152,7 @@
                     <input name="start_date" type="date" class="form-control" id="input_to" placeholder="Start Date" required="true">
                 {% endif %}
                 </br>
-                
+
                 <label style="color: white" for="endSelect">To</label>
                 <select name="end_field" class="form-select" id="endSelect" required="true">
                     {% if end_field %}
@@ -168,8 +168,8 @@
                             <option value={{field}}>{{printed_name}}</option>
                         {% endfor %}
                     {% endif %}
-                </select> 
-                
+                </select>
+
                 {% if end_date %}
                     <input name="end_date" type="date" class="form-control" id="input_to" placeholder="End Date" required="true" value="{{end_date}}">
                 {% else %}
@@ -213,7 +213,7 @@
                   <table id="summary-table" class="table table-striped table-hover">
                     <thead>
                       <tr>
-                      {% for column in table_columns %}   
+                      {% for column in table_columns %}
                           <th scope="col">{{column}}</th>
                       {% endfor %}
                       </tr>
@@ -227,7 +227,7 @@
                       </tr>
                       {% endfor %}
                     </tbody>
-                  </table>  
+                  </table>
                 </div>
               </div>
             </div>
@@ -250,9 +250,8 @@
       const filename =  '{{filename_field}}' + '_' + '{{start_field}}' + '_by_' + '{{start_date}}'+ '_and_' + '{{end_field}}' + '_by_' + '{{end_date}}' + Date.now() + '.csv';
       // Perform download
       $('#summary-table').table2csv('download', {'filename': filename});
-    }); 
+    });
   {% endif %}
 
 </script>
 {% endblock %}
-
