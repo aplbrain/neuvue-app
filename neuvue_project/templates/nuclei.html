@@ -34,10 +34,10 @@
   <div id="neuVue-sidebar" class="sidebar">
       <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
           <i class="glyphicon glyphicon-list"></i>
-      </a>  
+      </a>
   </div>
   <div id="neuVue-sidecontent" class="sidecontent">
-      
+
       <! Task Information >
       <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
         <div class="sideContentTitle">
@@ -53,8 +53,8 @@
         </div>
     </div>
     <div id = "instruction-container" class ="sideContentBox" style="padding: 0; border:transparent !important;">
-      <div class="sideContentInfo">     
-          <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>      
+      <div class="sideContentInfo">
+          <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
           <button type="button" class="btn btn-info" id="exportBtn_nucleiIDs"> <i class="fa fa-download"></i> Export Nuclei Info </button></br>
         </div>
     </div>
@@ -63,7 +63,7 @@
 </div>
 
 <div id="neuroglancer" class="leftFormatting">
-  <div class="left">    
+  <div class="left">
     <div id="neuroglancer-container" class="neuroglancer-container"></div>
     <div class="bottomBar">
       <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'nuclei' %}'">
@@ -76,7 +76,7 @@
 <script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
 {% endif%}
 
-<div id="hiddenTable" style="visibility: hidden;"> 
+<div id="hiddenTable" style="visibility: hidden;">
 </div>
 <style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -97,10 +97,10 @@
         const filename = 'Nuclei_IDs' + '_' +  + Date.now() + '.csv';
         // Perform download
         $('#hiddenIDTable').table2csv('download', {'filename': filename});
-    }); 
+    });
 
-  // Neuroglancer State Load 
-    
+  // Neuroglancer State Load
+
   function getLink() {
     viewer.postJsonState(true, undefined, true, function() {
       let url_prefix = "https://neuroglancer.neuvue.io/?json_url="

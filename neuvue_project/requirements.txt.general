@@ -19,4 +19,4 @@ pandas
 Pillow
 plotly
 requests
-./deps/neuvue-client 
+./deps/neuvue-client

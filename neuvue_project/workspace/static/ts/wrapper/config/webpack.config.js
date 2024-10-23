@@ -27,7 +27,7 @@ module.exports = env => {
   for (const [index, origConfig] of origConfigs.entries()) {
 
     let origPlugins = origConfig.plugins || []
-    
+
     origPlugins.push(new BundleTracker({filename: `./webpack-stats-${index}.json`}))
     let origOutput = origConfig.output || {}
     let output = Object.assign(
@@ -47,6 +47,6 @@ module.exports = env => {
     configs.push(config);
 
   };
-  
+
   return configs;
 };

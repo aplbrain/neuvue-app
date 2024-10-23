@@ -79,4 +79,4 @@ typing-extensions==3.10.0.2
 urllib3==1.26.7
 wcwidth==0.1.9
 websocket-client==0.59.0
-./deps/neuvue-client 
+./deps/neuvue-client

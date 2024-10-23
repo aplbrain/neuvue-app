@@ -24,7 +24,7 @@ function block_toggle() {
 /* This controls information from appearing in the sidebar*/
 
 function sidemenu_content() {
-  
+
   let side_button = document.getElementById("sidebarActivate");
   let neuroglancer_window = document.getElementById("neuroglancer");
 
@@ -40,7 +40,7 @@ function sidemenu_content() {
       window.localStorage.setItem('sidebarStatus', 'closed');
     }
 
-} 
+}
 
 /* Opens Side Menu */
 function openSideMenu(){
@@ -48,7 +48,7 @@ function openSideMenu(){
   let sidebar = document.getElementById("neuVue-sidebar");
   let sidecontent = document.getElementById("neuVue-sidecontent");
   let neuroglancer_window = document.getElementById("neuroglancer");
-  
+
   sidemenu.style.width = "25%";
   sidebar.style.width = "8%";
   sidecontent.style.width = "85%";
@@ -89,11 +89,11 @@ function closeSideMenu() {
   sidebar.style.transitionDelay = "0.15s";
   sidecontent.style.transition = "0.3s";
 
-  if (neuroglancer_window != null){  
+  if (neuroglancer_window != null){
   neuroglancer_window.style.width = "101%";
   neuroglancer_window.style.left = "-2%";
   }
-  
+
 }
 function getCookie(name) {
   let cookieValue = null;

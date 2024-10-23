@@ -6,13 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workspace', '0020_alter_forcedchoicebutton_button_color_and_more'),
+        ("workspace", "0020_alter_forcedchoicebutton_button_color_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='namespace',
-            name='ng_host',
-            field=models.CharField(choices=[('neuvue', 'NeuVue Built-in'), ('https://neuroglancer.bossdb.io', 'neuroglancer.bossdb.io'), ('https://spelunker.cave-explorer.org/', 'spelunker.cave-explorer.org')], default='neuvue', max_length=100),
+            model_name="namespace",
+            name="ng_host",
+            field=models.CharField(
+                choices=[
+                    ("neuvue", "NeuVue Built-in"),
+                    ("https://neuroglancer.bossdb.io", "neuroglancer.bossdb.io"),
+                    (
+                        "https://spelunker.cave-explorer.org/",
+                        "spelunker.cave-explorer.org",
+                    ),
+                ],
+                default="neuvue",
+                max_length=100,
+            ),
         ),
     ]
