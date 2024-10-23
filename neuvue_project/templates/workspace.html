@@ -305,10 +305,19 @@
     })
 
     function getLink() {
-        viewer.postJsonState(true, undefined, true, function() {
-            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
-        });
+        {% if ng_host == "neuvue" %}
+            viewer.postJsonState(true, undefined, true, function() {
+                let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+                copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+                triggerToast("Copied link to clipboard");
+            });
+        {% elif ng_host == "spelunker" %}
+            let url_prefix = "https://spelunker.cave-explorer.org/#!";
+            copyToClipboard(url_prefix.concat(JSON.stringify(viewer.state.toJSON())));
+            triggerToast("Copied link to clipboard");
+        {% else %}
+            triggerToast("Copy Link unavailable on embedded Neuroglancer task type");
+        {% endif %}
     }
 
     function saveState() {
@@ -326,7 +335,8 @@
                 });
         });
         {% else %}
-        triggerToast("Autosave disabled for embedded neuroglancer");
+        triggerToast("State saving disabled for non-native Neuroglancer");
+        removeLoadingSpinner("save_state", "Save State");
         {% endif %}
     }
 

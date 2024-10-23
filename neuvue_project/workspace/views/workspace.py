@@ -157,7 +157,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             if ng_state:
                 if is_url(ng_state.replace("middleauth+", "")):
-                    if namespace_obj.ng_host not in [NeuroglancerHost.NEUVUE]:
+                    if namespace_obj.ng_host not in [NeuroglancerHost.NEUVUE, NeuroglancerHost.SPELUNKER]:
                         # Assume its a url to json state
                         context["ng_state"] = ng_state
                     else:
@@ -428,4 +428,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
             return redirect(reverse("tasks"))
 
-        return redirect(reverse("workspace", args=[namespace]))
+        if namespace_obj.ng_host == NeuroglancerHost.SPELUNKER:
+            return redirect(reverse("spelunker-workspace", args=[namespace]))
+        else:
+            return redirect(reverse("workspace", args=[namespace]))
