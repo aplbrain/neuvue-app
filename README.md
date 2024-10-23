@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 ## Development Installation
 
-Install developer python requirements and set up pre-commit enviroment.
+Install developer python requirements and set up pre-commit environment.
 
 ```
 source  venv/bin/activate
@@ -102,7 +102,7 @@ Or perform each step individually:
 
 ## OAuth Set-up
 
-The included development database is preconfigured to allow OAuth to authetnticate user accounts from `localhost:8000`. Here is a more [complete guide](https://www.section.io/engineering-education/django-google-oauth/) on how this was done.
+The included development database is preconfigured to allow OAuth to authenticate user accounts from `localhost:8000`. Here is a more [complete guide](https://www.section.io/engineering-education/django-google-oauth/) on how this was done.
 
 We use `django-allauth` to connect Google OAuth to the Django environment. Users also have the option to log in through the base allauth login/signup page:
 
