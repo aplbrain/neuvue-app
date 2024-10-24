@@ -101,7 +101,11 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="{% static "workspace/main.bundle.js" %}"></script>
+{% if ng_host == "spelunker" %}
+<script type="module" src="{% static 'spelunker-workspace/562.1d0cecad9cc0725955f0.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/993.ca23372ceee17151541a.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/367.ad6071abcab399305157.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/main.cb26101b553ed6b82856.js' %}"></script><link href="{% static 'spelunker-workspace/main.cb26101b553ed6b82856.css' %}" rel="stylesheet">
+{% else %}
+<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
+{% endif %}
 <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
 {% endif%}
 <style> .overlay-hidden { display:none; } </style>
@@ -111,18 +115,41 @@
 <script type="text/javascript">
 
   function getLink() {
-    viewer.postJsonState(true, undefined, true, function() {
-      let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-      copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
-    });
+    {% if ng_host == "neuvue" %}
+        viewer.postJsonState(true, undefined, true, function() {
+            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
+            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
+        });
+    {% elif ng_host == "spelunker" %}
+        let url_prefix = "https://spelunker.cave-explorer.org/#!";
+        copyToClipboard(url_prefix.concat(JSON.stringify(viewer.state.toJSON())));
+    {% else %}
+        //pass
+    {% endif %}
+}
+
+  // Function to attempt restoring the viewer state
+  function tryRestoreState() {
+      if (typeof viewer !== 'undefined') {
+      // Viewer is defined, attempt to restore the state
+      try {
+          var received_data = {{ ng_state|safe }};
+          viewer.state.restoreState(received_data);
+          console.log('Viewer state restored successfully.');
+      } catch (error) {
+          console.error('Error restoring viewer state:', error);
+      }
+      } else {
+      // Viewer is not yet defined, retry after a short delay
+      setTimeout(tryRestoreState, 100); // Retry every 100 milliseconds
+      }
   }
 
   // Neuroglancer State Load
   $(document).ready(function() {
     {% if ng_state %}
-    const state = {{ ng_state|safe }};
-      openSideMenu();
-      viewer.state.restoreState(state);
+    openSideMenu();
+    tryRestoreState();
     {% endif %}
   })
 

@@ -35,6 +35,7 @@ class InspectTaskView(View):
             "task_id": task_id,
             "ng_state": None,
             "ng_url": None,
+            "ng_host": None,
             "error": None,
             "num_edits": 0,
         }
@@ -79,14 +80,13 @@ class InspectTaskView(View):
                 task_df, points, return_as="json"
             )
 
+        context["ng_host"] = namespace_obj.ng_host
         context["task_id"] = task_df["_id"]
         context["seg_id"] = task_df["seg_id"]
         context["instructions"] = task_df["instructions"]
         context["assignee"] = task_df["assignee"]
-        context["display_name"] = Namespace.objects.get(
-            namespace=namespace
-        ).display_name
-        context["pcg_url"] = Namespace.objects.get(namespace=namespace).pcg_source
+        context["display_name"] = namespace_obj.display_name
+        context["pcg_url"] = namespace_obj.pcg_source
         context["status"] = task_df["status"]
         if "flag_reason" in task_df["metadata"].keys():
             context["flag_reason"] = task_df["metadata"]["flag_reason"]
