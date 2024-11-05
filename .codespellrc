@@ -1,7 +1,7 @@
 [codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = .git*,*.svg,package-lock.json,*.css,*-min.*,.codespellrc,*.bundle.*,*.map
+skip = .git*,*.svg,package-lock.json,*.css,*-min.*,.codespellrc,*.bundle.*,*.map, *.js
 check-hidden = true
-# ignore-regex = 
+# ignore-regex =
 # some favorite albeit unfortunate variable names
 ignore-words-list = te

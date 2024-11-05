@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,6 +24,8 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
+SITE_ID = 2
 
 ALLOWED_HOSTS = [
     ".neuvue.io",
@@ -242,4 +245,7 @@ if DEBUG:
 
     mimetypes.add_type("application/javascript", ".js", True)
 
-STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace"))
+STATIC_NG_FILES = os.listdir(
+    os.path.join(BASE_DIR, "workspace", "static", "workspace")
+) + os.listdir(os.path.join(BASE_DIR, "workspace", "static", "spelunker-workspace"))
+# STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace-spelunker"))
