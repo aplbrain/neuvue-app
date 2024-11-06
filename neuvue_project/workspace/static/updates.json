@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v2.0.1",
+            "update_date":"November 6th, 2024",
+            "update_description": "Adds native Spelunker support. Updates NeuVue Neuroglancer."
+        },
+        {
             "update_name": "v2.0.0",
             "update_date":"March 19th, 2024",
             "update_description": "Updates backend to Python 3.9 runtime."

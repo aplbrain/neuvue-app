@@ -248,4 +248,4 @@ if DEBUG:
 STATIC_NG_FILES = os.listdir(
     os.path.join(BASE_DIR, "workspace", "static", "workspace")
 ) + os.listdir(os.path.join(BASE_DIR, "workspace", "static", "spelunker-workspace"))
-# STATIC_NG_FILES = os.listdir(os.path.join(BASE_DIR, "workspace", "static", "workspace-spelunker"))
+

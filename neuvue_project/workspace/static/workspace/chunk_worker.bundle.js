@@ -21410,7 +21410,7 @@ function decodeBatchMeshResponse(response, callback) {
     let length = response.byteLength;
     let index = 0;
     const dataView = new DataView(response);
-    const headerSize =
+    const headerSize = 
     /*object id*/ 8 + /*fragment key length*/ 8 + /*num vertices*/ 8 + /*num triangles*/ 8;
     while (index < length) {
         if (index + headerSize > length) {
@@ -21702,7 +21702,7 @@ function decodeSkeletonChunk(chunk, response) {
     if (numEdgesHigh !== 0) {
         throw new Error(`The number of edges should not exceed 2^32-1.`);
     }
-    Object(neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_8__["decodeSkeletonVertexPositionsAndIndices"])(chunk, response, neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__["Endianness"].LITTLE, /*vertexByteOffset=*/ 16, numVertices,
+    Object(neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_8__["decodeSkeletonVertexPositionsAndIndices"])(chunk, response, neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_13__["Endianness"].LITTLE, /*vertexByteOffset=*/ 16, numVertices, 
     /*indexByteOffset=*/ undefined, /*numEdges=*/ numEdges);
 }
 let BrainmapsSkeletonSource = class BrainmapsSkeletonSource extends (BrainmapsSource(neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_8__["SkeletonSource"], neuroglancer_datasource_brainmaps_base__WEBPACK_IMPORTED_MODULE_5__["SkeletonSourceParameters"])) {
@@ -27715,7 +27715,7 @@ function decodeSkeletonChunk(chunk, response, vertexAttributes) {
     let numEdges = dv.getUint32(4, true);
     const vertexPositionsStartOffset = 8;
     let curOffset = 8 + numVertices * 4 * 3;
-    Object(neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_0__["decodeSkeletonVertexPositionsAndIndices"])(chunk, response, neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__["Endianness"].LITTLE, /*vertexByteOffset=*/ vertexPositionsStartOffset, numVertices,
+    Object(neuroglancer_skeleton_backend__WEBPACK_IMPORTED_MODULE_0__["decodeSkeletonVertexPositionsAndIndices"])(chunk, response, neuroglancer_util_endian__WEBPACK_IMPORTED_MODULE_2__["Endianness"].LITTLE, /*vertexByteOffset=*/ vertexPositionsStartOffset, numVertices, 
     /*indexByteOffset=*/ curOffset, /*numEdges=*/ numEdges);
     curOffset += numEdges * 4 * 2;
     let attributes = [];
