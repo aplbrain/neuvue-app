@@ -78,12 +78,15 @@ class TaskView(LoginRequiredMixin, View):
             else:
                 context[namespace]["can_unassign_tasks"] = True
 
-        if not is_authorized(request.user):
-            logging.warning(f"Unauthorized requests from {request.user}.")
-            return redirect(reverse("index"))
+        if is_authorized(request.user):
+            assignee = str(request.user)
+        else:
+            assignee = "public"
+            # logging.warning(f"Unauthorized requests from {request.user}.")
+            # return redirect(reverse("index"))
 
         pending_tasks = client.get_tasks(
-            sieve={"status": ["open", "pending"], "assignee": str(request.user)},
+            sieve={"status": ["open", "pending"], "assignee": assignee},
             select=[
                 "seg_id",
                 "namespace",

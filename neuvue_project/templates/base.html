@@ -68,13 +68,14 @@
                   <li> <a class="dropdown-item" href="{% url "nuclei" %}">Nuclei Viewer</a> </li>
               </ul>
             </li>
-            <li class="nav-item">
-              <a class="btn btn-outline-success" href="{% url "tasks" %}">My Tasks</a>
-            </li>
 
             {% endif%}
 
             {% if request.user.is_authenticated %}
+
+            <li class="nav-item">
+              <a class="btn btn-outline-success" href="{% url "tasks" %}">My Tasks</a>
+            </li>
 
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
