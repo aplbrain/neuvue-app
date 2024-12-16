@@ -232,7 +232,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         namespace_obj = Namespace.objects.get(namespace=namespace)
 
         # Current task that is opened in this namespace.
-        task_df = client.get_next_task(str(request.user), namespace)
+        task_df = client.get_task(request.POST.get("taskId"))
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
