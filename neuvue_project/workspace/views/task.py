@@ -149,7 +149,10 @@ class TaskView(LoginRequiredMixin, View):
         request.session["session_task_count"] = 0
 
         # create settings and context dicts
-        settings_dict = {"SANDBOX_ID": settings.SANDBOX_ID}
+        settings_dict = {
+            "SANDBOX_ID": settings.SANDBOX_ID,
+            "is_authorized": is_authorized(request.user)
+        }
         daily_changelog, full_changelog = create_stats_table(
             pending_tasks, closed_tasks
         )

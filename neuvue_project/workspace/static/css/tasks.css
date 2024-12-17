@@ -337,3 +337,7 @@ tbody.pending >:nth-child(2) {
 .bg-pink {
   background-color: #d63384;
 }
+
+.text-pink {
+  color: #d63384;
+}
