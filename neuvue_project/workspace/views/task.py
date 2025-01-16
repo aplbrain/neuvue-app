@@ -50,11 +50,8 @@ class TaskView(LoginRequiredMixin, View):
             ] = n_s.max_number_of_pending_tasks_per_user
             context[namespace]["submission_method"] = str(n_s.submission_method)
 
-            # get user profile
-            namespace_name = n_s.namespace
-            user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
-
             # Try to find a user-specific push rule for this namespace
+            user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
             user_push_rule = user_profile.namespace_rule.filter(
                 namespace=n_s, action="push"
             ).first()

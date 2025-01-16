@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 
 from neuvue.client import client
 
@@ -195,34 +196,23 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             ############################# ALLOW TO REASSIGN ########################################
             # get user profile object
-            userProfile, _ = UserProfile.objects.get_or_create(user=request.user)
-
-            # determine if our user's highest level is novice, intermediate, or expert
-            user_level = "novice"
-            for ns in userProfile.intermediate_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "intermediate"
-            for ns in userProfile.expert_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "expert"
-
-            # get namespace object of task namespace
+            user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
             namespace_obj = Namespace.objects.get(namespace=namespace)
-            group_to_push_to = ""
-            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
-            if user_level == "novice":
-                group_to_push_to = namespace_obj.novice_push_to
-            elif user_level == "intermediate":
-                group_to_push_to = namespace_obj.intermediate_push_to
-            else:
-                group_to_push_to = namespace_obj.expert_push_to
+            
+            user_push_rule = user_profile.namespace_rule.filter(
+                namespace=namespace_obj, action="push"
+            ).first()
 
-            # determine if the user's group is allowed to reassign in this namespace
-            if group_to_push_to == "Queue Tasks Not Allowed":
-                context["allowed_to_reassign"] = False
+            # If user has a push rule, use it; otherwise fallback to the default push rule
+            if user_push_rule:
+                push_bucket_assignee = user_push_rule.task_bucket.bucket_assignee
+            elif namespace_obj.default_push_rule:
+                push_bucket_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
             else:
-                context["allowed_to_reassgin"] = True
+                push_bucket_assignee = None
 
+            # If no valid push bucket, user cannot unassign tasks
+            context[namespace]["allowed_to_reassign"] = bool(push_bucket_assignee)
             #######################################################################################
 
         return render(request, "workspace.html", context)
@@ -368,35 +358,30 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Add new differ stack entry
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
+        
         elif button == "remove":
-            # get user profile object
-            userProfile = UserProfile.objects.get(user=request.user)
+            # Fetch the user's profile and see if they have a custom "push" rule for this namespace
+            user_profile = UserProfile.objects.get(user=request.user)
+            user_push_rule = user_profile.namespace_rule.filter(
+                namespace=namespace_obj, 
+                action="push"
+            ).first()
 
-            # determine if our user's highest level is novice, intermediate, or expert
-            user_level = "novice"
-            for ns in userProfile.intermediate_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "intermediate"
-            for ns in userProfile.expert_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "expert"
-
-            # patch task to the correct group
-            new_assignee = "novice_unassigned"
-            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
-            if user_level == "novice":
-                new_assignee = namespace_obj.novice_push_to
-            elif user_level == "intermediate":
-                new_assignee = namespace_obj.intermediate_push_to
+            # If user has a specific push rule, use it; otherwise fall back to namespace's default
+            if user_push_rule:
+                new_assignee = user_push_rule.task_bucket.bucket_assignee
+            elif namespace_obj.default_push_rule:
+                new_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
             else:
-                new_assignee = namespace_obj.expert_push_to
+                return HttpResponse(
+                    "You do not have permission to remove tasks from this queue. No push rule found.",
+                    content_type="text/plain",
+                )
 
-            # patch task to the new assignee
+            # Use the existing logic to patch the task with the new assignee
             current_priority = task_df["priority"]
             task_metadata = task_df["metadata"]
-            num_skipped = 0
-            if "skipped" in task_metadata.keys():
-                num_skipped = task_metadata["skipped"]
+            num_skipped = task_metadata.get("skipped", 0)
 
             client.patch_task(
                 task_df["_id"],
@@ -427,7 +412,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
             return redirect(reverse("tasks"))
+        else:
+            logging.error(f"Invalid button submission: {button}")
 
+        #### REDIRECT BACK TO WORKSPACE
         if namespace_obj.ng_host == NeuroglancerHost.SPELUNKER:
             return redirect(reverse("spelunker-workspace", args=[namespace]))
         else:
