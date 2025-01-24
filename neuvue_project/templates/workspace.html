@@ -419,7 +419,7 @@
         $(form).submit();
 
         {% else %}
-        updateTrackedOperations(operation_ids)
+        //updateTrackedOperations(operation_ids)
         viewer.postJsonState(true, undefined, true, function() {
             let state = viewer.saver.savedUrl;
             // Check if state successfully saved. If not use the raw JSON state
@@ -510,6 +510,10 @@
         // Start Timer for duration tracking and auto-save
         browserTimer.startTimer();
 
+
+        // Fix undefined operation ID
+        let operation_ids = [];
+
         // Sidebar Preference
         if (window.localStorage.getItem('sidebarStatus') == 'closed') {
             closeSideMenu();
@@ -525,7 +529,8 @@
             {% if ng_host == "spelunker" %}
             updateTrackedOperations(getOperationIdsFromSpelunker());
             {% else %}
-            updateTrackedOperations(operation_ids);
+            //updateTrackedOperations(operation_ids);
+            console.log("skipping operation_ids")
             {% endif %}
         }, 3000);
         {% endif %}

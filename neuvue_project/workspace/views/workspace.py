@@ -212,7 +212,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 push_bucket_assignee = None
 
             # If no valid push bucket, user cannot unassign tasks
-            context[namespace]["allowed_to_reassign"] = bool(push_bucket_assignee)
+            context["allowed_to_reassign"] = bool(push_bucket_assignee)
             #######################################################################################
 
         return render(request, "workspace.html", context)

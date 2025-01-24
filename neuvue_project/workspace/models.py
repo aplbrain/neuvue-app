@@ -212,7 +212,7 @@ class NamespaceRule(models.Model):
 # Janky way to extend the default User model
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    namespace_rule = models.ManyToManyField(NamespaceRule)
+    namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
     
     # @property
     # def inherited_namespace_rules(self):
@@ -225,4 +225,4 @@ class UserProfile(models.Model):
 # Janky way to extend the default Group model
 class GroupProfile(models.Model):
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
-    namespace_rule = models.ManyToManyField(NamespaceRule)
+    namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
