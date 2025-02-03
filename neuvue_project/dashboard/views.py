@@ -13,6 +13,7 @@ from datetime import datetime
 import plotly.graph_objects as go
 
 from neuvue.client import client
+from workspace.utils import get_or_create_public_taskbucket
 
 # import the logging library
 import logging
@@ -74,7 +75,7 @@ class DashboardView(View, LoginRequiredMixin):
             return redirect(reverse("dashboard", kwargs={"username": username}))
         elif shortcut:
             if shortcut == "View all tasks assigned to public username":
-                return redirect(reverse("dashboard", kwargs={"username": "public"}))
+                return redirect(reverse("dashboard", kwargs={"username": get_or_create_public_taskbucket().bucket_assignee}))
             else:
                 return redirect(reverse("dashboard"))
         else:

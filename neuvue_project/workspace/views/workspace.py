@@ -15,7 +15,7 @@ from ..models import (
     UserProfile,
     ForcedChoiceButtonGroup,
     ForcedChoiceButton,
-    NeuroglancerHost,
+    NeuroglancerHost
 )
 from ..neuroglancer import (
     construct_proofreading_state,
@@ -25,7 +25,7 @@ from ..neuroglancer import (
     apply_state_config,
     refresh_ids,
 )
-from ..utils import is_url, is_json, is_authorized
+from ..utils import is_url, is_json, is_authorized, get_or_create_public_taskbucket
 
 
 # import the logging library
@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.INFO)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 Config = apps.get_model("preferences", "Config")
-
+    
 
 class WorkspaceView(LoginRequiredMixin, View):
     def get(self, request, namespace=None, **kwargs):
@@ -106,9 +106,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         if is_authorized(request.user):
             assignee = str(request.user)
         else:
-            assignee = "public"
-            # logging.warning(f"Unauthorized requests from {request.user}.")
-            # return redirect(reverse("index"))
+            assignee = get_or_create_public_taskbucket().bucket_assignee
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -128,6 +126,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 client.patch_task(
                     task_df["_id"],
                     status="open",
+                    assignee=str(request.user),
                     overwrite_opened=not task_df.get("opened"),
                 )
 

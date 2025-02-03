@@ -7,12 +7,12 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from ..models import Namespace, UserProfile
+from ..models import Namespace, UserProfile, TaskBucket
 
 from neuvue.client import client
 
 from ..analytics import create_stats_table
-from ..utils import utc_to_eastern, is_member, is_authorized
+from ..utils import utc_to_eastern, is_member, is_authorized, get_or_create_public_taskbucket
 
 
 # import the logging library
@@ -74,7 +74,7 @@ class TaskView(LoginRequiredMixin, View):
         if is_authorized(request.user):
             assignee = str(request.user)
         else:
-            assignee = "public"
+            assignee = get_or_create_public_taskbucket().bucket_assignee
             # logging.warning(f"Unauthorized requests from {request.user}.")
             # return redirect(reverse("index"))
 
