@@ -103,9 +103,12 @@ class WorkspaceView(LoginRequiredMixin, View):
         else:
             context["number_of_selected_segments_expected"] = None
 
-        if not is_authorized(request.user):
-            logging.warning(f"Unauthorized requests from {request.user}.")
-            return redirect(reverse("index"))
+        if is_authorized(request.user):
+            assignee = str(request.user)
+        else:
+            assignee = "public"
+            # logging.warning(f"Unauthorized requests from {request.user}.")
+            # return redirect(reverse("index"))
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -114,7 +117,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = client.get_next_task(str(request.user), namespace)
+        task_df = client.get_next_task(assignee, namespace)
 
         if not task_df:
             context["tasks_available"] = False
@@ -222,7 +225,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         namespace_obj = Namespace.objects.get(namespace=namespace)
 
         # Current task that is opened in this namespace.
-        task_df = client.get_next_task(str(request.user), namespace)
+        task_df = client.get_task(request.POST.get("taskId"))
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
@@ -273,6 +276,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 tags=tags,
                 metadata=metadata,
+                assignee=str(request.user)
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -290,6 +294,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 metadata=metadata,
                 tags=tags,
+                assignee=str(request.user)
             )
             # Add new differ stack entry
             if ng_differ_stack != []:

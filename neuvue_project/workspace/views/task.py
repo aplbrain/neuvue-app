@@ -71,12 +71,15 @@ class TaskView(LoginRequiredMixin, View):
                 context[namespace]["can_unassign_tasks"] = False
 
 
-        if not is_authorized(request.user):
-            logging.warning(f"Unauthorized requests from {request.user}.")
-            return redirect(reverse("index"))
+        if is_authorized(request.user):
+            assignee = str(request.user)
+        else:
+            assignee = "public"
+            # logging.warning(f"Unauthorized requests from {request.user}.")
+            # return redirect(reverse("index"))
 
         pending_tasks = client.get_tasks(
-            sieve={"status": ["open", "pending"], "assignee": str(request.user)},
+            sieve={"status": ["open", "pending"], "assignee": assignee},
             select=[
                 "seg_id",
                 "namespace",
@@ -139,7 +142,10 @@ class TaskView(LoginRequiredMixin, View):
         request.session["session_task_count"] = 0
 
         # create settings and context dicts
-        settings_dict = {"SANDBOX_ID": settings.SANDBOX_ID}
+        settings_dict = {
+            "SANDBOX_ID": settings.SANDBOX_ID,
+            "is_authorized": is_authorized(request.user)
+        }
         daily_changelog, full_changelog = create_stats_table(
             pending_tasks, closed_tasks
         )
