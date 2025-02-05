@@ -216,7 +216,7 @@ class TaskView(LoginRequiredMixin, View):
         
         
         # -----------------------------------------
-        # 2. Get PULL bucket (from either user rule or namespace default)
+        # 1. Get PULL bucket (from either user rule or namespace default)
         # -----------------------------------------
         # Check if user has a custom rule for pulling in this namespace
         user_pull_rule = user_profile.namespace_rule.filter(
@@ -233,7 +233,7 @@ class TaskView(LoginRequiredMixin, View):
                 pull_bucket_assignee = None  
 
         # -----------------------------------------
-        # 3. Get PUSH bucket (from either user rule or namespace default)
+        # 2. Get PUSH bucket (from either user rule or namespace default)
         # -----------------------------------------
         user_push_rule = user_profile.namespace_rule.filter(
             namespace=namespace_obj, action="push"
@@ -248,7 +248,7 @@ class TaskView(LoginRequiredMixin, View):
                 push_bucket_assignee = None  
 
         # -----------------------------------------
-        # 4. Handle "reassignTasks"
+        # 3. Handle "reassignTasks"
         # -----------------------------------------
         if "reassignTasks" in request.POST:
             # If push_bucket_assignee is None, treat it like "no permission"
@@ -291,7 +291,7 @@ class TaskView(LoginRequiredMixin, View):
             return HttpResponse(http_message, content_type="text/plain")
 
         # -----------------------------------------
-        # 5. Otherwise, user wants to PULL tasks for themselves
+        # 4. Otherwise, if not a reassign or a taskbucket pull, user wants to PULL tasks for themselves
         # -----------------------------------------
         # If pull_bucket_assignee is None, treat as no tasks available
         if not pull_bucket_assignee:
