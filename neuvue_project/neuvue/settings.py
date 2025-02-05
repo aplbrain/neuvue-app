@@ -218,6 +218,7 @@ SANDBOX_ID = "6269888a101fc4da81fdd410"
 NEUVUE_CLIENT_SETTINGS = {
     # "local" : True
 }
+PUBLIC_TASKBUCKET = "public"
 
 # Annotation Tables
 NEURON_TABLE = "nucleus_neuron_svm"

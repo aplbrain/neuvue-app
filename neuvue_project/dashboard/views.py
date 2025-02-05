@@ -13,6 +13,7 @@ from datetime import datetime
 import plotly.graph_objects as go
 
 from neuvue.client import client
+from workspace.utils import get_or_create_public_taskbucket
 
 # import the logging library
 import logging
@@ -63,6 +64,7 @@ class DashboardView(View, LoginRequiredMixin):
         display_name = request.POST.get("namespace")
         group = request.POST.get("group")
         username = request.POST.get("username")
+        shortcut = request.POST.get("shortcut")
 
         if display_name and group:
             namespace = Namespaces.objects.get(display_name=display_name).namespace
@@ -71,6 +73,11 @@ class DashboardView(View, LoginRequiredMixin):
             )
         elif username:
             return redirect(reverse("dashboard", kwargs={"username": username}))
+        elif shortcut:
+            if shortcut == "View all tasks assigned to public username":
+                return redirect(reverse("dashboard", kwargs={"username": get_or_create_public_taskbucket().bucket_assignee}))
+            else:
+                return redirect(reverse("dashboard"))
         else:
             # as long as all html form fields contain required="true" this case should not be reached
             return redirect(reverse("dashboard"))

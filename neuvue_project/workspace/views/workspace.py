@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 
 from neuvue.client import client
 
@@ -14,7 +15,7 @@ from ..models import (
     UserProfile,
     ForcedChoiceButtonGroup,
     ForcedChoiceButton,
-    NeuroglancerHost,
+    NeuroglancerHost
 )
 from ..neuroglancer import (
     construct_proofreading_state,
@@ -24,7 +25,7 @@ from ..neuroglancer import (
     apply_state_config,
     refresh_ids,
 )
-from ..utils import is_url, is_json, is_authorized
+from ..utils import is_url, is_json, is_authorized, get_or_create_public_taskbucket
 
 
 # import the logging library
@@ -32,7 +33,7 @@ logging.basicConfig(level=logging.INFO)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 Config = apps.get_model("preferences", "Config")
-
+    
 
 class WorkspaceView(LoginRequiredMixin, View):
     def get(self, request, namespace=None, **kwargs):
@@ -58,7 +59,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             "seg_id": "",
             "is_open": False,
             "tasks_available": True,
-            "skipable": True if namespace_obj.decrement_priority > 0 else False,
+            "skippable": True if namespace_obj.decrement_priority > 0 else False,
             "instructions": "",
             "display_name": namespace_obj.display_name,
             "submission_method": submission_method,
@@ -102,9 +103,10 @@ class WorkspaceView(LoginRequiredMixin, View):
         else:
             context["number_of_selected_segments_expected"] = None
 
-        if not is_authorized(request.user):
-            logging.warning(f"Unauthorized requests from {request.user}.")
-            return redirect(reverse("index"))
+        if is_authorized(request.user):
+            assignee = str(request.user)
+        else:
+            assignee = get_or_create_public_taskbucket().bucket_assignee
 
         if namespace is None:
             logging.debug("No namespace query provided.")
@@ -113,7 +115,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # Get the next task. If its open already display immediately.
         # TODO: Save current task to session.
-        task_df = client.get_next_task(str(request.user), namespace)
+        task_df = client.get_next_task(assignee, namespace)
 
         if not task_df:
             context["tasks_available"] = False
@@ -124,6 +126,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 client.patch_task(
                     task_df["_id"],
                     status="open",
+                    assignee=str(request.user),
                     overwrite_opened=not task_df.get("opened"),
                 )
 
@@ -138,7 +141,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             if task_df.get("tags"):
                 context["tags"] = ",".join(task_df["tags"])
             if task_df["priority"] < 2:
-                context["skipable"] = False
+                context["skippable"] = False
 
             # Pass User configs to Neuroglancer
             try:
@@ -195,34 +198,23 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             ############################# ALLOW TO REASSIGN ########################################
             # get user profile object
-            userProfile, _ = UserProfile.objects.get_or_create(user=request.user)
-
-            # determine if our user's highest level is novice, intermediate, or expert
-            user_level = "novice"
-            for ns in userProfile.intermediate_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "intermediate"
-            for ns in userProfile.expert_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "expert"
-
-            # get namespace object of task namespace
+            user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
             namespace_obj = Namespace.objects.get(namespace=namespace)
-            group_to_push_to = ""
-            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
-            if user_level == "novice":
-                group_to_push_to = namespace_obj.novice_push_to
-            elif user_level == "intermediate":
-                group_to_push_to = namespace_obj.intermediate_push_to
-            else:
-                group_to_push_to = namespace_obj.expert_push_to
+            
+            user_push_rule = user_profile.namespace_rule.filter(
+                namespace=namespace_obj, action="push"
+            ).first()
 
-            # determine if the user's group is allowed to reassign in this namespace
-            if group_to_push_to == "Queue Tasks Not Allowed":
-                context["allowed_to_reassign"] = False
+            # If user has a push rule, use it; otherwise fallback to the default push rule
+            if user_push_rule:
+                push_bucket_assignee = user_push_rule.task_bucket.bucket_assignee
+            elif namespace_obj.default_push_rule:
+                push_bucket_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
             else:
-                context["allowed_to_reassgin"] = True
+                push_bucket_assignee = None
 
+            # If no valid push bucket, user cannot unassign tasks
+            context["allowed_to_reassign"] = bool(push_bucket_assignee)
             #######################################################################################
 
         return render(request, "workspace.html", context)
@@ -232,7 +224,7 @@ class WorkspaceView(LoginRequiredMixin, View):
         namespace_obj = Namespace.objects.get(namespace=namespace)
 
         # Current task that is opened in this namespace.
-        task_df = client.get_next_task(str(request.user), namespace)
+        task_df = client.get_task(request.POST.get("taskId"))
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
@@ -283,6 +275,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 tags=tags,
                 metadata=metadata,
+                assignee=str(request.user)
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -300,6 +293,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 metadata=metadata,
                 tags=tags,
+                assignee=str(request.user)
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -368,35 +362,30 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Add new differ stack entry
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
+        
         elif button == "remove":
-            # get user profile object
-            userProfile = UserProfile.objects.get(user=request.user)
+            # Fetch the user's profile and see if they have a custom "push" rule for this namespace
+            user_profile = UserProfile.objects.get(user=request.user)
+            user_push_rule = user_profile.namespace_rule.filter(
+                namespace=namespace_obj, 
+                action="push"
+            ).first()
 
-            # determine if our user's highest level is novice, intermediate, or expert
-            user_level = "novice"
-            for ns in userProfile.intermediate_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "intermediate"
-            for ns in userProfile.expert_namespaces.all():
-                if namespace == ns.namespace:
-                    user_level = "expert"
-
-            # patch task to the correct group
-            new_assignee = "novice_unassigned"
-            # for the appropriate user level (found above), get the group tasks will be pushed to for this namespace
-            if user_level == "novice":
-                new_assignee = namespace_obj.novice_push_to
-            elif user_level == "intermediate":
-                new_assignee = namespace_obj.intermediate_push_to
+            # If user has a specific push rule, use it; otherwise fall back to namespace's default
+            if user_push_rule:
+                new_assignee = user_push_rule.task_bucket.bucket_assignee
+            elif namespace_obj.default_push_rule:
+                new_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
             else:
-                new_assignee = namespace_obj.expert_push_to
+                return HttpResponse(
+                    "You do not have permission to remove tasks from this queue. No push rule found.",
+                    content_type="text/plain",
+                )
 
-            # patch task to the new assignee
+            # Use the existing logic to patch the task with the new assignee
             current_priority = task_df["priority"]
             task_metadata = task_df["metadata"]
-            num_skipped = 0
-            if "skipped" in task_metadata.keys():
-                num_skipped = task_metadata["skipped"]
+            num_skipped = task_metadata.get("skipped", 0)
 
             client.patch_task(
                 task_df["_id"],
@@ -427,7 +416,10 @@ class WorkspaceView(LoginRequiredMixin, View):
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
             return redirect(reverse("tasks"))
+        else:
+            logging.error(f"Invalid button submission: {button}")
 
+        #### REDIRECT BACK TO WORKSPACE
         if namespace_obj.ng_host == NeuroglancerHost.SPELUNKER:
             return redirect(reverse("spelunker-workspace", args=[namespace]))
         else:

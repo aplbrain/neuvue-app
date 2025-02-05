@@ -181,6 +181,12 @@
                     </button>
                 </div>
             </div>
+        
+            {% if not data.settings.is_authorized %}
+            <h5 class="text-light text-center">
+                Have questions or are interested in collaborating? Email us at <a class="text-pink" href="mailto:neuvue@bossdb.org">neuvue@bossdb.org</a>.
+            </h5>
+            {% endif %}
 
         </div>
 

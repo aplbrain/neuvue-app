@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib import admin
-from .validators import validate_submission_value
+from .validators import validate_submission_value, no_whitespace
 
 # Create your models here.
 
@@ -114,20 +114,27 @@ class ImageChoices(models.TextChoices):
     )
     OTHER = "N/A", _("Other")
 
+class TaskBucketActions(models.TextChoices):
+    PUSH = (
+        "push",
+        _("Push Tasks to"),
+    )
+    PULL = (
+        "pull",
+        _("Pull tasks from"),
+    )
 
-class PushToChoices(models.TextChoices):
-    NULL = "Queue Tasks Not Allowed"
-    NOVICE = "unassigned_novice"
-    INTERMEDIATE = "unassigned_intermediate"
-    EXPERT = "unassigned_expert"
-
-
-class PullFromChoices(models.TextChoices):
-    NULL = "Reassign Tasks Not Allowed"
-    NOVICE = "unassigned_novice"
-    INTERMEDIATE = "unassigned_intermediate"
-    EXPERT = "unassigned_expert"
-
+class TaskBucket(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True, null=True)
+    bucket_assignee = models.CharField(
+        max_length=50, 
+        unique=True, 
+        help_text="Assignee string to in the queue for this task bucket",
+        validators=[no_whitespace]
+    )
+    def __str__(self):
+        return self.name
 
 class Namespace(models.Model):
     namespace_enabled = models.BooleanField(default=True)
@@ -166,28 +173,21 @@ class Namespace(models.Model):
         default=100, verbose_name="When skipped, decrement priority by"
     )
 
-    """Pull From Push To Novice"""
-    novice_pull_from = models.CharField(
-        max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL
+    default_push_rule = models.ForeignKey(
+        "NamespaceRule",
+        on_delete=models.SET_NULL,
+        related_name="default_push_for_namespace",
+        null=True,
+        blank=True,
+        help_text="Select the default push rule for this namespace. Must be set after the namespace is created.",
     )
-    novice_push_to = models.CharField(
-        max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL
-    )
-
-    """Pull From Push To Intermediate"""
-    intermediate_pull_from = models.CharField(
-        max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL
-    )
-    intermediate_push_to = models.CharField(
-        max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL
-    )
-
-    """Pull From Push To Expert"""
-    expert_pull_from = models.CharField(
-        max_length=50, choices=PullFromChoices.choices, default=PullFromChoices.NULL
-    )
-    expert_push_to = models.CharField(
-        max_length=50, choices=PushToChoices.choices, default=PushToChoices.NULL
+    default_pull_rule = models.ForeignKey(
+        "NamespaceRule",
+        on_delete=models.SET_NULL,
+        related_name="default_pull_for_namespace",
+        null=True,
+        blank=True,
+        help_text="Select the default pull rule for this namespace. Must be set after the namespace is created.",
     )
 
     def __str__(self):
@@ -195,11 +195,34 @@ class Namespace(models.Model):
         return self.namespace
 
 
+class NamespaceRule(models.Model):
+    namespace = models.ForeignKey(Namespace, on_delete=models.CASCADE)
+    action = models.CharField(max_length=10, 
+                              choices=TaskBucketActions.choices, 
+                              default=TaskBucketActions.PULL, 
+                              help_text="Determines if this rule provides a source or sink for tasks in the queue")
+    task_bucket = models.ForeignKey(TaskBucket, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ("namespace", "action", "task_bucket")
+
+    def __str__(self):
+        return f"{self.namespace.display_name}: {self.action} -> {self.task_bucket.bucket_assignee}"
+
+
+# Janky way to extend the default User model
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    intermediate_namespaces = models.ManyToManyField(
-        Namespace, related_name="intermediate_namespaces", blank=True
-    )
-    expert_namespaces = models.ManyToManyField(
-        Namespace, related_name="expert_namespaces", blank=True
-    )
+    namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
+    
+    # @property
+    # def inherited_namespace_rules(self):
+    #     """Get all namespace rules inherited from the user's groups."""
+    #     group_rules = NamespaceRule.objects.filter(
+    #         groupprofile__group__in=self.user.groups.all()
+    #     )
+    #     return group_rules.distinct()
+
+# Janky way to extend the default Group model
+class GroupProfile(models.Model):
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
+    namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
