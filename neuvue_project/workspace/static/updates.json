@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v2.0.2",
+            "update_date":"February 5th, 2025",
+            "update_description": "Adds dynamic task groupings and public tasks."
+        },
+        {
             "update_name": "v2.0.1",
             "update_date":"November 6th, 2024",
             "update_description": "Adds native Spelunker support. Updates NeuVue Neuroglancer."
