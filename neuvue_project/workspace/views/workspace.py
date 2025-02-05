@@ -59,7 +59,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             "seg_id": "",
             "is_open": False,
             "tasks_available": True,
-            "skipable": True if namespace_obj.decrement_priority > 0 else False,
+            "skippable": True if namespace_obj.decrement_priority > 0 else False,
             "instructions": "",
             "display_name": namespace_obj.display_name,
             "submission_method": submission_method,
@@ -141,7 +141,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             if task_df.get("tags"):
                 context["tags"] = ",".join(task_df["tags"])
             if task_df["priority"] < 2:
-                context["skipable"] = False
+                context["skippable"] = False
 
             # Pass User configs to Neuroglancer
             try:
