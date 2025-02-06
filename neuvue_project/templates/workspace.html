@@ -280,7 +280,7 @@
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
 
 {% if ng_host == "spelunker" %}
-<script type="module" src="{% static 'spelunker-workspace/562.1d0cecad9cc0725955f0.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/993.ca23372ceee17151541a.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/367.ad6071abcab399305157.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/main.cb26101b553ed6b82856.js' %}"></script><link href="{% static 'spelunker-workspace/main.cb26101b553ed6b82856.css' %}" rel="stylesheet">
+<script type="module" src="{% static 'spelunker-workspace/822.a8386f86d1765bd7.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/213.bb58e32f2c165c75.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/588.3545a44bfbf69189.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/103.7abc221a7699b0a6.js' %}"></script><script type="module" src="{% static 'spelunker-workspace/main.547bce2867ff2b42.js' %}"></script><link href="{% static 'spelunker-workspace/main.547bce2867ff2b42.css' %}" rel="stylesheet">
 {% else %}
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 {% endif %}
@@ -411,7 +411,7 @@
         $(form).submit();
 
         {% elif ng_host == "spelunker" %}
-        updateTrackedOperations(getOperationIdsFromSpelunker())
+        // updateTrackedOperations(getOperationIdsFromSpelunker())
         let state = JSON.stringify(viewer.state.toJSON());
         $('<input>').attr('type', 'hidden').attr('name', 'ngState').attr('value', state).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
@@ -530,7 +530,8 @@
         // Track operation IDs every three seconds
         window.setInterval(function() {
             {% if ng_host == "spelunker" %}
-            updateTrackedOperations(getOperationIdsFromSpelunker());
+            // updateTrackedOperations(getOperationIdsFromSpelunker());
+            console.log("skipping operation_ids")
             {% else %}
             //updateTrackedOperations(operation_ids);
             console.log("skipping operation_ids")
