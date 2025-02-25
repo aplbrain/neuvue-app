@@ -48,6 +48,7 @@ class DashboardView(View, LoginRequiredMixin):
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
+        TaskBuckets = apps.get_model("workspace", "TaskBucket")
 
         context = {}
         context["all_groups"] = sorted([x.name for x in Group.objects.all()])
@@ -56,6 +57,7 @@ class DashboardView(View, LoginRequiredMixin):
             [x.display_name for x in Namespaces.objects.all()]
         )
         context["all_users"] = sorted([x.username for x in User.objects.all()])
+        context["all_buckets"] = sorted([x.name for x in TaskBuckets.objects.all()])
 
         return render(request, "admin_dashboard/dashboard.html", context)
 
@@ -64,7 +66,7 @@ class DashboardView(View, LoginRequiredMixin):
         display_name = request.POST.get("namespace")
         group = request.POST.get("group")
         username = request.POST.get("username")
-        shortcut = request.POST.get("shortcut")
+        task_bucket = request.POST.get("task-bucket")
 
         if display_name and group:
             namespace = Namespaces.objects.get(display_name=display_name).namespace
@@ -73,11 +75,8 @@ class DashboardView(View, LoginRequiredMixin):
             )
         elif username:
             return redirect(reverse("dashboard", kwargs={"username": username}))
-        elif shortcut:
-            if shortcut == "View all tasks assigned to public username":
-                return redirect(reverse("dashboard", kwargs={"username": get_or_create_public_taskbucket().bucket_assignee}))
-            else:
-                return redirect(reverse("dashboard"))
+        elif task_bucket:
+            return redirect(reverse("dashboard", kwargs={"username": task_bucket}))
         else:
             # as long as all html form fields contain required="true" this case should not be reached
             return redirect(reverse("dashboard"))

@@ -22,7 +22,7 @@
                 <a class="nav-link" href="#username" data-bs-toggle="tab">Username</a>
             </li>
             <li class="nav-item margin-right-05">
-                <a class="nav-link" href="#shortcuts" data-bs-toggle="tab">Shortcuts</a>
+                <a class="nav-link" href="#bucket" data-bs-toggle="tab"> Task Bucket</a>
             </li>
         </ul>
 
@@ -88,14 +88,16 @@
                 </form>
             </div>
 
-            <div class="tab-pane fade" id="shortcuts">
+            <div class="tab-pane fade" id="bucket">
                 <form action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner-tab3')">
                 {% csrf_token %}
                     <div class="form-group my-3">
-                        <label class="text-white" for="userSelect">Shortcuts</label>
-                        <select name="shortcut" class="form-select" id="shortcutSelect" placeholder="Select one" required="true">
+                        <label class="text-white" for="userSelect">Task Bucket</label>
+                        <select name="task-bucket" class="form-select" id="shortcutSelect" placeholder="Select one" required="true">
                             <option value="" selected disabled>Please select</option>
-                            <option>View all tasks assigned to public username</option>
+                            {% for bucket_opt in all_buckets %}
+                            <option>{{bucket_opt}} </option>
+                            {% endfor %}
                         </select>
                     </div>
 
