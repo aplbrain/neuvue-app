@@ -24,6 +24,7 @@ class SaveStateView(View):
         data = json.loads(data)
         ng_state = data.get("ng_state")
         task_id = data.get("task_id")
+        requesting_user = request.user.username
 
         # do some validation on ng_state (should be a link) and task_id (should be a string of random numbers and letters)
         # make sure each is not empty, and what you expect
@@ -33,7 +34,7 @@ class SaveStateView(View):
         ):
             try:
                 logging.debug("Patching task state")
-                client.patch_task(task_id, ng_state=ng_state)
+                client.patch_task(task_id, requesting_user, ng_state=ng_state)
                 return HttpResponse(
                     "Successfully saved state", status=201, content_type="text/plain"
                 )
@@ -57,6 +58,7 @@ class SaveOperationsView(View):
         tracked_operation_ids = data.get("operation_ids")
         task_id = data.get("task_id")
         task = client.get_task(task_id)
+        requesting_user = request.user.username
 
         metadata = {}
         # if edits are possible
@@ -75,7 +77,7 @@ class SaveOperationsView(View):
             if (type(metadata) == dict) and (type(task_id) == str):
                 try:
                     logging.debug("Patching task operations")
-                    client.patch_task(task_id, metadata=metadata)
+                    client.patch_task(task_id, requesting_user, metadata=metadata)
                     return HttpResponse(
                         "Successfully saved operations",
                         status=201,

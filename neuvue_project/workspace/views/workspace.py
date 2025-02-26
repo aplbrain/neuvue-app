@@ -125,6 +125,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
                 client.patch_task(
                     task_df["_id"],
+                    str(request.user),
                     status="open",
                     assignee=str(request.user),
                     overwrite_opened=not task_df.get("opened"),
@@ -270,6 +271,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Update task data
             client.patch_task(
                 task_df["_id"],
+                str(request.user),
                 duration=duration,
                 status="closed",
                 ng_state=ng_state,
@@ -288,6 +290,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Update task data
             client.patch_task(
                 task_df["_id"],
+                str(request.user),
                 duration=duration,
                 status="closed",
                 ng_state=ng_state,
@@ -316,6 +319,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                     new_priority = 0
                 client.patch_task(
                     task_df["_id"],
+                    str(request.user),
                     duration=duration,
                     priority=new_priority,
                     status="pending",
@@ -333,6 +337,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 logging.warning(f"This task has reached the maximum number of skips.")
                 client.patch_task(
                     task_df["_id"],
+                    str(request.user),
                     duration=duration,
                     status="pending",
                     metadata=metadata,
@@ -353,6 +358,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Update task data
             client.patch_task(
                 task_df["_id"],
+                str(request.user),
                 duration=duration,
                 status="errored",
                 ng_state=ng_state,
@@ -389,6 +395,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             client.patch_task(
                 task_df["_id"],
+                str(request.user),
                 assignee=new_assignee,
                 status="pending",
                 priority=current_priority + num_skipped,
@@ -407,6 +414,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Update task data
             client.patch_task(
                 task_df["_id"],
+                str(request.user),
                 duration=duration,
                 ng_state=ng_state,
                 metadata=metadata,

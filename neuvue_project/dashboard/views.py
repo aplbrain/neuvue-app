@@ -48,6 +48,7 @@ class DashboardView(View, LoginRequiredMixin):
             return redirect(reverse("index"))
 
         Namespaces = apps.get_model("workspace", "Namespace")
+        TaskBuckets = apps.get_model("workspace", "TaskBucket")
 
         context = {}
         context["all_groups"] = sorted([x.name for x in Group.objects.all()])
@@ -56,6 +57,7 @@ class DashboardView(View, LoginRequiredMixin):
             [x.display_name for x in Namespaces.objects.all()]
         )
         context["all_users"] = sorted([x.username for x in User.objects.all()])
+        context["all_buckets"] = sorted([x.name for x in TaskBuckets.objects.all()])
 
         return render(request, "admin_dashboard/dashboard.html", context)
 
@@ -64,7 +66,7 @@ class DashboardView(View, LoginRequiredMixin):
         display_name = request.POST.get("namespace")
         group = request.POST.get("group")
         username = request.POST.get("username")
-        shortcut = request.POST.get("shortcut")
+        task_bucket = request.POST.get("task-bucket")
 
         if display_name and group:
             namespace = Namespaces.objects.get(display_name=display_name).namespace
@@ -73,11 +75,8 @@ class DashboardView(View, LoginRequiredMixin):
             )
         elif username:
             return redirect(reverse("dashboard", kwargs={"username": username}))
-        elif shortcut:
-            if shortcut == "View all tasks assigned to public username":
-                return redirect(reverse("dashboard", kwargs={"username": get_or_create_public_taskbucket().bucket_assignee}))
-            else:
-                return redirect(reverse("dashboard"))
+        elif task_bucket:
+            return redirect(reverse("dashboard", kwargs={"username": task_bucket}))
         else:
             # as long as all html form fields contain required="true" this case should not be reached
             return redirect(reverse("dashboard"))
@@ -117,6 +116,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         unassigned_group = request.POST.get("unassigned-group")
         namespace = request.POST.get("namespace")  ## GET THIS
+        requesting_user = request.user.username
 
         namespace_df = client.get_tasks(
             sieve={
@@ -134,7 +134,7 @@ class DashboardNamespaceView(View, LoginRequiredMixin):
             user = assignee_group_usernames[i]
             user_tasks = namespace_df.iloc[(i * n_tasks) : (n_tasks + (i * n_tasks))]
             for task in user_tasks.index:
-                client.patch_task(task, assignee=user)
+                client.patch_task(task, requesting_user, assignee=user)
 
         return redirect(
             reverse("dashboard", kwargs={"namespace": namespace, "group": "unassigned"})
@@ -234,6 +234,7 @@ class DashboardUserView(View, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         # Refresh request
         username = request.POST.get("username")
+        requesting_user = request.user.username
 
         # If update task(s) button was clicked - api call is made to update the task(s)
         if "selected_tasks" in request.POST:
@@ -252,13 +253,13 @@ class DashboardUserView(View, LoginRequiredMixin):
                     logging.debug(f"Delete task: {task}")
                     client.delete_task(task)
                 elif selected_action == "assignee":
-                    client.patch_task(task, assignee=new_assignee)
+                    client.patch_task(task, requesting_user, assignee=new_assignee)
                     logging.debug(f"Resassigning task {task} to {new_assignee}")
                 elif selected_action == "priority":
-                    client.patch_task(task, priority=new_priority)
+                    client.patch_task(task, requesting_user, priority=new_priority)
                     logging.debug(f"Reprioritizing task {task} to {new_priority}")
                 elif selected_action == "status":
-                    client.patch_task(task, status=new_status)
+                    client.patch_task(task, requesting_user, status=new_status)
                     logging.debug(f"Updating task {task} to {new_status}")
 
         # Redirect to dashboard page from splashpage or modal
