@@ -276,6 +276,7 @@ class TaskView(LoginRequiredMixin, View):
                     original_priority = row["priority"] + metadata["skipped"]
                     client.patch_task(
                         row["task_id"],
+                        user_profile=username,
                         assignee=push_bucket_assignee,
                         status="pending",
                         priority=int(original_priority),
@@ -330,6 +331,6 @@ class TaskView(LoginRequiredMixin, View):
         # Assign the tasks to the user
         ids = unassigned_tasks.index.tolist()
         for task_id in ids:
-            client.patch_task(task_id, assignee=username)
+            client.patch_task(task_id, username, assignee=username)
 
         return HttpResponse()
