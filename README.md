@@ -1,8 +1,11 @@
 <h3 align=center>Neuvue</h3>
 <h6 align=center>A Proofreading web-app and task management system</h6>
 
-
 ## What is Proofreading?
+
+Proofreading is the process by which errors in a dataset are corrected. In connectomics datasets, errors may be introduced at any stage of the processing pipeline, including during dense segmentation, object detection, and connectome generation. Common types of errors include artificial splits or merges in segmentation, incorrect detection of synapses, mitochondria, or other objects, and incorrect annotation of pre and postsynaptic partners. NeuVue is designed to support proofreading workflows for diverse types of error detection and correction tasks, and includes robust utilities for managing proofreader groups of all levels of expertise.
+
+Read more in our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500521v1).
 
 ## Installation
 
