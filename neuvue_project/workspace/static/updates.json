@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v2.0.3",
+            "update_date":"March 19th, 2025",
+            "update_description": "Various bug fixes and improvements."
+        },
+        {
             "update_name": "v2.0.2",
             "update_date":"February 5th, 2025",
             "update_description": "Adds dynamic task groupings and public tasks."
