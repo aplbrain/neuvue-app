@@ -100,9 +100,6 @@ class PcgChoices(models.TextChoices):
         "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
         _("Pinky"),
     )
-    MINNIE_PUBLIC = ("https://minnie.microns-daf.com/segmentation/table/minnie65_public",
-        _("Minnie65 Public (read-only)")
-    )
     OTHER = "N/A", _("Other")
 
 
