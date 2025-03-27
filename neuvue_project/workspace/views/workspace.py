@@ -265,7 +265,20 @@ class WorkspaceView(LoginRequiredMixin, View):
             set_name=submission_method
         ).all()
 
-        if button == "submit":
+        if namespace_obj.is_demo:
+            logger.info("User took action on a demo task. Patching priority only.")
+            new_priority = task_df["priority"] - namespace_obj.decrement_priority
+            try:
+                client.patch_task(
+                    task_df["_id"],
+                    priority=new_priority
+                )
+            except Exception:
+                logging.warning(
+                    f'Unable to lower priority for current task: {task_df["_id"]}'
+                )
+                logging.warning(f"This task has reached the maximum number of skips.")
+        elif button == "submit":
             logger.info("Submitting task")
             request.session["session_task_count"] = session_task_count + 1
             # Update task data

@@ -175,6 +175,7 @@ class Namespace(models.Model):
     decrement_priority = models.IntegerField(
         default=100, verbose_name="When skipped, decrement priority by"
     )
+    is_demo = models.BooleanField(default=False, verbose_name="Demonstration only? (Submitting does not patch task)")
 
     default_push_rule = models.ForeignKey(
         "NamespaceRule",
