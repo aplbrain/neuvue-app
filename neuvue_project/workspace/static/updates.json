@@ -1,6 +1,11 @@
 {
     "recent_updates" : [
         {
+            "update_name": "v2.0.4",
+            "update_date":"April 2nd, 2025",
+            "update_description": "Adds demo tasks."
+        },
+        {
             "update_name": "v2.0.3",
             "update_date":"March 19th, 2025",
             "update_description": "Various bug fixes and improvements."
