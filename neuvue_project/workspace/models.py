@@ -127,6 +127,8 @@ class TaskBucketActions(models.TextChoices):
         _("Pull tasks from"),
     )
 
+NG_STATE_PLUGINS = [("", "None"), ("test", "Test")]
+
 class TaskBucket(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
@@ -176,6 +178,9 @@ class Namespace(models.Model):
         default=100, verbose_name="When skipped, decrement priority by"
     )
     is_demo = models.BooleanField(default=False, verbose_name="Demonstration only? (Submitting does not patch task)")
+    ng_state_plugin = models.CharField(
+        max_length=300, choices=NG_STATE_PLUGINS, default="", blank=True
+    )
 
     default_push_rule = models.ForeignKey(
         "NamespaceRule",

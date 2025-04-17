@@ -26,7 +26,7 @@
             <! Task Notes >
             <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
                 <div class="sideContentTitle">
-                    Task tags
+                    Task Tags
                 </div>
                 <div class="sideContentInput" >
                     {% if tags %}
@@ -36,6 +36,21 @@
                     {% endif %}
                 </div>
             </div>
+
+            <! Ng State Plugins >
+            {% if ng_state_plugin != "None" %}
+            <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
+                <div class="sideContentTitle">
+                    Workspace Plugins
+                    <div>
+                        <button type="button" class="btn btn-info" onclick="applyNgStatePlugin()">
+                            <i class="fa fa-sync-alt"></i> Apply {{ng_state_plugin}} Plugin
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <! Task Information >
             <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
                 <div class="sideContentTitle">
@@ -138,7 +153,6 @@
                         <span class="modifier"></span><span> + <kbd>f</kbd> </span>
                     </div>
                 </div>
-
 
                 {% if allowed_to_reassgin%}
                 <! Remove >
@@ -338,6 +352,31 @@
         triggerToast("State saving disabled for non-native Neuroglancer");
         removeLoadingSpinner("save_state", "Save State");
         {% endif %}
+    }
+
+    function applyNgStatePlugin() {
+        let state = viewer.state.toJSON();
+        let post_body = JSON.stringify({'ng_state_plugin': "{{ng_state_plugin}}", 'ng_state' : state});
+        fetch(
+            '/ngStatePlugin',
+            {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"}
+        ).then((response) => {
+            if (!response.ok) {
+                response.text()
+                .then((text) => {
+                    console.error(text)
+                })
+            } else {
+                response.json()
+                .then((jsonResponse) => {
+                    // Set the current ng state to whatever is returned
+                    viewer.state.restoreState(jsonResponse);
+                })
+                .catch((error) => {
+                    console.error(error.message || error)
+                })
+            }
+        });
     }
 
     function show3DSlices() {
