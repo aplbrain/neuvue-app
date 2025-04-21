@@ -38,7 +38,7 @@
             </div>
 
             <! Workspace Plugins >
-            {% if ng_state_plugin != "None" %}
+            {% if ng_state_plugin %}
             <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
                 <div class="sideContentTitle">
                     Workspace Plugins
@@ -356,7 +356,7 @@
 
     function applyNgStatePlugin() {
         let state = viewer.state.toJSON();
-        let post_body = JSON.stringify({'ng_state_plugin': "{{ng_state_plugin}}", 'ng_state' : state});
+        let post_body = JSON.stringify({'namespace': "{{namespace}}", 'ng_state' : state});
         fetch(
             '/ngStatePlugin',
             {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"}
@@ -369,8 +369,10 @@
             } else {
                 response.json()
                 .then((jsonResponse) => {
-                    // Set the current ng state to whatever is returned
-                    viewer.state.restoreState(jsonResponse);
+                    // parse JSON response
+                    ({message, ngstate} = jsonResponse);
+                    viewer.state.restoreState(ngstate);
+                    triggerToast(message);  
                 })
                 .catch((error) => {
                     console.error(error.message || error)

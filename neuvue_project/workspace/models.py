@@ -127,7 +127,16 @@ class TaskBucketActions(models.TextChoices):
         _("Pull tasks from"),
     )
 
-NG_STATE_PLUGINS = [("", "None"), ("test", "Test")]
+class NeuroglancerPlugin(models.Model):
+    """
+    A model to represent a Neuroglancer plugin.
+    """
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+    default_plugin_params = models.JSONField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 class TaskBucket(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -178,8 +187,14 @@ class Namespace(models.Model):
         default=100, verbose_name="When skipped, decrement priority by"
     )
     is_demo = models.BooleanField(default=False, verbose_name="Demonstration only? (Submitting does not patch task)")
-    ng_state_plugin = models.CharField(
-        max_length=300, choices=NG_STATE_PLUGINS, default="", blank=True
+    
+    ng_state_plugin = models.ForeignKey(
+        NeuroglancerPlugin,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="Neuroglancer plugin to use for this namespace. If not set, no plugin will be used.",
+        related_name="ng_state_plugin"
     )
 
     default_push_rule = models.ForeignKey(
@@ -198,6 +213,42 @@ class Namespace(models.Model):
         blank=True,
         help_text="Select the default pull rule for this namespace. Must be set after the namespace is created.",
     )
+    
+    plugin_params = models.JSONField(
+        blank=True,
+        null=True,
+        help_text=("Override the default plugin parameters (specified in NeuroglancerPlugin) "
+                   "with namespace-specific values. Provided values will update/override the defaults."),
+    )
+
+    def get_effective_plugin_params(self):
+        """
+        Return the effective plugin parameters for this namespace by merging the default plugin parameters 
+        with any namespace-specific overrides. Namespace overrides take precedence.
+        
+        Returns:
+            dict: The merged plugin parameters.
+        """
+        effective_params = {}
+
+        # Start with the plugin's default parameters, if any.
+        if self.ng_state_plugin and self.ng_state_plugin.default_plugin_params:
+            effective_params.update(self.ng_state_plugin.default_plugin_params)
+
+        # Update with any overrides specific to this namespace.
+        if self.plugin_params:
+            effective_params.update(self.plugin_params)
+
+        return effective_params
+    
+    def save(self, *args, **kwargs):
+        """
+        Optionally, when saving a Namespace, if plugin_params is not defined,
+        pre-populate it with the plugin's defaults.
+        """
+        if self.ng_state_plugin and not self.plugin_params:
+            self.plugin_params = self.ng_state_plugin.default_plugin_params
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
