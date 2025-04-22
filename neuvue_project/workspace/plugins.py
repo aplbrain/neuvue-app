@@ -86,7 +86,11 @@ class TestNeuroglancerPlugin(NeuroglancerPlugin):
             message="Plugin executed successfully.",
             additional_info={"test": "This is a test plugin."}
         )
-    
+
+#                           Add new plugins here
+# The key corresponds to the name in the Django "NeuroglancerPlugin" model. 
+# This means new plugins require re-deployment and care has to be taken when replacing 
+# an existing plugin. 
 NEUROGLANCER_PLUGINS = {
     "None": None,
     "Test": TestNeuroglancerPlugin
