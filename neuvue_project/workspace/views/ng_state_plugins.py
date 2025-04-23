@@ -27,8 +27,6 @@ class NgStatePluginsView(View):
             namespace = Namespace.objects.get(namespace=namespace)
             ng_state_plugin_name = namespace.ng_state_plugin.name
             ng_state_plugin_params = namespace.get_effective_plugin_params()
-            print(type(ng_state_plugin_params))
-            print(ng_state_plugin_params)
             ng_state_plugin = NEUROGLANCER_PLUGINS[ng_state_plugin_name](**ng_state_plugin_params)
         except:
             return HttpResponse(f"Ng state plugin {ng_state_plugin} does not exist", status=501)
