@@ -31,6 +31,7 @@ from workspace.views import (
     GettingStartedView,
     SaveStateView,
     SaveOperationsView,
+    NgStatePluginsView
 )
 from preferences.views import PreferencesView
 from dashboard.views import (
@@ -92,4 +93,5 @@ urlpatterns = [
     path("save_state", SaveStateView.as_view(), name="save-state"),
     path("save_operations", SaveOperationsView.as_view(), name="save-operations"),
     path("about", AboutView.as_view(), name="about"),
+    path("ngStatePlugin", NgStatePluginsView.as_view(), name="ng-state-plugins")
 ]

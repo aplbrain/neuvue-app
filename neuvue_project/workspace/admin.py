@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from .models import ForcedChoiceButtonGroup, ForcedChoiceButton, Namespace, UserProfile, GroupProfile, TaskBucket, NamespaceRule
+from .models import ForcedChoiceButtonGroup, ForcedChoiceButton, Namespace, UserProfile, GroupProfile, TaskBucket, NamespaceRule, NeuroglancerPlugin
 from .forms import NamespaceAdminForm
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -31,11 +31,15 @@ class NamespaceRuleAdmin(admin.ModelAdmin):
     search_fields = ("namespace__namespace", "task_bucket__name")
     list_filter = ("namespace", "task_bucket",)
 
+@admin.register(NeuroglancerPlugin)
+class NeuroglancerPluginAdmin(admin.ModelAdmin):
+    list_display = ("name", "description") 
+    search_fields = ("name",)
 
 @admin.register(Namespace)
 class NamespaceAdmin(admin.ModelAdmin):
     form = NamespaceAdminForm
-    list_display = ("namespace", "display_name", "namespace_enabled")
+    list_display = ("namespace", "display_name", "ng_state_plugin", "namespace_enabled")
     search_fields = ("namespace", "display_name")
     list_filter = ("namespace_enabled",)
     fieldsets = [
@@ -57,11 +61,19 @@ class NamespaceAdmin(admin.ModelAdmin):
                     "max_number_of_pending_tasks_per_user",
                     "track_selected_segments",
                     "decrement_priority",
-                    "is_demo"
+                    "is_demo",
                 ]
             },
-        ),
-        (
+        ), (
+            "Neuroglancer State Plugin",
+            {
+                "fields": [
+                    "ng_state_plugin",
+                    "plugin_params"
+                ]
+            }
+
+        ), (
             "Default Rules",
             {
                 "fields": ["default_push_rule", "default_pull_rule"],

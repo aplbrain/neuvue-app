@@ -70,6 +70,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             "tags": "",
             "num_edits": 0,
             "track_selected_segments": namespace_obj.track_selected_segments,
+            "ng_state_plugin": namespace_obj.ng_state_plugin.name
         }
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(
