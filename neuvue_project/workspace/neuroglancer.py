@@ -297,8 +297,10 @@ def get_from_state_server(url: str):
     url = url.replace("middleauth+", "")
     headers = {
         "content-type": "application/json",
-        "Authorization": f"Bearer {os.environ['CAVECLIENT_TOKEN']}",
     }
+    if "bossdb-neuvue-datalake" not in url:
+        headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
+    
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
         raise Exception("GET Unsuccessful")
@@ -308,7 +310,7 @@ def get_from_state_server(url: str):
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
-def post_to_state_server(state: str):
+def post_to_state_server(state: str, public = False):
     """Posts JSON string to state server
 
     Args:
@@ -320,17 +322,19 @@ def post_to_state_server(state: str):
     # Get the authorization token from caveclient
     headers = {
         "content-type": "application/json",
-        "Authorization": f"Bearer {os.environ['CAVECLIENT_TOKEN']}",
     }
+    if public:
+        resp = requests.post(settings.PUBLIC_JSON_STATE_SERVER, data=state, headers=headers)
+        if resp.status_code != 200:
+            raise Exception("POST Unsuccessful")
+        return str(resp.json()['url'])
+    else:
+        headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
+        resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
+        if resp.status_code != 200:
+            raise Exception("POST Unsuccessful")
+        return str(resp.json())
 
-    # Post!
-    resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
-
-    if resp.status_code != 200:
-        raise Exception("POST Unsuccessful")
-
-    # Response will contain the URL for the state you just posted
-    return str(resp.json())
 
 
 def get_from_json(raw_state: str):

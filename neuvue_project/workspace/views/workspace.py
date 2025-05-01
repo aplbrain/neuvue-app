@@ -24,6 +24,7 @@ from ..neuroglancer import (
     get_from_json,
     apply_state_config,
     refresh_ids,
+    post_to_state_server
 )
 from ..utils import is_url, is_json, is_authorized, get_or_create_public_taskbucket
 
@@ -70,8 +71,11 @@ class WorkspaceView(LoginRequiredMixin, View):
             "tags": "",
             "num_edits": 0,
             "track_selected_segments": namespace_obj.track_selected_segments,
-            "ng_state_plugin": namespace_obj.ng_state_plugin.name
+            "ng_state_plugin": None
         }
+
+        if  namespace_obj.ng_state_plugin:
+            context["ng_state_plugin"] = namespace_obj.ng_state_plugin.name
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(
             set_name=context.get("submission_method")
@@ -245,10 +249,10 @@ class WorkspaceView(LoginRequiredMixin, View):
         else:
             tags = None
 
-        # try:
-        #     ng_state = post_to_state_server(ng_state)
-        # except:
-        #     logger.warning("Unable to post state to JSON State Server")
+        try:
+            ng_state = post_to_state_server(ng_state, public = namespace_obj.ng_host != NeuroglancerHost.NEUVUE)
+        except:
+            logger.warning("Unable to post state to JSON State Server")
 
         # Add operation ids to task metadata
         # Only if track_operation_ids is set to true at the namespace level
