@@ -244,8 +244,8 @@ VOXEL_RESOLUTION = (4, 4, 40)
 
 if DEBUG:
     import mimetypes
-
     mimetypes.add_type("application/javascript", ".js", True)
+    mimetypes.add_type("application/wasm", ".wasm", True)
 
 STATIC_NG_FILES = os.listdir(
     os.path.join(BASE_DIR, "workspace", "static", "workspace")
