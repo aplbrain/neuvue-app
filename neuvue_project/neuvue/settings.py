@@ -234,6 +234,7 @@ TIMEOUT = 900
 # TODO: Move this as a internal model separate from the django config
 NG_CLIENT = "https://neuroglancer.neuvue.io"
 JSON_STATE_SERVER = "https://global.daf-apis.com/nglstate/post"
+PUBLIC_JSON_STATE_SERVER = "https://mt462bg26ht52it337j53ktdpm0yfgyu.lambda-url.us-east-1.on.aws/"
 DATASET_VIEWER_OPTIONS = {
     "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em": {
         "contrast": {"black": 0.35, "white": 0.7}
@@ -243,8 +244,8 @@ VOXEL_RESOLUTION = (4, 4, 40)
 
 if DEBUG:
     import mimetypes
-
     mimetypes.add_type("application/javascript", ".js", True)
+    mimetypes.add_type("application/wasm", ".wasm", True)
 
 STATIC_NG_FILES = os.listdir(
     os.path.join(BASE_DIR, "workspace", "static", "workspace")
