@@ -1,7 +1,11 @@
-import abc
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Any
+import requests
+from django.conf import settings
+from nglui.statebuilder import StateBuilder, AnnotationLayerConfig, PointMapper, site_utils
+import json
+import pandas as pd
 
 @dataclass
 class PluginOutput:
@@ -87,11 +91,74 @@ class TestNeuroglancerPlugin(NeuroglancerPlugin):
             additional_info={"test": "This is a test plugin."}
         )
 
-#                           Add new plugins here
+class NeurdC2SkeletonPointsPlugin(NeuroglancerPlugin):
+    """
+    This plugin queries NEURD for the skeletons of all C2 seg IDs listed and
+    adds them to the ng state as a new annotation layer.
+    """
+
+    def modify_state(self, state: Dict[str, Any]) -> PluginOutput:
+
+        # Get seg ids to query
+        C2_SEG_LAYER = "precomputed://gs://h01-release/data/20210601/c2"
+        seg_ids = []
+        for layer in state["layers"]:
+            if layer["source"] == C2_SEG_LAYER:
+                seg_ids = layer["segments"]
+        position = state["position"]
+
+        # Query for skeleton
+        BASE_URL = settings.NEURD_LAMBDA_URL
+        skel_list = []
+        for seg_id in seg_ids:
+            request_url = f"{BASE_URL}/skeleton/{seg_id}"
+            # need to add try statement here try:
+            try:
+                response = requests.get(request_url)
+                # Raise exception if request is unsuccessful
+                response.raise_for_status()
+                # Process the successful response
+                skel_list.extend(json.loads(response.text)["skeleton_points"])
+            except Exception as e:
+                return PluginOutput(
+                    modified_state=state,
+                    status_code=500,
+                    message=f"An unexpected error occurred: {e}",
+                    additional_info={}
+                )
+        
+        # Process the skeleton points, converting them from nm to voxels
+        RESOLUTION = [8,8,33]
+        points_list_vx = []
+        for line_segment in skel_list:
+            for point in line_segment:
+                points_list_vx.append([point[0]/RESOLUTION[0], point[1]/RESOLUTION[1], point[2]/RESOLUTION[2]])
+        points_list_vx = [list(t) for t in dict.fromkeys(tuple(sub) for sub in points_list_vx)]
+        points_df = pd.DataFrame({"points": points_list_vx})
+        
+        # add to state
+        site_utils.set_default_config(target_site='spelunker')
+        view_options = {'position': [position[0]*2, position[1]*2, position[2]]}
+        points = PointMapper(point_column='points')
+        skeleton_layer = AnnotationLayerConfig(name="neurd skeleton", color="white", mapping_rules=points)
+        state_builder = StateBuilder([skeleton_layer], base_state=state, view_kws=view_options)
+        final_state = state_builder.render_state(points_df, return_as="dict")
+
+        # Return modified state
+        return PluginOutput(
+            modified_state=final_state,
+            status_code=200,
+            message="Plugin executed successfully.",
+            additional_info={}
+        )
+
+
+##### Add new plugins here and also create them in the admin console. #########
 # The key corresponds to the name in the Django "NeuroglancerPlugin" model. 
 # This means new plugins require re-deployment and care has to be taken when replacing 
 # an existing plugin. 
 NEUROGLANCER_PLUGINS = {
     "None": None,
-    "Test": TestNeuroglancerPlugin
+    "Test": TestNeuroglancerPlugin,
+    "Neurd C2 Skeleton Points": NeurdC2SkeletonPointsPlugin
 }
