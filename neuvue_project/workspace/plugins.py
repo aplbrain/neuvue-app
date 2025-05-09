@@ -111,21 +111,22 @@ class NeurdC2SkeletonPointsPlugin(NeuroglancerPlugin):
         BASE_URL = settings.NEURD_LAMBDA_URL
         skel_list = []
         for seg_id in seg_ids:
-            request_url = f"{BASE_URL}/skeleton/{seg_id}"
-            # need to add try statement here try:
-            try:
-                response = requests.get(request_url)
-                # Raise exception if request is unsuccessful
-                response.raise_for_status()
-                # Process the successful response
-                skel_list.extend(json.loads(response.text)["skeleton_points"])
-            except Exception as e:
-                return PluginOutput(
-                    modified_state=state,
-                    status_code=500,
-                    message=f"An unexpected error occurred: {e}",
-                    additional_info={}
-                )
+            if '!' not in seg_id:
+                request_url = f"{BASE_URL}/skeleton/{seg_id}"
+                try:
+                    response = requests.get(request_url)
+                    # Raise exception if request is unsuccessful
+                    response.raise_for_status()
+                    # Process the successful response
+                    skel_list.extend(json.loads(response.text)["skeleton_points"])
+                except Exception as e:
+                    print(f"An unexpected error occurred: {e}")
+                    return PluginOutput(
+                        modified_state=state,
+                        status_code=500,
+                        message=f"An unexpected error occurred: {e}",
+                        additional_info={}
+                    )
         
         # Process the skeleton points, converting them from nm to voxels
         RESOLUTION = [8,8,33]
