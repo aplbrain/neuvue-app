@@ -96,23 +96,26 @@ class NeurdC2SkeletonPointsPlugin(NeuroglancerPlugin):
     This plugin queries NEURD for the skeletons of all C2 seg IDs listed and
     adds them to the ng state as a new annotation layer.
     """
+    def __init__(self, **params):
+        super().__init__(**params)
+        self.resolution = [8,8,33]
+        self.seg_layer = "precomputed://gs://h01-release/data/20210601/c2"
+        self.base_url = settings.NEURD_LAMBDA_URL
 
     def modify_state(self, state: Dict[str, Any]) -> PluginOutput:
 
         # Get seg ids to query
-        C2_SEG_LAYER = "precomputed://gs://h01-release/data/20210601/c2"
         seg_ids = []
         for layer in state["layers"]:
-            if layer["source"] == C2_SEG_LAYER:
+            if layer["source"] == self.seg_layer:
                 seg_ids = layer["segments"]
         position = state["position"]
 
         # Query for skeleton
-        BASE_URL = settings.NEURD_LAMBDA_URL
         skel_list = []
         for seg_id in seg_ids:
             if '!' not in seg_id:
-                request_url = f"{BASE_URL}/skeleton/{seg_id}"
+                request_url = f"{self.base_url}/skeleton/{seg_id}"
                 try:
                     response = requests.get(request_url)
                     # Raise exception if request is unsuccessful
@@ -129,8 +132,8 @@ class NeurdC2SkeletonPointsPlugin(NeuroglancerPlugin):
                     )
         
         # Process the skeleton points, converting them from nm to voxels
-        RESOLUTION = [8,8,33]
         points_list_vx = []
+        RESOLUTION = self.resolution
         for line_segment in skel_list:
             for point in line_segment:
                 points_list_vx.append([point[0]/RESOLUTION[0], point[1]/RESOLUTION[1], point[2]/RESOLUTION[2]])

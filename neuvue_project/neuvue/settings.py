@@ -251,3 +251,7 @@ STATIC_NG_FILES = os.listdir(
     os.path.join(BASE_DIR, "workspace", "static", "workspace")
 ) + os.listdir(os.path.join(BASE_DIR, "workspace", "static", "spelunker-workspace"))
 
+
+# NEURD variables
+# should this be an env var?
+NEURD_LAMBDA_URL = "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
