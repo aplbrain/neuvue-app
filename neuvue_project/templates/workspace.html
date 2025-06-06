@@ -459,6 +459,11 @@
         $('<input>').attr('type', 'hidden').attr('name', 'duration').attr('value', duration).appendTo(form);
         $('<input>').attr('type', 'hidden').attr('name', 'taskId').attr('value', "{{task_id}}").appendTo(form);
 
+        {% if track_selected_segments %}
+        const selected_segments = getSelectedSegments(viewer.state);
+        $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
+        {% endif %}
+        
         $(form).submit();
 
         {% else %}
