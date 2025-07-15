@@ -255,3 +255,4 @@ STATIC_NG_FILES = os.listdir(
 # NEURD variables
 # should this be an env var?
 NEURD_LAMBDA_URL = "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
+NEURD_LAMBDA_SECRET_ARN = ""

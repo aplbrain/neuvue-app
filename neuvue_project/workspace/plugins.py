@@ -6,6 +6,7 @@ from django.conf import settings
 from nglui.statebuilder import StateBuilder, AnnotationLayerConfig, PointMapper, site_utils
 import json
 import pandas as pd
+import base64
 
 @dataclass
 class PluginOutput:
@@ -117,7 +118,9 @@ class NeurdC2SkeletonPointsPlugin(NeuroglancerPlugin):
             if '!' not in seg_id:
                 request_url = f"{self.base_url}/skeleton/{seg_id}"
                 try:
-                    response = requests.get(request_url)
+                    secret = base64.b64encode(settings.NEURD_LAMBDA_SECRET_ARN.encode("utf-8")).decode("utf-8")
+                    headers = {'Authorization': f'Bearer {secret}'}
+                    response = requests.get(request_url, headers=headers)
                     # Raise exception if request is unsuccessful
                     response.raise_for_status()
                     # Process the successful response
