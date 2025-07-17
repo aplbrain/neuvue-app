@@ -253,5 +253,12 @@ STATIC_NG_FILES = os.listdir(
 
 
 # NEURD variables
-# should this be an env var?
-NEURD_LAMBDA_URL = "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
+if "NEURD_LAMBDA_URL" in os.environ and DEBUG is False:
+    NEURD_LAMBDA_URL = os.environ["NEURD_LAMBDA_URL"]
+else:
+    NEURD_LAMBDA_URL = "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
+
+if "NEURD_LAMBDA_SECRET_ARN" in os.environ and DEBUG is False:
+    NEURD_LAMBDA_SECRET_ARN = os.environ["NEURD_LAMBDA_SECRET_ARN"]
+else:
+    NEURD_LAMBDA_SECRET_ARN = ""
