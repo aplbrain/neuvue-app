@@ -9,16 +9,20 @@
   <div class="container-fluid inherit-height">
     <div class="row inherit-height">
       <div class="col-md-6 d-flex justify-content-center align-items-center">
-        <div class="d-flex justify-content-center">
-          <div class="title-container">
-            <h1 class="index-title-text mt-4 my-1">Welcome to NeuVue</h1>
+        <div class="title-container text-center">
+          <h1 class="index-title-text mt-4 my-1">Welcome to NeuVue</h1>
+          <div class="flex-column mt-3 mx-auto" style="width: 200px;">
           {% if user.is_authenticated %}
             <div class="d-flex justify-content-center">
-              <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}. </b> </p>
+              <span class="index-title-sub-text">You are logged in as <b>{{ user.username }}</b>.</span>
             </div>
           {% else %}
-            <a class="index-title-sub-text d-flex justify-content-center" href="{% provider_login_url 'google' %}" ><img width="200"src="static/images/google.png" alt="Sign in with Google"></a>
+            <a class="index-title-sub-text d-flex justify-content-center mb-2" href="{% provider_login_url 'google' %}">
+              <img width="200" src="static/images/google.png" alt="Sign in with Google">
+            </a>
           {% endif %}
+            <a class="btn btn-info mb-2 w-100" style="font-size: 2vh; color: var(--primary-accent);" href="{% url 'about' %}">About</a>
+            <a class="btn btn-info w-100" style="font-size: 2vh; color: var(--primary-accent);" href="{% url 'getting-started' %}">Getting Started</a>
           </div>
         </div>
       </div>
