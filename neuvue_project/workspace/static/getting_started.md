@@ -4,6 +4,11 @@ This page contains resources and documentation to help you get started proofread
 
 ## Accessing the Proofreading Interface
 
+### Explore NeuVue tasks now
+
+Sample tasks are available for all users with an account. Simply log-in and tasks will automatically be added for you to explore!
+Additional information and FAQ can be found by visiting our page <a class="text-secondary-color-activated" href="{% url 'getting-started' %}">Getting Started</a> page.
+
 ### Home Page
 
 <img src="https://i.imgur.com/BbuuTWg.png" alt="Home Page" width="800"/>
@@ -59,7 +64,7 @@ From this point you can begin proofreading by deciding on which task types you w
 
 <img src="https://i.imgur.com/CEsxB92.jpg" alt="Workspace Page" width="800"/>
 
-The workspace page provides all the tools necessary to complete a proofreading task. The page is an extension of [Neuroglancer](https://github.com/google/neuroglancer), the primary tool for viewing, annotating, and editing the volumetric data we use for proofreading.
+The workspace page provides all the tools necessary to complete a proofreading task. The page is an extension of <a href="https://github.com/google/neuroglancer" target="_blank">Neuroglancer</a>, the primary tool for viewing, annotating, and editing the volumetric data we use for proofreading.
 
 The workspace page consists an embedded neuroglancer window, task-specific buttons, and a toggle-able side panel that contains information about the current task as well as additional features. Once the user navigates to the workspace, a task from the queue will automatically be loaded in and set to status *open*. If a task is already open for the selected task type, that task will be re-opened.
 
@@ -87,9 +92,9 @@ Some forced choice tasks have both decision buttons and a "Submit" button. In th
 ### Neuroglancer (WIP)
 Here is a great instructional video on how to operate Neuroglancer for basic navigation and data exploration.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/TwBTyWWnbxc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TwBTyWWnbxc" title="YouTube video playerr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-[This cheatsheet](https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing) (credit to flywire.ai) has additional useful information that's specific to this proofreading effort!
+<a href="https://docs.google.com/document/d/1eypqJ9iI1GlWSPMTZQo9oDCLEahye6oYo_CuhS_5QTA/edit?usp=sharing" target="_blank">This cheatsheet</a> (credit to flywire.ai) has additional useful information that's specific to this proofreading effort!
 
 
 ## Additional Pages and Tools
