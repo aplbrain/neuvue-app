@@ -1,6 +1,6 @@
 [codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = .git*,*.svg,package-lock.json,*.css,*-min.*,.codespellrc,*.bundle.*,*.map, *.js
+skip = .git*,*.svg,package-lock.json,*.css,*-min.*,.codespellrc,*.bundle.*,*.map, *.js, neuvue_project/.platform/nginx/conf.d/mime.types.conf
 check-hidden = true
 # ignore-regex =
 # some favorite albeit unfortunate variable names
