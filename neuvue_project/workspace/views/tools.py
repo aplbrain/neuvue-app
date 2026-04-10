@@ -25,10 +25,26 @@ logger = logging.getLogger(__name__)
 
 
 class InspectTaskView(View):
+    @staticmethod
+    def _get_inspect_route_name(ng_host):
+        if ng_host == NeuroglancerHost.SPELUNKER:
+            return "spelunker-inspect-task"
+        return "workspace-inspect-task"
+
     def get(self, request, task_id=None, *args, **kwargs):
+        static_ng_root = request.path.split("/")[1]
+        static_ng_name = static_ng_root.replace("-workspace", "")
+
+        if task_id == static_ng_name:
+            return redirect(
+                f"/static/{static_ng_root}/index.html",
+                content_type="text/html",
+            )
+
         if task_id in settings.STATIC_NG_FILES:
             return redirect(
-                f"/static/workspace/{task_id}", content_type="application/javascript"
+                f"/static/{static_ng_root}/{task_id}",
+                content_type="application/javascript",
             )
 
         context = {
@@ -56,10 +72,18 @@ class InspectTaskView(View):
         namespace = task_df["namespace"]
         ng_state = task_df.get("ng_state")
         namespace_obj = Namespace.objects.get(namespace=namespace)
+        inspect_route_name = self._get_inspect_route_name(namespace_obj.ng_host)
+        canonical_path = reverse(inspect_route_name, kwargs={"task_id": task_id})
+
+        if request.path != canonical_path:
+            return redirect(canonical_path)
 
         if ng_state:
-            if is_url(ng_state):
-                if namespace_obj.ng_host != NeuroglancerHost.NEUVUE:
+            if is_url(ng_state.replace("middleauth+", "")):
+                if namespace_obj.ng_host not in [
+                    NeuroglancerHost.NEUVUE,
+                    NeuroglancerHost.SPELUNKER,
+                ]:
                     # Assume its a url to json state
                     context["ng_state"] = ng_state
                     context["ng_url"] = construct_url_from_existing(

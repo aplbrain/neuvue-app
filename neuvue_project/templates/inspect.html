@@ -102,7 +102,7 @@
   </div>
 </div>
 {% if ng_host == "spelunker" %}
-<script defer src="822.js"></script><script defer src="213.js"></script><script defer src="588.js"></script><script defer src="103.js"></script><script defer src="main.js"></script><link href="main.css" rel="stylesheet">
+<script defer src="{% static 'spelunker-workspace/822.js' %}"></script><script defer src="{% static 'spelunker-workspace/213.js' %}"></script><script defer src="{% static 'spelunker-workspace/588.js' %}"></script><script defer src="{% static 'spelunker-workspace/103.js' %}"></script><script defer src="{% static 'spelunker-workspace/main.js' %}"></script><link href="{% static 'spelunker-workspace/main.css' %}" rel="stylesheet">
 {% else %}
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 {% endif %}

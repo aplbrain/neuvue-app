@@ -47,7 +47,35 @@ urlpatterns = [
     path("preferences/", PreferencesView.as_view(), name="preferences"),
     path("tasks/", TaskView.as_view(), name="tasks"),
     path("getting-started/", GettingStartedView.as_view(), name="getting-started"),
+    path("workspace/inspect/", InspectTaskView.as_view(), name="workspace-inspect"),
+    path(
+        "workspace/inspect/workspace/",
+        InspectTaskView.as_view(),
+        {"task_id": "workspace"},
+        name="workspace-inspect-root",
+    ),
+    path(
+        "workspace/inspect/<str:task_id>",
+        InspectTaskView.as_view(),
+        name="workspace-inspect-task",
+    ),
     path("workspace/<str:namespace>", WorkspaceView.as_view(), name="workspace"),
+    path(
+        "spelunker-workspace/inspect/",
+        InspectTaskView.as_view(),
+        name="spelunker-inspect",
+    ),
+    path(
+        "spelunker-workspace/inspect/spelunker/",
+        InspectTaskView.as_view(),
+        {"task_id": "spelunker"},
+        name="spelunker-inspect-root",
+    ),
+    path(
+        "spelunker-workspace/inspect/<str:task_id>",
+        InspectTaskView.as_view(),
+        name="spelunker-inspect-task",
+    ),
     path(
         "spelunker-workspace/<str:namespace>",
         WorkspaceView.as_view(),
