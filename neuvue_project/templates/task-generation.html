@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}Synapse Viewer{% endblock %}
+
+{% block content %}
+
+<div class="basic workspace">
+  <div class="inspect-container" style="width: 60%">
+    <h3 class="text-white mb-3"> Task Generation </h3>
+    <form method="post" style="color: white;">
+      {% csrf_token %}
+
+      <div class="accordion" id="taskAccordion">
+        <div class="accordion-item bg-dark text-white border-light">
+          <h2 class="accordion-header" id="headingSegIds">
+            <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSegIds" aria-expanded="true" aria-controls="collapseSegIds">
+              Segmentation IDs
+            </button>
+          </h2>
+          <div id="collapseSegIds" class="accordion-collapse collapse show" aria-labelledby="headingSegIds">
+            <div class="accordion-body">
+
+              <div class="form-section d-flex align-items-start gap-4 mt-4">
+                <div>
+                  <label for="id_seg_table_csv"><strong>Segmentation Table (CSV)</strong></label><br>
+                  {{ form.seg_table_csv }}
+                  <br>
+                  <button type="button" onclick="renderCSVTable()">Render Table</button>
+                  <p><small>{{ form.seg_table_csv.help_text }}</small></p>
+                </div>
+                <div>
+                  <strong>Parsed Table:</strong>
+                  <table id="seg-csv-table" border="1" style="display: none;">
+                    <thead>
+                      <tr><th>seg_id</th><th>x</th><th>y</th><th>z</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                  <p id="csv-error" style="color:red;"></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item bg-dark text-white border-light">
+          <h2 class="accordion-header" id="headingNamespace">
+            <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseNamespace" aria-expanded="true" aria-controls="collapseNamespace">
+              Namespace
+            </button>
+          </h2>
+          <div id="collapseNamespace" class="accordion-collapse collapse show" aria-labelledby="headingNamespace">
+            <div class="accordion-body">
+
+              {% for field in form.visible_fields %}
+                {% if field.name not in skip_fields %}
+                  <div class="form-group" id="group-{{ field.name }}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                    {% for error in field.errors %}<div style="color:red;">{{ error }}</div>{% endfor %}
+                  </div>
+
+                  {% if field.name == "pcg_source" %}
+                    <div id="pcg-custom-fields" class="form-group" style="display: none;">
+                      <label for="id_pcg_source_other_name">Custom PCG Source Name</label>
+                      {{ form.pcg_source_other_name }}
+                      <label for="id_pcg_source_other_url">Custom PCG Source URL</label>
+                      {{ form.pcg_source_other_url }}
+                    </div>
+                  {% endif %}
+
+                  {% if field.name == "img_source" %}
+                    <div id="img-custom-fields" class="form-group" style="display: none;">
+                      <label for="id_img_source_other_name">Custom Image Source Name</label>
+                      {{ form.img_source_other_name }}
+                      <label for="id_img_source_other_url">Custom Image Source URL</label>
+                      {{ form.img_source_other_url }}
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item bg-dark text-white border-light">
+          <h2 class="accordion-header" id="headingLayers">
+            <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseLayers" aria-expanded="true" aria-controls="collapseLayers">
+              Segmentation Layers
+            </button>
+          </h2>
+          <div id="collapseLayers" class="accordion-collapse collapse show" aria-labelledby="headingLayers">
+            <div class="accordion-body">
+              <div id="segmentation-layers-section">
+                <div class="card bg-secondary text-white mb-3" id="default-layer">
+                  <div class="card-body">
+                    <div class="form-row mb-2">
+                      <label class="form-label col-12">Name</label>
+                      <input type="text" id="default-name" class="form-control" readonly>
+                    </div>
+                    <div class="form-row mb-2">
+                      <label class="form-label col-12">Source</label>
+                      <input type="text" id="default-source" class="form-control" readonly>
+                    </div>
+                    <div class="form-check mb-2">
+                      <input type="checkbox" class="form-check-input" id="default-fixed_ids">
+                      <label class="form-check-label" for="default-fixed_ids">Fixed IDs</label>
+                    </div>
+                    <div class="form-check mb-2">
+                      <input type="checkbox" class="form-check-input" id="default-active" checked disabled>
+                      <label class="form-check-label" for="default-active">Active</label>
+                    </div>
+                  </div>
+                </div>
+                <div id="additional-layers"></div>
+                <button type="button" class="btn btn-outline-light btn-sm" onclick="addLayer()">+ Add Layer</button>
+
+                {{ form.segmentation_layers.as_hidden }}
+              </div>
+              <div class="accordion mt-4" id="segmentationAdvancedAccordion">
+                <div class="accordion-item bg-dark text-white border-light">
+                  <h2 class="accordion-header" id="headingAlphaAdvanced">
+                    <button class="accordion-button bg-dark text-white collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseAlphaAdvanced"
+                            aria-expanded="false" aria-controls="collapseAlphaAdvanced">
+                      Advanced Segmentation Settings
+                    </button>
+                  </h2>
+                  <div id="collapseAlphaAdvanced" class="accordion-collapse collapse"
+                      aria-labelledby="headingAlphaAdvanced">
+                    <div class="accordion-body">
+                      <div class="form-group mb-3">
+                        <label for="id_alpha_selected">Alpha Selected</label>
+                        {{ form.alpha_selected }}
+                        {% if form.alpha_selected.help_text %}
+                          <small>{{ form.alpha_selected.help_text }}</small>
+                        {% endif %}
+                      </div>
+                      <div class="form-group mb-3">
+                        <label for="id_alpha_3d">Alpha 3D</label>
+                        {{ form.alpha_3d }}
+                        {% if form.alpha_3d.help_text %}
+                          <small>{{ form.alpha_3d.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item bg-dark text-white border-light">
+          <h2 class="accordion-header" id="headingAdvanced">
+            <button class="accordion-button bg-dark text-white collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
+              Advanced Options
+            </button>
+          </h2>
+          <div id="collapseAdvanced" class="accordion-collapse collapse" aria-labelledby="headingAdvanced">
+            <div class="accordion-body">
+              <div class="form-group mb-3">
+                <label for="id_em_zoom">EM Zoom</label>
+                {{ form.em_zoom }}
+                {% if form.em_zoom.help_text %}<small>{{ form.em_zoom.help_text }}</small>{% endif %}
+              </div>
+              <!-- <div class="form-group mb-3">
+                <label for="id_resolution">Resolution (3D, CSV)</label>
+                {{ form.resolution }}
+                {% if form.resolution.help_text %}<small>{{ form.resolution.help_text }}</small>{% endif %}
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex mt-4">
+        <input type="submit" class="btn btn-primary" value="Submit">
+        <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
+        {% if error %}
+          <small id="errorMessage" class="form-text text-danger"> {{ error }} </small>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<style> .overlay-hidden { display:none; } </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/table2csv@1.1.3/src/table2csv.js" integrity="sha384-vVCd7tQ0g9opUDOT/X+Dsb5u1xXL/2bhtBkeV4TWA0/x5lDgMNyl/YqrEFMMPUZL" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+  // Remove loading spinner when page loads. This is important if the back button is clicked
+  window.addEventListener('pageshow', function(e) {
+    if (document.getElementById('submit-spinner') !== null) {
+      removeLoadingSpinner('submit-spinner');
+    }
+  })
+
+  function renderCSVTable() {
+    const input = document.getElementById('id_seg_table_csv').value.trim();
+    const table = document.getElementById('seg-csv-table');
+    const tbody = table.querySelector('tbody');
+    const errorDiv = document.getElementById('csv-error');
+
+    // Reset table
+    tbody.innerHTML = '';
+    errorDiv.textContent = '';
+    table.style.display = 'table';
+
+    if (!input) {
+      return;
+    }
+
+    const rows = input.split('\n');
+    let valid = true;
+
+    rows.forEach((line, idx) => {
+      const cols = line.split(',').map(c => c.trim());
+      if (cols.length !== 4) {
+        errorDiv.textContent = `Row ${idx + 1} is invalid: expected 4 values (seg_id,x,y,z).`;
+        valid = false;
+        return;
+      }
+
+      const tr = document.createElement('tr');
+      cols.forEach(val => {
+        const td = document.createElement('td');
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    renderCSVTable();
+    function toggleCustomFields(sourceId, customDivId) {
+      const select = document.getElementById(sourceId);
+      const customDiv = document.getElementById(customDivId);
+      if (select && customDiv) {
+        const show = select.value.toLowerCase() === "n/a";
+        customDiv.style.display = show ? "block" : "none";
+      }
+    }
+
+    const pcgSource = document.getElementById("id_pcg_source");
+    const imgSource = document.getElementById("id_img_source");
+
+    pcgSource?.addEventListener("change", () => toggleCustomFields("id_pcg_source", "pcg-custom-fields"));
+    imgSource?.addEventListener("change", () => toggleCustomFields("id_img_source", "img-custom-fields"));
+
+    // Trigger on page load in case "Other" is already selected
+    toggleCustomFields("id_pcg_source", "pcg-custom-fields");
+    toggleCustomFields("id_img_source", "img-custom-fields");
+  });
+
+  function getDefaultLayerValues() {
+    const pcgSelect = document.getElementById("id_pcg_source");
+    const selectedValue = pcgSelect?.value;
+    const selectedLabel = pcgSelect?.options[pcgSelect.selectedIndex].text;
+
+    if (selectedValue === "N/A") {
+      return {
+        name: document.getElementById("id_pcg_source_other_name")?.value || "",
+        source: document.getElementById("id_pcg_source_other_url")?.value || "",
+      };
+    } else {
+      return {
+        name: selectedLabel,
+        source: selectedValue,
+      };
+    }
+  }
+
+  function updateDefaultLayer() {
+    const { name, source } = getDefaultLayerValues();
+    document.getElementById("default-name").value = name;
+    document.getElementById("default-source").value = source;
+  }
+
+  function addLayer() {
+    const container = document.getElementById("additional-layers");
+
+    const id = Date.now();  // arbitrary but unique ID
+    const html = `
+      <div class="card bg-dark border-light text-white mb-3" data-id="${id}">
+        <div class="card-body">
+          <div class="form-group mb-2">
+            <label>Name</label>
+            <input type="text" class="form-control name">
+          </div>
+          <div class="form-group mb-2">
+            <label>Source</label>
+            <input type="text" class="form-control source">
+          </div>
+          <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input fixed_ids" id="fixed_${id}">
+            <label class="form-check-label" for="fixed_${id}">Fixed IDs</label>
+          </div>
+          <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input active" id="active_${id}">
+            <label class="form-check-label" for="active_${id}">Active</label>
+          </div>
+          <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('.card').remove()">Remove</button>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", html);
+  }
+
+  function gatherSegmentationLayers() {
+    const layers = [];
+
+    const { name, source } = getDefaultLayerValues();
+    layers.push({
+      name,
+      source,
+      fixed_ids: document.getElementById("default-fixed_ids").checked,
+      active: true
+    });
+
+    document.querySelectorAll("#additional-layers .card").forEach(card => {
+      layers.push({
+        name: card.querySelector(".name")?.value || "",
+        source: card.querySelector(".source")?.value || "",
+        fixed_ids: card.querySelector(".fixed_ids")?.checked || false,
+        active: card.querySelector(".active")?.checked || false,
+      });
+    });
+
+    document.getElementById("id_segmentation_layers").value = JSON.stringify(layers);
+  }
+
+
+  // Update on source changes
+  document.addEventListener("DOMContentLoaded", () => {
+    updateDefaultLayer();
+
+    const sourceFields = ["id_pcg_source", "id_pcg_source_other_name", "id_pcg_source_other_url"];
+    sourceFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", updateDefaultLayer);
+    });
+
+    document.querySelector("form").addEventListener("submit", gatherSegmentationLayers);
+  });
+
+  </script>
+{% endblock %}

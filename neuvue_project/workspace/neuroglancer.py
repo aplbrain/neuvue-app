@@ -77,55 +77,94 @@ def get_df_from_static(cave_client, table_name):
         raise Exception(f"Table {table_name} unavailable.")
 
 
-def create_base_state(seg_ids, coordinate, namespace=None):
+def create_base_state(
+    seg_ids,
+    coordinate,
+    namespace=None,
+    img_layer=None,
+    seg_layer_list=None,
+    segmentation_view_options={"alpha_selected": 0.6, "alpha_3d": 0.3},
+    zoom_image=20,
+):
     """Generates a base state containing imagery and segmentation layers.
 
     Args:
         seg_ids (list): seg_ids to select in the view
         coordinate (tuple|list): collection of three integer voxel coordinates, XYZ order.
         namespace (str): task namespace
+        img_layer (dict) (optional): dictionary with keys name, source
+        seg_layer_list (list of dict) (optional): list of dictionaries with keys name, source, fixed_ids, active
+            where fixed_ids is a boolean for the inclusion of the seg_ids as fixed
+        segmentation_view_options (dict): dictionary with keys alpha_selected, alpha_3d
+        zoom_image (int|float): image zoom
     Returns:
         StateBuilder: Base State
     """
 
     # Create ImageLayerConfig
-    if namespace:
-        img_source = (
-            "precomputed://" + Namespace.objects.get(namespace=namespace).img_source
-        )
-    else:
-        img_source = "precomputed://" + ImageChoices.MINNIE
+    if not img_layer:
+        if namespace:
+            img_source = (
+                "precomputed://" + Namespace.objects.get(namespace=namespace).img_source
+            )
+        else:
+            img_source = "precomputed://" + ImageChoices.MINNIE
+        img_layer = {"name": "em", "source": img_source}
 
     try:
-        black = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["black"]
-        white = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["white"]
+        black = settings.DATASET_VIEWER_OPTIONS[img_layer.get("source")]["contrast"][
+            "black"
+        ]
+        white = settings.DATASET_VIEWER_OPTIONS[img_layer.get("source")]["contrast"][
+            "white"
+        ]
     except KeyError:
         black = 0
         white = 1
 
     img_layer = ImageLayerConfig(
-        name="em", source=img_source, contrast_controls=True, black=black, white=white
+        name=img_layer.get("name"),
+        source=img_layer.get("source"),
+        contrast_controls=True,
+        black=black,
+        white=white,
     )
 
     # Create SegmentationLayerConfig
-    if namespace:
-        seg_source = (
-            "graphene://" + Namespace.objects.get(namespace=namespace).pcg_source
-        )
-    else:
-        seg_source = "graphene://" + PcgChoices.MINNIE
+    if not seg_layer_list:
+        if namespace:
+            seg_source = (
+                "graphene://" + Namespace.objects.get(namespace=namespace).pcg_source
+            )
+        else:
+            seg_source = "graphene://" + PcgChoices.MINNIE
+        seg_layer_list = [
+            {"name": "seg", "source": seg_source, "fixed_ids": True, "active": True}
+        ]
 
-    segmentation_view_options = {"alpha_selected": 0.6, "alpha_3d": 0.3}
-    seg_layer = SegmentationLayerConfig(
-        name="seg",
-        source=seg_source,
-        fixed_ids=seg_ids,
-        view_kws=segmentation_view_options,
-    )
+    layers = [img_layer]
 
-    view_options = {"position": coordinate, "zoom_image": 20}
+    for seg_layer in seg_layer_list:
+        if seg_layer.get("fixed_ids"):
+            seg_layer = SegmentationLayerConfig(
+                name=seg_layer.get("name"),
+                source=seg_layer.get("source"),
+                fixed_ids=seg_ids,
+                active=seg_layer.get("active"),
+                view_kws=segmentation_view_options,
+            )
+        else:
+            seg_layer = SegmentationLayerConfig(
+                name=seg_layer.get("name"),
+                source=seg_layer.get("source"),
+                active=seg_layer.get("active"),
+                view_kws=segmentation_view_options,
+            )
+        layers.append(seg_layer)
 
-    return StateBuilder(layers=[img_layer, seg_layer], view_kws=view_options)
+    view_options = {"position": coordinate, "zoom_image": zoom_image}
+
+    return StateBuilder(layers, view_kws=view_options)
 
 
 def generate_path_df(points):
@@ -300,7 +339,7 @@ def get_from_state_server(url: str):
     }
     if "bossdb-neuvue-datalake" not in url:
         headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
-    
+
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
         raise Exception("GET Unsuccessful")
@@ -310,7 +349,7 @@ def get_from_state_server(url: str):
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
-def post_to_state_server(state: str, public = False):
+def post_to_state_server(state: str, public=False):
     """Posts JSON string to state server
 
     Args:
@@ -324,17 +363,18 @@ def post_to_state_server(state: str, public = False):
         "content-type": "application/json",
     }
     if public:
-        resp = requests.post(settings.PUBLIC_JSON_STATE_SERVER, data=state, headers=headers)
+        resp = requests.post(
+            settings.PUBLIC_JSON_STATE_SERVER, data=state, headers=headers
+        )
         if resp.status_code != 200:
             raise Exception("POST Unsuccessful")
-        return str(resp.json()['url'])
+        return str(resp.json()["url"])
     else:
         headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
         resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
         if resp.status_code != 200:
             raise Exception("POST Unsuccessful")
         return str(resp.json())
-
 
 
 def get_from_json(raw_state: str):
@@ -493,6 +533,43 @@ def construct_lineage_state_and_graph(root_id: str):
         json.dumps(base_state_dict, default=lambda x: [str(y) for y in x]),
         graph_image,
     )
+
+
+def construct_task_generation_proofreading_state(
+    seg_id,
+    coordinate,
+    namespace=None,
+    img_layer=None,
+    seg_layer_list=None,
+    segmentation_view_options={"alpha_selected": 0.6, "alpha_3d": 0.3},
+    zoom_image=20,
+):
+    """Generates a Neuroglancer URL from task generation portal
+
+    Args:
+        seg_id: integer id for seg_id
+        coordinate (list): Numpy list for center location for seg_id
+
+    Returns:
+        string: Neuroglancer URL
+
+    """
+    base_state = create_base_state(
+        [seg_id],
+        coordinate,
+        namespace=namespace,
+        img_layer=img_layer,
+        seg_layer_list=seg_layer_list,
+        segmentation_view_options=segmentation_view_options,
+        zoom_image=zoom_image,
+    )
+
+    chained_state = ChainedStateBuilder([base_state])
+    ng_state = chained_state.render_state(
+        [None], return_as="json", url_prefix=settings.NG_CLIENT
+    )
+    state_url = post_to_state_server(ng_state, public=False)
+    return state_url, ng_state
 
 
 def apply_state_config(state: str, username: str):

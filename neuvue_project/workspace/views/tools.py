@@ -1,11 +1,12 @@
 import logging
-
+from pathlib import Path
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
+from django.views.generic import TemplateView
 from django.conf import settings
 from neuvue.client import client
 
-from ..models import Namespace, NeuroglancerHost
+from ..models import Namespace, NeuroglancerHost, ImageChoices
 from ..neuroglancer import (
     construct_proofreading_state,
     construct_lineage_state_and_graph,
@@ -14,8 +15,10 @@ from ..neuroglancer import (
     get_from_state_server,
     get_from_json,
     construct_url_from_existing,
+    construct_task_generation_proofreading_state,
 )
 from ..utils import is_url, is_json, is_authorized
+from ..forms import TaskGenerationForm
 
 # import the logging library
 
@@ -283,3 +286,115 @@ class NucleiView(View):
                 },
             )
         )
+
+
+class TaskGenerationSuccessView(TemplateView):
+    template_name = "task-generation-success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ns = kwargs["namespace"]
+        relpath = f"task_generation/{ns}.csv"
+        context["namespace"] = ns
+        context["csv_url"] = settings.MEDIA_URL + relpath
+        csv_path = Path(settings.MEDIA_ROOT) / relpath
+        try:
+            context["csv_text"] = csv_path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            context["csv_text"] = ""
+        return context
+
+
+class GenerateTasksView(View):
+    # Form fields that do not take default rendering
+    skip_fields = [
+        "seg_table_csv",
+        "segmentation_layers",
+        "em_zoom",
+        "resolution",
+        "alpha_selected",
+        "alpha_3d",
+        "img_source_other_name",
+        "img_source_other_url",
+        "pcg_source_other_name",
+        "pcg_source_other_url",
+    ]
+
+    def get(self, request, *args, **kwargs):
+        form = TaskGenerationForm(request.POST)
+        return render(
+            request,
+            "task-generation.html",
+            {"form": form, "skip_fields": self.skip_fields},
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = TaskGenerationForm(request.POST)
+        if not form.is_valid():
+            return render(
+                request,
+                "task-generation.html",
+                {"form": form, "skip_fields": self.skip_fields},
+            )
+        try:
+            namespace = form.save(commit=True)
+            # namespace.save()
+            # Save optional extra fields
+            # resolution = form.cleaned_data.get('resolution')
+            img_value = (form.cleaned_data.get("img_source") or "").strip()
+
+            if img_value == ImageChoices.OTHER:
+                img_layer = {
+                    "name": (
+                        form.cleaned_data.get("img_source_other_name") or ""
+                    ).strip(),
+                    "source": (
+                        form.cleaned_data.get("img_source_other_url") or ""
+                    ).strip(),
+                }
+            else:
+                choice_label = dict(form.fields["img_source"].choices).get(
+                    img_value, ""
+                )
+                img_layer = {
+                    "name": (choice_label or "").strip(),
+                    "source": img_value,
+                }
+
+            df = form.cleaned_data["seg_table_df"].copy()
+            # POST states to server and get links
+            df[["state_url", "ng_state"]] = df.apply(
+                lambda row: construct_task_generation_proofreading_state(
+                    row.seg_id,
+                    [row.x, row.y, row.z],
+                    namespace=namespace,
+                    img_layer=img_layer,
+                    seg_layer_list=form.cleaned_data.get(
+                        "segmentation_layers_list", []
+                    ),
+                    segmentation_view_options={
+                        "alpha_selected": form.cleaned_data.get("alpha_selected"),
+                        "alpha_3d": form.cleaned_data.get("alpha_3d"),
+                    },
+                    zoom_image=form.cleaned_data.get("em_zoom", 20),
+                ),
+                axis=1,
+                result_type="expand",
+            )
+
+            # Save CSV to MEDIA_ROOT/task_generation/<namespace>.csv
+            out_dir = Path(settings.MEDIA_ROOT) / "task_generation"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            csv_path = out_dir / f"{namespace.namespace}.csv"
+            df.to_csv(csv_path, index=False)
+
+            # Go to success page that shows a copy/paste block + download link of the created states
+            return redirect("task-generation-success", namespace=namespace.namespace)
+        except Exception as e:
+            # Return form with error statement
+            form.add_error(None, str(e))
+            return render(
+                request,
+                "task-generation.html",
+                {"form": form, "skip_fields": self.skip_fields},
+            )

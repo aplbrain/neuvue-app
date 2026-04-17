@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Task Generation Success{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-white">
+  <h3>Tasks created for namespace: <code>{{ namespace }}</code></h3>
+
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{{ csv_url }}" download>Download CSV</a>
+  </div>
+
+  <h5>Copy & paste CSV</h5>
+
+  <textarea id="csv-text" class="form-control" rows="12" readonly
+            style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
+{{ csv_text }}
+  </textarea>
+
+  <button class="btn btn-outline-light mt-2" onclick="copyCsv()">Copy to clipboard</button>
+
+  <p class="mt-4">
+    <a class="btn btn-secondary" href="{% url 'task-generation' %}">Create another</a>
+  </p>
+</div>
+
+<script>
+function copyCsv() {
+  const ta = document.getElementById('csv-text');
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, ta.value.length);
+  try { document.execCommand('copy'); } catch(e) {}
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ta.value);
+  }
+}
+</script>
+{% endblock %}
