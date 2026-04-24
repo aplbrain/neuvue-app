@@ -50,6 +50,13 @@ class NeuroglancerHost(models.TextChoices):
 class ForcedChoiceButtonGroup(models.Model):
     group_name = models.CharField(max_length=100, unique=True, help_text="(snake case)")
     submit_task_button = models.BooleanField(default=True)
+    require_all_selection_groups = models.BooleanField(
+        default=True,
+        help_text=(
+            "When enabled, one button must be selected in every selection "
+            "group before the task can be submitted."
+        ),
+    )
     number_of_selected_segments_expected = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -77,6 +84,15 @@ class HotkeyChoices(models.TextChoices):
 class ForcedChoiceButton(models.Model):
     set_name = models.ForeignKey(
         ForcedChoiceButtonGroup, to_field="group_name", on_delete=models.CASCADE
+    )
+    selection_group = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        help_text=(
+            "Optional subgroup name. Buttons in the same subgroup are mutually "
+            "exclusive, while different subgroups can each have one selection."
+        ),
     )
     display_name = models.CharField(max_length=100)
     submission_value = models.CharField(

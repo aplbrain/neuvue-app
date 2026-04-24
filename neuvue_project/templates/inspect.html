@@ -66,7 +66,7 @@
 
               {% if decision %}
               Decision  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br>
+              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision|escapejs}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br>
               {% endif %}
 
               Number of Edits  <br>
@@ -102,7 +102,7 @@
   </div>
 </div>
 {% if ng_host == "spelunker" %}
-<script defer src="{% static 'spelunker-workspace/822.js' %}"></script><script defer src="{% static 'spelunker-workspace/213.js' %}"></script><script defer src="{% static 'spelunker-workspace/588.js' %}"></script><script defer src="{% static 'spelunker-workspace/103.js' %}"></script><script defer src="{% static 'spelunker-workspace/main.js' %}"></script><link href="{% static 'spelunker-workspace/main.css' %}" rel="stylesheet">
+<script defer src="/static/neuroglancer/spelunker/453.js"></script><script defer src="/static/neuroglancer/spelunker/71.js"></script><script defer src="/static/neuroglancer/spelunker/74.js"></script><script defer src="/static/neuroglancer/spelunker/741.js"></script><script defer src="/static/neuroglancer/spelunker/main.js"></script><link href="/static/neuroglancer/spelunker/main.css" rel="stylesheet">
 {% else %}
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 {% endif %}

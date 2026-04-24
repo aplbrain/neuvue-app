@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.shortcuts import render, redirect, reverse
@@ -117,7 +118,10 @@ class InspectTaskView(View):
 
         metadata = task_df["metadata"]
         if metadata.get("decision"):
-            context["decision"] = metadata["decision"]
+            if isinstance(metadata["decision"], dict):
+                context["decision"] = json.dumps(metadata["decision"], sort_keys=True)
+            else:
+                context["decision"] = metadata["decision"]
         if metadata.get("operation_ids"):
             context["num_edits"] = len(metadata["operation_ids"])
         if task_df.get("tags"):

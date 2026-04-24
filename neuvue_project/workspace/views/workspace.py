@@ -79,24 +79,41 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(
             set_name=context.get("submission_method")
-        ).all()
+        ).order_by("id")
         if forced_choice_buttons:
             button_list = []
+            button_groups = {}
             for button in forced_choice_buttons:
+                selection_group = getattr(button, "selection_group") or "__default__"
                 button_item = {
                     "display_name": getattr(button, "display_name"),
                     "submission_value": getattr(button, "submission_value"),
                     "button_color": getattr(button, "button_color"),
                     "button_color_active": getattr(button, "button_color_active"),
                     "hotkey": getattr(button, "hotkey"),
+                    "selection_group": selection_group,
                 }
                 button_list.append(button_item)
+                if selection_group not in button_groups:
+                    button_groups[selection_group] = {
+                        "group_key": selection_group,
+                        "group_label": None
+                        if selection_group == "__default__"
+                        else selection_group.replace("_", " ").title(),
+                        "buttons": [],
+                    }
+                button_groups[selection_group]["buttons"].append(button_item)
             context["button_list"] = button_list
+            context["button_groups"] = list(button_groups.values())
+            context["has_multiple_button_groups"] = len(button_groups) > 1
 
         button_group_obj = ForcedChoiceButtonGroup.objects.get(
             group_name=submission_method
         )
         context["submit_task_button"] = button_group_obj.submit_task_button
+        context["require_all_selection_groups"] = (
+            button_group_obj.require_all_selection_groups
+        )
 
         number_of_selected_segments_expected = (
             button_group_obj.number_of_selected_segments_expected
@@ -234,6 +251,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         # All form submissions include button name and ng state
         button = request.POST.get("button")
+        decision_payload = request.POST.get("decision_payload")
         ng_state = request.POST.get("ngState", task_df["ng_state"])
         duration = int(request.POST.get("duration", 0))
         tags = request.POST.get("tags")
@@ -248,6 +266,13 @@ class WorkspaceView(LoginRequiredMixin, View):
             tags = tags.split(",")
         else:
             tags = None
+
+        parsed_decision = None
+        if decision_payload:
+            try:
+                parsed_decision = json.loads(decision_payload)
+            except json.JSONDecodeError:
+                logger.warning("Unable to parse decision payload")
 
         try:
             ng_state = post_to_state_server(ng_state, public = namespace_obj.ng_host != NeuroglancerHost.NEUVUE)
@@ -286,6 +311,11 @@ class WorkspaceView(LoginRequiredMixin, View):
         elif button == "submit":
             logger.info("Submitting task")
             request.session["session_task_count"] = session_task_count + 1
+            if isinstance(parsed_decision, dict):
+                if len(parsed_decision) == 1:
+                    metadata["decision"] = next(iter(parsed_decision.values()))
+                elif parsed_decision:
+                    metadata["decision"] = parsed_decision
             # Update task data
             client.patch_task(
                 task_df["_id"],
@@ -304,7 +334,15 @@ class WorkspaceView(LoginRequiredMixin, View):
         elif button in [x.submission_value for x in forced_choice_buttons]:
             logger.info("Submitting task")
             request.session["session_task_count"] = session_task_count + 1
-            metadata["decision"] = button
+            if isinstance(parsed_decision, dict):
+                if len(parsed_decision) == 1:
+                    metadata["decision"] = next(iter(parsed_decision.values()))
+                elif parsed_decision:
+                    metadata["decision"] = parsed_decision
+                else:
+                    metadata["decision"] = button
+            else:
+                metadata["decision"] = button
             # Update task data
             client.patch_task(
                 task_df["_id"],

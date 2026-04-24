@@ -42,6 +42,14 @@ def _get_status_count(task_df, status):
     return task_df["status"].value_counts().get(status, 0)
 
 
+def _normalize_decision_values(decision):
+    if isinstance(decision, str):
+        return [decision]
+    if isinstance(decision, dict):
+        return [value for value in decision.values() if isinstance(value, str)]
+    return []
+
+
 class DashboardView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -344,7 +352,9 @@ class ReportView(View, LoginRequiredMixin):
             import plotly.express as px
             from plotly.subplots import make_subplots
 
-            task_df["decision"] = task_df["metadata"].apply(lambda x: x.get("decision"))
+            task_df["decision_values"] = task_df["metadata"].apply(
+                lambda x: _normalize_decision_values(x.get("decision"))
+            )
 
             users = task_df["assignee"].unique()
             fig_decision = make_subplots(
@@ -366,9 +376,10 @@ class ReportView(View, LoginRequiredMixin):
             for namespace_display_name, submission_value in decision_types:
                 decision_counts = {}
                 for assignee in users:
-                    decision_counts[assignee] = len(
-                        task_df[task_df["decision"] == submission_value]
-                    )
+                    assignee_df = task_df[task_df["assignee"] == assignee]
+                    decision_counts[assignee] = assignee_df["decision_values"].apply(
+                        lambda values: submission_value in values
+                    ).sum()
 
                 x = list(decision_counts.keys())
                 y = list(decision_counts.values())

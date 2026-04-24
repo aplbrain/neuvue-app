@@ -92,40 +92,45 @@
                 <! Forced Choice>
                 <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
                     {% csrf_token %}
-                    {% for button in button_list %}
-                        <style>
-                            .{{button.submission_value}} {
-                                background-color: {{button.button_color}};
-                            }
-                            .{{button.submission_value}}:hover {
-                                background-color: {{button.button_color_active}};
-                                border: 2.5px solid {{button.button_color_active}};
-                            }
-                            {% if submit_task_button %}
-                            .{{button.submission_value}}.active {
-                                background-color: {{button.button_color_active}};
-                            }
+                    {% for button_group in button_groups %}
+                        {% if has_multiple_button_groups %}
+                        <div class="forcedChoiceGroup">
+                            {% if button_group.group_label %}
+                            <div class="forcedChoiceGroupLabel">{{button_group.group_label}}</div>
                             {% endif %}
-                        </style>
-                        <div class="mainButtonWrapper forcedChoiceWrapper">
-                            <button
-                                id="{{button.submission_value}}"
-                                type="button"
-                                class="forcedChoiceButton {{button.submission_value}}"
-                                {% if submit_task_button %}
-                                    onclick="updateButtonSelected('{{button.submission_value}}')"
-                                {% else %}
-                                    onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
-                                {% endif %}
-                            >
-                                <div id = '{{button.submission_value}}_load'>
-                                    {{button.display_name}}
+                            <div class="forcedChoiceGroupButtons">
+                        {% endif %}
+                        {% for button in button_group.buttons %}
+                            <style>
+                                .{{button.submission_value}} {
+                                    background-color: {{button.button_color}};
+                                }
+                                .{{button.submission_value}}:hover {
+                                    background-color: {{button.button_color_active}};
+                                    border: 2.5px solid {{button.button_color_active}};
+                                }
+                            </style>
+                            <div class="mainButtonWrapper forcedChoiceWrapper">
+                                <button
+                                    id="{{button.submission_value}}"
+                                    type="button"
+                                    class="forcedChoiceButton {{button.submission_value}}"
+                                    data-selection-group="{{button.selection_group}}"
+                                    onclick="handleForcedChoiceButtonClick('{{button.submission_value}}', '{{button.selection_group|escapejs}}', '{{button.display_name|escapejs }}')"
+                                >
+                                    <div id = '{{button.submission_value}}_load'>
+                                        {{button.display_name}}
+                                    </div>
+                                </button>
+                                <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">
+                                    <span class="modifier"></span><span class="hotkey_button">+ <kbd>{{button.hotkey}}</kbd></span>
                                 </div>
-                            </button>
-                            <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">
-                                <span class="modifier"></span><span class="hotkey_button">+ <kbd>{{button.hotkey}}</kbd></span>
+                            </div>
+                        {% endfor %}
+                        {% if has_multiple_button_groups %}
                             </div>
                         </div>
+                        {% endif %}
                     {% endfor %}
             </form>
 
@@ -294,7 +299,7 @@
 <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
 
 {% if ng_host == "spelunker" %}
-<script defer src="822.js"></script><script defer src="213.js"></script><script defer src="588.js"></script><script defer src="103.js"></script><script defer src="main.js"></script><link href="main.css" rel="stylesheet">
+<script defer src="/static/neuroglancer/spelunker/453.js"></script><script defer src="/static/neuroglancer/spelunker/71.js"></script><script defer src="/static/neuroglancer/spelunker/74.js"></script><script defer src="/static/neuroglancer/spelunker/741.js"></script><script defer src="/static/neuroglancer/spelunker/main.js"></script><link href="/static/neuroglancer/spelunker/main.css" rel="stylesheet">
 {% else %}
 <script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
 {% endif %}
@@ -444,6 +449,8 @@
         window.removeEventListener('beforeunload', exitAlert);
         let duration = Math.round(browserTimer.getTimeInMilliseconds()/1000);
 
+        appendDecisionPayload(form);
+
         {% if ng_url %}
 
         $('<input>').attr('type', 'hidden').attr('name', 'button').attr('value', value).appendTo(form);
@@ -522,18 +529,105 @@
     })
 
     // forced choice button selection logic
-    var current_button_selection = 'noneSelected'
+    const forced_choice_group_keys = [
+        {% for button_group in button_groups %}
+        "{{button_group.group_key|escapejs}}",
+        {% endfor %}
+    ];
+    const has_multiple_button_groups = {% if has_multiple_button_groups %}true{% else %}false{% endif %};
+    const require_all_selection_groups = {% if require_all_selection_groups %}true{% else %}false{% endif %};
+    var current_button_selections = {};
 
-    function updateButtonSelected(button_title){
-        // deactivate the old button
-        if (current_button_selection != 'noneSelected'){
-            var previously_selecected_button = document.getElementById(current_button_selection);
-            previously_selecected_button.classList.toggle("active");
+    function getSelectedDecisionPayload() {
+        return Object.assign({}, current_button_selections);
+    }
+
+    function getSingleSelectedDecisionValue() {
+        const selected_values = Object.values(current_button_selections);
+        if (selected_values.length === 0) {
+            return 'noneSelected';
         }
-        // activate the new one
-        current_button_selection = button_title;
-        var selected_button = document.getElementById(button_title);
-        selected_button.classList.toggle("active");
+        return selected_values[0];
+    }
+
+    function hasAllRequiredDecisionSelections() {
+        return Object.keys(current_button_selections).length === forced_choice_group_keys.length;
+    }
+
+    function hasMinimumDecisionSelections() {
+        if (Object.keys(current_button_selections).length === 0) {
+            return false;
+        }
+
+        if (!has_multiple_button_groups) {
+            return true;
+        }
+
+        if (!require_all_selection_groups) {
+            return true;
+        }
+
+        return hasAllRequiredDecisionSelections();
+    }
+
+    function appendDecisionPayload(form) {
+        if (forced_choice_group_keys.length === 0 || Object.keys(current_button_selections).length === 0) {
+            return;
+        }
+
+        $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', 'decision_payload')
+            .attr('value', JSON.stringify(getSelectedDecisionPayload()))
+            .appendTo(form);
+    }
+
+    function updateButtonSelected(button_title, selection_group) {
+        const previously_selected_button_id = current_button_selections[selection_group];
+        const selected_button = document.getElementById(button_title);
+
+        if (previously_selected_button_id === button_title) {
+            if (selected_button) {
+                selected_button.classList.remove("active");
+            }
+            delete current_button_selections[selection_group];
+            return false;
+        }
+
+        if (previously_selected_button_id && previously_selected_button_id !== button_title) {
+            const previously_selected_button = document.getElementById(previously_selected_button_id);
+            if (previously_selected_button) {
+                previously_selected_button.classList.remove("active");
+            }
+        }
+
+        current_button_selections[selection_group] = button_title;
+
+        if (selected_button) {
+            selected_button.classList.add("active");
+        }
+        return true;
+    }
+
+    function handleForcedChoiceButtonClick(button_title, selection_group, button_display_name) {
+        const is_selected = updateButtonSelected(button_title, selection_group);
+
+        {% if not submit_task_button %}
+            if (!is_selected) {
+                return;
+            }
+            if (has_multiple_button_groups) {
+                if (hasMinimumDecisionSelections()) {
+                    triggerLoadingSpinner(button_title + "_load");
+                    submitWithSelectedSegmentsCheck(button_title + "_load", "submit", "Submit Task");
+                } else if (require_all_selection_groups) {
+                    triggerToast("Select one option in each remaining button group to submit.");
+                }
+            } else {
+                triggerLoadingSpinner(button_title + "_load");
+                submitWithSelectedSegmentsCheck(button_title + "_load", button_title, button_display_name);
+            }
+        {% endif %}
     }
 
     // Function to attempt restoring the viewer state
@@ -627,9 +721,13 @@
         {% if submit_task_button %}
             {% if button_list %}
                 $('#btnSubmit').click(function(){
-                    if (current_button_selection != 'noneSelected'){
+                    if (hasMinimumDecisionSelections()) {
                         triggerLoadingSpinner('submit_task_load');
-                        submitWithSelectedSegmentsCheck('submit_task_load', current_button_selection, 'Submit Task');
+                        submitWithSelectedSegmentsCheck('submit_task_load', 'submit', 'Submit Task');
+                    } else if (has_multiple_button_groups && require_all_selection_groups) {
+                        if (!hasAllRequiredDecisionSelections()) {
+                            alert("Please select one decision in each button group!");
+                        }
                     } else {
                         alert("Please select a decision!");
                     }
@@ -639,12 +737,6 @@
                     submitWithSelectedSegmentsCheck('submit_task_load', 'submit', 'Submit Task');
                 });
             {% endif %}
-        {% else %}
-            {% for button in button_list %}
-                $("#{{button.submission_value}}").click(function(){
-                    submitWithSelectedSegmentsCheck("{{button.submission_value}}" + "_load", "{{button.submission_value}}", "{{button.display_name}}");
-                });
-            {% endfor %}
         {% endif %}
 
         var button_id_to_hotkey = {}
