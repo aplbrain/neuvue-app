@@ -229,6 +229,15 @@ class WorkspaceView(LoginRequiredMixin, View):
         namespace = kwargs.get("namespace")
         namespace_obj = Namespace.objects.get(namespace=namespace)
 
+        def redirect_url(route_name, *route_args):
+            url = reverse(route_name, args=route_args)
+            # Spelunker stores viewer state in the location fragment. Without an
+            # explicit empty fragment, browser redirects can inherit the previous
+            # task's `#!...` state into the next task page load.
+            if namespace_obj.ng_host == NeuroglancerHost.SPELUNKER:
+                return f"{url}#"
+            return url
+
         # Current task that is opened in this namespace.
         task_df = client.get_task(request.POST.get("taskId"))
 
@@ -441,12 +450,12 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Add new differ stack entry
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
-            return redirect(reverse("tasks"))
+            return redirect(redirect_url("tasks"))
         else:
             logging.error(f"Invalid button submission: {button}")
 
         #### REDIRECT BACK TO WORKSPACE
         if namespace_obj.ng_host == NeuroglancerHost.SPELUNKER:
-            return redirect(reverse("spelunker-workspace", args=[namespace]))
+            return redirect(redirect_url("spelunker-workspace", namespace))
         else:
-            return redirect(reverse("workspace", args=[namespace]))
+            return redirect(redirect_url("workspace", namespace))
