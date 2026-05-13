@@ -90,7 +90,7 @@
             {% if is_open %}
             <! Submission Options>
                 <! Forced Choice>
-                <form id="mainForm" action="" method="post" class="bottomBar justify-content-center" style="order: 0;">
+                <form id="mainForm" action="" method="post" class="bottomBar forcedChoiceForm">
                     {% csrf_token %}
                     {% for button in button_list %}
                         <style>
@@ -372,7 +372,7 @@
                     // parse JSON response
                     ({message, ngstate} = jsonResponse);
                     viewer.state.restoreState(ngstate);
-                    triggerToast(message);  
+                    triggerToast(message);
                 })
                 .catch((error) => {
                     console.error(error.message || error)
@@ -463,7 +463,7 @@
         const selected_segments = getSelectedSegments(viewer.state);
         $('<input>').attr('type', 'hidden').attr('name', 'selected_segments').attr('value', selected_segments).appendTo(form);
         {% endif %}
-        
+
         $(form).submit();
 
         {% else %}
