@@ -116,17 +116,18 @@ nav {
 /* Separates left column with NG window, text, and buttons from right column: sidebar */
 
 .left {
-border-radius: 12px;
-background-color: transparent;
-flex-grow: 6;
-order: 1;
-height: 95%;
-margin-top: 0%;
-margin-left: 1%;
-display: flex;
-top:0;
-align-items: center;
-flex-direction: column;
+  border-radius: 12px;
+  background-color: transparent;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 95%;
+  margin-top: 0;
+  margin-left: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
 .right {
@@ -217,32 +218,68 @@ overflow-x: hidden;
 
 }
 
-/* button container below NG */
-.bottomBar {
-  background-color: transparent;
-  max-height:5vh;
-  margin-bottom: 10px;
-  bottom:1.5vh;
-  width: 95%;
+.forcedChoiceForm {
+  order: 0;
+  flex: 0 0 auto;
+  max-height: 12vh;
+  overflow: hidden;
+
   display: flex;
-  flex-direction: row;
-  order:2;
-  /*align-items: flex-end;*/
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 0.4vh 0.5vw;
 }
 
-.forcedChoiceButton{
+.forcedChoiceForm .mainButtonWrapper {
+  flex: 1 1 140px;
+  min-width: 100px;
+  max-width: 180px;
+  padding: 0;
+}
+
+.forcedChoiceForm .forcedChoiceButton {
+  height: clamp(2.8vh, 4vh, 4.5vh);
+  font-size: clamp(1vh, 1.4vh, 1.7vh);
+  padding: 0.15vh 0.25vw;
+  line-height: 1.05;
+}
+
+.left > form.bottomBar:not(.forcedChoiceForm) {
+  padding-top: 0.75vh;
+  order: 2;
+  flex: 0 0 auto;
+}
+
+/* button container below NG */
+.bottomBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 0.75vw;
+  width: 95%;
+  overflow: visible;
+}
+
+.forcedChoiceButton {
   width: 100%;
   font-family: var(--monospace-font);
   border-radius: 8px;
   color: var(--background);
-  height: 3.5vh;
-  padding: 0.15vh 0.25vh;
-  margin: 0vh 0.5vw;
+  height: 4.5vh;
+  padding: 0.25vh 0.35vh;
+  margin: 0;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 1.5vh;
+  font-size: 1.7vh;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
 .forcedChoiceButton.active {
@@ -252,10 +289,7 @@ overflow-x: hidden;
 
 /* buttons used in bottom container */
 .mainButtonWrapper {
-  min-width: 12%;
-  padding: 0.15vh 0.25vh;
-  margin: 0vh 0.5vw;
-  text-align: center;
+  flex: 0 0 200px;
 }
 
 .hotkeyHint {
@@ -278,12 +312,18 @@ overflow-x: hidden;
   background-color: var(--secondary-accent);
   border-radius: 8px;
   color: var(--background);
-  height: 3.5vh;
+  height: 4.5vh;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 1.5vh;
+  font-size: 1.7vh;
+  white-space: normal;
+  word-wrap: break-word;
+  padding: 0.25vh 0.35vh;
+  line-height: 1.2;
 }
 
 .mainButton:hover{
@@ -880,16 +920,11 @@ background: transparent;
 
 /* NG container */
 .neuroglancer-container {
-  box-shadow: 0 4px 8px 0 var(--transparent-shadow);
-  border-radius: 8px;
-  border: 1px solid var(--background);
-  margin-top: 1vh;
-  margin-bottom: 1vh;
-  height: 100% !important;
-  width: 95% !important;
-  color: var(--primary-accent);
-  overflow:auto;
   order: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 95% !important;
+  height: auto !important;
 }
 .neuroglancer-minimizable-group-flexible.neuroglancer-annotation-hiding-list-parent{
   overflow-y: hidden !important;
