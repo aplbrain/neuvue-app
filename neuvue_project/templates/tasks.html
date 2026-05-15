@@ -1,421 +1,321 @@
 {% extends "base.html" %}
 {% load static %}
-{% load socialaccount %}
 
 {% block header_includes %}
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
-<!--Add for Palette Dropdown-->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src= "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<!--End Palette Dropdown-->
 {% endblock %}
 {% block title %}My Tasks{% endblock %}
 
 {% block content %}
-<div class="basic tasks">
-    <div class="neuvueRow">
-        <div class="jobQueue" >
-            {% for namespace, context in data.namespaces.items %}
-                {% if context.total_tasks %}
-                    <div class="neuvueRow">
-                        <div id="{{namespace}}Header" class="jobHeader active d-flex align-items-center" onclick="tableHide('{{namespace}}Header','{{namespace}}Table')">
-                            {{context.display_name}}
-                            <span class="badge rounded-pill bg-pink ms-2">
-                                {{context.total_pending}}
-                            </span>
-                            {% if context.submission_method != "SubmitButton" %}
-                                <span class="badge rounded-pill bg-secondary ms-1" >
-                                    Forced Choice
-                                </span>
-                            {% endif %}
-                        </div>
-                        {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed or context.can_unassign_tasks %}
-                        <div class="header-sizing btn-toolbar">
-                            <button type="button"
-                                    class="header-button header-outline dropdown-toggle dropdown-toggle-split"
-                                    style="margin-right: 5pt"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                <span class="sr-only header-box-text">Toggle Dropdown</span>
-                              </button>
-                            {% if context.ng_host == "spelunker" %}
-                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'spelunker-workspace' namespace=namespace %}'">
-                            {% else %}
-                            <span class="header-button header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'">
-                            {% endif %}
-                                <button class="header-box-text"
-                                    onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
-                                    <div id='{{namespace}}NgSpinner'>
-                                        Start Proofreading
-                                    </div>
-                                </button>
-                            </span>
-                            <div class="dropdown-menu dropdown-menu-dark">
-                                {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
-                                <button class="dropdown-item"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmAddTasksModal"
-                                    data-bs-display-name="{{context.display_name}}"
-                                    data-bs-namespace="{{namespace}}">
-                                    <div id='{{namespace}}TasksSpinner'>
-                                        Add More Tasks
-                                    </div>
-                                    <input type="hidden" name="namespace" value="{{ namespace }}">
-                                </button>
-                                {% endif %}
-                                {% if context.can_unassign_tasks%}
-                                <button class="dropdown-item" style="font-size: 1.15vh;"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmReassignTasksModal"
-                                    data-bs-display-name="{{context.display_name}}"
-                                    data-bs-namespace="{{namespace}}">
-                                    <div id='{{namespace}}TasksSpinnerReassign'>
-                                        Remove Skipped Tasks
-                                    </div>
-                                    <input type="hidden" name="namespace" value="{{ namespace }}">
-                                </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% else %}
-                        {% if context.ng_host == "spelunker" %}
-                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'spelunker-workspace' namespace=namespace %}'">
-                        {% else %}
-                        <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'workspace' namespace=namespace %}'">
-                        {% endif %}
-                            <button class="header-box-text"
-                                onclick="triggerLoadingSpinner('{{namespace}}NgSpinner')">
-                                <div id='{{namespace}}NgSpinner'>
-                                    Start Proofreading
-                                </div>
-                            </button>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div id="{{namespace}}Table" class ="bin" style="display:none;">
-                        <div class="tab">
-                            <button id = "pending{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'pending{{namespace}}', {{context.start}}, {{context.end}},'pending{{namespace}}Tab')">Pending ({{context.total_pending}}) </button>
-                            <button id = "closed{{namespace}}Tab" class="tablinks" onclick="tabToggle(event, 'closed{{namespace}}', {{context.start}}, {{context.end}},'closed{{namespace}}Tab')">Closed ({{context.total_closed}}) </button>
-                        </div>
-                        <div id="pending{{namespace}}" class="tabcontent">
-                            <div>
-                                <table>
-                                    <tr>
-                                        <th>Task ID</th>
-                                        <th>Seg ID</th>
-                                        <th>Created</th>
-                                        <th>Priority</th>
-                                        <th>Status</th>
-                                        <th>Times Skipped</th>
-                                        {% comment %} <th>Flag Reason</th>
-                                        <th>Notes</th> {% endcomment %}
-                                    </tr>
-                                    {% for row in  context.pending %}
-                                    <tr>
-                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
-                                        <td> {{ row.created }} </td>
-                                        <td> {{ row.priority }} </td>
-                                        <td> {{ row.status }} </td>
-                                        <td> {{ row.skipped }}</td>
-                                    </tr>
-                                    {% endfor %}
+<div class="nv-page">
+  <div class="nv-wrap">
+    <header class="nv-hero">
+      <div>
+        <h1>My Tasks</h1>
+        <p>Launch proofreading workspaces, review pending and closed tasks, and manage queue actions from one place.</p>
+      </div>
+      <div class="nv-status-badge">
+        <span class="nv-dot" aria-hidden="true"></span>
+        <span>Queue activity loaded</span>
+      </div>
+    </header>
 
-                                </table>
-                            </div>
-                        </div>
-                        <div id="closed{{namespace}}" class="tabcontent">
-                            <div>
-                                <table>
-                                    <tr>
-                                        <th>Task ID</th>
-                                        <th>Seg ID</th>
-                                        <th>Opened Time</th>
-                                        <th>Closed Time</th>
-                                        <th>Status</th>
-                                        <th>Tags</th>
-                                    </tr>
-                                    {% for row in context.closed %}
-                                    <tr>
-                                        <td><a href="{% url 'inspect' row.task_id %}" style="color:var(--secondary-accent-activated)"><code>{{ row.task_id }}</code> </a></td>
-                                        <td><a href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None'%}" style="color:var(--secondary-accent-activated)"><code>{{ row.seg_id }}</code> </a></td>
-                                        <td> {{ row.opened }} </td>
-                                        <td> {{ row.closed }} </td>
-                                        <td> {{ row.status }} </td>
-                                        {% if row.tags %}
-                                        <td class='userTags'>
-                                        <span
-                                          data-bs-toggle="tooltip"
-                                          data-bs-placement="right"
-                                          data-bs-html="true"
-                                          title="{% for tag in row.tags %} {{tag}} </br> {% endfor%}" >
-                                          {{ row.tags.0 }}
-                                        </span>
-                                        </td>
-                                        {% else %}
-                                        <td> None </td>
-                                        {% endif %}
-                                    </tr>
-                                    {% endfor %}
-
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-            <div class="neuvueRow">
-                <div id="pinkyHeader" class="pinkyHeader jobHeader active">
-                    Pinky Sandbox
-                </div>
-                <div class="header-sizing header-outline rightBorderRounded" onclick="document.location='{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}'">
-                    <button class="header-box-text" id='pinkySandboxButton'
-                    onclick="triggerLoadingSpinner('PinkyNgSpinner')">
-                        <div id='PinkyNgSpinner'>
-                            Start Sandbox
-                        </div>
-                    </button>
-                </div>
-            </div>
-        
-            {% if not data.settings.is_authorized %}
-            <h5 class="text-light text-center">
-                Have questions or are interested in collaborating? Email us at <a class="text-pink" href="mailto:neuvue@bossdb.org">neuvue@bossdb.org</a>.
-            </h5>
-            {% endif %}
-
+    <div class="nv-tasks-layout">
+      <section class="nv-queue-list" aria-label="Task queues">
+        <div class="nv-task-toolbar">
+          <div class="nv-sort-control">
+            <label for="namespaceSort">Sort namespaces</label>
+            <select id="namespaceSort">
+              <option value="pending-desc">Pending tasks</option>
+              <option value="name-asc">Name</option>
+              <option value="activity-desc">Last activity</option>
+            </select>
+          </div>
         </div>
 
-
-        <div class="analytics">
-            <div class="sideContentTitle">
-                Activity Log
-            </div>
-            <div class="sideContentInfo">
-                <span class = "analyticsSubHeader"> Last 24 hours </span>
-                </br>
-                {{ data.daily_changelog | safe }}
-                </br>
-                <span class = "analyticsSubHeader"> Older </span>
-                </br>
-                {{ data.full_changelog | safe }}
-            </div>
-        </div>
-    </div>
-    <!-- Triggerable elements -->
-
-    <!-- Toast -->
-    <div class="position-fixed top-0 start-50 translate-middle-x mt-5">
-        <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div id="toast-body" class="toast-body"> <!-- triggerToast will fill in text here--> </div>
-                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="confirmAddTasksModal" class="modal" name="flag" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="color: black;"> <!-- modal function will fill in text here --> </h5>
-                <button type="button" class="btn-close" id="btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="modalNo" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="modalYes" data-bs-dismiss="modal">Yes</button>
-                <!-- Modal function will add POST request to yes button -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="confirmReassignTasksModal" class="modal" name="reassign" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="color: black;"> <!-- modal function will fill in text here --> </h5>
-                <button type="button" class="btn-close" id="btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="modalNo" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="reassignModalYes" data-bs-dismiss="modal">Yes</button>
-                <!-- Modal function will add POST request to yes button -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script>
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-
-    start();
-    function start() {
         {% for namespace, context in data.namespaces.items %}
-            if ({{context.total_tasks}}) {
-                tabToggle(event, "pending{{namespace}}", "{{context.start}}", "{{context.end}}", "pending{{namespace}}Tab");
-                document.getElementById("pending{{namespace}}Tab").click();
-                tableHide("{{namespace}}Header","{{namespace}}Table");
-                // {% if not context.total_pending %}
-                //    document.getElementById("{{namespace}}Header").click();
-                // {% endif %}
-            }
+          {% if context.total_tasks %}
+            <article
+              class="nv-card nv-task-card"
+              data-task-card
+              data-namespace-card
+              data-name="{{ context.display_name|lower }}"
+              data-pending="{{ context.total_pending }}"
+              data-last-activity="{{ context.last_activity_sort }}">
+              <div class="nv-task-summary">
+                <button
+                  type="button"
+                  class="nv-btn nv-btn-secondary nv-task-toggle js-task-panel-toggle"
+                  aria-expanded="false"
+                  aria-controls="task-panel-{{ forloop.counter }}"
+                  data-target="task-panel-{{ forloop.counter }}">
+                  <span class="nv-chevron" aria-hidden="true"></span>
+                  <span class="visually-hidden">Toggle {{ context.display_name }}</span>
+                </button>
+
+                <div class="nv-task-title">
+                  <h2>{{ context.display_name }}</h2>
+                  <div class="nv-task-meta">
+                    <span class="nv-chip"><strong>{{ context.total_pending }}</strong> pending</span>
+                    <span class="nv-chip"><strong>{{ context.total_closed }}</strong> closed</span>
+                    <span class="nv-chip">Last activity <strong>{{ context.last_activity }}</strong></span>
+                    {% if context.submission_method != "SubmitButton" %}
+                      <span class="nv-chip">Forced Choice</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="nv-task-actions">
+                  {% if context.can_self_assign_tasks and context.total_pending < context.max_pending_tasks_allowed %}
+                    <button
+                      type="button"
+                      class="nv-btn nv-btn-secondary js-queue-action"
+                      data-action="add"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmAddTasksModal"
+                      data-display-name="{{ context.display_name }}"
+                      data-namespace="{{ namespace }}"
+                      data-spinner-target="tasks-spinner-{{ forloop.counter }}">
+                      <span id="tasks-spinner-{{ forloop.counter }}">Add More Tasks</span>
+                    </button>
+                  {% endif %}
+
+                  {% if context.can_unassign_tasks %}
+                    <button
+                      type="button"
+                      class="nv-btn nv-btn-secondary js-queue-action"
+                      data-action="reassign"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmReassignTasksModal"
+                      data-display-name="{{ context.display_name }}"
+                      data-namespace="{{ namespace }}"
+                      data-spinner-target="reassign-spinner-{{ forloop.counter }}">
+                      <span id="reassign-spinner-{{ forloop.counter }}">Remove Skipped Tasks</span>
+                    </button>
+                  {% endif %}
+
+                  {% if context.ng_host == "spelunker" %}
+                    <a
+                      class="nv-btn nv-btn-primary js-loading-link"
+                      href="{% url 'spelunker-workspace' namespace=namespace %}"
+                      data-spinner-target="ng-spinner-{{ forloop.counter }}">
+                      <span id="ng-spinner-{{ forloop.counter }}">Start Proofreading</span>
+                    </a>
+                  {% else %}
+                    <a
+                      class="nv-btn nv-btn-primary js-loading-link"
+                      href="{% url 'workspace' namespace=namespace %}"
+                      data-spinner-target="ng-spinner-{{ forloop.counter }}">
+                      <span id="ng-spinner-{{ forloop.counter }}">Start Proofreading</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div id="task-panel-{{ forloop.counter }}" class="nv-task-panel" hidden>
+                <div class="nv-tabs" role="tablist" aria-label="{{ context.display_name }} task status">
+                  <button
+                    type="button"
+                    id="pending-tab-{{ forloop.counter }}"
+                    class="nv-tab-button js-task-tab active"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="pending-panel-{{ forloop.counter }}"
+                    data-target="pending-panel-{{ forloop.counter }}">
+                    Pending ({{ context.total_pending }})
+                  </button>
+                  <button
+                    type="button"
+                    id="closed-tab-{{ forloop.counter }}"
+                    class="nv-tab-button js-task-tab"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="closed-panel-{{ forloop.counter }}"
+                    data-target="closed-panel-{{ forloop.counter }}">
+                    Closed ({{ context.total_closed }})
+                  </button>
+                </div>
+
+                <div
+                  id="pending-panel-{{ forloop.counter }}"
+                  class="nv-tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="pending-tab-{{ forloop.counter }}">
+                  {% if context.pending %}
+                    <div class="nv-table-wrap">
+                      <table class="nv-table">
+                        <thead>
+                          <tr>
+                            <th>Task ID</th>
+                            <th>Seg ID</th>
+                            <th>Created</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Times Skipped</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for row in context.pending %}
+                            <tr>
+                              <td><a class="nv-code-link" href="{% url 'inspect' row.task_id %}"><code>{{ row.task_id }}</code></a></td>
+                              <td><a class="nv-code-link" href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None' %}"><code>{{ row.seg_id }}</code></a></td>
+                              <td>{{ row.created }}</td>
+                              <td>{{ row.priority }}</td>
+                              <td>{{ row.status }}</td>
+                              <td>{{ row.skipped }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  {% else %}
+                    <div class="nv-empty">No pending tasks in this queue.</div>
+                  {% endif %}
+                </div>
+
+                <div
+                  id="closed-panel-{{ forloop.counter }}"
+                  class="nv-tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="closed-tab-{{ forloop.counter }}"
+                  hidden>
+                  {% if context.closed %}
+                    <div class="nv-table-wrap">
+                      <table class="nv-table">
+                        <thead>
+                          <tr>
+                            <th>Task ID</th>
+                            <th>Seg ID</th>
+                            <th>Opened Time</th>
+                            <th>Closed Time</th>
+                            <th>Status</th>
+                            <th>Tags</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for row in context.closed %}
+                            <tr>
+                              <td><a class="nv-code-link" href="{% url 'inspect' row.task_id %}"><code>{{ row.task_id }}</code></a></td>
+                              <td><a class="nv-code-link" href="{% url 'synapse' row.seg_id 'True' 'True' 'True' 'None' %}"><code>{{ row.seg_id }}</code></a></td>
+                              <td>{{ row.opened }}</td>
+                              <td>{{ row.closed }}</td>
+                              <td>{{ row.status }}</td>
+                              {% if row.tags %}
+                                <td class="userTags">
+                                  <span
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right"
+                                    data-bs-html="true"
+                                    title="{% for tag in row.tags %}{{ tag }}<br>{% endfor %}">
+                                    {{ row.tags.0 }}
+                                  </span>
+                                </td>
+                              {% else %}
+                                <td>None</td>
+                              {% endif %}
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  {% else %}
+                    <div class="nv-empty">No closed tasks in this queue.</div>
+                  {% endif %}
+                </div>
+              </div>
+            </article>
+          {% endif %}
         {% endfor %}
-    };
 
-    // Add event listener to modal
-    const exampleModal = document.getElementById('confirmAddTasksModal');
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-        // Extract info from data-bs-* attributes
-        const addMoreTasksButton = event.relatedTarget
-        const namespace = addMoreTasksButton.getAttribute('data-bs-namespace');
-        const displayName = addMoreTasksButton.getAttribute('data-bs-display-name');
-        // Customize the modal
-        const modalTitle = exampleModal.querySelector('.modal-title');
-        modalTitle.textContent = 'Add more ' + displayName + ' tasks?';
-        const yesButton = document.getElementById("modalYes");
-        yesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinner'); addTasks('" + namespace + "')");
-    })
+        <article class="nv-card nv-task-card">
+          <div class="nv-task-summary">
+            <div class="nv-task-title">
+              <h2>Pinky Sandbox</h2>
+              <div class="nv-task-meta">
+                <span class="nv-chip">Practice workspace</span>
+              </div>
+            </div>
+            <div class="nv-task-actions">
+              <a
+                class="nv-btn nv-btn-primary js-loading-link"
+                href="{% url 'inspect' task_id='6269888a101fc4da81fdd410' %}"
+                data-spinner-target="pinky-ng-spinner">
+                <span id="pinky-ng-spinner">Start Sandbox</span>
+              </a>
+            </div>
+          </div>
+        </article>
 
-    // Add event listener to reassign modal
-    const reassignModal = document.getElementById('confirmReassignTasksModal');
-    reassignModal.addEventListener('show.bs.modal', function (event) {
-        // Extract info from data-bs-* attributes
-        const reassignTasksButton = event.relatedTarget
-        const namespace = reassignTasksButton.getAttribute('data-bs-namespace');
-        const displayName = reassignTasksButton.getAttribute('data-bs-display-name');
+        {% if not data.settings.is_authorized %}
+          <div class="nv-empty nv-contact-note">
+            Have questions or are interested in collaborating? Email us at <a href="mailto:neuvue@bossdb.org">neuvue@bossdb.org</a>.
+          </div>
+        {% endif %}
+      </section>
 
-        // Customize the modal
-        const modalTitle = reassignModal.querySelector('.modal-title');
-        modalTitle.textContent = 'Reassign all skipped ' + displayName + ' tasks?';
-        const reassignYesButton = document.getElementById("reassignModalYes");
-        reassignYesButton.setAttribute("onclick", "triggerLoadingSpinner('" + namespace + "TasksSpinnerReassign'); reassignTasks('" + namespace + "')");
-    })
+      <aside class="nv-card nv-activity" aria-labelledby="activity-log-title">
+        <div class="nv-card-header">
+          <div>
+            <h2 id="activity-log-title">Activity Log</h2>
+            <p>Recent task changes for your queues.</p>
+          </div>
+        </div>
+        <div class="nv-card-body">
+          <section class="nv-activity-section" aria-labelledby="activity-recent-title">
+            <h3 id="activity-recent-title">Last 24 hours</h3>
+            {{ data.daily_changelog | safe }}
+          </section>
+          <section class="nv-activity-section" aria-labelledby="activity-older-title">
+            <h3 id="activity-older-title">Older</h3>
+            {{ data.full_changelog | safe }}
+          </section>
+        </div>
+      </aside>
+    </div>
 
-    function tabToggle(evt, timeframe,start,end,buttonid) {
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-5 nv-toast-wrap">
+      <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div id="toast-body" class="toast-body"></div>
+          <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = start; i < end; i++) {
-            tabcontent[i].style.display = "none";
-        }
+<div id="confirmAddTasksModal" class="modal nv-modal" name="flag" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="nv-btn nv-btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="nv-btn nv-btn-primary js-confirm-add-tasks" data-bs-dismiss="modal">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = start; i < end; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(timeframe).style.display = "block";
+<div id="confirmReassignTasksModal" class="modal nv-modal" name="reassign" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="nv-btn nv-btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="nv-btn nv-btn-primary js-confirm-reassign-tasks" data-bs-dismiss="modal">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
-        var tab_button = document.getElementById(buttonid);
-        tab_button.classList.toggle("active");
-
-    };
-
-    function tableHide(actionButton, hiddenContentId) {
-
-        var acc = document.getElementById(actionButton);
-        acc.onclick=function() {
-            /* Toggle between adding and removing the "active" class,
-            to highlight the button that controls the panel */
-            this.classList.toggle("active");
-
-            /* Toggle between hiding and showing the active panel */
-            var panel = document.getElementById(hiddenContentId);
-            if (panel.style.display === "block") {
-            panel.style.display = "none";
-            } else {
-            panel.style.display = "block";
-            }
-        };
-
-    };
-
-    function triggerToast(toastText) {
-        const toastBody = document.getElementById('toast-body');
-        toastBody.textContent = toastText;
-        const toastDiv = document.getElementById('toast');
-        const toast = new bootstrap.Toast(toastDiv);
-        toast.show();
-    }
-
-    function addTasks(namespace) {
-
-        const csrftoken = getCookie('csrftoken');
-        const formData = new FormData();
-        formData.append('namespace', namespace);
-
-        const request = {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-            },
-            body: formData,
-            credentials: 'same-origin',
-        };
-        // Call the post request defined for this view
-        fetch('', request).then(function (response) {
-            if (response.ok) {
-                response.text().then(function(text) {
-                    if(text) {
-                        triggerToast(text);
-                        removeLoadingSpinner(namespace + "TasksSpinner", "Add More Tasks");
-                    } else {
-                        location.reload();
-                    }
-                });
-            } else {
-                triggerToast("Unable to reach queue. Please try again.");
-                removeLoadingSpinner(namespace + "TasksSpinner", "Add More Tasks");
-            }
-        });
-
-    }
-
-    function reassignTasks(namespace) {
-
-        const csrftoken = getCookie('csrftoken');
-        const formData = new FormData();
-        formData.append('namespace', namespace);
-        formData.append('reassignTasks', 'True');
-
-        const request = {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-            },
-            body: formData,
-            credentials: 'same-origin',
-        };
-        // Call the post request defined for this view
-        fetch('', request).then(function (response) {
-            if (response.ok) {
-                response.text().then(function(text) {
-                    if(text) {
-                        triggerToast(text);
-                        removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-                        location.reload();
-                    } else {
-                        location.reload();
-                    }
-                });
-            } else {
-                triggerToast("Unable to reach queue. Please try again.");
-                removeLoadingSpinner(namespace + "TasksSpinnerReassign", "Reassign More Tasks");
-            }
-        });
-
-    }
-
-</script>
+{% block footer_scripts %}
+<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tasks.js' %}"></script>
 {% endblock %}
