@@ -8,10 +8,6 @@
 <div class="nv-page nv-home nv-home-original-bg">
   <div class="nv-wrap nv-home-panel">
     <section class="nv-home-copy" aria-labelledby="home-title">
-      <div class="nv-status-badge">
-        <span class="nv-dot" aria-hidden="true"></span>
-        <span>MICrONS proofreading</span>
-      </div>
       <h1 id="home-title">Welcome to NeuVue</h1>
       <p>
         Review task queues, inspect neurons, and launch proofreading workspaces from a focused interface built for dense neuroanatomy workflows.
@@ -38,30 +34,6 @@
           {% endif %}
       </div>
 
-    </section>
-
-    <section class="nv-card" aria-labelledby="recent-changes-title">
-      <div class="nv-card-header">
-        <div>
-          <h2 id="recent-changes-title">Recent Changes</h2>
-          <p>Updates to queues, tools, and proofreading workflows.</p>
-        </div>
-      </div>
-      <div class="nv-card-body">
-        <div class="nv-update-list">
-          {% if recent_updates %}
-            {% for update in recent_updates %}
-              <article class="nv-update-item">
-                <div class="nv-update-title">{{ update.update_name }}</div>
-                <div class="nv-update-date">{{ update.update_date }}</div>
-                <div class="nv-update-description">{{ update.update_description }}</div>
-              </article>
-            {% endfor %}
-          {% else %}
-            <div class="nv-empty">There are no new updates to show.</div>
-          {% endif %}
-        </div>
-      </div>
     </section>
   </div>
 </div>

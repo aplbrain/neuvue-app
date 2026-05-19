@@ -355,14 +355,12 @@ body.nv-body::before {
   position: relative;
   z-index: 1;
   min-height: min(720px, calc(100vh - 160px));
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.72fr);
-  gap: 18px;
+  display: flex;
   align-items: center;
 }
 
 .nv-home-copy {
-  max-width: 680px;
+  max-width: 760px;
 }
 
 .nv-home-copy h1 {
@@ -420,45 +418,6 @@ body.nv-body::before {
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
 }
 
-.nv-update-list {
-  max-height: 520px;
-  overflow: auto;
-}
-
-.nv-update-item {
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.nv-update-item:first-child {
-  padding-top: 0;
-}
-
-.nv-update-item:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.nv-update-title {
-  color: var(--nv-text);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.nv-update-date {
-  margin-top: 4px;
-  color: var(--nv-cyan);
-  font-size: 12px;
-  font-style: italic;
-}
-
-.nv-update-description {
-  margin-top: 8px;
-  color: var(--nv-muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
 .nv-code-link {
   color: var(--nv-cyan);
   text-decoration: none;
@@ -491,10 +450,7 @@ body.nv-body::before {
 }
 
 .nv-tasks-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
-  gap: 16px;
-  align-items: start;
+  display: block;
 }
 
 .nv-task-toolbar {
@@ -660,44 +616,6 @@ body.nv-body::before {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0 var(--nv-radius-md) var(--nv-radius-md) var(--nv-radius-md);
   background: rgba(0, 0, 0, 0.16);
-}
-
-.nv-activity {
-  position: sticky;
-  top: calc(var(--nv-nav-height) + 24px);
-  max-height: calc(100vh - var(--nv-nav-height) - 48px);
-}
-
-.nv-activity .nv-card-body {
-  max-height: calc(100vh - var(--nv-nav-height) - 136px);
-  overflow: auto;
-}
-
-.nv-activity-section {
-  margin-bottom: 18px;
-}
-
-.nv-activity-section h3 {
-  margin: 0 0 10px;
-  color: var(--nv-text);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.nv-activity .changelog {
-  color: var(--nv-muted);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.nv-activity .changelog code {
-  color: var(--nv-cyan);
-}
-
-.nv-activity .changelogLine,
-.nv-activity hr {
-  margin: 8px 0;
-  color: rgba(255, 255, 255, 0.14);
 }
 
 .nv-contact-note {
@@ -893,8 +811,7 @@ body.nv-body::before {
 
 @media (max-width: 980px) {
   .nv-grid,
-  .nv-home-panel,
-  .nv-tasks-layout {
+  .nv-content-layout {
     grid-template-columns: 1fr;
   }
 
@@ -904,10 +821,6 @@ body.nv-body::before {
 
   .nv-status-badge {
     white-space: normal;
-  }
-
-  .nv-content-layout {
-    grid-template-columns: 1fr;
   }
 
   .nv-toc {

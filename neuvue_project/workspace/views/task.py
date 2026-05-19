@@ -1,18 +1,22 @@
 import logging
 import pandas as pd
+from urllib.parse import urlparse
 
 from django.http import HttpResponse
-from django.apps import apps
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from ..models import Namespace, UserProfile, TaskBucket
+from ..models import Namespace, UserProfile
 
 from neuvue.client import client
 
-from ..analytics import create_stats_table
-from ..utils import utc_to_eastern, is_member, is_authorized, get_or_create_public_taskbucket
+from ..utils import (
+    utc_to_eastern,
+    is_member,
+    is_authorized,
+    get_or_create_public_taskbucket,
+)
 
 
 # import the logging library
@@ -152,21 +156,26 @@ class TaskView(LoginRequiredMixin, View):
         request.session["session_task_count"] = 0
 
         # create settings and context dicts
+        queue_addr = settings.NEUVUE_QUEUE_ADDR
         settings_dict = {
             "SANDBOX_ID": settings.SANDBOX_ID,
-            "is_authorized": is_authorized(request.user)
+            "is_authorized": is_authorized(request.user),
+            "queue_addr": queue_addr,
+            "queue_display": self._format_queue_display(queue_addr),
         }
-        daily_changelog, full_changelog = create_stats_table(
-            pending_tasks, closed_tasks
-        )
         data_dict = {
             "settings": settings_dict,
             "namespaces": context,
-            "daily_changelog": daily_changelog,
-            "full_changelog": full_changelog,
         }
 
         return render(request, "tasks.html", {"data": data_dict})
+
+    def _format_queue_display(self, queue_addr):
+        parsed_queue_addr = urlparse(queue_addr)
+        if parsed_queue_addr.netloc:
+            return parsed_queue_addr.netloc
+
+        return queue_addr.rstrip("/")
 
     def _generate_tables(self, pending_tasks, closed_tasks):
 

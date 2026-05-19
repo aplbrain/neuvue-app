@@ -16,7 +16,7 @@
       </div>
       <div class="nv-status-badge">
         <span class="nv-dot" aria-hidden="true"></span>
-        <span>Queue activity loaded</span>
+        <span>Connected to {{ data.settings.queue_display }}</span>
       </div>
     </header>
 
@@ -252,25 +252,6 @@
           </div>
         {% endif %}
       </section>
-
-      <aside class="nv-card nv-activity" aria-labelledby="activity-log-title">
-        <div class="nv-card-header">
-          <div>
-            <h2 id="activity-log-title">Activity Log</h2>
-            <p>Recent task changes for your queues.</p>
-          </div>
-        </div>
-        <div class="nv-card-body">
-          <section class="nv-activity-section" aria-labelledby="activity-recent-title">
-            <h3 id="activity-recent-title">Last 24 hours</h3>
-            {{ data.daily_changelog | safe }}
-          </section>
-          <section class="nv-activity-section" aria-labelledby="activity-older-title">
-            <h3 id="activity-older-title">Older</h3>
-            {{ data.full_changelog | safe }}
-          </section>
-        </div>
-      </aside>
     </div>
 
     <div class="position-fixed top-0 start-50 translate-middle-x mt-5 nv-toast-wrap">
