@@ -12,7 +12,7 @@ class ButtonsInline(admin.TabularInline):
     verbose_name = "forced choice button"
     verbose_name_plural = "forced choice buttons"
     extra = 1
-    max_num = 8
+    max_num = 15
 
 
 @admin.register(ForcedChoiceButtonGroup)
@@ -123,4 +123,3 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Group)
 class CustomGroupAdmin(GroupAdmin):
     inlines = [GroupProfileInline]
-
