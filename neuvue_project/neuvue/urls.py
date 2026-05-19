@@ -31,7 +31,7 @@ from workspace.views import (
     GettingStartedView,
     SaveStateView,
     SaveOperationsView,
-    NgStatePluginsView
+    NgStatePluginsView,
 )
 from preferences.views import PreferencesView
 from dashboard.views import (
@@ -107,19 +107,31 @@ urlpatterns = [
     path("inspect/<str:task_id>", InspectTaskView.as_view(), name="inspect"),
     path("lineage/", LineageView.as_view(), name="lineage"),
     path("lineage/<str:root_id>", LineageView.as_view(), name="lineage"),
+    path(
+        "lineage/<str:datastack>/<str:root_id>", LineageView.as_view(), name="lineage"
+    ),
     path("synapse/", SynapseView.as_view(), name="synapse"),
     path("synapse/<str:root_ids>", SynapseView.as_view(), name="synapse"),
+    path(
+        "synapse/<str:datastack>/<str:root_ids>", SynapseView.as_view(), name="synapse"
+    ),
     path(
         "synapse/<str:root_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>",
         SynapseView.as_view(),
         name="synapse",
     ),
+    path(
+        "synapse/<str:datastack>/<str:root_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>",
+        SynapseView.as_view(),
+        name="synapse",
+    ),
     path("nuclei/", NucleiView.as_view(), name="nuclei"),
     path("nuclei/<str:given_ids>", NucleiView.as_view(), name="nuclei"),
+    path("nuclei/<str:datastack>/<str:given_ids>", NucleiView.as_view(), name="nuclei"),
     path("report/", ReportView.as_view(), name="report"),
     path("userNamespace/", UserNamespaceView.as_view(), name="user-namespace"),
     path("save_state", SaveStateView.as_view(), name="save-state"),
     path("save_operations", SaveOperationsView.as_view(), name="save-operations"),
     path("about", AboutView.as_view(), name="about"),
-    path("ngStatePlugin", NgStatePluginsView.as_view(), name="ng-state-plugins")
+    path("ngStatePlugin", NgStatePluginsView.as_view(), name="ng-state-plugins"),
 ]

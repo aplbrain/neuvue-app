@@ -13,6 +13,16 @@
     <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
       {% csrf_token %}
       <div class="form-group">
+        <label class="text-white-50" for="datastackSelect">Dataset</label>
+        <select class="form-control" id="datastackSelect" name="datastack" required="true">
+          {% for ds in datastacks %}
+          <option value="{{ ds.datastack_name }}" {% if ds.datastack_name == datastack %}selected{% endif %}>
+            {{ ds.display_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
         <label class="text-white-50" for="rootIDInput">Nuclei ID and/or Seg ID (Enter ID (s) separated by commas)</label>
         <input class="form-control" id="rootIDInput" name="given_ids" required="true">
       </div>

@@ -31,6 +31,7 @@ from .models import (
     PcgChoices,
     ImageChoices,
     NeuroglancerHost,
+    Datastack,
 )
 
 
@@ -77,43 +78,55 @@ def get_df_from_static(cave_client, table_name):
         raise Exception(f"Table {table_name} unavailable.")
 
 
-def create_base_state(seg_ids, coordinate, namespace=None):
+def create_base_state(seg_ids, coordinate, namespace=None, datastack=None):
     """Generates a base state containing imagery and segmentation layers.
 
     Args:
         seg_ids (list): seg_ids to select in the view
         coordinate (tuple|list): collection of three integer voxel coordinates, XYZ order.
         namespace (str): task namespace
+        datastack (str): datastack name (e.g., minnie65_phase3_v1)
     Returns:
         StateBuilder: Base State
     """
 
-    # Create ImageLayerConfig
-    if namespace:
+    # Determine image and segmentation sources from datastack or namespace
+
+    if datastack:
+        try:
+            ds = Datastack.objects.get(datastack_name=datastack)
+            img_source = "precomputed://" + ds.image_source
+            seg_source = "graphene://" + ds.segmentation_source
+            viewer_opts = ds.get_viewer_options()
+            black = viewer_opts.get("contrast", {}).get("black", 0)
+            white = viewer_opts.get("contrast", {}).get("white", 1)
+        except Datastack.DoesNotExist:
+            img_source = "precomputed://" + ImageChoices.MINNIE
+            seg_source = "graphene://" + PcgChoices.MINNIE
+            black = 0
+            white = 1
+    elif namespace:
         img_source = (
             "precomputed://" + Namespace.objects.get(namespace=namespace).img_source
         )
+        seg_source = (
+            "graphene://" + Namespace.objects.get(namespace=namespace).pcg_source
+        )
+        try:
+            black = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["black"]
+            white = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["white"]
+        except KeyError:
+            black = 0
+            white = 1
     else:
         img_source = "precomputed://" + ImageChoices.MINNIE
-
-    try:
-        black = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["black"]
-        white = settings.DATASET_VIEWER_OPTIONS[img_source]["contrast"]["white"]
-    except KeyError:
+        seg_source = "graphene://" + PcgChoices.MINNIE
         black = 0
         white = 1
 
     img_layer = ImageLayerConfig(
         name="em", source=img_source, contrast_controls=True, black=black, white=white
     )
-
-    # Create SegmentationLayerConfig
-    if namespace:
-        seg_source = (
-            "graphene://" + Namespace.objects.get(namespace=namespace).pcg_source
-        )
-    else:
-        seg_source = "graphene://" + PcgChoices.MINNIE
 
     segmentation_view_options = {"alpha_selected": 0.6, "alpha_3d": 0.3}
     seg_layer = SegmentationLayerConfig(
@@ -300,7 +313,7 @@ def get_from_state_server(url: str):
     }
     if "bossdb-neuvue-datalake" not in url:
         headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
-    
+
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
         raise Exception("GET Unsuccessful")
@@ -310,7 +323,7 @@ def get_from_state_server(url: str):
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
-def post_to_state_server(state: str, public = False):
+def post_to_state_server(state: str, public=False):
     """Posts JSON string to state server
 
     Args:
@@ -324,17 +337,18 @@ def post_to_state_server(state: str, public = False):
         "content-type": "application/json",
     }
     if public:
-        resp = requests.post(settings.PUBLIC_JSON_STATE_SERVER, data=state, headers=headers)
+        resp = requests.post(
+            settings.PUBLIC_JSON_STATE_SERVER, data=state, headers=headers
+        )
         if resp.status_code != 200:
             raise Exception("POST Unsuccessful")
-        return str(resp.json()['url'])
+        return str(resp.json()["url"])
     else:
         headers["Authorization"] = f"Bearer {os.environ['CAVECLIENT_TOKEN']}"
         resp = requests.post(settings.JSON_STATE_SERVER, data=state, headers=headers)
         if resp.status_code != 200:
             raise Exception("POST Unsuccessful")
         return str(resp.json())
-
 
 
 def get_from_json(raw_state: str):
@@ -452,18 +466,23 @@ def _get_nx_graph_image(nx_graph):
     return networkx_to_graphViz(nx_graph)
 
 
-def construct_lineage_state_and_graph(root_id: str):
+def construct_lineage_state_and_graph(root_id: str, datastack: str = None):
     """Construct state for the lineage viewer.
 
     Args:
         root_id (str): segment root id
+        datastack (str): datastack name
 
     Returns:
         string: json-formatted state
     """
+    if datastack is None:
+        datastack = "minnie65_phase3_v1"
+
     root_id = root_id.strip()
+    ds = Datastack.objects.get(datastack_name=datastack)
     cave_client = CAVEclient(
-        "minnie65_phase3_v1", auth_token=os.environ["CAVECLIENT_TOKEN"]
+        ds.cave_datastack, server_address=ds.cave_url, auth_token=ds.get_auth_token()
     )
 
     # Lineage graph gives you the nodes and edges of a root IDs history
@@ -477,7 +496,7 @@ def construct_lineage_state_and_graph(root_id: str):
     root_ids = list(root_ids)
 
     position, root_ids_with_center = _get_soma_center(root_ids, cave_client)
-    base_state = create_base_state(root_ids_with_center, position)
+    base_state = create_base_state(root_ids_with_center, position, datastack=datastack)
 
     # For the rest of the IDs, we can add them to the seg layer as unselected.
     base_state_dict = base_state.render_state(return_as="dict")
@@ -741,7 +760,7 @@ def apply_state_config(state: str, username: str):
     return json.dumps(cdict)
 
 
-def construct_synapse_state(root_ids: List, flags: dict = None):
+def construct_synapse_state(root_ids: List, flags: dict = None, datastack: str = None):
     """Construct state for the synapse viewer.
 
     Args:
@@ -751,15 +770,23 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
             - post_synapses
             - cleft_layer
             - timestamp
+        datastack (str): datastack name
 
     Returns:
         string: json-formatted state
         dict: synapse stats
     """
+    if datastack is None:
+        datastack = "minnie85_phase3_v1"
+
+    ds = Datastack.objects.get(datstack_name=datastack)
     cave_client = CAVEclient(
-        "minnie65_phase3_v1", auth_token=os.environ["CAVECLIENT_TOKEN"]
+        ds.cave_datastack, server_address=ds.cave_url, auth_token=ds.get_auth_token()
     )
     int_root_ids = [int(x) for x in root_ids]
+
+    # Get synapse table name from datastack config
+    synapse_table = ds.get_table_name("syanpses") or settings.SYNAPSE_TABLE
 
     # Error checking
     if flags["pre_synapses"] != "True" and flags["post_synapses"] != "True":
@@ -772,7 +799,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         if flags["timestamp"] != "None":
             try:
                 pre_synapses = cave_client.materialize.query_table(
-                    settings.SYNAPSE_TABLE,
+                    synapse_table,
                     filter_in_dict={"pre_pt_root_id": int_root_ids},
                     select_columns=[
                         "ctr_pt_position",
@@ -785,7 +812,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
                 raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             pre_synapses = cave_client.materialize.query_table(
-                settings.SYNAPSE_TABLE,
+                synapse_table,
                 filter_in_dict={"pre_pt_root_id": int_root_ids},
                 select_columns=["ctr_pt_position", "pre_pt_root_id", "post_pt_root_id"],
             )
@@ -804,7 +831,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         if flags["timestamp"] != "None":
             try:
                 post_synapses = cave_client.materialize.query_table(
-                    settings.SYNAPSE_TABLE,
+                    synapse_table,
                     filter_in_dict={"post_pt_root_id": int_root_ids},
                     select_columns=[
                         "ctr_pt_position",
@@ -832,7 +859,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
         position = np.random.choice(post_synapses["ctr_pt_position"].to_numpy())
 
     data_list = [None]
-    base_state = create_base_state(root_ids, position)
+    base_state = create_base_state(root_ids, position, datastack=datastack)
 
     # Random color generation
     r = lambda: random.randint(0, 255)
@@ -952,22 +979,28 @@ def construct_synapse_state(root_ids: List, flags: dict = None):
     return json.dumps(state_dict, default=lambda x: [str(y) for y in x]), synapse_stats
 
 
-def construct_nuclei_state(given_ids: List):
+def construct_nuclei_state(given_ids: List, datastack: str = None):
     """Construct state for the synapse viewer.
 
     Args:
         given_ids (list): nuclei and/or pt_root_ids
+        datastack (str): datastack name
 
     Returns:
         string: json-formatted state
         dict: synapse stats
     """
+    if dataset is None:
+        datastack = "minnie65_phase3_v1"
+
     given_ids = [int(x) for x in given_ids]
+    ds = Datastack.objects.get(datastack_name=datastack)
     cave_client = CAVEclient(
-        "minnie65_phase3_v1", auth_token=os.environ["CAVECLIENT_TOKEN"]
+        ds.cave_datastack, server_address=ds.cave_url, auth_token=ds.get_auth_token()
     )
 
-    soma_df = get_df_from_static(cave_client, settings.NEURON_TABLE)
+    nuclei_table = ds.get_table_name("nuclei") or settings.NEURON_TABLE
+    soma_df = get_df_from_static(cave_client, nuclei_table)
     soma_df = soma_df[
         (soma_df.id.isin(given_ids)) | (soma_df.pt_root_id.isin(given_ids))
     ]
@@ -988,7 +1021,7 @@ def construct_nuclei_state(given_ids: List):
         raise Exception("ID is outdated or does not exist.")
 
     data_list = [None]
-    base_state = create_base_state(root_ids, position)
+    base_state = create_base_state(root_ids, position, datastack=datastack)
 
     # Random color generation
     r = lambda: random.randint(0, 255)
@@ -1051,17 +1084,21 @@ def construct_nuclei_state(given_ids: List):
     return json.dumps(state_dict), cell_type_table, formatted_not_found_ids
 
 
-def refresh_ids(ng_state: str, namespace: str):
-    namespace = Namespace.objects.get(namespace=namespace)
-    if not namespace.refresh_selected_root_ids:
-        return ng_state
+def refresh_ids(ng_state: str, namespace: str = None, datastack: str = None):
+    if datastack is None and namespace:
+        ns = Namespace.objects.get(namespace=namespace)
+        if not ns.refresh_selected_root_ids:
+            return ng_state
+        # Use namespace's datastack if available, otherwise default
+        datastack = ns.datastack.datastack_name if ns.datastack else None
 
-    if namespace.pcg_source == PcgChoices.PINKY:
-        return ng_state
-    else:
-        cave_client = CAVEclient(
-            "minnie65_phase3_v1", auth_token=os.environ["CAVECLIENT_TOKEN"]
-        )
+    if datastack is None:
+        datastack = "minnie65_phase3_v1"
+
+    ds = Datastack.objects.get(datastack_name=datastack)
+    cave_client = CAVEclient(
+        ds.cave_datastack, server_address=ds.cave_url, auth_token=ds.get_auth_token()
+    )
 
     state = json.loads(ng_state)
     for layer in state["layers"]:

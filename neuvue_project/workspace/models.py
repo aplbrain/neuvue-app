@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
@@ -6,6 +7,64 @@ from django.contrib import admin
 from .validators import validate_submission_value, no_whitespace
 
 # Create your models here.
+
+
+class Datastack(models.Model):
+    datastack_name = models.CharField(max_length=100, unique=True, primary_key=True)
+    display_name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    cave_url = models.URLField(
+        help_text="CAVE deployment URL (e.g., https://minnie.microns-daf.com)"
+    )
+    cave_datastack = models.CharField(
+        max_length=200, help_text="Datastack name in CAVE (e.g., minnie65_phase3_v1)"
+    )
+
+    image_source = models.URLField(help_text="Image layer source (precomputed://...)")
+    segmentation_source = models.URLField(
+        help_text="Segmentation source (graphene://...)"
+    )
+
+    table_config = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Table name mappings (synapses, nuclei, cell_classes, etc.)",
+    )
+
+    viewer_options = models.JSONField(
+        default=dict, blank=True, help_text="Viewer contrast settings and other options"
+    )
+
+    auth_token_env_var = models.CharField(
+        max_length=100,
+        default="CAVECLIENT_TOKEN",
+        help_text="Environment variable name for CAVE auth token",
+    )
+
+    enabled = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def get_table_name(self, table_type):
+        return self.table_config.get(table_type, "")
+
+    def get_auth_token(self):
+        return os.environ.get(
+            self.auth_token_env_var, os.environ.get("CAVECLIENT_TOKEN")
+        )
+
+    def get_viewer_options(self):
+        if self.viewer_options:
+            return self.viewer_options
+        return {"contrast": {"black": 0, "white": 1}}
+
+    class Meta:
+        verbose_name = "Datastack"
+        verbose_name_plural = "Datastacks"
+
+    def __str__(self):
+        return f"{self.display_name} ({self.datastack_name})"
 
 
 class NeuroglancerLinkType(models.TextChoices):
@@ -100,8 +159,9 @@ class PcgChoices(models.TextChoices):
         "https://minnie.microns-daf.com/segmentation/table/pinky_v2_microns_sandbox",
         _("Pinky"),
     )
-    MINNIE_PUBLIC = ("https://minnie.microns-daf.com/segmentation/table/minnie65_public",
-        _("Minnie65 Public (read-only)")
+    MINNIE_PUBLIC = (
+        "https://minnie.microns-daf.com/segmentation/table/minnie65_public",
+        _("Minnie65 Public (read-only)"),
     )
     OTHER = "N/A", _("Other")
 
@@ -117,6 +177,7 @@ class ImageChoices(models.TextChoices):
     )
     OTHER = "N/A", _("Other")
 
+
 class TaskBucketActions(models.TextChoices):
     PUSH = (
         "push",
@@ -127,10 +188,12 @@ class TaskBucketActions(models.TextChoices):
         _("Pull tasks from"),
     )
 
+
 class NeuroglancerPlugin(models.Model):
     """
     A model to represent a Neuroglancer plugin.
     """
+
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     default_plugin_params = models.JSONField(blank=True, null=True)
@@ -138,17 +201,20 @@ class NeuroglancerPlugin(models.Model):
     def __str__(self):
         return self.name
 
+
 class TaskBucket(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
     bucket_assignee = models.CharField(
-        max_length=50, 
-        unique=True, 
+        max_length=50,
+        unique=True,
         help_text="Assignee string to in the queue for this task bucket",
-        validators=[no_whitespace]
+        validators=[no_whitespace],
     )
+
     def __str__(self):
         return self.name
+
 
 class Namespace(models.Model):
     namespace_enabled = models.BooleanField(default=True)
@@ -186,15 +252,18 @@ class Namespace(models.Model):
     decrement_priority = models.IntegerField(
         default=100, verbose_name="When skipped, decrement priority by"
     )
-    is_demo = models.BooleanField(default=False, verbose_name="Demonstration only? (Submitting does not patch task)")
-    
+    is_demo = models.BooleanField(
+        default=False,
+        verbose_name="Demonstration only? (Submitting does not patch task)",
+    )
+
     ng_state_plugin = models.ForeignKey(
         NeuroglancerPlugin,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
         help_text="Neuroglancer plugin to use for this namespace. If not set, no plugin will be used.",
-        related_name="ng_state_plugin"
+        related_name="ng_state_plugin",
     )
 
     default_push_rule = models.ForeignKey(
@@ -213,19 +282,29 @@ class Namespace(models.Model):
         blank=True,
         help_text="Select the default pull rule for this namespace. Must be set after the namespace is created.",
     )
-    
+
     plugin_params = models.JSONField(
         blank=True,
         null=True,
-        help_text=("Override the default plugin parameters (specified in NeuroglancerPlugin) "
-                   "with namespace-specific values. Provided values will update/override the defaults."),
+        help_text=(
+            "Override the default plugin parameters (specified in NeuroglancerPlugin) "
+            "with namespace-specific values. Provided values will update/override the defaults."
+        ),
+    )
+
+    datastack = models.ForeignKey(
+        Datastack,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Optional: Override default datastack for this namespace. If not set, default datastack (minnie65) is used.",
     )
 
     def get_effective_plugin_params(self):
         """
-        Return the effective plugin parameters for this namespace by merging the default plugin parameters 
+        Return the effective plugin parameters for this namespace by merging the default plugin parameters
         with any namespace-specific overrides. Namespace overrides take precedence.
-        
+
         Returns:
             dict: The merged plugin parameters.
         """
@@ -240,7 +319,7 @@ class Namespace(models.Model):
             effective_params.update(self.plugin_params)
 
         return effective_params
-    
+
     def save(self, *args, **kwargs):
         """
         Optionally, when saving a Namespace, if plugin_params is not defined,
@@ -257,11 +336,14 @@ class Namespace(models.Model):
 
 class NamespaceRule(models.Model):
     namespace = models.ForeignKey(Namespace, on_delete=models.CASCADE)
-    action = models.CharField(max_length=10, 
-                              choices=TaskBucketActions.choices, 
-                              default=TaskBucketActions.PULL, 
-                              help_text="Determines if this rule provides a source or sink for tasks in the queue")
+    action = models.CharField(
+        max_length=10,
+        choices=TaskBucketActions.choices,
+        default=TaskBucketActions.PULL,
+        help_text="Determines if this rule provides a source or sink for tasks in the queue",
+    )
     task_bucket = models.ForeignKey(TaskBucket, on_delete=models.CASCADE)
+
     class Meta:
         unique_together = ("namespace", "action", "task_bucket")
 
@@ -273,7 +355,7 @@ class NamespaceRule(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
-    
+
     # @property
     # def inherited_namespace_rules(self):
     #     """Get all namespace rules inherited from the user's groups."""
@@ -281,6 +363,7 @@ class UserProfile(models.Model):
     #         groupprofile__group__in=self.user.groups.all()
     #     )
     #     return group_rules.distinct()
+
 
 # Janky way to extend the default Group model
 class GroupProfile(models.Model):
