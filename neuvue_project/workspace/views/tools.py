@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.conf import settings
 from neuvue.client import client
 
-from ..models import Namespace, NeuroglancerHost
+from ..models import Namespace, NeuroglancerHost, Datastack
 from ..neuroglancer import (
     construct_proofreading_state,
     construct_lineage_state_and_graph,
@@ -22,6 +22,26 @@ from ..utils import is_url, is_json, is_authorized
 logging.basicConfig(level=logging.INFO)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+class DatastackMixin:
+    """Mixin to handle datastack selection and backward compatibility for URLs without datastack parameter"""
+
+    def get_datastack(self, kwargs):
+        """Get datastack from kwargs, default to first enabled datastack if not provided"""
+        datastack = kwargs.get("datastack")
+        if datastack is None:
+            ds = Datastack.objects.filter(enabled=True).first()
+            return ds.datastack_name if ds else "minnie65_phase3_v1"
+        return datastack
+
+    def get_datastack_object(self, datastack_name):
+        """Get Datastack object, with fallback to default if not found"""
+        try:
+            return Datastack.objects.get(datastack_name=datastack_name, enabled=True)
+        except Datastack.DoesNotExist:
+            ds = Datastack.objects.filter(enabled=True).first()
+            return ds if ds else None
 
 
 class InspectTaskView(View):
@@ -129,24 +149,41 @@ class InspectTaskView(View):
         return redirect(reverse("inspect", kwargs={"task_id": task_id}))
 
 
-class LineageView(View):
-    def get(self, request, root_id=None, *args, **kwargs):
+class LineageView(DatastackMixin, View):
+    def get(self, request, datastack=None, root_id=None, *args, **kwargs):
         if not request.user.is_staff:
             return redirect(reverse("index"))
+
+        # Handle backward compatibility: redirect old URLs without datastack to new format
+        if datastack is None and root_id is not None:
+            ds = self.get_datastack({"datastack": None})
+            return redirect(
+                reverse("lineage", kwargs={"datastack": ds, "root_id": root_id})
+            )
 
         if root_id in settings.STATIC_NG_FILES:
             return redirect(
                 f"/static/workspace/{root_id}", content_type="application/javascript"
             )
 
-        context = {"root_id": root_id, "ng_state": None, "graph": None, "error": None}
+        datastack_name = self.get_datastack({"datastack": datastack})
+        ds_obj = self.get_datastack_object(datastack_name)
+
+        context = {
+            "root_id": root_id,
+            "ng_state": None,
+            "graph": None,
+            "error": None,
+            "datastack": datastack_name,
+            "datastacks": Datastack.objects.filter(enabled=True),
+        }
 
         if root_id is None:
             return render(request, "lineage.html", context)
 
         try:
             context["ng_state"], context["graph"] = construct_lineage_state_and_graph(
-                root_id
+                root_id, datastack=datastack_name
             )
         except Exception as e:
             context["error"] = e
@@ -154,14 +191,18 @@ class LineageView(View):
         return render(request, "lineage.html", context)
 
     def post(self, request, *args, **kwargs):
+        datastack = request.POST.get("datastack")
         root_id = request.POST.get("root_id")
-        return redirect(reverse("lineage", kwargs={"root_id": root_id}))
+        return redirect(
+            reverse("lineage", kwargs={"datastack": datastack, "root_id": root_id})
+        )
 
 
-class SynapseView(View):
+class SynapseView(DatastackMixin, View):
     def get(
         self,
         request,
+        datastack=None,
         root_ids=None,
         pre_synapses=None,
         post_synapses=None,
@@ -174,6 +215,23 @@ class SynapseView(View):
             logging.warning(f"Unauthorized requests from {request.user}.")
             return redirect(reverse("index"))
 
+        # Handle backward compatibility: redirect old URLs without datastack to new format
+        if datastack is None and root_ids is not None:
+            ds = self.get_datastack({"datastack": None})
+            return redirect(
+                reverse(
+                    "synapse",
+                    kwargs={
+                        "datastack": ds,
+                        "root_ids": root_ids,
+                        "pre_synapses": pre_synapses,
+                        "post_synapses": post_synapses,
+                        "cleft_layer": cleft_layer,
+                        "timestamp": timestamp,
+                    },
+                )
+            )
+
         if root_ids in settings.STATIC_NG_FILES:
             return redirect(
                 f"/static/workspace/{root_ids}", content_type="application/javascript"
@@ -182,6 +240,9 @@ class SynapseView(View):
             return redirect(
                 f"/static/workspace/{timestamp}", content_type="application/javascript"
             )
+
+        datastack_name = self.get_datastack({"datastack": datastack})
+        ds_obj = self.get_datastack_object(datastack_name)
 
         context = {
             "root_ids": None,
@@ -192,6 +253,8 @@ class SynapseView(View):
             "ng_state": None,
             "synapse_stats": None,
             "error": None,
+            "datastack": datastack_name,
+            "datastacks": Datastack.objects.filter(enabled=True),
         }
 
         if root_ids is None:
@@ -211,7 +274,7 @@ class SynapseView(View):
             context["cleft_layer"] = cleft_layer
             context["timestamp"] = timestamp
             context["ng_state"], context["synapse_stats"] = construct_synapse_state(
-                root_ids=root_ids, flags=flags
+                root_ids=root_ids, flags=flags, datastack=datastack_name
             )
         except Exception as e:
             print(e)
@@ -220,6 +283,7 @@ class SynapseView(View):
         return render(request, "synapse.html", context)
 
     def post(self, request, *args, **kwargs):
+        datastack = request.POST.get("datastack")
         root_ids = request.POST.get("root_ids")
         pre_synapses = request.POST.get("pre_synapses")
         post_synapses = request.POST.get("post_synapses")
@@ -232,6 +296,7 @@ class SynapseView(View):
             reverse(
                 "synapse",
                 kwargs={
+                    "datastack": datastack,
                     "root_ids": root_ids,
                     "pre_synapses": pre_synapses,
                     "post_synapses": post_synapses,
@@ -242,18 +307,33 @@ class SynapseView(View):
         )
 
 
-class NucleiView(View):
-    def get(self, request, given_ids=None, *args, **kwargs):
+class NucleiView(DatastackMixin, View):
+    def get(self, request, datastack=None, given_ids=None, *args, **kwargs):
         if not is_authorized(request.user):
             logging.warning(f"Unauthorized requests from {request.user}.")
             return redirect(reverse("index"))
+
+        # Handle backward compatibility: redirect old URLs without datastack to new format
+        if datastack is None and given_ids is not None:
+            ds = self.get_datastack({"datastack": None})
+            return redirect(
+                reverse("nuclei", kwargs={"datastack": ds, "given_ids": given_ids})
+            )
 
         if given_ids in settings.STATIC_NG_FILES:
             return redirect(
                 f"/static/workspace/{given_ids}", content_type="application/javascript"
             )
 
-        context = {"given_ids": None, "error": None}
+        datastack_name = self.get_datastack({"datastack": datastack})
+        ds_obj = self.get_datastack_object(datastack_name)
+
+        context = {
+            "given_ids": None,
+            "error": None,
+            "datastack": datastack_name,
+            "datastacks": Datastack.objects.filter(enabled=True),
+        }
 
         if given_ids is None:
             return render(request, "nuclei.html", context)
@@ -266,19 +346,21 @@ class NucleiView(View):
                 context["ng_state"],
                 context["cell_types"],
                 context["ids_not_found"],
-            ) = construct_nuclei_state(given_ids=given_ids)
+            ) = construct_nuclei_state(given_ids=given_ids, datastack=datastack_name)
         except Exception as e:
             context["error"] = e
 
         return render(request, "nuclei.html", context)
 
     def post(self, request, *args, **kwargs):
+        datastack = request.POST.get("datastack")
         given_ids = request.POST.get("given_ids")
 
         return redirect(
             reverse(
                 "nuclei",
                 kwargs={
+                    "datastack": datastack,
                     "given_ids": given_ids,
                 },
             )
