@@ -1,8 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from .models import ForcedChoiceButtonGroup, ForcedChoiceButton, Namespace, UserProfile, GroupProfile, TaskBucket, NamespaceRule, NeuroglancerPlugin
+from .models import (
+    ForcedChoiceButtonGroup,
+    ForcedChoiceButton,
+    Namespace,
+    UserProfile,
+    GroupProfile,
+    TaskBucket,
+    NamespaceRule,
+    NeuroglancerPlugin,
+    Datastack,
+)
 from .forms import NamespaceAdminForm
+
 admin.site.unregister(User)
 admin.site.unregister(Group)
 
@@ -25,23 +36,36 @@ class TaskBucketAdmin(admin.ModelAdmin):
     list_display = ("name", "description")
     search_fields = ("name",)
 
+
 @admin.register(NamespaceRule)
 class NamespaceRuleAdmin(admin.ModelAdmin):
-    list_display = ("namespace", "action", "task_bucket" )
+    list_display = ("namespace", "action", "task_bucket")
     search_fields = ("namespace__namespace", "task_bucket__name")
-    list_filter = ("namespace", "task_bucket",)
+    list_filter = (
+        "namespace",
+        "task_bucket",
+    )
+
 
 @admin.register(NeuroglancerPlugin)
 class NeuroglancerPluginAdmin(admin.ModelAdmin):
-    list_display = ("name", "description") 
+    list_display = ("name", "description")
     search_fields = ("name",)
+
 
 @admin.register(Namespace)
 class NamespaceAdmin(admin.ModelAdmin):
     form = NamespaceAdminForm
-    list_display = ("namespace", "display_name", "ng_state_plugin", "namespace_enabled")
+    list_display = (
+        "namespace",
+        "display_name",
+        "ng_state_plugin",
+        "datastack",
+        "namespace_enabled",
+    )
     search_fields = ("namespace", "display_name")
     list_filter = ("namespace_enabled",)
+
     fieldsets = [
         (
             "Namespace Information",
@@ -55,6 +79,7 @@ class NamespaceAdmin(admin.ModelAdmin):
                     "submission_method",
                     "pcg_source",
                     "img_source",
+                    "datastack",
                     "track_operation_ids",
                     "refresh_selected_root_ids",
                     "number_of_tasks_users_can_self_assign",
@@ -64,22 +89,94 @@ class NamespaceAdmin(admin.ModelAdmin):
                     "is_demo",
                 ]
             },
-        ), (
-            "Neuroglancer State Plugin",
-            {
-                "fields": [
-                    "ng_state_plugin",
-                    "plugin_params"
-                ]
-            }
-
-        ), (
+        ),
+        ("Neuroglancer State Plugin", {"fields": ["ng_state_plugin", "plugin_params"]}),
+        (
             "Default Rules",
             {
                 "fields": ["default_push_rule", "default_pull_rule"],
             },
         ),
     ]
+
+
+@admin.register(Datastack)
+class DatastackAdmin(admin.ModelAdmin):
+    list_display = (
+        "datastack_name",
+        "display_name",
+        "cave_datastack",
+        "enabled",
+        "updated_at",
+    )
+
+    search_fields = (
+        "datastack_name",
+        "display_name",
+        "cave_datastack",
+    )
+
+    list_filter = (
+        "enabled",
+        "created_at",
+        "updated_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Basic Information",
+            {
+                "fields": (
+                    "enabled",
+                    "datastack_name",
+                    "display_name",
+                    "description",
+                )
+            },
+        ),
+        (
+            "CAVE Configuration",
+            {
+                "fields": (
+                    "cave_url",
+                    "cave_datastack",
+                    "auth_token_env_var",
+                )
+            },
+        ),
+        (
+            "Data Sources",
+            {
+                "fields": (
+                    "image_source",
+                    "segmentation_source",
+                )
+            },
+        ),
+        (
+            "Viewer Configuration",
+            {
+                "fields": (
+                    "table_config",
+                    "viewer_options",
+                )
+            },
+        ),
+        (
+            "Timestamps",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
 
 
 class UserProfileInline(admin.StackedInline):
@@ -94,9 +191,11 @@ class UserProfileInline(admin.StackedInline):
     #     return "None"
     # inherited_namespace_rules_display.short_description = "Inherited Namespace Rules"
 
+
 class GroupProfileInline(admin.StackedInline):
     model = GroupProfile
     filter_horizontal = ("namespace_rule",)
+
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -120,7 +219,7 @@ class CustomUserAdmin(UserAdmin):
     ]
     inlines = [UserProfileInline]
 
+
 @admin.register(Group)
 class CustomGroupAdmin(GroupAdmin):
     inlines = [GroupProfileInline]
-
