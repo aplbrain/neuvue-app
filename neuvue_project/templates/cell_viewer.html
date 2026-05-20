@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Cell Viewer{% endblock %}
+{% block body_class %}{% if ng_state and not error %}nv-workspace-body{% endif %}{% endblock %}
+
+{% block content %}
+
+{% if not ng_state or error %}
+<div class="nv-page nv-tool-lookup-page nv-cell-viewer-lookup-page">
+    <div class="nv-wrap nv-tool-lookup-wrap">
+        <header class="nv-hero nv-tool-lookup-hero">
+            <div>
+                <h1 id="cellViewerTitle">Cell Viewer</h1>
+                <p>Inspect synapses by root ID, nuclei by nucleus/segment ID, or lineage by root ID.</p>
+            </div>
+            <div class="nv-status-badge">
+                <span class="nv-dot" aria-hidden="true"></span>
+                <span>Connected to {{ data.settings.queue_display }}</span>
+            </div>
+        </header>
+
+        <section class="nv-card nv-tool-lookup-card nv-cell-viewer-card" aria-labelledby="cellViewerTitle">
+            <div class="nv-card-body">
+                <form id="cellViewerLookupForm" class="nv-tool-lookup-form" action="" method="post">
+                    {% csrf_token %}
+
+                    <div class="nv-segmented-control" aria-label="Cell viewer query type">
+                        <label>
+                            <input type="radio" name="viewer_type" value="synapse" {% if viewer_type != "nuclei" and viewer_type != "lineage" %}checked{% endif %}>
+                            <span>Synapses</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="viewer_type" value="nuclei" {% if viewer_type == "nuclei" %}checked{% endif %}>
+                            <span>Nuclei</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="viewer_type" value="lineage" {% if viewer_type == "lineage" %}checked{% endif %}>
+                            <span>Lineage</span>
+                        </label>
+                    </div>
+
+                    <label class="nv-tool-lookup-label" for="datastackSelect">Dataset</label>
+                    <select class="nv-tool-lookup-input" id="datastackSelect" name="datastack" required>
+                        {% for ds in datastacks %}
+                        <option value="{{ ds.datastack_name }}" {% if ds.datastack_name == datastack %}selected{% endif %}>
+                            {{ ds.display_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <label class="nv-tool-lookup-label" id="cellViewerIdsLabel" for="cellViewerIDsInput">
+                        {% if viewer_type == "nuclei" %}Nucleus ID or Seg ID{% elif viewer_type == "lineage" %}Root ID{% else %}Root ID{% endif %}
+                    </label>
+                    <input
+                        class="nv-tool-lookup-input"
+                        id="cellViewerIDsInput"
+                        name="query_ids"
+                        value="{{ query_ids }}"
+                        placeholder="{% if viewer_type == 'nuclei' %}Enter nucleus or segment IDs separated by commas{% elif viewer_type == 'lineage' %}Enter one root ID{% else %}Enter root IDs separated by commas{% endif %}"
+                        required>
+
+                    <div id="synapseOptions" class="nv-cell-viewer-options">
+                        <label class="nv-tool-lookup-label" for="timestampInput">Timestamp</label>
+                        <input
+                            class="nv-tool-lookup-input"
+                            id="timestampInput"
+                            name="timestamp"
+                            type="date"
+                            value="{{ timestamp_input_value }}"
+                            autocomplete="off">
+
+                        <div class="nv-toggle-grid">
+                            <label class="nv-toggle-row" for="PreSynapsesCheckbox">
+                                <input type="checkbox" id="PreSynapsesCheckbox" name="pre_synapses" value="True" {% if pre_synapses != "False" %}checked{% endif %}>
+                                <span>Pre-Synapses</span>
+                            </label>
+                            <label class="nv-toggle-row" for="PostSynapsesCheckbox">
+                                <input type="checkbox" id="PostSynapsesCheckbox" name="post_synapses" value="True" {% if post_synapses != "False" %}checked{% endif %}>
+                                <span>Post-Synapses</span>
+                            </label>
+                            <label class="nv-toggle-row" for="CleftLayerCheckbox">
+                                <input type="checkbox" id="CleftLayerCheckbox" name="cleft_layer" value="True" {% if cleft_layer != "False" %}checked{% endif %}>
+                                <span>Cleft Layer</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="nv-btn nv-btn-primary nv-tool-lookup-submit">
+                        <span id="submit-spinner">Open Cell Viewer</span>
+                    </button>
+
+                    {% if error %}
+                    <p id="errorMessage" class="nv-tool-lookup-error">{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% else %}
+
+<div class="basic workspace overflow-hidden nv-workspace-page nv-cell-viewer-workspace">
+    <div id="neuVue-sidemenu" class="sidemenu nv-workspace-sidepanel">
+        <div id="neuVue-sidebar" class="sidebar nv-sidepanel-rail">
+            <a id="sidebarActivate" class="fill-div nv-sidepanel-toggle" onclick="sidemenu_content()" title="Toggle information panel">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="neuVue-sidecontent" class="sidecontent nv-workspace-sidecontent">
+            <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
+                <div class="sideContentTitle">
+                    {{ result_title }}
+                </div>
+                <div class="sideContentInfo">
+                    <div class="nv-table-wrap">
+                        <table id="cell-viewer-result-table" class="nv-table">
+                            <thead>
+                                <tr>
+                                    {% for header in result_headers %}
+                                    <th>{{ header }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in result_rows %}
+                                <tr>
+                                    {% for cell in row %}
+                                    <td>{{ cell }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if ids_not_found %}
+                    <p class="nv-tool-lookup-error">IDs not found: {{ ids_not_found }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if graph %}
+            <div class="sideContentBox nv-workspace-panel nv-lineage-panel">
+                <div class="sideContentTitle">
+                    Lineage Graph
+                </div>
+                <div class="sideContentInfo">
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="downloadLineagePNG">
+                        <i class="fa fa-download" aria-hidden="true"></i> Export Graph
+                    </button>
+                    <div id="svg_graph" class="nv-lineage-graph">{{ graph|safe }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="sideContentBox nv-workspace-panel nv-display-panel">
+                <div class="sideContentTitle">
+                    Cell Viewer Controls
+                </div>
+                <div class="sideContentInfo">
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnCopyNgLink">
+                        <i class="fa fa-copy" aria-hidden="true"></i> Copy Neuroglancer Link
+                    </button>
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnCopyCellInfo" data-copy-value="{{ copy_payload }}">
+                        <i class="fa fa-copy" aria-hidden="true"></i> Copy Table Info
+                    </button>
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnExportCellInfo">
+                        <i class="fa fa-download" aria-hidden="true"></i> Export Table Info
+                    </button>
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnExitCellViewer" data-exit-url="{% url 'cell-viewer' %}">
+                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit Cell Viewer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <! Neuroglancer >
+    <div id="neuroglancer" class="leftFormatting nv-workspace-main">
+        <div class="left nv-workspace-stage nv-cell-viewer-stage">
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            <div class="bottomBar justify-content-center nv-action-bar nv-inspect-action-bar">
+                <div class="mainButtonWrapper nv-action-wrapper">
+                    <button id="btnExitCellViewerBottom" type="button" class="mainButton nv-action-button nv-action-secondary" data-exit-url="{% url 'cell-viewer' %}">
+                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
+        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-body" class="toast-body"></div>
+                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
+{% endif %}
+
+<style> .overlay-hidden { display:none; } </style>
+<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+{{ cell_viewer_config|json_script:"cell-viewer-config" }}
+<script type="text/javascript" src="{% static 'js/cell_viewer.js' %}"></script>
+{% endblock %}

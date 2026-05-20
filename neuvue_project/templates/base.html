@@ -31,7 +31,7 @@
           <img src="{% static 'images/axonolotl.png' %}" alt="" width="34" height="34">
           <span class="nv-brand-mark">
             <strong>NeuVue</strong>
-            <span>Proofreading workspace</span>
+            <span>Proofreading Workspace</span>
           </span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,6 @@
               <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminNavDropdown">
                 <li> <a class="dropdown-item" href="{% url "admin:index" %}">Console</a></li>
                 <li> <a class="dropdown-item" href="{% url "dashboard" %}">Dashboard</a></li>
-                <li><a class="dropdown-item" href="{% url "lineage" %}">Lineage Viewer</a></li>
                 <li><a class="dropdown-item" href="{% url "report" %}">Reports</a></li>
                 <li><a class="dropdown-item" href="{% url "user-namespace" %}">User/Namespace Query</a></li>
               </ul>
@@ -67,14 +66,8 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url "inspect" %}">Inspect Task</a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="viewerNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Neuron Viewers
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="viewerNavDropdown">
-                  <li> <a class="dropdown-item" href="{% url "synapse" %}">Synapse Viewer</a> </li>
-                  <li> <a class="dropdown-item" href="{% url "nuclei" %}">Nuclei Viewer</a> </li>
-              </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "cell-viewer" %}">Cell Viewer</a>
             </li>
 
             {% endif%}
