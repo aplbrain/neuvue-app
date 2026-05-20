@@ -17,8 +17,8 @@
         {% if user.is_authenticated %}
           <a class="nv-btn nv-btn-primary" href="{% url 'tasks' %}">My Tasks</a>
         {% else %}
-          <a class="nv-google-signin" href="{% provider_login_url 'google' %}">
-            <img src="{% static 'images/google.png' %}" alt="Sign in with Google">
+          <a class="nv-google-signin" href="{% provider_login_url 'google' %}" aria-label="Sign in with Google">
+            <img src="{% static 'images/google.png' %}" alt="">
           </a>
         {% endif %}
         <a class="nv-btn nv-btn-secondary" href="{% url 'getting-started' %}">Getting Started</a>
@@ -27,13 +27,12 @@
 
       <div class="nv-user-note">
         <span class="nv-dot" aria-hidden="true"></span>
-          {% if user.is_authenticated %}
-            <span>You are logged in as <b>{{ user.username }}</b>.</span>
-          {% else %}
-            <span>Sign in to view assigned task queues.</span>
-          {% endif %}
+        {% if user.is_authenticated %}
+          <span>You are logged in as <b>{{ user.username }}</b>.</span>
+        {% else %}
+          <span>Sign in to view assigned task queues.</span>
+        {% endif %}
       </div>
-
     </section>
   </div>
 </div>

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% load inclusion_tags %}
+{% block header_includes %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+{% endblock %}
 {% block title %}{{ task_summary.namespace_display }} Workspace{% endblock %}
 {% block body_class %}nv-workspace-body{% endblock %}
 
@@ -19,10 +22,10 @@
         </div>
         <div id="neuVue-sidecontent" class="sidecontent nv-workspace-sidecontent">
 
-            <! Instructions >
+            <!-- Instructions -->
             {% processed_instructions instructions %}
 
-            <! Task Tags >
+            <!-- Task Tags -->
             <div id="tag-container" class="sideContentBox nv-workspace-panel nv-tag-panel">
                 <div class="sideContentTitle">
                     Task Tags
@@ -39,7 +42,7 @@
                 </div>
             </div>
 
-            <! Task Information >
+            <!-- Task Information -->
             <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
                 <div class="sideContentTitle">
                     Task Information
@@ -109,7 +112,7 @@
                 </div>
             </div>
 
-            <! Workspace Plugins >
+            <!-- Workspace Plugins -->
             {% if ng_state_plugin %}
             <div class="sideContentBox nv-workspace-panel nv-plugin-panel">
                 <div class="sideContentTitle">
@@ -124,14 +127,14 @@
             {% endif %}
         </div>
     </div>
-    <! Neuroglancer >
+    <!-- Neuroglancer -->
     <div id="neuroglancer" class="leftFormatting nv-workspace-main">
         <div class="left nv-workspace-stage">
             {% if is_open %}
             <form id="mainForm" action="" method="post" class="nv-workspace-form">
                 {% csrf_token %}
-            <! Submission Options>
-                <! Forced Choice>
+            <!-- Submission Options -->
+                <!-- Forced Choice -->
                 {% if button_list %}
                 <section class="nv-decision-bar" aria-label="Namespace decision options">
                     <div class="nv-decision-header">
@@ -154,11 +157,11 @@
                                     onclick="triggerLoadingSpinner('{{button.submission_value}}_load')"
                                 {% endif %}
                             >
-                                <div id = '{{button.submission_value}}_load'>
+                                <div id="{{ button.submission_value }}_load">
                                     {{button.display_name}}
                                 </div>
                             </button>
-                            <div class="hotkeyHint forcedChoiceHotkeyHint" style="display: none;">
+                            <div class="hotkeyHint forcedChoiceHotkeyHint">
                                 <span class="modifier"></span><span class="hotkey_button">+ <kbd>{{button.hotkey}}</kbd></span>
                             </div>
                         </div>
@@ -167,15 +170,15 @@
                 </section>
                 {% endif %}
 
-            <! Neuroglancer Container>
+            <!-- Neuroglancer Container -->
             {% if ng_url %}
             <iframe src="{{ng_url}}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
             {% else %}
             <div id="neuroglancer-container" class="neuroglancer-container"></div>
             {% endif %}
-            <! Buttons >
+            <!-- Buttons -->
             <div class="bottomBar justify-content-center nv-action-bar">
-                <! Flag >
+                <!-- Flag -->
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
                         id="btnFlag"
@@ -192,7 +195,7 @@
                 </div>
 
                 {% if allowed_to_reassign %}
-                <! Remove >
+                <!-- Remove -->
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
                         id="btnRemove"
@@ -206,7 +209,7 @@
                 </div>
                 {% endif %}
 
-                <! Skip >
+                <!-- Skip -->
                 {% if skippable %}
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
@@ -216,7 +219,7 @@
                         accesskey="k"
                         onclick="triggerLoadingSpinner('skip_task_load')"
                     >
-                        <div id = 'skip_task_load'>
+                        <div id="skip_task_load">
                             <i class="fa fa-forward" aria-hidden="true"></i> Skip
                         </div>
                     </button>
@@ -227,7 +230,7 @@
                 </div>
                 {% endif %}
 
-                <! Submit >
+                <!-- Submit -->
                 {% if submit_task_button %}
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
@@ -236,14 +239,14 @@
                         type="button"
                         class="mainButton submit nv-action-button nv-action-success"
                     >
-                        <div id = 'submit_task_load'>
+                        <div id="submit_task_load">
                             <i class="fa fa-check" aria-hidden="true"></i> Submit
                         </div>
                     </button>
                 </div>
                 {% endif %}
 
-                <! Save State >
+                <!-- Save State -->
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
                         id="btnSaveState"
@@ -251,13 +254,13 @@
                         class="mainButton save_state nv-action-button nv-action-neutral"
                         onclick="triggerLoadingSpinner('save_state')"
                         >
-                        <div id = 'save_state'>
+                        <div id="save_state">
                             <i class="fa fa-save" aria-hidden="true"></i> Save State
                         </div>
                     </button>
                 </div>
 
-                <! Stop >
+                <!-- Stop -->
                 <div class="mainButtonWrapper nv-action-wrapper">
                     <button
                         id="btnStop"
@@ -266,7 +269,7 @@
                         accesskey="e"
                         onclick="triggerLoadingSpinner('exit_task_load')"
                     >
-                        <div id = 'exit_task_load'>
+                        <div id="exit_task_load">
                             <i class="fa fa-door-open" aria-hidden="true"></i> Save & Exit
                         </div>
                     </button>
@@ -277,7 +280,7 @@
             </div>
             </form>
             {% else %}
-                <! In-between Tasks >
+                <!-- In-between Tasks -->
                 <div class="interTaskBox nv-intertask-card">
                     <div class="interTaskTitle">
                         Tasks Complete <br> {{ task_summary.namespace_display }}
@@ -286,8 +289,8 @@
                         <button
                             type="button"
                             class="mainButton return nv-action-button nv-action-danger"
-                            onclick= "document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
-                            <div id = 'exit_workspace'>
+                            onclick="document.location='{% url 'tasks' %}';triggerLoadingSpinner('exit_workspace')">
+                            <div id="exit_workspace">
                                 Return to Task page
                             </div>
                         </button>
@@ -296,22 +299,7 @@
             {% endif %}
         </div>
     </div>
-    <div style="display:none;">
-        <div id = 'loading-spinner' class="spinner-border spinner-border-sm" role="status" style="margin: auto;">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-    <!-- Triggerable elements -->
-
-    <!-- Toast -->
-    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
-        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div id="toast-body" class="toast-body"> <!-- triggerToast will fill in text here--> </div>
-                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
+    {% include "reusable_components/toast.html" %}
 </div>
 
 <!-- Modals -->
@@ -320,20 +308,15 @@
 {% timeout_modal %}
 {% confirm_selected_segments_modal number_of_selected_segments_expected %}
 
-<style> .overlay-hidden { display:none; } </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
-<script type="text/javascript"  src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/browser-interaction-time.umd.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 
-{% if ng_host == "spelunker" %}
-<script defer src="/static/spelunker-workspace/453.js"></script><script defer src="/static/spelunker-workspace/71.js"></script><script defer src="/static/spelunker-workspace/74.js"></script><script defer src="/static/spelunker-workspace/741.js"></script><script defer src="/static/spelunker-workspace/main.js"></script><link href="/static/spelunker-workspace/main.css" rel="stylesheet">
-{% else %}
-<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
-{% endif %}
+{% include "reusable_components/neuroglancer_bundle.html" %}
 
 {{ workspace_config|json_script:"workspace-config" }}
-<script type="text/javascript" src="{% static 'js/workspace.js' %}"></script>
+<script src="{% static 'js/workspace.js' %}"></script>
 {% endblock %}

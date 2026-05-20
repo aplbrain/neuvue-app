@@ -14,10 +14,7 @@
                 <h1 id="inspectTaskTitle">Inspect Task</h1>
                 <p>Open an existing proofreading task by task ID.</p>
             </div>
-            <div class="nv-status-badge">
-                <span class="nv-dot" aria-hidden="true"></span>
-                <span>Connected to {{ data.settings.queue_display }}</span>
-            </div>
+            {% include "reusable_components/status_badge.html" %}
         </header>
 
         <section class="nv-card nv-tool-lookup-card nv-inspect-search-card" aria-labelledby="inspectTaskTitle">
@@ -51,10 +48,10 @@
         </div>
         <div id="neuVue-sidecontent" class="sidecontent nv-workspace-sidecontent">
 
-            <! Instructions >
+            <!-- Instructions -->
             {% processed_instructions instructions %}
 
-            <! Task Information >
+            <!-- Task Information -->
             <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
                 <div class="sideContentTitle">
                     Task Information
@@ -94,10 +91,10 @@
         </div>
     </div>
 
-    <! Neuroglancer >
+    <!-- Neuroglancer -->
     <div id="neuroglancer" class="leftFormatting nv-workspace-main">
         <div class="left nv-workspace-stage nv-inspect-stage">
-            <! Neuroglancer Container>
+            <!-- Neuroglancer Container -->
             {% if ng_url %}
             <iframe src="{{ ng_url }}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
             {% else %}
@@ -114,26 +111,13 @@
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
-        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div id="toast-body" class="toast-body"></div>
-                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
+    {% include "reusable_components/toast.html" %}
 </div>
 
-{% if ng_host == "spelunker" %}
-<script defer src="/static/spelunker-workspace/453.js"></script><script defer src="/static/spelunker-workspace/71.js"></script><script defer src="/static/spelunker-workspace/74.js"></script><script defer src="/static/spelunker-workspace/741.js"></script><script defer src="/static/spelunker-workspace/main.js"></script><link href="/static/spelunker-workspace/main.css" rel="stylesheet">
-{% else %}
-<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
-{% endif %}
+{% include "reusable_components/neuroglancer_bundle.html" %}
 {% endif %}
 
-<style> .overlay-hidden { display:none; } </style>
-<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 {{ inspect_config|json_script:"inspect-config" }}
-<script type="text/javascript" src="{% static 'js/inspect.js' %}"></script>
+<script src="{% static 'js/inspect.js' %}"></script>
 {% endblock %}

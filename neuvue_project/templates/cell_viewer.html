@@ -13,10 +13,7 @@
                 <h1 id="cellViewerTitle">Cell Viewer</h1>
                 <p>Inspect synapses by root ID, nuclei by nucleus/segment ID, or lineage by root ID.</p>
             </div>
-            <div class="nv-status-badge">
-                <span class="nv-dot" aria-hidden="true"></span>
-                <span>Connected to {{ data.settings.queue_display }}</span>
-            </div>
+            {% include "reusable_components/status_badge.html" %}
         </header>
 
         <section class="nv-card nv-tool-lookup-card nv-cell-viewer-card" aria-labelledby="cellViewerTitle">
@@ -175,7 +172,7 @@
         </div>
     </div>
 
-    <! Neuroglancer >
+    <!-- Neuroglancer -->
     <div id="neuroglancer" class="leftFormatting nv-workspace-main">
         <div class="left nv-workspace-stage nv-cell-viewer-stage">
             <div id="neuroglancer-container" class="neuroglancer-container"></div>
@@ -189,22 +186,13 @@
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="position-fixed bottom-0 end-0 p-3 translate-middle-x mt-5">
-        <div id="toast" class="toast align-items-center bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div id="toast-body" class="toast-body"></div>
-                <button id="close-toast" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
+    {% include "reusable_components/toast.html" %}
 </div>
 
-<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
+<script src="{% static 'workspace/main.bundle.js' %}"></script>
 {% endif %}
 
-<style> .overlay-hidden { display:none; } </style>
-<script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 {{ cell_viewer_config|json_script:"cell-viewer-config" }}
-<script type="text/javascript" src="{% static 'js/cell_viewer.js' %}"></script>
+<script src="{% static 'js/cell_viewer.js' %}"></script>
 {% endblock %}

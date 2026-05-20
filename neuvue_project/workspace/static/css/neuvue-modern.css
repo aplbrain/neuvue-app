@@ -23,6 +23,7 @@
   --nv-radius-xl: 20px;
   --nv-focus: 0 0 0 3px rgba(167, 139, 250, 0.35);
   --nv-nav-height: 64px;
+  --nv-footer-height: 28px;
 }
 
 html,
@@ -30,7 +31,14 @@ body {
   min-height: 100%;
 }
 
+html {
+  background: var(--nv-bg-1);
+}
+
 body.nv-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   color: var(--nv-text);
   font-family: Inter, "Open Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -177,11 +185,42 @@ body.nv-body::before {
 }
 
 .nv-main {
-  min-height: calc(100vh - var(--nv-nav-height));
+  flex: 1 0 auto;
+  min-height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height));
+}
+
+.nv-footer {
+  flex: 0 0 auto;
+  min-height: var(--nv-footer-height);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(201, 192, 232, 0.72);
+  background: linear-gradient(180deg, rgba(15, 8, 28, 0.92), rgba(11, 6, 19, 0.98));
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.nv-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(1240px, 100%);
+  min-height: var(--nv-footer-height);
+  margin: 0 auto;
+  padding: 4px 20px;
+}
+
+.nv-footer a {
+  color: #fde68a;
+  text-decoration: none;
+}
+
+.nv-footer a:hover {
+  color: #fbbf24;
 }
 
 .nv-page {
-  min-height: calc(100vh - var(--nv-nav-height));
+  min-height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height));
   padding: 24px 20px 72px;
 }
 
@@ -335,6 +374,10 @@ body.nv-body::before {
   background: rgba(167, 139, 250, 0.08);
   font-size: 13px;
   line-height: 1.45;
+}
+
+.overlay-hidden {
+  display: none;
 }
 
 .nv-home {
@@ -667,6 +710,10 @@ body.nv-body::before {
   font-size: 24px;
 }
 
+.nv-prose > h2:first-child {
+  margin-top: 0;
+}
+
 .nv-prose h3 {
   margin-top: 24px;
   font-size: 19px;
@@ -812,7 +859,7 @@ body.nv-body::before {
 .nv-workspace-page.basic,
 .nv-workspace-page.interTask {
   position: relative;
-  height: calc(100vh - var(--nv-nav-height));
+  height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height));
   overflow: hidden;
   background:
     radial-gradient(900px 640px at 18% 6%, rgba(167, 139, 250, 0.18), transparent 58%),
@@ -824,7 +871,7 @@ body.nv-body::before {
   right: 0;
   display: flex;
   width: 330px;
-  height: calc(100vh - var(--nv-nav-height));
+  height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height));
   border-left: 1px solid var(--nv-border);
   background: rgba(15, 10, 26, 0.9);
   box-shadow: -18px 0 44px rgba(0, 0, 0, 0.36);
@@ -883,6 +930,16 @@ body.nv-body::before {
 
 .nv-workspace-sidecontent > .sideContentBox:first-child {
   max-height: 34vh !important;
+}
+
+.nv-instructions-panel {
+  max-height: 30%;
+}
+
+.nv-instruction-media {
+  display: flex;
+  justify-content: center;
+  margin: 1vh 0;
 }
 
 .nv-workspace-sidecontent .sideContentTitle {
@@ -1280,6 +1337,10 @@ body.nv-body::before {
   text-align: center;
 }
 
+.nv-workspace-stage .forcedChoiceHotkeyHint {
+  display: none;
+}
+
 .nv-hide-hotkeys .nv-workspace-stage .hotkeyHint {
   display: none !important;
 }
@@ -1333,14 +1394,14 @@ body.nv-body::before {
 
 .nv-tool-lookup-page,
 .nv-inspect-lookup-page {
-  min-height: calc(100vh - var(--nv-nav-height));
+  min-height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height));
   overflow: auto;
 }
 
 .nv-tool-lookup-wrap {
   display: grid;
   align-content: center;
-  min-height: calc(100vh - var(--nv-nav-height) - 96px);
+  min-height: calc(100vh - var(--nv-nav-height) - var(--nv-footer-height) - 96px);
 }
 
 .nv-tool-lookup-hero {

@@ -104,6 +104,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "workspace.context_processors.app_metadata",
             ],
         },
     },
@@ -213,6 +214,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Neuvue Specific Settings
+NEUVUE_APP_VERSION = os.environ.get("NEUVUE_APP_VERSION", "dev")
 NEUVUE_QUEUE_ADDR = "https://queue.neuvue.io/"
 SANDBOX_ID = "6269888a101fc4da81fdd410"
 NEUVUE_CLIENT_SETTINGS = {
