@@ -44,7 +44,7 @@
                     Workspace Plugins
                     <div>
                         <button type="button" class="btn btn-info" onclick="applyNgStatePlugin()">
-                            <i class="fa fa-sync-alt"></i> Apply {{ng_state_plugin}} Plugin
+                            <i class="fa fa-sync-alt"></i> <span id="ng_state_plugin_button_text">Apply {{ng_state_plugin}} Plugin</span>
                         </button>
                     </div>
                 </div>
@@ -361,23 +361,34 @@
             '/ngStatePlugin',
             {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"}
         ).then((response) => {
-            if (!response.ok) {
-                response.text()
-                .then((text) => {
-                    console.error(text)
-                })
-            } else {
-                response.json()
-                .then((jsonResponse) => {
-                    // parse JSON response
-                    ({message, ngstate} = jsonResponse);
-                    viewer.state.restoreState(ngstate);
+            return response.text().then((text) => {
+                let jsonResponse = {};
+                try {
+                    jsonResponse = text ? JSON.parse(text) : {};
+                } catch (error) {
+                    jsonResponse = {
+                        message: text || "Plugin returned an unreadable response."
+                    };
+                }
+
+                if (!response.ok) {
+                    const message = jsonResponse.message || `Plugin failed with status ${response.status}.`;
+                    console.error(message, jsonResponse.additional_info || {});
                     triggerToast(message);
-                })
-                .catch((error) => {
-                    console.error(error.message || error)
-                })
-            }
+                    return;
+                }
+
+                const message = jsonResponse.message || "Plugin executed successfully.";
+                const ngstate = jsonResponse.ngstate;
+                if (ngstate) {
+                    viewer.state.restoreState(ngstate);
+                }
+                triggerToast(message);
+            });
+        }).catch((error) => {
+            const message = `Plugin request failed before reaching the server: ${error.message || error}`;
+            console.error(message);
+            triggerToast(message);
         });
     }
 
