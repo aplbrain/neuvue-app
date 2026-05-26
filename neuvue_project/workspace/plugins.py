@@ -14,16 +14,6 @@ import pandas as pd
 import base64
 
 
-DEFAULT_NEURD_DATASTACK_SCHEMAS = {
-    "h01": "h01_c2",
-    "h01_c2": "h01_c2",
-    "h01-c2": "h01_c2",
-    "minnie35": "minnie35_mirrortables",
-    "minnie35_mirrortables": "minnie35_mirrortables",
-    "v1dd": "v1dd_mirrortables",
-    "v1dd_mirrortables": "v1dd_mirrortables",
-}
-
 DEFAULT_COMPARTMENT_COLORS = {
     "axon": "#ff4d4d",
     "dendrite": "#4d9dff",
@@ -125,11 +115,9 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
     """
     def __init__(self, **params):
         super().__init__(**params)
-        self.resolution = params.get("resolution", [8, 8, 33])
-        self.seg_layer = params.get(
-            "seg_layer",
-            "precomputed://gs://h01-release/data/20210601/c2",
-        )
+        self.dataset_schema = params.get("dataset_schema")
+        self.resolution = params.get("resolution")
+        self.seg_layer = params.get("seg_layer")
         self.base_url = settings.NEURD_LAMBDA_URL
         self.endpoint = params.get("endpoint", "labeled_skeleton")
         self.request_timeout = params.get("request_timeout", 30)
@@ -140,8 +128,31 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
 
     def modify_state(self, state: Dict[str, Any], **kwargs) -> PluginOutput:
         datastack = kwargs.get("datastack")
-        dataset_schema = self._dataset_schema(datastack)
-        resolution = self._resolution(datastack)
+        dataset_schema = self.dataset_schema
+        resolution = self._validated_resolution()
+
+        if not dataset_schema:
+            return PluginOutput(
+                modified_state=state,
+                status_code=400,
+                message=(
+                    "NEURD skeleton plugin is missing required plugin parameter "
+                    "`dataset_schema`."
+                ),
+                additional_info={},
+            )
+
+        if resolution is None:
+            return PluginOutput(
+                modified_state=state,
+                status_code=400,
+                message=(
+                    "NEURD skeleton plugin is missing or has an invalid required "
+                    "plugin parameter `resolution`; expected a three-value list "
+                    "such as [8, 8, 33]."
+                ),
+                additional_info={"dataset_schema": dataset_schema},
+            )
 
         # Get seg ids to query
         seg_ids = []
@@ -330,39 +341,6 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
             additional_info={"dataset_schema": dataset_schema}
         )
 
-    def _dataset_schema(self, datastack):
-        dataset_schema = self.params.get("dataset_schema")
-        if dataset_schema:
-            return dataset_schema
-
-        mapping = self._normalized_mapping(
-            self.params.get("dataset_schema_by_datastack", {})
-        )
-        for key in self._datastack_keys(datastack):
-            if key in mapping:
-                return mapping[key]
-
-        for config in self._datastack_configs(datastack):
-            for key in (
-                "neurd_dataset_schema",
-                "dataset_schema",
-                "plugin_dataset_schema",
-            ):
-                if config.get(key):
-                    return config[key]
-            plugins_config = config.get("plugins", {})
-            if plugins_config.get("neurd_dataset_schema"):
-                return plugins_config["neurd_dataset_schema"]
-            neurd_config = plugins_config.get("neurd", {})
-            if neurd_config.get("dataset_schema"):
-                return neurd_config["dataset_schema"]
-
-        for key in self._datastack_keys(datastack):
-            if key in DEFAULT_NEURD_DATASTACK_SCHEMAS:
-                return DEFAULT_NEURD_DATASTACK_SCHEMAS[key]
-
-        return self.params.get("default_dataset_schema", "h01_c2")
-
     def _request_params(self, dataset_schema):
         params = {"dataset_schema": dataset_schema}
         for name in ("split_index", "decimation_ratio"):
@@ -376,25 +354,17 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
             sources.append(datastack.segmentation_source)
         return {source for source in sources if source}
 
-    def _resolution(self, datastack):
-        mapping = self._normalized_mapping(
-            self.params.get("resolution_by_datastack", {})
-        )
-        for key in self._datastack_keys(datastack):
-            if key in mapping:
-                return mapping[key]
+    def _validated_resolution(self):
+        if self.resolution in (None, ""):
+            return None
 
-        for config in self._datastack_configs(datastack):
-            if config.get("resolution"):
-                return config["resolution"]
-            plugins_config = config.get("plugins", {})
-            if plugins_config.get("neurd_resolution"):
-                return plugins_config["neurd_resolution"]
-            neurd_config = plugins_config.get("neurd", {})
-            if neurd_config.get("resolution"):
-                return neurd_config["resolution"]
+        if not isinstance(self.resolution, (list, tuple)) or len(self.resolution) != 3:
+            return None
 
-        return self.resolution
+        try:
+            return [float(value) for value in self.resolution]
+        except (TypeError, ValueError):
+            return None
 
     def _skeleton_segments_df(self, skeleton, resolution):
         point_column_a = []
@@ -430,37 +400,6 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
         if isinstance(source, list):
             return any(item in seg_sources for item in source)
         return source in seg_sources
-
-    def _datastack_keys(self, datastack):
-        if not datastack:
-            return []
-        return [
-            str(value).strip().lower()
-            for value in (
-                getattr(datastack, "datastack_name", None),
-                getattr(datastack, "cave_datastack", None),
-                getattr(datastack, "display_name", None),
-            )
-            if value
-        ]
-
-    def _datastack_configs(self, datastack):
-        if not datastack:
-            return []
-        return [
-            config
-            for config in (
-                getattr(datastack, "table_config", None),
-                getattr(datastack, "viewer_options", None),
-            )
-            if isinstance(config, dict)
-        ]
-
-    def _normalized_mapping(self, mapping):
-        return {
-            str(key).strip().lower(): value
-            for key, value in mapping.items()
-        }
 
     def _response_error_text(self, response):
         try:
