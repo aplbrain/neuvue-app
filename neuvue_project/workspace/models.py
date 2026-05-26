@@ -21,9 +21,19 @@ class Datastack(models.Model):
         max_length=200, help_text="Datastack name in CAVE (e.g., minnie65_phase3_v1)"
     )
 
-    image_source = models.URLField(help_text="Image layer source (precomputed://...)")
-    segmentation_source = models.URLField(
-        help_text="Segmentation source (graphene://...)"
+    image_source = models.CharField(
+        max_length=1000,
+        help_text=(
+            "Full Neuroglancer image layer source, including the layer type "
+            "(e.g., precomputed://s3://bucket/path/to/layer)"
+        ),
+    )
+    segmentation_source = models.CharField(
+        max_length=1000,
+        help_text=(
+            "Full Neuroglancer segmentation layer source, including the layer type "
+            "(e.g., graphene://https://... or precomputed://s3://bucket/path/to/layer)"
+        ),
     )
 
     table_config = models.JSONField(

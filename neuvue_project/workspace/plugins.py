@@ -373,14 +373,7 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
     def _segmentation_sources(self, datastack):
         sources = [self.seg_layer, *self.params.get("seg_layers", [])]
         if datastack and getattr(datastack, "segmentation_source", None):
-            source = datastack.segmentation_source
-            sources.extend(
-                [
-                    source,
-                    self._prefixed_source(source, "graphene://"),
-                    self._prefixed_source(source, "precomputed://"),
-                ]
-            )
+            sources.append(datastack.segmentation_source)
         return {source for source in sources if source}
 
     def _resolution(self, datastack):
@@ -462,11 +455,6 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
             )
             if isinstance(config, dict)
         ]
-
-    def _prefixed_source(self, source, prefix):
-        if source.startswith(prefix):
-            return source
-        return f"{prefix}{source}"
 
     def _normalized_mapping(self, mapping):
         return {
