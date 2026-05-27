@@ -1,19 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Any
+import copy
 import requests
-import math
 from django.conf import settings
-from nglui.statebuilder import (
-    StateBuilder,
-    AnnotationLayerConfig,
-    LineMapper,
-    site_utils,
-)
-import json
-import pandas as pd
-import numpy as np
-import base64
+from urllib.parse import quote
 
 
 DEFAULT_COMPARTMENT_COLORS = {
@@ -112,16 +103,18 @@ class TestNeuroglancerPlugin(NeuroglancerPlugin):
 
 class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
     """
-    This plugin queries NEURD for the skeletons of all selected seg IDs and
-    adds them to the ng state as a new annotation layer.
+    Adds a public NEURD precomputed skeleton source to the current segmentation
+    layer. The skeleton service serves coordinates in nanometers and exposes a
+    per-vertex compartment attribute for shader-based coloring.
     """
+
     def __init__(self, **params):
         super().__init__(**params)
         self.dataset_schema = params.get("dataset_schema")
-        self.resolution = params.get("resolution")
         self.base_url = settings.NEURD_LAMBDA_URL
-        self.endpoint = params.get("endpoint", "labeled_skeleton")
         self.request_timeout = params.get("request_timeout", 30)
+        self.target_layer_name = params.get("target_layer_name")
+        self.created_layer_name = params.get("layer_name", "neurd skeleton")
         self.compartment_colors = {
             **DEFAULT_COMPARTMENT_COLORS,
             **params.get("compartment_colors", {}),
@@ -129,7 +122,6 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
 
     def modify_state(self, state: Dict[str, Any], **kwargs) -> PluginOutput:
         dataset_schema = self.dataset_schema
-        resolution = self._validated_resolution()
 
         if not dataset_schema:
             return PluginOutput(
@@ -142,22 +134,15 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
                 additional_info={},
             )
 
-        if resolution is None:
+        if not settings.NEURD_LAMBDA_URL:
             return PluginOutput(
                 modified_state=state,
-                status_code=400,
-                message=(
-                    "NEURD skeleton plugin is missing or has an invalid required "
-                    "plugin parameter `resolution`; expected a three-value list "
-                    "such as [x, y, z]."
-                ),
-                additional_info={"dataset_schema": dataset_schema},
+                status_code=500,
+                message="NEURD skeleton plugin is not configured: NEURD_LAMBDA_URL is empty.",
+                additional_info={},
             )
 
-        # Get seg ids to query
         seg_ids = self._segment_ids(kwargs.get("plugin_inputs"))
-        position = state["position"]
-
         if not seg_ids:
             return PluginOutput(
                 modified_state=state,
@@ -172,191 +157,117 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
                 },
             )
 
-        if not settings.NEURD_LAMBDA_URL:
-            return PluginOutput(
-                modified_state=state,
-                status_code=500,
-                message="NEURD skeleton plugin is not configured: NEURD_LAMBDA_URL is empty.",
-                additional_info={},
-            )
+        skeleton_source = self._skeleton_source(dataset_schema)
 
-        if not settings.NEURD_LAMBDA_SECRET_ARN:
-            return PluginOutput(
-                modified_state=state,
-                status_code=500,
-                message=(
-                    "NEURD skeleton plugin is not configured: "
-                    "NEURD_LAMBDA_SECRET_ARN is empty."
-                ),
-                additional_info={},
-            )
-
-        # Query for skeleton
-        skeletons_by_compartment = {}
         for seg_id in seg_ids:
-            if '!' not in seg_id:
-                request_url = f"{self.base_url}/{self.endpoint}/{seg_id}"
-                try:
-                    secret = base64.b64encode(settings.NEURD_LAMBDA_SECRET_ARN.encode("utf-8")).decode("utf-8")
-                    headers = {'Authorization': f'Bearer {secret}'}
-                    params = self._request_params(dataset_schema)
-                    response = requests.get(
-                        request_url,
-                        headers=headers,
-                        params=params,
-                        timeout=self.request_timeout,
-                    )
-                    # Raise exception if request is unsuccessful
-                    response.raise_for_status()
-                    # Process the successful response
-                    skeleton_points = json.loads(response.text)["skeleton_points"]
-                    if isinstance(skeleton_points, dict):
-                        for compartment, skeleton in skeleton_points.items():
-                            skeletons_by_compartment.setdefault(compartment, []).extend(
-                                skeleton
-                            )
-                    else:
-                        skeletons_by_compartment.setdefault("neurd skeleton", []).extend(
-                            skeleton_points
-                        )
-                except requests.Timeout:
-                    return PluginOutput(
-                        modified_state=state,
-                        status_code=504,
-                        message=(
-                            f"NEURD skeleton request timed out for segment {seg_id} "
-                            f"after {self.request_timeout} seconds."
-                        ),
-                        additional_info={
-                            "dataset_schema": dataset_schema,
-                            "request_url": request_url,
-                        },
-                    )
-                except requests.HTTPError as e:
-                    return PluginOutput(
-                        modified_state=state,
-                        status_code=response.status_code,
-                        message=(
-                            f"NEURD skeleton request failed for segment {seg_id} "
-                            f"with status {response.status_code}: "
-                            f"{self._response_error_text(response)}"
-                        ),
-                        additional_info={
-                            "dataset_schema": dataset_schema,
-                            "request_url": request_url,
-                        },
-                    )
-                except requests.RequestException as e:
-                    return PluginOutput(
-                        modified_state=state,
-                        status_code=502,
-                        message=(
-                            f"Could not reach the NEURD skeleton service for segment "
-                            f"{seg_id}: {e}"
-                        ),
-                        additional_info={
-                            "dataset_schema": dataset_schema,
-                            "request_url": request_url,
-                        },
-                    )
-                except (KeyError, json.JSONDecodeError, TypeError) as e:
-                    return PluginOutput(
-                        modified_state=state,
-                        status_code=502,
-                        message=(
-                            f"NEURD skeleton service returned an unexpected response "
-                            f"for segment {seg_id}: {e}"
-                        ),
-                        additional_info={
-                            "dataset_schema": dataset_schema,
-                            "request_url": request_url,
-                        },
-                    )
-                except Exception as e:
-                    print(f"An unexpected error occurred: {e}")
-                    return PluginOutput(
-                        modified_state=state,
-                        status_code=500,
-                        message=(
-                            f"Unexpected NEURD skeleton plugin error for segment "
-                            f"{seg_id}: {e}"
-                        ),
-                        additional_info={"dataset_schema": dataset_schema}
-                    )
-
-        layer_configs = []
-        layer_dfs = []
-        for compartment, skeleton in skeletons_by_compartment.items():
-            skeleton_df = self._skeleton_segments_df(skeleton, resolution)
-            if skeleton_df.empty:
-                continue
-
-            layer_name = self._layer_name(compartment)
-            layer_configs.append(
-                AnnotationLayerConfig(
-                    name=layer_name,
-                    color=self.compartment_colors.get(compartment, "white"),
-                    mapping_rules=LineMapper(
-                        "point_column_a",
-                        "point_column_b",
-                        group_column="group",
-                    ),
-                )
+            validation = self._validate_skeleton(
+                state,
+                dataset_schema,
+                seg_id,
             )
-            layer_dfs.append(skeleton_df)
+            if validation is not None:
+                return validation
 
-        if not layer_configs:
-            return PluginOutput(
-                modified_state=state,
-                status_code=404,
-                message=(
-                    "No NEURD skeleton points were found for the selected segments "
-                    f"using dataset_schema={dataset_schema}."
-                ),
-                additional_info={
-                    "dataset_schema": dataset_schema,
-                    "selected_segments": seg_ids,
-                },
-            )
-        
-        # add to state
-        site_utils.set_default_config(target_site='spelunker')
-        view_options = {'position': [position[0]*2, position[1]*2, position[2]]}
         try:
-            final_state = state
-            for layer_config, layer_df in zip(layer_configs, layer_dfs):
-                state_builder = StateBuilder(
-                    [layer_config],
-                    base_state=final_state,
-                    view_kws=view_options,
+            modified_state = copy.deepcopy(state)
+            layer = self._segmentation_layer(modified_state, kwargs.get("datastack"))
+            if layer is None:
+                return PluginOutput(
+                    modified_state=state,
+                    status_code=400,
+                    message=(
+                        "NEURD skeleton plugin could not find or create a "
+                        "segmentation layer for the skeleton source."
+                    ),
+                    additional_info={"dataset_schema": dataset_schema},
                 )
-                final_state = state_builder.render_state(layer_df, return_as="dict")
+
+            self._apply_skeleton_source(layer, skeleton_source, seg_ids)
         except Exception as e:
             return PluginOutput(
                 modified_state=state,
                 status_code=500,
-                message=f"NEURD skeleton plugin could not render skeleton layers: {e}",
+                message=f"NEURD skeleton plugin could not update the Neuroglancer state: {e}",
                 additional_info={
                     "dataset_schema": dataset_schema,
                     "selected_segments": seg_ids,
-                    "layer_names": [layer_config.name for layer_config in layer_configs],
+                    "skeleton_source": skeleton_source,
                 },
             )
 
-        # Return modified state
         return PluginOutput(
-            modified_state=final_state,
+            modified_state=self._state_for_restore(modified_state),
             status_code=200,
-            message="Plugin executed successfully.",
-            additional_info={"dataset_schema": dataset_schema}
+            message="NEURD skeleton source added.",
+            additional_info={
+                "dataset_schema": dataset_schema,
+                "selected_segments": seg_ids,
+                "skeleton_source": skeleton_source,
+            },
         )
 
-    def _request_params(self, dataset_schema):
-        params = {"dataset_schema": dataset_schema}
-        for name in ("split_index", "decimation_ratio"):
-            if self.params.get(name) is not None:
-                params[name] = self.params[name]
-        return params
+    def _validate_skeleton(self, state, dataset_schema, seg_id):
+        request_url = (
+            f"{self.base_url.rstrip('/')}/precomputed/skeletons/"
+            f"{quote(str(dataset_schema), safe='')}/"
+            "validate/"
+            f"{quote(str(seg_id), safe='')}"
+        )
+        try:
+            response = requests.get(request_url, timeout=self.request_timeout)
+            response.raise_for_status()
+        except requests.Timeout:
+            return PluginOutput(
+                modified_state=state,
+                status_code=504,
+                message=(
+                    f"NEURD skeleton validation timed out for segment {seg_id} "
+                    f"after {self.request_timeout} seconds."
+                ),
+                additional_info={
+                    "dataset_schema": dataset_schema,
+                    "request_url": request_url,
+                },
+            )
+        except requests.HTTPError:
+            return PluginOutput(
+                modified_state=state,
+                status_code=response.status_code,
+                message=(
+                    f"NEURD skeleton validation failed for segment {seg_id} "
+                    f"with status {response.status_code}: "
+                    f"{self._response_error_text(response)}"
+                ),
+                additional_info={
+                    "dataset_schema": dataset_schema,
+                    "request_url": request_url,
+                },
+            )
+        except requests.RequestException as e:
+            return PluginOutput(
+                modified_state=state,
+                status_code=502,
+                message=(
+                    f"Could not reach the NEURD skeleton service for segment "
+                    f"{seg_id}: {e}"
+                ),
+                additional_info={
+                    "dataset_schema": dataset_schema,
+                    "request_url": request_url,
+                },
+            )
+        return None
+
+    def _skeleton_source(self, dataset_schema):
+        return (
+            f"precomputed://{self.base_url.rstrip('/')}/precomputed/skeletons/"
+            f"{quote(str(dataset_schema), safe='')}"
+        )
+
+    def _state_for_restore(self, state):
+        state = copy.deepcopy(state)
+        state.pop("layout", None)
+        return state
 
     def _segment_ids(self, plugin_inputs):
         plugin_inputs = plugin_inputs or {}
@@ -371,152 +282,121 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
             return [
                 str(segment_id).strip()
                 for segment_id in raw_segment_ids
-                if str(segment_id).strip()
+                if str(segment_id).strip() and "!" not in str(segment_id)
             ]
         return [
             segment_id
             for segment_id in str(raw_segment_ids)
             .replace(",", " ")
             .split()
-            if segment_id
+            if segment_id and "!" not in segment_id
         ]
 
-    def _validated_resolution(self):
-        if self.resolution in (None, ""):
+    def _segmentation_layer(self, state, datastack):
+        layers = state.setdefault("layers", [])
+        layer = self._find_segmentation_layer(layers)
+        if layer is not None:
+            return layer
+
+        segmentation_source = self.params.get("segmentation_source")
+        if not segmentation_source and datastack is not None:
+            segmentation_source = getattr(datastack, "segmentation_source", None)
+
+        if not segmentation_source:
             return None
 
-        if not isinstance(self.resolution, (list, tuple)) or len(self.resolution) != 3:
-            return None
+        layer = {
+            "type": "segmentation",
+            "name": self.created_layer_name,
+            "source": segmentation_source,
+            "segments": [],
+        }
+        layers.append(layer)
+        return layer
 
-        try:
-            return [float(value) for value in self.resolution]
-        except (TypeError, ValueError):
-            return None
+    def _find_segmentation_layer(self, layers):
+        if self.target_layer_name:
+            for layer in layers:
+                if (
+                    self._is_segmentation_layer(layer)
+                    and layer.get("name") == self.target_layer_name
+                ):
+                    return layer
 
-    def _skeleton_segments_df(self, skeleton, resolution):
-        point_column_a = []
-        point_column_b = []
-        for point_a, point_b in self._line_segments(skeleton):
-            point_column_a.append(self._to_voxel(point_a, resolution))
-            point_column_b.append(self._to_voxel(point_b, resolution))
+        for layer in layers:
+            if self._is_segmentation_layer(layer):
+                return layer
+        return None
 
-        return pd.DataFrame(
+    def _is_segmentation_layer(self, layer):
+        return "segmentation" in str(layer.get("type", ""))
+
+    def _apply_skeleton_source(self, layer, skeleton_source, seg_ids):
+        layer["skeletons"] = skeleton_source
+        layer["skeletonShader"] = self._skeleton_shader()
+        layer.setdefault("skeletonRendering", {})
+        layer["skeletonRendering"].update(
             {
-                "point_column_a": point_column_a,
-                "point_column_b": point_column_b,
-                "group": [1] * len(point_column_a),
+                "lineWidth2d": self.params.get("line_width_2d", 3),
+                "lineWidth3d": self.params.get("line_width_3d", 2),
             }
         )
 
-    def _line_segments(self, skeleton):
-        if skeleton is None or (isinstance(skeleton, str) and skeleton == ""):
-            return []
-
-        try:
-            skeleton_array = np.asarray(skeleton, dtype=float)
-        except (TypeError, ValueError):
-            skeleton_array = None
-
-        if skeleton_array is not None:
-            if skeleton_array.size == 0:
-                return []
-            if skeleton_array.ndim == 3 and skeleton_array.shape[1:] == (2, 3):
-                return self._valid_segments(
-                    (
-                        self._point_tuple(segment[0]),
-                        self._point_tuple(segment[1]),
-                    )
-                    for segment in skeleton_array
-                )
-            if skeleton_array.ndim == 2 and skeleton_array.shape[1] == 3:
-                return self._valid_segments(
-                    (
-                        self._point_tuple(skeleton_array[index]),
-                        self._point_tuple(skeleton_array[index + 1]),
-                    )
-                    for index in range(len(skeleton_array) - 1)
-                )
-
-        return self._line_segments_from_nested_data(skeleton)
-
-    def _line_segments_from_nested_data(self, skeleton):
-        segment = self._segment_tuple(skeleton)
-        if segment is not None:
-            return [segment]
-
-        try:
-            items = list(skeleton)
-        except TypeError:
-            return []
-
-        points = []
-        segments = []
-        for item in items:
-            segment = self._segment_tuple(item)
-            if segment is not None:
+        segments = layer.get("segments", [])
+        if not isinstance(segments, list):
+            segments = []
+        segment_set = {str(segment) for segment in segments}
+        for seg_id in seg_ids:
+            segment = str(seg_id)
+            if segment not in segment_set:
                 segments.append(segment)
-                continue
+                segment_set.add(segment)
+        layer["segments"] = segments
 
-            point = self._point_tuple(item)
-            if point is not None:
-                points.append(point)
-                continue
+        hidden_segments = layer.get("hiddenSegments")
+        if isinstance(hidden_segments, list):
+            layer["hiddenSegments"] = [
+                segment
+                for segment in hidden_segments
+                if str(segment) not in segment_set
+            ]
 
-            segments.extend(self._line_segments_from_nested_data(item))
+    def _skeleton_shader(self):
+        branches = []
+        for index, compartment in enumerate(DEFAULT_COMPARTMENT_COLORS, start=1):
+            color = self._hex_color_to_vec3(
+                self.compartment_colors.get(compartment, "#ffffff")
+            )
+            prefix = "if" if index == 1 else "else if"
+            branches.append(
+                f"  {prefix} (compartment < {index + 0.5:.1f}) {{ "
+                f"emitRGB(vec3({color})); return; }}"
+            )
 
-        if segments:
-            return segments
-
-        return [
-            (points[index], points[index + 1])
-            for index in range(len(points) - 1)
-        ]
-
-    def _valid_segments(self, segments):
-        return [
-            (point_a, point_b)
-            for point_a, point_b in segments
-            if point_a is not None and point_b is not None
-        ]
-
-    def _segment_tuple(self, value):
-        try:
-            items = list(value)
-        except TypeError:
-            return None
-
-        if len(items) != 2:
-            return None
-
-        point_a = self._point_tuple(items[0])
-        point_b = self._point_tuple(items[1])
-        if point_a is None or point_b is None:
-            return None
-        return point_a, point_b
-
-    def _point_tuple(self, value):
-        try:
-            point = tuple(float(coordinate) for coordinate in value)
-        except (TypeError, ValueError):
-            return None
-
-        if len(point) != 3:
-            return None
-        if not all(math.isfinite(coordinate) for coordinate in point):
-            return None
-        return point
-
-    def _to_voxel(self, point, resolution):
-        return (
-            point[0] / resolution[0],
-            point[1] / resolution[1],
-            point[2] / resolution[2],
+        return "\n".join(
+            [
+                "void main() {",
+                "  float compartment = prop_compartment();",
+                *branches,
+                "  emitDefault();",
+                "}",
+            ]
         )
 
-    def _layer_name(self, compartment):
-        if compartment == "neurd skeleton":
-            return compartment
-        return f"neurd {compartment} skeleton"
+    def _hex_color_to_vec3(self, color):
+        color = str(color).strip()
+        if color.startswith("#"):
+            color = color[1:]
+        if len(color) != 6:
+            color = "ffffff"
+        try:
+            channels = [
+                int(color[index:index + 2], 16) / 255.0
+                for index in (0, 2, 4)
+            ]
+        except ValueError:
+            channels = [1.0, 1.0, 1.0]
+        return ", ".join(f"{channel:.6f}" for channel in channels)
 
     def _response_error_text(self, response):
         try:
@@ -533,6 +413,5 @@ class NeurdSkeletonPointsPlugin(NeuroglancerPlugin):
 NEUROGLANCER_PLUGINS = {
     "None": None,
     "Test": TestNeuroglancerPlugin,
-    "Neurd Skeleton Points": NeurdSkeletonPointsPlugin,
-    "Neurd C2 Skeleton Points": NeurdSkeletonPointsPlugin,
+    "NEURD Skeletons": NeurdSkeletonPointsPlugin
 }

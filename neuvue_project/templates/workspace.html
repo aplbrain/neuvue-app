@@ -405,7 +405,18 @@
                 const message = jsonResponse.message || "Plugin executed successfully.";
                 const ngstate = jsonResponse.ngstate;
                 if (ngstate) {
-                    viewer.state.restoreState(ngstate);
+                    try {
+                        viewer.state.restoreState(ngstate);
+                    } catch (error) {
+                        console.error("Plugin returned an unrestorable Neuroglancer state:", error, jsonResponse.additional_info || {});
+                        try {
+                            viewer.state.restoreState(state);
+                        } catch (rollbackError) {
+                            console.error("Could not restore the previous Neuroglancer state:", rollbackError);
+                        }
+                        triggerToast(`Plugin returned an unrestorable Neuroglancer state: ${error.message || error}`);
+                        return;
+                    }
                 }
                 triggerToast(message);
             });
