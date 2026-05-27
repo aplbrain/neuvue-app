@@ -95,8 +95,8 @@ def create_base_state(seg_ids, coordinate, namespace=None, datastack=None):
     if datastack:
         try:
             ds = Datastack.objects.get(datastack_name=datastack)
-            img_source = "precomputed://" + ds.image_source
-            seg_source = "graphene://" + ds.segmentation_source
+            img_source = ds.image_source
+            seg_source = ds.segmentation_source
             viewer_opts = ds.get_viewer_options()
             black = viewer_opts.get("contrast", {}).get("black", 0)
             white = viewer_opts.get("contrast", {}).get("white", 1)

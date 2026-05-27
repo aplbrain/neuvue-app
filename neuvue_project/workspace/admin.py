@@ -51,6 +51,7 @@ class NamespaceRuleAdmin(admin.ModelAdmin):
 class NeuroglancerPluginAdmin(admin.ModelAdmin):
     list_display = ("name", "description")
     search_fields = ("name",)
+    fields = ("name", "description", "default_plugin_params", "input_schema")
 
 
 @admin.register(Namespace)
