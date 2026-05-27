@@ -31,6 +31,9 @@ class NgStatePluginsView(View):
             data = json.loads(data)
             namespace = data["namespace"]
             ng_state = dict(data["ng_state"])
+            plugin_inputs = data.get("plugin_inputs", {})
+            if not isinstance(plugin_inputs, dict):
+                raise ValueError("plugin_inputs must be an object")
         except Exception as e:
             return plugin_response(
                 f"Ng state plugin request could not be parsed: {e}",
@@ -70,6 +73,7 @@ class NgStatePluginsView(View):
                 ng_state,
                 namespace=namespace,
                 datastack=namespace.datastack,
+                plugin_inputs=plugin_inputs,
             )
         except Exception as e:
             logger.exception("Ng state plugin failed")

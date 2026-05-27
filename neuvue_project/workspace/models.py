@@ -207,6 +207,14 @@ class NeuroglancerPlugin(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     default_plugin_params = models.JSONField(blank=True, null=True)
+    input_schema = models.JSONField(
+        blank=True,
+        null=True,
+        help_text=(
+            "List of workspace input definitions for this plugin. Each item can "
+            "include name, label, type, placeholder, default, and required."
+        ),
+    )
 
     def __str__(self):
         return self.name

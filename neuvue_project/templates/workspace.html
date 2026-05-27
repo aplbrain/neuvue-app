@@ -42,6 +42,22 @@
             <div id="tag-container" class = "sideContentBox" style="max-height:35%;">
                 <div class="sideContentTitle">
                     Workspace Plugins
+                </div>
+                <div class="sideContentInput">
+                    {% for plugin_input in ng_state_plugin_inputs %}
+                        <label for="ng_state_plugin_input_{{plugin_input.name}}">
+                            {% if plugin_input.label %}{{plugin_input.label}}{% else %}{{plugin_input.name}}{% endif %}
+                        </label>
+                        <input
+                            id="ng_state_plugin_input_{{plugin_input.name}}"
+                            class="sideContentTextArea ngStatePluginInput"
+                            type="{% if plugin_input.type %}{{plugin_input.type}}{% else %}text{% endif %}"
+                            value="{% if plugin_input.default %}{{plugin_input.default}}{% endif %}"
+                            placeholder="{% if plugin_input.placeholder %}{{plugin_input.placeholder}}{% endif %}"
+                            data-plugin-input-name="{{plugin_input.name}}"
+                            {% if plugin_input.required %}required{% endif %}
+                        >
+                    {% endfor %}
                     <div>
                         <button type="button" class="btn btn-info" onclick="applyNgStatePlugin()">
                             <i class="fa fa-sync-alt"></i> <span id="ng_state_plugin_button_text">Apply {{ng_state_plugin}} Plugin</span>
@@ -356,7 +372,15 @@
 
     function applyNgStatePlugin() {
         let state = viewer.state.toJSON();
-        let post_body = JSON.stringify({'namespace': "{{namespace}}", 'ng_state' : state});
+        const pluginInputs = getNgStatePluginInputs();
+        if (pluginInputs === null) {
+            return;
+        }
+        let post_body = JSON.stringify({
+            'namespace': "{{namespace}}",
+            'ng_state' : state,
+            'plugin_inputs': pluginInputs,
+        });
         fetch(
             '/ngStatePlugin',
             {body: post_body, headers: {"X-CSRFToken": getCookie("csrftoken")}, method: "POST"}
@@ -390,6 +414,32 @@
             console.error(message);
             triggerToast(message);
         });
+    }
+
+    function getNgStatePluginInputs() {
+        let pluginInputs = {};
+        let missingRequiredInput = null;
+        document.querySelectorAll(".ngStatePluginInput").forEach((input) => {
+            let name = input.dataset.pluginInputName;
+            if (!name) {
+                return;
+            }
+            if (input.type === "checkbox") {
+                pluginInputs[name] = input.checked;
+            } else {
+                pluginInputs[name] = input.value.trim();
+                if (input.required && !pluginInputs[name] && missingRequiredInput === null) {
+                    missingRequiredInput = input;
+                }
+            }
+        });
+        if (missingRequiredInput !== null) {
+            missingRequiredInput.focus();
+            const label = missingRequiredInput.labels.length > 0 ? missingRequiredInput.labels[0].innerText : "Plugin input";
+            triggerToast(`${label} is required.`);
+            return null;
+        }
+        return pluginInputs;
     }
 
     function show3DSlices() {

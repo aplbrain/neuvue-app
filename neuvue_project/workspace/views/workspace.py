@@ -71,11 +71,18 @@ class WorkspaceView(LoginRequiredMixin, View):
             "tags": "",
             "num_edits": 0,
             "track_selected_segments": namespace_obj.track_selected_segments,
-            "ng_state_plugin": None
+            "ng_state_plugin": None,
+            "ng_state_plugin_inputs": [],
         }
 
         if  namespace_obj.ng_state_plugin:
             context["ng_state_plugin"] = namespace_obj.ng_state_plugin.name
+            plugin_inputs = namespace_obj.ng_state_plugin.input_schema or []
+            if isinstance(plugin_inputs, dict):
+                plugin_inputs = plugin_inputs.get("inputs", [])
+            if not isinstance(plugin_inputs, list):
+                plugin_inputs = []
+            context["ng_state_plugin_inputs"] = plugin_inputs
 
         forced_choice_buttons = ForcedChoiceButton.objects.filter(
             set_name=context.get("submission_method")
