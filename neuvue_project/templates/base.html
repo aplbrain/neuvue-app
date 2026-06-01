@@ -54,13 +54,13 @@
 
             {% endif %}
 
-            {% if request.user|in_group:"AuthorizedUsers"%}
             <li class="nav-item">
               <a class="nav-link" href="{% url "about" %}">About</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url "getting-started" %}">Getting Started</a>
             </li>
+            {% if request.user|in_group:"AuthorizedUsers"%}
             <li class="nav-item">
               <a class="nav-link" href="{% url "inspect" %}">Inspect Task</a>
             </li>
@@ -110,7 +110,9 @@
 
     <footer class="nv-footer">
       <div class="nv-footer-inner">
-        <a href="mailto:info@bossdb.org">Contact info@bossdb.org</a>
+        <div>
+          Have questions or are interested in collaborating? Email us at <a href="mailto:neuvue@bossdb.org">neuvue@bossdb.org</a>.
+        </div>
         <span>Version {{ neuvue_app_version }}</span>
       </div>
     </footer>
