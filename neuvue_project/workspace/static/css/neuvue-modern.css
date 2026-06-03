@@ -1108,6 +1108,124 @@ body.nv-body::before {
   margin-top: 8px;
 }
 
+.nv-plugin-panel {
+  overflow: hidden;
+}
+
+.nv-plugin-panel .nv-plugin-details {
+  width: 100%;
+}
+
+.nv-plugin-panel .nv-plugin-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 14px;
+  gap: 8px;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
+}
+
+.nv-plugin-panel .nv-plugin-summary::-webkit-details-marker {
+  display: none;
+}
+
+.nv-plugin-name {
+  overflow: hidden;
+  max-width: 112px;
+  color: var(--nv-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nv-plugin-summary .fa-chevron-down {
+  color: var(--nv-dim);
+  font-size: 11px;
+  transition: transform 0.12s ease;
+}
+
+.nv-plugin-details:not([open]) .nv-plugin-summary .fa-chevron-down {
+  transform: rotate(-90deg);
+}
+
+.nv-plugin-body {
+  max-height: min(42vh, 360px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nv-plugin-panel-collapsed .nv-plugin-body {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.nv-plugin-input-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.nv-plugin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin: 0;
+}
+
+.nv-plugin-label {
+  overflow-wrap: anywhere;
+  color: var(--nv-dim);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nv-workspace-sidecontent .nv-plugin-control {
+  min-width: 0;
+  min-height: 36px;
+  max-width: 100%;
+  padding: 8px 9px;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+}
+
+.nv-workspace-sidecontent textarea.nv-plugin-control {
+  min-height: 76px;
+  max-height: 150px;
+  overflow-y: auto;
+  resize: vertical;
+}
+
+.nv-workspace-sidecontent select.nv-plugin-control {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nv-plugin-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--nv-muted);
+  font-size: 12px;
+}
+
+.nv-plugin-checkbox-row span {
+  overflow-wrap: anywhere;
+}
+
+.nv-plugin-checkbox {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  accent-color: #f59e0b;
+}
+
 .nv-toggle-row {
   display: flex;
   align-items: center;

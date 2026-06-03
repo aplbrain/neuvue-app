@@ -125,29 +125,135 @@
   }
 
   function applyNgStatePlugin() {
+    const previousState = viewer.state.toJSON();
+    const pluginInputs = getNgStatePluginInputs();
+    if (pluginInputs === null) {
+      return;
+    }
+
     const postBody = JSON.stringify({
       namespace: config.namespace,
-      ng_state: viewer.state.toJSON(),
+      ng_state: previousState,
+      plugin_inputs: pluginInputs,
     });
+
     fetch(config.urls.ngStatePlugin, {
       body: postBody,
       headers: { "X-CSRFToken": getCookie("csrftoken") },
       method: "POST",
     }).then((response) => {
-      if (!response.ok) {
-        response.text().then((text) => console.error(text));
+      return response.text().then((text) => {
+        let jsonResponse = {};
+        try {
+          jsonResponse = text ? JSON.parse(text) : {};
+        } catch (error) {
+          jsonResponse = {
+            message: text || "Plugin returned an unreadable response.",
+          };
+        }
+
+        if (!response.ok) {
+          const message = jsonResponse.message || `Plugin failed with status ${response.status}.`;
+          console.error(message, jsonResponse.additional_info || {});
+          triggerToast(message);
+          return;
+        }
+
+        const ngState = jsonResponse.ngstate;
+        if (ngState) {
+          try {
+            viewer.state.restoreState(ngState);
+          } catch (error) {
+            console.error(
+              "Plugin returned an unrestorable Neuroglancer state:",
+              error,
+              jsonResponse.additional_info || {}
+            );
+            try {
+              viewer.state.restoreState(previousState);
+            } catch (rollbackError) {
+              console.error("Could not restore the previous Neuroglancer state:", rollbackError);
+            }
+            triggerToast(`Plugin returned an unrestorable Neuroglancer state: ${error.message || error}`);
+            return;
+          }
+        }
+
+        triggerToast(jsonResponse.message || "Plugin executed successfully.");
+      });
+    }).catch((error) => {
+      const message = `Plugin request failed before reaching the server: ${error.message || error}`;
+      console.error(message);
+      triggerToast(message);
+    });
+  }
+
+  function getNgStatePluginInputs() {
+    const pluginInputs = {};
+    let missingRequiredInput = null;
+
+    document.querySelectorAll(".ngStatePluginInput").forEach((input) => {
+      const name = input.dataset.pluginInputName;
+      if (!name) {
         return;
       }
 
-      response
-        .json()
-        .then((jsonResponse) => {
-          viewer.state.restoreState(jsonResponse.ngstate);
-          triggerToast(jsonResponse.message);
-        })
-        .catch((error) => {
-          console.error(error.message || error);
-        });
+      if (input.type === "checkbox") {
+        pluginInputs[name] = input.checked;
+        if (input.required && !input.checked && missingRequiredInput === null) {
+          missingRequiredInput = input;
+        }
+        return;
+      }
+
+      const value = typeof input.value === "string" ? input.value.trim() : input.value;
+      pluginInputs[name] = value;
+      if (input.required && !value && missingRequiredInput === null) {
+        missingRequiredInput = input;
+      }
+    });
+
+    if (missingRequiredInput !== null) {
+      const details = missingRequiredInput.closest("details");
+      if (details) {
+        details.open = true;
+        const panel = details.closest("[data-autocollapse-panel]");
+        if (panel) {
+          panel.classList.remove("nv-plugin-panel-collapsed");
+        }
+      }
+      missingRequiredInput.focus();
+      const label = missingRequiredInput.closest(".nv-plugin-field");
+      const labelText = label ? label.querySelector(".nv-plugin-label") : null;
+      triggerToast(`${labelText ? labelText.textContent.trim() : "Plugin input"} is required.`);
+      return null;
+    }
+
+    return pluginInputs;
+  }
+
+  function initPluginPanels() {
+    const sidecontent = document.getElementById("neuVue-sidecontent");
+    if (!sidecontent) {
+      return;
+    }
+
+    document.querySelectorAll("[data-autocollapse-panel] details").forEach((details) => {
+      details.open = true;
+      const panel = details.closest("[data-autocollapse-panel]");
+      if (!panel) {
+        return;
+      }
+
+      const maxOpenHeight = Math.max(220, sidecontent.clientHeight * 0.42);
+      if (panel.scrollHeight > maxOpenHeight) {
+        details.open = false;
+        panel.classList.add("nv-plugin-panel-collapsed");
+      }
+
+      details.addEventListener("toggle", function () {
+        panel.classList.toggle("nv-plugin-panel-collapsed", !details.open);
+      });
     });
   }
 
@@ -518,6 +624,7 @@
   window.getLink = getLink;
   window.saveState = saveState;
   window.applyNgStatePlugin = applyNgStatePlugin;
+  window.getNgStatePluginInputs = getNgStatePluginInputs;
   window.getSelectedSegments = getSelectedSegments;
   window.submitForm = submitForm;
   window.triggerToast = triggerToast;
@@ -536,6 +643,7 @@
     initViewer();
     initHotkeyHints();
     initHotkeyToggle();
+    initPluginPanels();
     initButtons();
     initKeyboard();
 

@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("workspace", "0027_userprofile_recent_tags_forcedchoicebutton_palette"),
+        ("workspace", "0026_neuroglancerplugin_namespace_plugin_params_and_more"),
     ]
 
     operations = [

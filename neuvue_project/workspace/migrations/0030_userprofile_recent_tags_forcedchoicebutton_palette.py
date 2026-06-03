@@ -63,7 +63,7 @@ def migrate_button_colors(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("workspace", "0026_neuroglancerplugin_namespace_plugin_params_and_more"),
+        ("workspace", "0029_neuroglancerplugin_input_schema"),
     ]
 
     operations = [

@@ -114,15 +114,77 @@
 
             <!-- Workspace Plugins -->
             {% if ng_state_plugin %}
-            <div class="sideContentBox nv-workspace-panel nv-plugin-panel">
-                <div class="sideContentTitle">
-                    Workspace Plugin
-                </div>
-                <div class="sideContentInfo">
-                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" onclick="applyNgStatePlugin()">
-                        <i class="fa fa-sync-alt" aria-hidden="true"></i> Apply {{ng_state_plugin}} Plugin
-                    </button>
-                </div>
+            <div class="sideContentBox nv-workspace-panel nv-plugin-panel" data-autocollapse-panel>
+                <details class="nv-plugin-details" open>
+                    <summary class="sideContentTitle nv-plugin-summary">
+                        <span>Workspace Plugin</span>
+                        <span class="nv-plugin-name">{{ ng_state_plugin }}</span>
+                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                    </summary>
+                    <div class="sideContentInfo nv-plugin-body">
+                        {% if ng_state_plugin_inputs %}
+                        <div class="nv-plugin-input-list">
+                            {% for plugin_input in ng_state_plugin_inputs %}
+                            <label class="nv-plugin-field" for="ng_state_plugin_input_{{ plugin_input.name }}">
+                                <span class="nv-plugin-label">
+                                    {% if plugin_input.label %}{{ plugin_input.label }}{% else %}{{ plugin_input.name }}{% endif %}
+                                </span>
+                                {% if plugin_input.type == "textarea" %}
+                                <textarea
+                                    id="ng_state_plugin_input_{{ plugin_input.name }}"
+                                    class="sideContentTextArea ngStatePluginInput nv-plugin-control"
+                                    placeholder="{% if plugin_input.placeholder %}{{ plugin_input.placeholder }}{% endif %}"
+                                    data-plugin-input-name="{{ plugin_input.name }}"
+                                    {% if plugin_input.required %}required{% endif %}
+                                >{% if plugin_input.default %}{{ plugin_input.default }}{% endif %}</textarea>
+                                {% elif plugin_input.options %}
+                                <select
+                                    id="ng_state_plugin_input_{{ plugin_input.name }}"
+                                    class="sideContentTextArea ngStatePluginInput nv-plugin-control"
+                                    data-plugin-input-name="{{ plugin_input.name }}"
+                                    {% if plugin_input.required %}required{% endif %}
+                                >
+                                    {% for option in plugin_input.options %}
+                                    <option
+                                        value="{% if option.value %}{{ option.value }}{% else %}{{ option }}{% endif %}"
+                                        {% if plugin_input.default == option or plugin_input.default == option.value %}selected{% endif %}
+                                    >
+                                        {% if option.label %}{{ option.label }}{% elif option.value %}{{ option.value }}{% else %}{{ option }}{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% elif plugin_input.type == "checkbox" %}
+                                <span class="nv-plugin-checkbox-row">
+                                    <input
+                                        id="ng_state_plugin_input_{{ plugin_input.name }}"
+                                        class="ngStatePluginInput nv-plugin-checkbox"
+                                        type="checkbox"
+                                        data-plugin-input-name="{{ plugin_input.name }}"
+                                        {% if plugin_input.default %}checked{% endif %}
+                                        {% if plugin_input.required %}required{% endif %}
+                                    >
+                                    <span>{% if plugin_input.placeholder %}{{ plugin_input.placeholder }}{% else %}Enabled{% endif %}</span>
+                                </span>
+                                {% else %}
+                                <input
+                                    id="ng_state_plugin_input_{{ plugin_input.name }}"
+                                    class="sideContentTextArea ngStatePluginInput nv-plugin-control"
+                                    type="{% if plugin_input.type %}{{ plugin_input.type }}{% else %}text{% endif %}"
+                                    value="{% if plugin_input.default %}{{ plugin_input.default }}{% endif %}"
+                                    placeholder="{% if plugin_input.placeholder %}{{ plugin_input.placeholder }}{% endif %}"
+                                    data-plugin-input-name="{{ plugin_input.name }}"
+                                    {% if plugin_input.required %}required{% endif %}
+                                >
+                                {% endif %}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" onclick="applyNgStatePlugin()">
+                            <i class="fa fa-sync-alt" aria-hidden="true"></i> Apply {{ ng_state_plugin }} Plugin
+                        </button>
+                    </div>
+                </details>
             </div>
             {% endif %}
         </div>
