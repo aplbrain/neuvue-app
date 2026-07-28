@@ -15,7 +15,7 @@ from ..models import (
     UserProfile,
     ForcedChoiceButtonGroup,
     ForcedChoiceButton,
-    NeuroglancerHost
+    NeuroglancerHost,
 )
 from ..neuroglancer import (
     construct_proofreading_state,
@@ -24,7 +24,7 @@ from ..neuroglancer import (
     get_from_json,
     apply_state_config,
     refresh_ids,
-    post_to_state_server
+    post_to_state_server,
 )
 from ..utils import is_url, is_json, is_authorized, get_or_create_public_taskbucket
 
@@ -34,7 +34,7 @@ logging.basicConfig(level=logging.INFO)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 Config = apps.get_model("preferences", "Config")
-    
+
 
 class WorkspaceView(LoginRequiredMixin, View):
     def get(self, request, namespace=None, **kwargs):
@@ -87,7 +87,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             },
         }
 
-        if  namespace_obj.ng_state_plugin:
+        if namespace_obj.ng_state_plugin:
             context["ng_state_plugin"] = namespace_obj.ng_state_plugin.name
             plugin_inputs = namespace_obj.ng_state_plugin.input_schema or []
             if isinstance(plugin_inputs, dict):
@@ -194,7 +194,10 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             if ng_state:
                 if is_url(ng_state.replace("middleauth+", "")):
-                    if namespace_obj.ng_host not in [NeuroglancerHost.NEUVUE, NeuroglancerHost.SPELUNKER]:
+                    if namespace_obj.ng_host not in [
+                        NeuroglancerHost.NEUVUE,
+                        NeuroglancerHost.SPELUNKER,
+                    ]:
                         # Assume its a url to json state
                         context["ng_state"] = ng_state
                     else:
@@ -233,7 +236,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             ############################# ALLOW TO REASSIGN ########################################
             # get user profile object
             namespace_obj = Namespace.objects.get(namespace=namespace)
-            
+
             user_push_rule = user_profile.namespace_rule.filter(
                 namespace=namespace_obj, action="push"
             ).first()
@@ -242,7 +245,9 @@ class WorkspaceView(LoginRequiredMixin, View):
             if user_push_rule:
                 push_bucket_assignee = user_push_rule.task_bucket.bucket_assignee
             elif namespace_obj.default_push_rule:
-                push_bucket_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                push_bucket_assignee = (
+                    namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                )
             else:
                 push_bucket_assignee = None
 
@@ -347,7 +352,9 @@ class WorkspaceView(LoginRequiredMixin, View):
         self._remember_recent_tags(request.user, tags)
 
         try:
-            ng_state = post_to_state_server(ng_state, public = namespace_obj.ng_host != NeuroglancerHost.NEUVUE)
+            ng_state = post_to_state_server(
+                ng_state, public=namespace_obj.ng_host != NeuroglancerHost.NEUVUE
+            )
         except:
             logger.warning("Unable to post state to JSON State Server")
 
@@ -371,10 +378,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             logger.info("User took action on a demo task. Patching priority only.")
             new_priority = task_df["priority"] - namespace_obj.decrement_priority
             try:
-                client.patch_task(
-                    task_df["_id"],
-                    priority=new_priority
-                )
+                client.patch_task(task_df["_id"], priority=new_priority)
             except Exception:
                 logging.warning(
                     f'Unable to lower priority for current task: {task_df["_id"]}'
@@ -392,7 +396,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 tags=tags,
                 metadata=metadata,
-                assignee=str(request.user)
+                assignee=str(request.user),
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -411,7 +415,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 ng_state=ng_state,
                 metadata=metadata,
                 tags=tags,
-                assignee=str(request.user)
+                assignee=str(request.user),
             )
             # Add new differ stack entry
             if ng_differ_stack != []:
@@ -483,20 +487,21 @@ class WorkspaceView(LoginRequiredMixin, View):
             # Add new differ stack entry
             if ng_differ_stack != []:
                 client.post_differ_stack(task_df["_id"], ng_differ_stack)
-        
+
         elif button == "remove":
             # Fetch the user's profile and see if they have a custom "push" rule for this namespace
             user_profile = UserProfile.objects.get(user=request.user)
             user_push_rule = user_profile.namespace_rule.filter(
-                namespace=namespace_obj, 
-                action="push"
+                namespace=namespace_obj, action="push"
             ).first()
 
             # If user has a specific push rule, use it; otherwise fall back to namespace's default
             if user_push_rule:
                 new_assignee = user_push_rule.task_bucket.bucket_assignee
             elif namespace_obj.default_push_rule:
-                new_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                new_assignee = (
+                    namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                )
             else:
                 return HttpResponse(
                     "You do not have permission to remove tasks from this queue. No push rule found.",

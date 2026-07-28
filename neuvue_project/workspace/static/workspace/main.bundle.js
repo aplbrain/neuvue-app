@@ -15400,10 +15400,10 @@ module.exports['DIFF_EQUAL'] = DIFF_EQUAL;
                 self.selectedDates.length > 0 || self.config.noCalendar;
             var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             /* TODO: investigate this further
-        
+
               Currently, there is weird positioning behavior in safari causing pages
               to scroll up. https://github.com/chmln/flatpickr/issues/563
-        
+
               However, most browsers are not Safari and positioning is expensive when used
               in scale. https://github.com/chmln/flatpickr/issues/1096
             */
@@ -32002,7 +32002,7 @@ module.exports = function(CodeMirror) {
                 var _i, _a, child, _b, _c, child, _d, _e, child, _f, _g, child, _h, _j, child, _k, _l, child, _m, _o, child;
                 return __generator(this, function (_p) {
                     switch (_p.label) {
-                        case 0: 
+                        case 0:
                         // https://www.w3.org/TR/css-position-3/#painting-order
                         // 1. the background and borders of the element forming the stacking context.
                         return [4 /*yield*/, this.renderNodeBackgroundAndBorders(stack.element)];
@@ -32022,7 +32022,7 @@ module.exports = function(CodeMirror) {
                         case 4:
                             _i++;
                             return [3 /*break*/, 2];
-                        case 5: 
+                        case 5:
                         // 3. For all its in-flow, non-positioned, block-level descendants in tree order:
                         return [4 /*yield*/, this.renderNodeContent(stack.element)];
                         case 6:
@@ -51641,7 +51641,7 @@ function addStyle (obj, options) {
 	// If a transform function was defined, run it on the css
 	if (options.transform && obj.css) {
 	    result = typeof options.transform === 'function'
-		 ? options.transform(obj.css) 
+		 ? options.transform(obj.css)
 		 : options.transform.default(obj.css);
 
 	    if (result) {
@@ -54528,11 +54528,11 @@ class RenderHelper extends neuroglancer_annotation_type_handler__WEBPACK_IMPORTE
             const { gl } = shader;
             const aLower = shader.attribute('aLower');
             const aUpper = shader.attribute('aUpper');
-            context.buffer.bindToVertexAttrib(aLower, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aLower, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset);
-            context.buffer.bindToVertexAttrib(aUpper, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aUpper, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset + 4 * 3);
             gl.vertexAttribDivisor(aLower, 1);
             gl.vertexAttribDivisor(aUpper, 1);
@@ -54548,7 +54548,7 @@ class PerspectiveViewRenderHelper extends RenderHelper {
     constructor() {
         super(...arguments);
         this.lineShader = this.registerDisposer(new neuroglancer_webgl_lines__WEBPACK_IMPORTED_MODULE_9__["LineShader"](this.gl, EDGES_PER_BOX));
-        this.edgeBoxCornerOffsetsBuffer = this.registerDisposer(neuroglancer_webgl_buffer__WEBPACK_IMPORTED_MODULE_7__["Buffer"].fromData(this.gl, Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(edgeBoxCornerOffsetData, /*majorDimension=*/ 7, /*minorTiles=*/ 1, 
+        this.edgeBoxCornerOffsetsBuffer = this.registerDisposer(neuroglancer_webgl_buffer__WEBPACK_IMPORTED_MODULE_7__["Buffer"].fromData(this.gl, Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(edgeBoxCornerOffsetData, /*majorDimension=*/ 7, /*minorTiles=*/ 1,
         /*majorTiles=*/ neuroglancer_webgl_lines__WEBPACK_IMPORTED_MODULE_9__["VERTICES_PER_LINE"])));
         this.edgeShaderGetter = Object(neuroglancer_webgl_shader__WEBPACK_IMPORTED_MODULE_10__["emitterDependentShaderGetter"])(this, this.gl, (builder) => {
             this.defineShader(builder);
@@ -54568,7 +54568,7 @@ emitAnnotation(vec4(vColor.rgb, getLineAlpha()));
 `);
         });
         this.circleShader = this.registerDisposer(new neuroglancer_webgl_circles__WEBPACK_IMPORTED_MODULE_8__["CircleShader"](this.gl, CORNERS_PER_BOX));
-        this.boxCornerOffsetsBuffer = this.registerDisposer(neuroglancer_webgl_buffer__WEBPACK_IMPORTED_MODULE_7__["Buffer"].fromData(this.gl, Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(neuroglancer_sliceview_bounding_box_shader_helper__WEBPACK_IMPORTED_MODULE_3__["vertexBasePositions"], /*majorDimension=*/ 3, /*minorTiles=*/ 1, 
+        this.boxCornerOffsetsBuffer = this.registerDisposer(neuroglancer_webgl_buffer__WEBPACK_IMPORTED_MODULE_7__["Buffer"].fromData(this.gl, Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(neuroglancer_sliceview_bounding_box_shader_helper__WEBPACK_IMPORTED_MODULE_3__["vertexBasePositions"], /*majorDimension=*/ 3, /*minorTiles=*/ 1,
         /*majorTiles=*/ neuroglancer_webgl_circles__WEBPACK_IMPORTED_MODULE_8__["VERTICES_PER_CIRCLE"])));
         this.cornerShaderGetter = Object(neuroglancer_webgl_shader__WEBPACK_IMPORTED_MODULE_10__["emitterDependentShaderGetter"])(this, this.gl, (builder) => {
             this.defineShader(builder);
@@ -54594,11 +54594,11 @@ emitAnnotation(getCircleColor(vColor, borderColor));
         this.enable(shader, context, () => {
             const aBoxCornerOffset1 = shader.attribute('aBoxCornerOffset1');
             const aBoxCornerOffset2 = shader.attribute('aBoxCornerOffset2');
-            this.edgeBoxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset1, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            this.edgeBoxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset1, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 7, /*offset=*/ 0);
-            this.edgeBoxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset2, /*components=*/ 4, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            this.edgeBoxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset2, /*components=*/ 4, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 7, /*offset=*/ 4 * 3);
             this.lineShader.draw(shader, context.renderContext, /*lineWidth=*/ 1, 1, context.count);
             gl.disableVertexAttribArray(aBoxCornerOffset1);
@@ -54610,7 +54610,7 @@ emitAnnotation(getCircleColor(vColor, borderColor));
         const { gl } = this;
         this.enable(shader, context, () => {
             const aBoxCornerOffset = shader.attribute('aBoxCornerOffset');
-            this.boxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
+            this.boxCornerOffsetsBuffer.bindToVertexAttrib(aBoxCornerOffset, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
             /*normalized=*/ false);
             this.circleShader.draw(shader, context.renderContext, { interiorRadiusInPixels: 1, borderWidthInPixels: 0, featherWidthInPixels: 1 }, context.count);
             gl.disableVertexAttribArray(aBoxCornerOffset);
@@ -54625,9 +54625,9 @@ function getBaseIntersectionVertexIndexArray() {
     return new Float32Array([0, 1, 2, 3, 4, 5]);
 }
 function getIntersectionVertexIndexArray() {
-    return Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(getBaseIntersectionVertexIndexArray(), 
-    /*majorDimension=*/ 1, 
-    /*minorTiles=*/ 1, 
+    return Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_5__["tile2dArray"])(getBaseIntersectionVertexIndexArray(),
+    /*majorDimension=*/ 1,
+    /*minorTiles=*/ 1,
     /*majorTiles=*/ neuroglancer_webgl_lines__WEBPACK_IMPORTED_MODULE_9__["VERTICES_PER_LINE"]);
 }
 class SliceViewRenderHelper extends RenderHelper {
@@ -54681,7 +54681,7 @@ emitAnnotation(vec4(vColor.rgb, uFillOpacity));
             this.boundingBoxCrossSectionHelper.setViewportPlane(shader, context.renderContext.sliceView.viewportAxes[2], context.renderContext.sliceView.centerDataPosition, context.annotationLayer.state.globalToObject);
             const aVertexIndexFloat = shader.attribute('aVertexIndexFloat');
             (fillOpacity ? this.filledIntersectionVertexIndexBuffer : this.intersectionVertexIndexBuffer)
-                .bindToVertexAttrib(aVertexIndexFloat, /*components=*/ 1, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
+                .bindToVertexAttrib(aVertexIndexFloat, /*components=*/ 1, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
             /*normalized=*/ false);
             if (fillOpacity) {
                 gl.uniform1f(shader.uniform('uFillOpacity'), fillOpacity);
@@ -54946,11 +54946,11 @@ class RenderHelper extends neuroglancer_annotation_type_handler__WEBPACK_IMPORTE
             const aCenter = shader.attribute('aCenter');
             const aRadii = shader.attribute('aRadii');
             const { gl } = shader;
-            context.buffer.bindToVertexAttrib(aCenter, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aCenter, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset);
-            context.buffer.bindToVertexAttrib(aRadii, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aRadii, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset + 4 * 3);
             gl.vertexAttribDivisor(aCenter, 1);
             gl.vertexAttribDivisor(aRadii, 1);
@@ -56684,7 +56684,7 @@ const FULL_OBJECT_PICK_OFFSET = 0;
 const ENDPOINTS_PICK_OFFSET = FULL_OBJECT_PICK_OFFSET + 1;
 const PICK_IDS_PER_INSTANCE = ENDPOINTS_PICK_OFFSET + 2;
 function getEndpointIndexArray() {
-    return Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_4__["tile2dArray"])(new Uint8Array([0, 1]), /*majorDimension=*/ 1, /*minorTiles=*/ 1, 
+    return Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_4__["tile2dArray"])(new Uint8Array([0, 1]), /*majorDimension=*/ 1, /*minorTiles=*/ 1,
     /*majorTiles=*/ neuroglancer_webgl_circles__WEBPACK_IMPORTED_MODULE_8__["VERTICES_PER_CIRCLE"]);
 }
 class RenderHelper extends neuroglancer_annotation_type_handler__WEBPACK_IMPORTED_MODULE_2__["AnnotationRenderHelper"] {
@@ -56740,11 +56740,11 @@ emitAnnotation(getCircleColor(vColor, borderColor));
             const { gl } = shader;
             const aLower = shader.attribute('aEndpointA');
             const aUpper = shader.attribute('aEndpointB');
-            context.buffer.bindToVertexAttrib(aLower, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aLower, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset);
-            context.buffer.bindToVertexAttrib(aUpper, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aUpper, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 4 * 6, /*offset=*/ context.bufferOffset + 4 * 3);
             gl.vertexAttribDivisor(aLower, 1);
             gl.vertexAttribDivisor(aUpper, 1);
@@ -56765,7 +56765,7 @@ emitAnnotation(getCircleColor(vColor, borderColor));
         const shader = this.endpointShaderGetter(context.renderContext.emitter);
         this.enable(shader, context, () => {
             const aEndpointIndex = shader.attribute('aEndpointIndex');
-            this.endpointIndexBuffer.bindToVertexAttribI(aEndpointIndex, /*components=*/ 1, 
+            this.endpointIndexBuffer.bindToVertexAttribI(aEndpointIndex, /*components=*/ 1,
             /*attributeType=*/ WebGL2RenderingContext.UNSIGNED_BYTE);
             this.circleShader.draw(shader, context.renderContext, { interiorRadiusInPixels: 6, borderWidthInPixels: 2, featherWidthInPixels: 1 }, context.count);
             shader.gl.disableVertexAttribArray(aEndpointIndex);
@@ -57087,8 +57087,8 @@ emitAnnotation(getCircleColor(vColor, borderColor));
         this.enable(shader, context, () => {
             const { gl } = this;
             const aVertexPosition = shader.attribute('aVertexPosition');
-            context.buffer.bindToVertexAttrib(aVertexPosition, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-            /*normalized=*/ false, 
+            context.buffer.bindToVertexAttrib(aVertexPosition, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+            /*normalized=*/ false,
             /*stride=*/ 0, /*offset=*/ context.bufferOffset);
             gl.vertexAttribDivisor(aVertexPosition, 1);
             const pointSize = context.annotationLayer.state.pointSize.value;
@@ -63992,7 +63992,7 @@ function getMeshMetadata(chunkManager, url) {
     return chunkManager.memoize.getUncounted({ 'type': 'graphene:MeshSource', url }, () => Object(neuroglancer_authentication_frontend_ts__WEBPACK_IMPORTED_MODULE_1__["authFetch"])(`${url}/info`)
         .then(response => {
         return response.json().then(value => parseMeshMetadata(value));
-    }, 
+    },
     // If we fail to fetch the info file, assume it is the legacy
     // single-resolution mesh format.
     () => undefined));
@@ -65036,7 +65036,7 @@ function getMeshMetadata(chunkManager, url) {
     return chunkManager.memoize.getUncounted({ 'type': 'precomputed:MeshSource', url }, () => Object(neuroglancer_util_http_request__WEBPACK_IMPORTED_MODULE_10__["fetchOk"])(`${url}/info`)
         .then(response => {
         return response.json().then(value => parseMeshMetadata(value));
-    }, 
+    },
     // If we fail to fetch the info file, assume it is the legacy
     // single-resolution mesh format.
     () => undefined));
@@ -69909,7 +69909,7 @@ function setupDropZone(dropZone, manager, makeLayerGroupViewer) {
             catch (e) {
                 return;
             }
-            const dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, manager, /*forceCopy=*/ false, /*allowMove=*/ false, 
+            const dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, manager, /*forceCopy=*/ false, /*allowMove=*/ false,
             /*newTarget=*/ true);
             if (dropLayers !== undefined && dropLayers.finalize(event)) {
                 event.preventDefault();
@@ -69927,8 +69927,8 @@ function setupDropZone(dropZone, manager, makeLayerGroupViewer) {
             }
         }
         else {
-            const dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, manager, /*forceCopy=*/ Object(neuroglancer_util_drag_and_drop__WEBPACK_IMPORTED_MODULE_6__["getDropEffect"])() === 'copy', 
-            /*allowMove=*/ false, 
+            const dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, manager, /*forceCopy=*/ Object(neuroglancer_util_drag_and_drop__WEBPACK_IMPORTED_MODULE_6__["getDropEffect"])() === 'copy',
+            /*allowMove=*/ false,
             /*newTarget=*/ true);
             if (dropLayers !== undefined && dropLayers.finalize(event)) {
                 event.preventDefault();
@@ -70222,7 +70222,7 @@ function registerDropHandlers(panel, target, targetLayer) {
             }
         }
         if (dropLayers === undefined) {
-            dropLayers = panel.dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, panel.manager, /*forceCopy=*/ dropEffect === 'copy', /*allowMove=*/ true, 
+            dropLayers = panel.dropLayers = Object(neuroglancer_ui_layer_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["getDropLayers"])(event, panel.manager, /*forceCopy=*/ dropEffect === 'copy', /*allowMove=*/ true,
             /*newTarget=*/ false);
             if (dropLayers === undefined) {
                 return undefined;
@@ -71163,7 +71163,7 @@ function getFloatPositionHandler(glAttributeType) {
             builder.addVertexCode(`highp vec3 getVertexPosition() { return aVertexPosition; }`);
         },
         bind(_gl, shader, fragmentChunk) {
-            fragmentChunk.vertexBuffer.bindToVertexAttrib(shader.attribute('aVertexPosition'), 
+            fragmentChunk.vertexBuffer.bindToVertexAttrib(shader.attribute('aVertexPosition'),
             /*components=*/ 3, glAttributeType, /* normalized=*/ true);
         },
         endLayer: (gl, shader) => {
@@ -71186,7 +71186,7 @@ highp vec3 getVertexPosition() {
 `);
         },
         bind(_gl, shader, fragmentChunk) {
-            fragmentChunk.vertexBuffer.bindToVertexAttribI(shader.attribute('aVertexPosition'), 
+            fragmentChunk.vertexBuffer.bindToVertexAttribI(shader.attribute('aVertexPosition'),
             /*components=*/ 1, WebGL2RenderingContext.UNSIGNED_INT);
         },
         endLayer: (gl, shader) => {
@@ -71269,7 +71269,7 @@ vColor = vec4(lightingFactor * uColor.rgb, uColor.a);
     drawFragmentHelper(gl, shader, fragmentChunk, indexBegin, indexEnd) {
         this.vertexPositionHandler.bind(gl, shader, fragmentChunk);
         const { meshData } = fragmentChunk;
-        fragmentChunk.normalBuffer.bindToVertexAttrib(shader.attribute('aVertexNormal'), 
+        fragmentChunk.normalBuffer.bindToVertexAttrib(shader.attribute('aVertexNormal'),
         /*components=*/ 2, WebGL2RenderingContext.BYTE, /*normalized=*/ true);
         fragmentChunk.indexBuffer.bind();
         const { indices } = meshData;
@@ -77106,7 +77106,7 @@ function helper(Base) {
                         let chunkLow = entry[0].split(',')[0];
                         let chunkHigh = entry[0].split(',')[1];
                         let tempSegment = new neuroglancer_util_uint64__WEBPACK_IMPORTED_MODULE_21__["Uint64"](parseInt(chunkLow), parseInt(chunkHigh));
-                        // create a refresh promise for each segment 
+                        // create a refresh promise for each segment
                         const promise = meshSource.rpc.promiseInvoke(neuroglancer_datasource_graphene_base__WEBPACK_IMPORTED_MODULE_3__["GRAPHENE_MANIFEST_REFRESH_PROMISE"], { 'rpcId': meshSource.rpcId, 'segment': tempSegment.toString() });
                         let msgTail = 'if full mesh does not appear try again after this message disappears.';
                         this.chunkedGraphLayer.withErrorMessage(promise, {
@@ -81194,15 +81194,15 @@ let SliceView = class SliceView extends Base {
         gl.enable(gl.STENCIL_TEST);
         gl.disable(gl.DEPTH_TEST);
         gl.stencilOpSeparate(
-        /*face=*/ gl.FRONT_AND_BACK, /*sfail=*/ gl.KEEP, /*dpfail=*/ gl.KEEP, 
+        /*face=*/ gl.FRONT_AND_BACK, /*sfail=*/ gl.KEEP, /*dpfail=*/ gl.KEEP,
         /*dppass=*/ gl.REPLACE);
         let renderLayerNum = 0;
         for (let renderLayer of this.visibleLayerList) {
             gl.clear(gl.STENCIL_BUFFER_BIT);
             gl.stencilFuncSeparate(
-            /*face=*/ gl.FRONT_AND_BACK, 
-            /*func=*/ gl.GREATER, 
-            /*ref=*/ 1, 
+            /*face=*/ gl.FRONT_AND_BACK,
+            /*func=*/ gl.GREATER,
+            /*ref=*/ 1,
             /*mask=*/ 1);
             renderLayer.setGLBlendMode(gl, renderLayerNum);
             renderLayer.draw(this);
@@ -82274,9 +82274,9 @@ gl_Position = uProjection * (pos + delta);
         gl.uniform1f(shader.uniform('uOpacity'), this.opacity.value);
         gl.uniform1f(shader.uniform('ulineWidth'), this.lineWidth.value);
         gl.uniform3fv(shader.uniform('uColor'), this.color.value);
-        this.vertexIndexBuffer.bindToVertexAttrib(shader.attribute('aVertexIndex'), 
+        this.vertexIndexBuffer.bindToVertexAttrib(shader.attribute('aVertexIndex'),
         /*components=*/ 2);
-        this.normalDirectionBuffer.bindToVertexAttrib(shader.attribute('aNormalDirection'), 
+        this.normalDirectionBuffer.bindToVertexAttrib(shader.attribute('aNormalDirection'),
         /*components=*/ 1);
         return shader;
     }
@@ -82320,19 +82320,19 @@ gl_Position = uProjection * (pos + delta);
                 if (chunk && chunk.state === neuroglancer_chunk_manager_base__WEBPACK_IMPORTED_MODULE_0__["ChunkState"].GPU_MEMORY) {
                     let numInstances = chunk.numPoints / 2; // Two points == One vector
                     const aVertexFirst = shader.attribute('aVertexFirst');
-                    chunk.vertexBuffer.bindToVertexAttrib(aVertexFirst, 
-                    /*components=*/ 3, 
-                    /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-                    /*normalized=*/ false, 
-                    /*stride=*/ 6 * 4, 
+                    chunk.vertexBuffer.bindToVertexAttrib(aVertexFirst,
+                    /*components=*/ 3,
+                    /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+                    /*normalized=*/ false,
+                    /*stride=*/ 6 * 4,
                     /*offset=*/ 0);
                     gl.vertexAttribDivisor(aVertexFirst, 1);
                     const aVertexSecond = shader.attribute('aVertexSecond');
-                    chunk.vertexBuffer.bindToVertexAttrib(aVertexSecond, 
-                    /*components=*/ 3, 
-                    /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
-                    /*normalized=*/ false, 
-                    /*stride=*/ 6 * 4, 
+                    chunk.vertexBuffer.bindToVertexAttrib(aVertexSecond,
+                    /*components=*/ 3,
+                    /*attributeType=*/ WebGL2RenderingContext.FLOAT,
+                    /*normalized=*/ false,
+                    /*stride=*/ 6 * 4,
                     /*offset=*/ 3 * 4);
                     gl.vertexAttribDivisor(aVertexSecond, 1);
                     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, numInstances);
@@ -85908,7 +85908,7 @@ class GraphOperationLayerView extends neuroglancer_widget_tab_view__WEBPACK_IMPO
                                 this.wrapper.graphOperationLayerState.value.segmentationState.value.segmentSelectionState.selectedSegment = splitRoots[0];
                                 this.annotationLayer.segmentationState.value.segmentSelectionState.selectedSegment = splitRoots[0];
                             }
-                            // Access split points mode checkbox value 
+                            // Access split points mode checkbox value
                             let splitPointscheckbox = document.getElementById('multi-split-mode-checkbox');
                             let splitPointsValue = splitPointscheckbox.checked;
                             if (splitPointsValue) {
@@ -98052,10 +98052,10 @@ void emitSphere(mat4 projectionMatrix, mat4 normalTransformMatrix, vec3 centerPo
     }
     draw(shader, numInstances) {
         const aSphereVertex = shader.attribute('aSphereVertex');
-        this.vertexBuffer.bindToVertexAttrib(aSphereVertex, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT, 
+        this.vertexBuffer.bindToVertexAttrib(aSphereVertex, /*components=*/ 3, /*attributeType=*/ WebGL2RenderingContext.FLOAT,
         /*normalized=*/ false);
         this.indexBuffer.bind();
-        shader.gl.drawElementsInstanced(WebGL2RenderingContext.TRIANGLES, this.numIndices, WebGL2RenderingContext.UNSIGNED_SHORT, 
+        shader.gl.drawElementsInstanced(WebGL2RenderingContext.TRIANGLES, this.numIndices, WebGL2RenderingContext.UNSIGNED_SHORT,
         /*offset=*/ 0, numInstances);
         shader.gl.disableVertexAttribArray(aSphereVertex);
     }
@@ -98101,7 +98101,7 @@ function getSquareCornersArray(startX = -1, startY = -1, endX = 1, endY = 1, min
         startX, endY,
         endX, endY,
         endX, startY,
-    ]), 
+    ]),
     /*majorDimension=*/ 2, minorTiles, majorTiles);
 }
 function getCubeCornersArray(startX = -1, startY = -1, startZ = -1, endX = 1, endY = 1, endZ = 1, minorTiles = 1, majorTiles = 1) {
@@ -98114,7 +98114,7 @@ function getCubeCornersArray(startX = -1, startY = -1, startZ = -1, endX = 1, en
         endX, startY, endZ,
         startX, endY, endZ,
         endX, endY, endZ,
-    ]), 
+    ]),
     /*majorDimension=*/ 3, minorTiles, majorTiles);
 }
 function getSquareCornersBuffer(gl, startX = -1, startY = -1, endX = 1, endY = 1, minorTiles = 1, majorTiles = 1) {
@@ -98182,11 +98182,11 @@ function resizeTexture(gl, texture, width, height, internalFormat = WebGL2Render
     gl.activeTexture(WebGL2RenderingContext.TEXTURE0 + gl.tempTextureUnit);
     gl.bindTexture(WebGL2RenderingContext.TEXTURE_2D, texture);
     setRawTextureParameters(gl);
-    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D, 0, 
-    /*internalformat=*/ internalFormat, 
-    /*width=*/ width, 
-    /*height=*/ height, 
-    /*border=*/ 0, 
+    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D, 0,
+    /*internalformat=*/ internalFormat,
+    /*width=*/ width,
+    /*height=*/ height,
+    /*border=*/ 0,
     /*format=*/ format, dataType, null);
     gl.bindTexture(WebGL2RenderingContext.TEXTURE_2D, null);
 }
@@ -98203,8 +98203,8 @@ function setTextureFromCanvas(gl, texture, canvas) {
     gl.texParameteri(WebGL2RenderingContext.TEXTURE_2D, WebGL2RenderingContext.TEXTURE_WRAP_T, WebGL2RenderingContext.CLAMP_TO_EDGE);
     gl.pixelStorei(WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
     gl.pixelStorei(WebGL2RenderingContext.UNPACK_ALIGNMENT, 4);
-    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D, /*level=*/ 0, 
-    /*internalformat=*/ WebGL2RenderingContext.RGBA8, 
+    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D, /*level=*/ 0,
+    /*internalformat=*/ WebGL2RenderingContext.RGBA8,
     /*format=*/ WebGL2RenderingContext.RGBA, WebGL2RenderingContext.UNSIGNED_BYTE, canvas);
     gl.pixelStorei(WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, 0);
     gl.bindTexture(WebGL2RenderingContext.TEXTURE_2D, null);
@@ -98409,10 +98409,10 @@ function setOneDimensionalTextureData(gl, textureLayout, format, data) {
     let padded = Object(neuroglancer_util_array__WEBPACK_IMPORTED_MODULE_0__["maybePadArray"])(data, requiredSize);
     gl.pixelStorei(WebGL2RenderingContext.UNPACK_ALIGNMENT, 1);
     Object(neuroglancer_webgl_texture__WEBPACK_IMPORTED_MODULE_3__["setRawTextureParameters"])(gl);
-    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D, 
-    /*level=*/ 0, textureInternalFormat, 
-    /*width=*/ textureWidth, 
-    /*height=*/ textureHeight, 
+    gl.texImage2D(WebGL2RenderingContext.TEXTURE_2D,
+    /*level=*/ 0, textureInternalFormat,
+    /*width=*/ textureWidth,
+    /*height=*/ textureHeight,
     /*border=*/ 0, textureFormat, format.texelType, padded);
 }
 function setThreeDimensionalTextureData(gl, format, data, width, height, depth) {
@@ -98422,11 +98422,11 @@ function setThreeDimensionalTextureData(gl, format, data, width, height, depth) 
     }
     gl.pixelStorei(WebGL2RenderingContext.UNPACK_ALIGNMENT, 1);
     Object(neuroglancer_webgl_texture__WEBPACK_IMPORTED_MODULE_3__["setRawTexture3DParameters"])(gl);
-    gl.texImage3D(WebGL2RenderingContext.TEXTURE_3D, 
-    /*level=*/ 0, textureInternalFormat, 
-    /*width=*/ width * texelsPerElement, 
-    /*height=*/ height, 
-    /*depth=*/ depth, 
+    gl.texImage3D(WebGL2RenderingContext.TEXTURE_3D,
+    /*level=*/ 0, textureInternalFormat,
+    /*width=*/ width * texelsPerElement,
+    /*height=*/ height,
+    /*depth=*/ depth,
     /*border=*/ 0, textureFormat, format.texelType, data);
 }
 function getShaderCodeForDataType(dataType) {

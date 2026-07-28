@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 SITE_ID = 2
 
@@ -236,7 +236,9 @@ TIMEOUT = 900
 # TODO: Move this as a internal model separate from the django config
 NG_CLIENT = "https://neuroglancer.neuvue.io"
 JSON_STATE_SERVER = "https://global.daf-apis.com/nglstate/post"
-PUBLIC_JSON_STATE_SERVER = "https://mt462bg26ht52it337j53ktdpm0yfgyu.lambda-url.us-east-1.on.aws/"
+PUBLIC_JSON_STATE_SERVER = (
+    "https://mt462bg26ht52it337j53ktdpm0yfgyu.lambda-url.us-east-1.on.aws/"
+)
 DATASET_VIEWER_OPTIONS = {
     "https://bossdb-open-data.s3.amazonaws.com/iarpa_microns/minnie/minnie65/em": {
         "contrast": {"black": 0.35, "white": 0.7}
@@ -246,6 +248,7 @@ VOXEL_RESOLUTION = (4, 4, 40)
 
 if DEBUG:
     import mimetypes
+
     mimetypes.add_type("application/javascript", ".js", True)
     mimetypes.add_type("application/wasm", ".wasm", True)
 
@@ -258,7 +261,9 @@ STATIC_NG_FILES = os.listdir(
 if "NEURD_LAMBDA_URL" in os.environ and DEBUG is False:
     NEURD_LAMBDA_URL = os.environ["NEURD_LAMBDA_URL"]
 else:
-    NEURD_LAMBDA_URL = "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
+    NEURD_LAMBDA_URL = (
+        "https://g9v90mw9u0.execute-api.us-east-1.amazonaws.com/production"
+    )
 
 if "NEURD_LAMBDA_SECRET_ARN" in os.environ and DEBUG is False:
     NEURD_LAMBDA_SECRET_ARN = os.environ["NEURD_LAMBDA_SECRET_ARN"]

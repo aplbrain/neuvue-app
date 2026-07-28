@@ -9,6 +9,7 @@ def validate_submission_value(value):
             params={"value": value},
         )
 
+
 def no_whitespace(value):
     if any(char.isspace() for char in value):
         raise ValidationError("No whitespace is allowed in this field.")

@@ -23,7 +23,6 @@ def plugin_response(message, ng_state=None, status=500, additional_info=None):
 
 
 class NgStatePluginsView(View):
-
     def post(self, request, *args, **kwargs):
         # Make sure input state is well formed
         try:

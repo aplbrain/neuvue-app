@@ -7,6 +7,7 @@ import pandas as pd
 # import the logging library
 import logging
 import warnings
+
 logging.basicConfig(level=logging.DEBUG)
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -113,7 +114,9 @@ def create_stats_table(pending_tasks, closed_tasks):
             m = namespace_df[status].min()
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                average_event_time = (m + (namespace_df[status] - m)).mean().to_pydatetime()
+                average_event_time = (
+                    (m + (namespace_df[status] - m)).mean().to_pydatetime()
+                )
                 changelog.append((average_event_time, n_tasks, status, namespace))
 
     # Sort changelogs by datetime

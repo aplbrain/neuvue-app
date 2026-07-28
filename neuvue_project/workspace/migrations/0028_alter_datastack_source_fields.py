@@ -15,8 +15,11 @@ def add_explicit_layer_source_prefixes(apps, schema_editor):
             datastack.image_source = f"precomputed://{datastack.image_source}"
             changed = True
 
-        if datastack.segmentation_source and not datastack.segmentation_source.startswith(
-            SEGMENTATION_SOURCE_PREFIXES
+        if (
+            datastack.segmentation_source
+            and not datastack.segmentation_source.startswith(
+                SEGMENTATION_SOURCE_PREFIXES
+            )
         ):
             datastack.segmentation_source = (
                 f"graphene://{datastack.segmentation_source}"
