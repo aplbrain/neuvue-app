@@ -193,8 +193,10 @@
     <div id="neuroglancer" class="leftFormatting nv-workspace-main">
         <div class="left nv-workspace-stage">
             {% if is_open %}
-            <form id="mainForm" action="" method="post" class="nv-workspace-form">
+            <form id="mainForm" action="" method="post">
                 {% csrf_token %}
+            </form>
+            <div class="nv-workspace-form">
             <!-- Submission Options -->
                 <!-- Forced Choice -->
                 {% if button_list %}
@@ -340,7 +342,7 @@
                     </div>
                 </div>
             </div>
-            </form>
+            </div>
             {% else %}
                 <!-- In-between Tasks -->
                 <div class="interTaskBox nv-intertask-card">
