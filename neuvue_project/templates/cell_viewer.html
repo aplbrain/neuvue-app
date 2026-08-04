@@ -57,13 +57,19 @@
                         required>
 
                     <div id="synapseOptions" class="nv-cell-viewer-options">
-                        <label class="nv-tool-lookup-label" for="timestampInput">Timestamp</label>
+                        <p id="synapseOptionsHint" class="nv-tool-lookup-help">
+                            Timestamp and synapse-layer selections are optional.
+                        </p>
+                        <label class="nv-tool-lookup-label" for="timestampInput">
+                            Timestamp <span class="nv-field-optional">(optional)</span>
+                        </label>
                         <input
                             class="nv-tool-lookup-input"
                             id="timestampInput"
                             name="timestamp"
                             type="date"
                             value="{{ timestamp_input_value }}"
+                            aria-describedby="synapseOptionsHint"
                             autocomplete="off">
 
                         <div class="nv-toggle-grid">

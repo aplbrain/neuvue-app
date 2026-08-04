@@ -1612,12 +1612,17 @@ body.nv-body::before {
 
 input[type="date"].nv-tool-lookup-input {
   color-scheme: dark;
+  padding-right: 44px;
+  border-color: rgba(253, 230, 138, 0.6);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 input[type="date"].nv-tool-lookup-input::-webkit-calendar-picker-indicator {
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   filter: invert(91%) sepia(30%) saturate(796%) hue-rotate(350deg) brightness(104%) contrast(98%);
-  opacity: 0.95;
+  opacity: 1;
 }
 
 select.nv-tool-lookup-input {
@@ -1627,6 +1632,21 @@ select.nv-tool-lookup-input {
 .nv-tool-lookup-input::placeholder,
 .nv-inspect-input::placeholder {
   color: rgba(201, 192, 232, 0.62);
+}
+
+.nv-tool-lookup-help {
+  margin: 0;
+  color: var(--nv-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.nv-field-optional {
+  color: var(--nv-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .nv-tool-lookup-input:focus,
