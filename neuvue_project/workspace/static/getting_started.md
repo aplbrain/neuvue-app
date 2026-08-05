@@ -15,7 +15,7 @@ Additional information and FAQ can be found by visiting our page <a class="text-
 
 NeuVue's main home page will be always located at app.neuvue.io. To make the login process seamless, we use google sign-on service to create an account using a pre-existing google account. Once you are logged in, you will have access to additional pages on the top navigation bar on the web app. The top right item in the navigation bar will be your **username**. Click the dropdown here will provide access to user preferences and logging out. Usernames are assigned automatically based on your google credentials. Please contact Neuvue development team if you'd like to change your username. Passwords are automatically managed by the google account you used to create the NeuVue account.
 
-Regular updates to the app will be posted to the "Recent Changes" widget located on the home screen. You can continue to the next step of accessing the proofreading interface by then clicking "My Tasks" in the top navigation bar.
+You can continue to the next step of accessing the proofreading interface by clicking "My Tasks" in the top navigation bar.
 
 ### Task Page
 

@@ -1,164 +1,123 @@
 {% extends "base.html" %}
 {% load static %}
-{% load socialaccount %}
 {% load inclusion_tags %}
 {% block title %}Inspect Task{% endblock %}
+{% block body_class %}{% if task_id and not error %}nv-workspace-body{% endif %}{% endblock %}
+
 {% block content %}
 
-{% if not task_id or error%}
+{% if not task_id or error %}
+<div class="nv-page nv-tool-lookup-page nv-inspect-lookup-page">
+    <div class="nv-wrap nv-tool-lookup-wrap">
+        <header class="nv-hero nv-tool-lookup-hero">
+            <div>
+                <h1 id="inspectTaskTitle">Inspect Task</h1>
+                <p>Open an existing proofreading task by task ID.</p>
+            </div>
+            {% include "reusable_components/status_badge.html" %}
+        </header>
 
-<div class="basic workspace">
-  <div class="inspect-container">
-  <h3 class="text-white mb-3"> Inspect Task </h3>
-    <form id="mainForm" action="" method="post" onSubmit="triggerLoadingSpinner('submit-spinner')">
-      {% csrf_token %}
-      <div class="form-group">
-        <input class="form-control" id="taskIDInput" placeholder="Enter Task ID" name="task_id" required="true">
-        <br>
-        <div class="d-flex">
-          <input type="submit" class="btn btn-primary" value="Submit">
-          <div id="submit-spinner" class="text-white mx-3 mt-2"></div>
-          {% if error%}
-          <small id="errorMessage" class="form-text text-danger"> {{error}} </small>
-          {% endif %}
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-{% else %}
-
-<div id="neuVue-sidemenu" class="sidemenu">
-  <div id="neuVue-sidebar" class="sidebar">
-      <a id = "sidebarActivate" class="fill-div" onclick="sidemenu_content()">
-          <i class="glyphicon glyphicon-list"></i>
-      </a>
-  </div>
-  <div id="neuVue-sidecontent" class="sidecontent">
-
-      <! Instructions >
-      {% processed_instructions instructions %}
-
-      <! Task Information >
-      <div id = "instruction-container" class ="sideContentBox" style="max-height:70%;">
-          <div class="sideContentTitle">
-              Task Information
-          </div>
-          <div class="sideContentInfo">
-              Namespace <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{display_name}}')"><i class="fa fa-copy"></i></button> {{display_name}} </span> <br>
-              Task ID <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{task_id}}')"><i class="fa fa-copy"></i></button> {{task_id}} </span> <br>
-              Segmentation ID  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{seg_id}}')"><i class="fa fa-copy"></i></button> {{seg_id}} </span> <br>
-              PCG Endpoint  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{pcg_url}}')"><i class="fa fa-copy"></i></button> {{pcg_url}}  </span>  <br>
-              Assignee  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{assignee}}')"><i class="fa fa-copy"></i></button> {{assignee}}  </span>  <br>
-              Status  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{status}}')"><i class="fa fa-copy"></i></button> {{status}}  </span>  <br>
-
-              {% if flag_reason %}
-              Flag Reason  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{flag_reason}}')"><i class="fa fa-copy"></i></button> {{flag_reason}}  </span>  <br>
-              {% endif %}
-
-              {% if decision %}
-              Decision  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{decision}}')"><i class="fa fa-copy"></i></button> {{decision}}  </span>  <br>
-              {% endif %}
-
-              Number of Edits  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{num_edits}}')"><i class="fa fa-copy"></i></button> {{num_edits}}  </span>  <br>
-
-              {% if tags %}
-              Tags  <br>
-              <span class ="code"> <button class="clipboard" onclick="copyToClipboard('{{tags}}')"><i class="fa fa-copy"></i></button> {{tags}}  </span>  <br>
-              {% endif %}
-
-              Neuroglancer Link <br>
-
-              <button type="button" class="btn btn-info" onclick="getLink()"> <i class="fa fa-copy"></i> Copy Link to Clipboard </button>  </br>
-          </div>
-      </div>
-  </div>
-</div>
-
-<div id="neuroglancer" class="leftFormatting">
-  <div class="left">
-    <! Neuroglancer Container>
-    {% if ng_url %}
-    <iframe src="{{ng_url}}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
-    {% else %}
-    <div id="neuroglancer-container" class="neuroglancer-container"></div>
-    {% endif %}
-
-    <div class="bottomBar">
-      <button id="btnExit" type="button" class="mainButton" onclick= "document.location='{% url 'inspect' %}'">
-          Exit
-      </button>
+        <section class="nv-card nv-tool-lookup-card nv-inspect-search-card" aria-labelledby="inspectTaskTitle">
+            <div class="nv-card-body">
+                <form id="inspectLookupForm" class="nv-tool-lookup-form" action="" method="post">
+                    {% csrf_token %}
+                    <label class="nv-tool-lookup-label nv-inspect-label" for="taskIDInput">Task ID</label>
+                    <div class="nv-tool-lookup-row nv-inspect-search-row">
+                        <input class="nv-tool-lookup-input nv-inspect-input" id="taskIDInput" placeholder="Enter Task ID" name="task_id" required>
+                        <button type="submit" class="nv-btn nv-btn-primary">
+                            <span id="submit-spinner">Submit</span>
+                        </button>
+                    </div>
+                    {% if error %}
+                    <p id="errorMessage" class="nv-tool-lookup-error nv-inspect-error">{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </section>
     </div>
-  </div>
 </div>
-{% if ng_host == "spelunker" %}
-<script defer src="/static/spelunker-workspace/453.js"></script><script defer src="/static/spelunker-workspace/71.js"></script><script defer src="/static/spelunker-workspace/74.js"></script><script defer src="/static/spelunker-workspace/741.js"></script><script defer src="/static/spelunker-workspace/main.js"></script><link href="/static/spelunker-workspace/main.css" rel="stylesheet">
+
 {% else %}
-<script type="text/javascript" src="{% static 'workspace/main.bundle.js' %}"></script>
+
+<div class="basic workspace overflow-hidden nv-workspace-page nv-inspect-workspace">
+    <div id="neuVue-sidemenu" class="sidemenu nv-workspace-sidepanel">
+        <div id="neuVue-sidebar" class="sidebar nv-sidepanel-rail">
+            <a id="sidebarActivate" class="fill-div nv-sidepanel-toggle" onclick="sidemenu_content()" title="Toggle task panel">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="neuVue-sidecontent" class="sidecontent nv-workspace-sidecontent">
+
+            <!-- Instructions -->
+            {% processed_instructions instructions %}
+
+            <!-- Task Information -->
+            <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
+                <div class="sideContentTitle">
+                    Task Information
+                </div>
+                <div class="sideContentInfo nv-task-info-compact">
+                    {% for row in task_metadata_rows %}
+                    <div class="nv-info-row">
+                        <span>{{ row.label }}</span>
+                        <code>{{ row.value }}</code>
+                        <button
+                            type="button"
+                            class="nv-copy-button"
+                            data-copy-value="{{ row.value }}"
+                            title="{{ row.copy_title }}"
+                        >
+                            <i class="fa fa-copy" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    {% endfor %}
+
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnCopyNgLink">
+                        <i class="fa fa-copy" aria-hidden="true"></i> Copy Neuroglancer Link
+                    </button>
+                </div>
+            </div>
+
+            <div class="sideContentBox nv-workspace-panel nv-display-panel">
+                <div class="sideContentTitle">
+                    Inspect Controls
+                </div>
+                <div class="sideContentInfo">
+                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnExitInspect" data-exit-url="{% url 'inspect' %}">
+                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit Inspect
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neuroglancer -->
+    <div id="neuroglancer" class="leftFormatting nv-workspace-main">
+        <div class="left nv-workspace-stage nv-inspect-stage">
+            <!-- Neuroglancer Container -->
+            {% if ng_url %}
+            <iframe src="{{ ng_url }}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
+            {% else %}
+            <div id="neuroglancer-container" class="neuroglancer-container"></div>
+            {% endif %}
+
+            <div class="bottomBar justify-content-center nv-action-bar nv-inspect-action-bar">
+                <div class="mainButtonWrapper nv-action-wrapper">
+                    <button id="btnExitInspectBottom" type="button" class="mainButton nv-action-button nv-action-secondary" data-exit-url="{% url 'inspect' %}">
+                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "reusable_components/toast.html" %}
+</div>
+
+{% include "reusable_components/neuroglancer_bundle.html" %}
 {% endif %}
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-{% endif%}
-<style> .overlay-hidden { display:none; } </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-<script type="text/javascript">
 
-  function getLink() {
-    {% if ng_host == "neuvue" %}
-        viewer.postJsonState(true, undefined, true, function() {
-            let url_prefix = "https://neuroglancer.neuvue.io/?json_url="
-            copyToClipboard(url_prefix.concat(viewer.saver.savedUrl));
-        });
-    {% elif ng_host == "spelunker" %}
-        let url_prefix = "https://spelunker.cave-explorer.org/#!";
-        copyToClipboard(url_prefix.concat(JSON.stringify(viewer.state.toJSON())));
-    {% else %}
-        //pass
-    {% endif %}
-}
-
-  // Function to attempt restoring the viewer state
-  function tryRestoreState() {
-      if (typeof viewer !== 'undefined') {
-      // Viewer is defined, attempt to restore the state
-      try {
-          var received_data = {{ ng_state|safe }};
-          viewer.state.restoreState(received_data);
-          console.log('Viewer state restored successfully.');
-      } catch (error) {
-          console.error('Error restoring viewer state:', error);
-      }
-      } else {
-      // Viewer is not yet defined, retry after a short delay
-      setTimeout(tryRestoreState, 100); // Retry every 100 milliseconds
-      }
-  }
-
-  // Neuroglancer State Load
-  $(document).ready(function() {
-    {% if ng_state %}
-    openSideMenu();
-    tryRestoreState();
-    {% endif %}
-  })
-
-  // Remove loading spinner when page loads. This is important if the back button is clicked
-  window.addEventListener('pageshow', function(e) {
-    if (document.getElementById('submit-spinner') !== null) {
-      removeLoadingSpinner('submit-spinner');
-    }
-  })
-
-  </script>
+<script src="{% static 'js/utils.js' %}"></script>
+{{ inspect_config|json_script:"inspect-config" }}
+<script src="{% static 'js/inspect.js' %}"></script>
 {% endblock %}

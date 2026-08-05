@@ -50,6 +50,7 @@ class WorkspaceView(LoginRequiredMixin, View):
 
         session_task_count = request.session.get("session_task_count", 0)
         namespace_obj = Namespace.objects.get(namespace=namespace)
+        user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
         submission_method = namespace_obj.submission_method
         context = {
             "ng_state": {},
@@ -73,6 +74,17 @@ class WorkspaceView(LoginRequiredMixin, View):
             "track_selected_segments": namespace_obj.track_selected_segments,
             "ng_state_plugin": None,
             "ng_state_plugin_inputs": [],
+            "recent_tags": user_profile.recent_tags,
+            "task_summary": {
+                "namespace": namespace,
+                "namespace_display": namespace_obj.display_name,
+                "task_id": "",
+                "seg_id": "",
+                "pcg_url": namespace_obj.pcg_source,
+                "was_skipped": False,
+                "num_edits": 0,
+                "session_task_count": session_task_count,
+            },
         }
 
         if  namespace_obj.ng_state_plugin:
@@ -93,8 +105,7 @@ class WorkspaceView(LoginRequiredMixin, View):
                 button_item = {
                     "display_name": getattr(button, "display_name"),
                     "submission_value": getattr(button, "submission_value"),
-                    "button_color": getattr(button, "button_color"),
-                    "button_color_active": getattr(button, "button_color_active"),
+                    "palette_color": getattr(button, "palette_color", "blue"),
                     "hotkey": getattr(button, "hotkey"),
                 }
                 button_list.append(button_item)
@@ -155,6 +166,16 @@ class WorkspaceView(LoginRequiredMixin, View):
                 context["tags"] = ",".join(task_df["tags"])
             if task_df["priority"] < 2:
                 context["skippable"] = False
+            context["task_summary"] = {
+                "namespace": namespace,
+                "namespace_display": namespace_obj.display_name,
+                "task_id": context["task_id"],
+                "seg_id": context["seg_id"],
+                "pcg_url": context["pcg_url"],
+                "was_skipped": context["was_skipped"],
+                "num_edits": context["num_edits"],
+                "session_task_count": session_task_count,
+            }
 
             # Pass User configs to Neuroglancer
             try:
@@ -211,7 +232,6 @@ class WorkspaceView(LoginRequiredMixin, View):
 
             ############################# ALLOW TO REASSIGN ########################################
             # get user profile object
-            user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
             namespace_obj = Namespace.objects.get(namespace=namespace)
             
             user_push_rule = user_profile.namespace_rule.filter(
@@ -230,7 +250,67 @@ class WorkspaceView(LoginRequiredMixin, View):
             context["allowed_to_reassign"] = bool(push_bucket_assignee)
             #######################################################################################
 
+        context["workspace_config"] = self._build_workspace_config(context)
+
         return render(request, "workspace.html", context)
+
+    def _build_workspace_config(self, context):
+        instructions = context.get("instructions") or {}
+        namespace_tags = []
+        if isinstance(instructions, dict):
+            namespace_tags = instructions.get("tags") or []
+
+        return {
+            "ngHost": context["ng_host"],
+            "ngUrl": context["ng_url"],
+            "ngState": self._normalize_ng_state_for_config(context["ng_state"]),
+            "taskId": context["task_id"],
+            "namespace": context["namespace"],
+            "showSlices": context["show_slices"],
+            "numEdits": context["num_edits"],
+            "trackSelectedSegments": context["track_selected_segments"],
+            "numberOfSelectedSegmentsExpected": context[
+                "number_of_selected_segments_expected"
+            ],
+            "submitTaskButton": context["submit_task_button"],
+            "buttonList": context.get("button_list", []),
+            "namespaceTags": namespace_tags,
+            "recentTags": context.get("recent_tags", []),
+            "urls": {
+                "saveState": reverse("save-state"),
+                "saveOperations": reverse("save-operations"),
+                "ngStatePlugin": reverse("ng-state-plugins"),
+            },
+        }
+
+    def _normalize_ng_state_for_config(self, ng_state):
+        if not isinstance(ng_state, str):
+            return ng_state
+
+        try:
+            parsed_state = json.loads(ng_state)
+        except (TypeError, json.JSONDecodeError):
+            return ng_state
+
+        if isinstance(parsed_state, dict) and "value" in parsed_state:
+            return parsed_state["value"]
+
+        return parsed_state
+
+    def _remember_recent_tags(self, user, tags):
+        if not tags:
+            return
+
+        user_profile, _ = UserProfile.objects.get_or_create(user=user)
+        recent_tags = user_profile.recent_tags or []
+        clean_tags = []
+        for tag in list(tags) + recent_tags:
+            clean_tag = str(tag).strip()
+            if clean_tag and clean_tag not in clean_tags:
+                clean_tags.append(clean_tag)
+
+        user_profile.recent_tags = clean_tags[:50]
+        user_profile.save(update_fields=["recent_tags"])
 
     def post(self, request, *args, **kwargs):
         namespace = kwargs.get("namespace")
@@ -264,6 +344,7 @@ class WorkspaceView(LoginRequiredMixin, View):
             tags = tags.split(",")
         else:
             tags = None
+        self._remember_recent_tags(request.user, tags)
 
         try:
             ng_state = post_to_state_server(ng_state, public = namespace_obj.ng_host != NeuroglancerHost.NEUVUE)
