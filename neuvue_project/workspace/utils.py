@@ -7,6 +7,7 @@ from django.conf import settings
 
 from .models import TaskBucket
 
+
 def is_url(value):
     validate = URLValidator()
     try:
@@ -52,13 +53,14 @@ def utc_to_eastern(time_value):
     except:
         return time_value
 
+
 def get_or_create_public_taskbucket():
     task_bucket = TaskBucket.objects.filter(name=settings.PUBLIC_TASKBUCKET)
     if task_bucket.exists():
         return task_bucket[0]
     else:
         return TaskBucket.objects.create(
-            name=settings.PUBLIC_TASKBUCKET, 
-            description="Public task queue name", 
-            bucket_assignee="public")
-    
+            name=settings.PUBLIC_TASKBUCKET,
+            description="Public task queue name",
+            bucket_assignee="public",
+        )

@@ -46,7 +46,11 @@ class NamespaceAdminForm(forms.ModelForm):
             # the Namespace to exist before you can create rules for it.
 
         # Pre-populate the plugin_params field with default parameters
-        if self.instance and self.instance.ng_state_plugin and not self.instance.plugin_params:
+        if (
+            self.instance
+            and self.instance.ng_state_plugin
+            and not self.instance.plugin_params
+        ):
             default_params = self.instance.ng_state_plugin.default_plugin_params
             if default_params:
-                self.initial['plugin_params'] = default_params
+                self.initial["plugin_params"] = default_params

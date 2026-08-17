@@ -394,7 +394,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
     recent_tags = models.JSONField(default=list, blank=True)
-    
+
     # @property
     # def inherited_namespace_rules(self):
     #     """Get all namespace rules inherited from the user's groups."""
@@ -402,6 +402,7 @@ class UserProfile(models.Model):
     #         groupprofile__group__in=self.user.groups.all()
     #     )
     #     return group_rules.distinct()
+    recent_tags = models.JSONField(default=list, blank=True)
 
 
 # Janky way to extend the default Group model

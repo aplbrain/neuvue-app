@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 {% load inclusion_tags %}
+
 {% block title %}Inspect Task{% endblock %}
-{% block body_class %}{% if task_id and not error %}nv-workspace-body{% endif %}{% endblock %}
+
+{% block body_class %}
+{% if task_id and not error %}nv-workspace-body{% endif %}
+{% endblock %}
 
 {% block content %}
 
 {% if not task_id or error %}
+
 <div class="nv-page nv-tool-lookup-page nv-inspect-lookup-page">
     <div class="nv-wrap nv-tool-lookup-wrap">
         <header class="nv-hero nv-tool-lookup-hero">
@@ -14,22 +19,51 @@
                 <h1 id="inspectTaskTitle">Inspect Task</h1>
                 <p>Open an existing proofreading task by task ID.</p>
             </div>
+
             {% include "reusable_components/status_badge.html" %}
         </header>
 
-        <section class="nv-card nv-tool-lookup-card nv-inspect-search-card" aria-labelledby="inspectTaskTitle">
+        <section
+            class="nv-card nv-tool-lookup-card nv-inspect-search-card"
+            aria-labelledby="inspectTaskTitle"
+        >
             <div class="nv-card-body">
-                <form id="inspectLookupForm" class="nv-tool-lookup-form" action="" method="post">
+                <form
+                    id="inspectLookupForm"
+                    class="nv-tool-lookup-form"
+                    action=""
+                    method="post"
+                >
                     {% csrf_token %}
-                    <label class="nv-tool-lookup-label nv-inspect-label" for="taskIDInput">Task ID</label>
+
+                    <label
+                        class="nv-tool-lookup-label nv-inspect-label"
+                        for="taskIDInput"
+                    >
+                        Task ID
+                    </label>
+
                     <div class="nv-tool-lookup-row nv-inspect-search-row">
-                        <input class="nv-tool-lookup-input nv-inspect-input" id="taskIDInput" placeholder="Enter Task ID" name="task_id" required>
+                        <input
+                            class="nv-tool-lookup-input nv-inspect-input"
+                            id="taskIDInput"
+                            placeholder="Enter Task ID"
+                            name="task_id"
+                            required
+                        >
+
                         <button type="submit" class="nv-btn nv-btn-primary">
                             <span id="submit-spinner">Submit</span>
                         </button>
                     </div>
+
                     {% if error %}
-                    <p id="errorMessage" class="nv-tool-lookup-error nv-inspect-error">{{ error }}</p>
+                    <p
+                        id="errorMessage"
+                        class="nv-tool-lookup-error nv-inspect-error"
+                    >
+                        {{ error }}
+                    </p>
                     {% endif %}
                 </form>
             </div>
@@ -39,85 +73,146 @@
 
 {% else %}
 
-<div class="basic workspace overflow-hidden nv-workspace-page nv-inspect-workspace">
-    <div id="neuVue-sidemenu" class="sidemenu nv-workspace-sidepanel">
-        <div id="neuVue-sidebar" class="sidebar nv-sidepanel-rail">
-            <a id="sidebarActivate" class="fill-div nv-sidepanel-toggle" onclick="sidemenu_content()" title="Toggle task panel">
-                <i class="fa fa-bars" aria-hidden="true"></i>
-            </a>
-        </div>
-        <div id="neuVue-sidecontent" class="sidecontent nv-workspace-sidecontent">
+<div class="inspect-task-container">
+    <div class="basic workspace overflow-hidden nv-workspace-page nv-inspect-workspace">
+        <div
+            id="neuVue-sidemenu"
+            class="sidemenu nv-workspace-sidepanel"
+        >
+            <div
+                id="neuVue-sidebar"
+                class="sidebar nv-sidepanel-rail"
+            >
+                <a
+                    id="sidebarActivate"
+                    class="fill-div nv-sidepanel-toggle"
+                    onclick="sidemenu_content()"
+                    title="Toggle task panel"
+                >
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </a>
+            </div>
 
-            <!-- Instructions -->
-            {% processed_instructions instructions %}
+            <div
+                id="neuVue-sidecontent"
+                class="sidecontent nv-workspace-sidecontent"
+            >
+                {% processed_instructions instructions %}
 
-            <!-- Task Information -->
-            <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
-                <div class="sideContentTitle">
-                    Task Information
-                </div>
-                <div class="sideContentInfo nv-task-info-compact">
-                    {% for row in task_metadata_rows %}
-                    <div class="nv-info-row">
-                        <span>{{ row.label }}</span>
-                        <code>{{ row.value }}</code>
+                <div class="sideContentBox nv-workspace-panel nv-task-info-panel">
+                    <div class="sideContentTitle">
+                        Task Information
+                    </div>
+
+                    <div class="sideContentInfo nv-task-info-compact">
+                        {% for row in task_metadata_rows %}
+                        <div class="nv-info-row">
+                            <span>{{ row.label }}</span>
+                            <code>{{ row.value }}</code>
+
+                            <button
+                                type="button"
+                                class="nv-copy-button"
+                                data-copy-value="{{ row.value }}"
+                                title="{{ row.copy_title }}"
+                            >
+                                <i class="fa fa-copy" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        {% endfor %}
+
                         <button
                             type="button"
-                            class="nv-copy-button"
-                            data-copy-value="{{ row.value }}"
-                            title="{{ row.copy_title }}"
+                            class="nv-btn nv-btn-secondary nv-panel-action"
+                            id="btnCopyNgLink"
                         >
                             <i class="fa fa-copy" aria-hidden="true"></i>
+                            Copy Neuroglancer Link
                         </button>
                     </div>
-                    {% endfor %}
-
-                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnCopyNgLink">
-                        <i class="fa fa-copy" aria-hidden="true"></i> Copy Neuroglancer Link
-                    </button>
                 </div>
-            </div>
 
-            <div class="sideContentBox nv-workspace-panel nv-display-panel">
-                <div class="sideContentTitle">
-                    Inspect Controls
-                </div>
-                <div class="sideContentInfo">
-                    <button type="button" class="nv-btn nv-btn-secondary nv-panel-action" id="btnExitInspect" data-exit-url="{% url 'inspect' %}">
-                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit Inspect
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div class="sideContentBox nv-workspace-panel nv-display-panel">
+                    <div class="sideContentTitle">
+                        Inspect Controls
+                    </div>
 
-    <!-- Neuroglancer -->
-    <div id="neuroglancer" class="leftFormatting nv-workspace-main">
-        <div class="left nv-workspace-stage nv-inspect-stage">
-            <!-- Neuroglancer Container -->
-            {% if ng_url %}
-            <iframe src="{{ ng_url }}" class="neuroglancer-container" id="neuroglancer-container"></iframe>
-            {% else %}
-            <div id="neuroglancer-container" class="neuroglancer-container"></div>
-            {% endif %}
-
-            <div class="bottomBar justify-content-center nv-action-bar nv-inspect-action-bar">
-                <div class="mainButtonWrapper nv-action-wrapper">
-                    <button id="btnExitInspectBottom" type="button" class="mainButton nv-action-button nv-action-secondary" data-exit-url="{% url 'inspect' %}">
-                        <i class="fa fa-door-open" aria-hidden="true"></i> Exit
-                    </button>
+                    <div class="sideContentInfo">
+                        <button
+                            type="button"
+                            class="nv-btn nv-btn-secondary nv-panel-action"
+                            id="btnExitInspect"
+                            data-exit-url="{% url 'inspect' %}"
+                        >
+                            <i class="fa fa-door-open" aria-hidden="true"></i>
+                            Exit Inspect
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    {% include "reusable_components/toast.html" %}
+        <div
+            id="neuroglancer"
+            class="leftFormatting nv-workspace-main"
+        >
+            <div class="left nv-workspace-stage nv-inspect-stage">
+                {% if ng_url %}
+                <iframe
+                    src="{{ ng_url }}"
+                    class="neuroglancer-container"
+                    id="neuroglancer-container"
+                ></iframe>
+                {% else %}
+                <div
+                    id="neuroglancer-container"
+                    class="neuroglancer-container"
+                ></div>
+                {% endif %}
+
+                <div class="bottomBar justify-content-center nv-action-bar nv-inspect-action-bar">
+                    <div class="mainButtonWrapper nv-action-wrapper">
+                        <button
+                            id="btnExitInspectBottom"
+                            type="button"
+                            class="mainButton nv-action-button nv-action-secondary"
+                            data-exit-url="{% url 'inspect' %}"
+                        >
+                            <i class="fa fa-door-open" aria-hidden="true"></i>
+                            Exit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include "reusable_components/toast.html" %}
+    </div>
 </div>
 
 {% include "reusable_components/neuroglancer_bundle.html" %}
+
+{% if ng_host == "spelunker" %}
+<script defer src="/static/spelunker-workspace/453.js"></script>
+<script defer src="/static/spelunker-workspace/71.js"></script>
+<script defer src="/static/spelunker-workspace/74.js"></script>
+<script defer src="/static/spelunker-workspace/741.js"></script>
+<script defer src="/static/spelunker-workspace/main.js"></script>
+<link
+    href="/static/spelunker-workspace/main.css"
+    rel="stylesheet"
+>
+{% else %}
+<script
+    type="text/javascript"
+    src="{% static 'workspace/main.bundle.js' %}"
+></script>
 {% endif %}
 
 <script src="{% static 'js/utils.js' %}"></script>
 {{ inspect_config|json_script:"inspect-config" }}
 <script src="{% static 'js/inspect.js' %}"></script>
+
+{% endif %}
+
 {% endblock %}

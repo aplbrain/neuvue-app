@@ -11,6 +11,7 @@ from ..models import Namespace, UserProfile
 
 from neuvue.client import client
 
+from ..analytics import create_stats_table
 from ..utils import (
     utc_to_eastern,
     is_member,
@@ -75,7 +76,6 @@ class TaskView(LoginRequiredMixin, View):
                 context[namespace]["can_unassign_tasks"] = True
             else:
                 context[namespace]["can_unassign_tasks"] = False
-
 
         if is_authorized(request.user):
             assignee = str(request.user)
@@ -236,7 +236,9 @@ class TaskView(LoginRequiredMixin, View):
         timestamps = []
         for activity_column in activity_columns:
             if not activity_column.empty:
-                timestamps.append(pd.to_datetime(activity_column, errors="coerce").max())
+                timestamps.append(
+                    pd.to_datetime(activity_column, errors="coerce").max()
+                )
 
         timestamps = [timestamp for timestamp in timestamps if not pd.isna(timestamp)]
         if not timestamps:
@@ -255,8 +257,7 @@ class TaskView(LoginRequiredMixin, View):
         max_tasks = namespace_obj.max_number_of_pending_tasks_per_user
 
         user_profile = UserProfile.objects.get(user=request.user)
-        
-        
+
         # -----------------------------------------
         # 1. Get PULL bucket (from either user rule or namespace default)
         # -----------------------------------------
@@ -270,9 +271,11 @@ class TaskView(LoginRequiredMixin, View):
         else:
             # If no user-specific rule, use the namespace default pull rule (if any)
             if namespace_obj.default_pull_rule:
-                pull_bucket_assignee = namespace_obj.default_pull_rule.task_bucket.bucket_assignee
+                pull_bucket_assignee = (
+                    namespace_obj.default_pull_rule.task_bucket.bucket_assignee
+                )
             else:
-                pull_bucket_assignee = None  
+                pull_bucket_assignee = None
 
         # -----------------------------------------
         # 2. Get PUSH bucket (from either user rule or namespace default)
@@ -285,9 +288,11 @@ class TaskView(LoginRequiredMixin, View):
             push_bucket_assignee = user_push_rule.task_bucket.bucket_assignee
         else:
             if namespace_obj.default_push_rule:
-                push_bucket_assignee = namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                push_bucket_assignee = (
+                    namespace_obj.default_push_rule.task_bucket.bucket_assignee
+                )
             else:
-                push_bucket_assignee = None  
+                push_bucket_assignee = None
 
         # -----------------------------------------
         # 3. Handle "reassignTasks"
