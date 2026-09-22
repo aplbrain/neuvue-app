@@ -14,13 +14,26 @@ Clone this repository recursively so that the neuvue-client submodule will also 
 git clone https://github.com/aplbrain/neuvue-app.git --recursive
 ```
 
-Create a python3 virtual environment and install the requirements in neuvue_project/requirements.txt.
+NeuVue targets Python 3.12. Create the Conda environment and install the application
+requirements with:
 
 ```shell
-python3 -m venv venv
-source  venv/bin/activate
+conda env create -f environment.yml
+conda activate neuvue-py312
 cd neuvue_project
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+cd ..
+```
+
+Alternatively, create a Python 3.12 virtual environment and install
+`neuvue_project/requirements.txt` with pip.
+
+When a VPN performs HTTPS inspection, point both Python and Requests at a trusted
+CA bundle before creating the environment or running NeuVue:
+
+```shell
+export SSL_CERT_FILE=/path/to/trusted-ca-bundle.pem
+export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
 ```
 
 ## Development Installation
@@ -28,8 +41,8 @@ pip install -r requirements.txt
 Install developer python requirements and set up pre-commit environment.
 
 ```
-source  venv/bin/activate
-pip install -r requirements-dev.txt
+conda activate neuvue-py312
+python -m pip install -r requirements-dev.txt
 pre-commit install
 ```
 

@@ -1,2 +1,2 @@
 pre-commit
-black
+black>=24.3,<26
