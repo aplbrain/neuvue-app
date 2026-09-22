@@ -1,7 +1,6 @@
 import os
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from colorfield.fields import ColorField
 from django.contrib.auth.models import User, Group
 from django.contrib import admin
 from .validators import validate_submission_value, no_whitespace
@@ -143,6 +142,24 @@ class HotkeyChoices(models.TextChoices):
     Z = "z"
 
 
+class ForcedChoiceButtonPalette(models.TextChoices):
+    BLUE = "blue", _("Blue")
+    CYAN = "cyan", _("Cyan")
+    EMERALD = "emerald", _("Emerald")
+    LIME = "lime", _("Lime")
+    AMBER = "amber", _("Amber")
+    ORANGE = "orange", _("Orange")
+    RED = "red", _("Red")
+    PINK = "pink", _("Pink")
+    PURPLE = "purple", _("Purple")
+    INDIGO = "indigo", _("Indigo")
+    TEAL = "teal", _("Teal")
+    GREEN = "green", _("Green")
+    OCHRE = "ochre", _("Ochre")
+    ROSE = "rose", _("Rose")
+    SLATE = "slate", _("Slate")
+
+
 class ForcedChoiceButton(models.Model):
     set_name = models.ForeignKey(
         ForcedChoiceButtonGroup, to_field="group_name", on_delete=models.CASCADE
@@ -151,8 +168,11 @@ class ForcedChoiceButton(models.Model):
     submission_value = models.CharField(
         max_length=100, validators=[validate_submission_value]
     )
-    button_color = ColorField(format="hexa")
-    button_color_active = ColorField(format="hexa")
+    palette_color = models.CharField(
+        max_length=20,
+        choices=ForcedChoiceButtonPalette.choices,
+        default=ForcedChoiceButtonPalette.BLUE,
+    )
     hotkey = models.CharField(
         max_length=300, choices=HotkeyChoices.choices, blank=True, null=True
     )
@@ -373,7 +393,8 @@ class NamespaceRule(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     namespace_rule = models.ManyToManyField(NamespaceRule, blank=True)
-
+    recent_tags = models.JSONField(default=list, blank=True)
+    
     # @property
     # def inherited_namespace_rules(self):
     #     """Get all namespace rules inherited from the user's groups."""

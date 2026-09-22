@@ -779,14 +779,14 @@ def construct_synapse_state(root_ids: List, flags: dict = None, datastack: str =
     if datastack is None:
         datastack = "minnie85_phase3_v1"
 
-    ds = Datastack.objects.get(datstack_name=datastack)
+    ds = Datastack.objects.get(datastack_name=datastack)
     cave_client = CAVEclient(
         ds.cave_datastack, server_address=ds.cave_url, auth_token=ds.get_auth_token()
     )
     int_root_ids = [int(x) for x in root_ids]
 
     # Get synapse table name from datastack config
-    synapse_table = ds.get_table_name("syanpses") or settings.SYNAPSE_TABLE
+    synapse_table = ds.get_table_name("synapses") or settings.SYNAPSE_TABLE
 
     # Error checking
     if flags["pre_synapses"] != "True" and flags["post_synapses"] != "True":
@@ -844,7 +844,7 @@ def construct_synapse_state(root_ids: List, flags: dict = None, datastack: str =
                 raise Exception(f"Root ID {index} not found for this timestamp")
         else:
             post_synapses = cave_client.materialize.query_table(
-                settings.SYNAPSE_TABLE,
+                synapse_table,
                 filter_in_dict={"post_pt_root_id": int_root_ids},
                 select_columns=["ctr_pt_position", "post_pt_root_id", "pre_pt_root_id"],
             )
@@ -979,7 +979,9 @@ def construct_synapse_state(root_ids: List, flags: dict = None, datastack: str =
     return json.dumps(state_dict, default=lambda x: [str(y) for y in x]), synapse_stats
 
 
-def construct_nuclei_state(given_ids: List, datastack: str = None):
+def construct_nuclei_state(
+    given_ids: List, datastack: str = None, include_rows: bool = False
+):
     """Construct state for the synapse viewer.
 
     Args:
@@ -990,7 +992,7 @@ def construct_nuclei_state(given_ids: List, datastack: str = None):
         string: json-formatted state
         dict: synapse stats
     """
-    if dataset is None:
+    if datastack is None:
         datastack = "minnie65_phase3_v1"
 
     given_ids = [int(x) for x in given_ids]
@@ -1045,11 +1047,19 @@ def construct_nuclei_state(given_ids: List, datastack: str = None):
         updated_soma_df = pd.merge(soma_df, cell_class_info_df, on="id", how="outer")
         updated_soma_df.cell_type_y = updated_soma_df.cell_type_y.fillna("unknown")
 
+        type_rows = []
         type_table = "<thead><tr><th>Nuclei ID</th><th>Seg ID</th><th>Type</th></tr></thead><tbody>"
         for nucleus_id, seg_id in zip(
             updated_soma_df.id.values, updated_soma_df.pt_root_id_x.values
         ):
             cell_type = get_cell_type(nucleus_id, cell_class_info_df)
+            type_rows.append(
+                {
+                    "nucleus_id": str(nucleus_id),
+                    "seg_id": str(seg_id),
+                    "cell_type": cell_type,
+                }
+            )
             type_table += (
                 "<tr><td>"
                 + str(nucleus_id)
@@ -1061,9 +1071,9 @@ def construct_nuclei_state(given_ids: List, datastack: str = None):
             )
         type_table += "</tbody>"
 
-        return type_table, updated_soma_df
+        return type_table, updated_soma_df, type_rows
 
-    cell_type_table, soma_df = generate_cell_type_table(soma_df)
+    cell_type_table, soma_df, cell_type_rows = generate_cell_type_table(soma_df)
 
     for cell_type, type_df in soma_df.groupby("cell_type_y"):
         data_list.append(generate_point_df(np.array(type_df["pt_position_x"].values)))
@@ -1081,7 +1091,111 @@ def construct_nuclei_state(given_ids: List, datastack: str = None):
     state_dict["selectedLayer"] = {"layer": "seg", "visible": True}
     state_dict["jsonStateServer"] = settings.JSON_STATE_SERVER
 
+    if include_rows:
+        return (
+            json.dumps(state_dict),
+            cell_type_table,
+            formatted_not_found_ids,
+            cell_type_rows,
+        )
+
     return json.dumps(state_dict), cell_type_table, formatted_not_found_ids
+
+
+def construct_cell_viewer_state(
+    viewer_type: str, ids: List, flags: dict = None, datastack: str = None
+):
+    """Construct a normalized result for the combined cell viewer."""
+    if viewer_type == "synapse":
+        ng_state, synapse_stats = construct_synapse_state(
+            root_ids=ids, flags=flags, datastack=datastack
+        )
+        include_pre = flags.get("pre_synapses") == "True"
+        include_post = flags.get("post_synapses") == "True"
+        headers = ["Root ID"]
+        if include_pre:
+            headers.extend(
+                [
+                    "Presynaptic Connections",
+                    "Presynaptic Targets",
+                    "Presynapses to Targets",
+                ]
+            )
+        if include_post:
+            headers.extend(
+                [
+                    "Postsynaptic Connections",
+                    "Postsynaptic Targets",
+                    "Postsynapses to Targets",
+                ]
+            )
+
+        rows = []
+        for root_id, stats in synapse_stats.items():
+            row = [root_id]
+            if include_pre:
+                row.extend(
+                    [
+                        stats.get("num_pre_synapses", 0),
+                        stats.get("num_pre_targets", 0),
+                        stats.get("pre_synapses_to_targets", 0),
+                    ]
+                )
+            if include_post:
+                row.extend(
+                    [
+                        stats.get("num_post_synapses", 0),
+                        stats.get("num_post_targets", 0),
+                        stats.get("post_synapses_to_targets", 0),
+                    ]
+                )
+            rows.append(row)
+
+        return {
+            "viewer_type": "synapse",
+            "ng_state": ng_state,
+            "table_title": "Synapse Information",
+            "table_headers": headers,
+            "table_rows": rows,
+            "copy_payload": json.dumps(synapse_stats, default=str),
+            "ids_not_found": "",
+        }
+
+    if viewer_type == "nuclei":
+        ng_state, cell_type_table, ids_not_found, cell_type_rows = construct_nuclei_state(
+            given_ids=ids, datastack=datastack, include_rows=True
+        )
+        rows = [
+            [row["nucleus_id"], row["seg_id"], row["cell_type"]]
+            for row in cell_type_rows
+        ]
+        return {
+            "viewer_type": "nuclei",
+            "ng_state": ng_state,
+            "table_title": "Nuclei Information",
+            "table_headers": ["Nuclei ID", "Seg ID", "Type"],
+            "table_rows": rows,
+            "copy_payload": cell_type_table,
+            "ids_not_found": ids_not_found,
+        }
+
+    if viewer_type == "lineage":
+        root_id = ids[0] if ids else ""
+        ng_state, graph = construct_lineage_state_and_graph(
+            root_id=root_id, datastack=datastack
+        )
+        return {
+            "viewer_type": "lineage",
+            "ng_state": ng_state,
+            "table_title": "Lineage Information",
+            "table_headers": ["Root ID"],
+            "table_rows": [[root_id]],
+            "copy_payload": root_id,
+            "ids_not_found": "",
+            "graph": graph.decode("utf-8") if isinstance(graph, bytes) else graph,
+        }
+
+    raise ValueError(f"Unsupported cell viewer type: {viewer_type}")
 
 
 def refresh_ids(ng_state: str, namespace: str = None, datastack: str = None):

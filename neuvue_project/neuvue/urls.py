@@ -24,6 +24,7 @@ from workspace.views import (
     AuthView,
     AboutView,
     InspectTaskView,
+    CellViewerView,
     LineageView,
     TokenView,
     SynapseView,
@@ -105,6 +106,17 @@ urlpatterns = [
     path("token/", TokenView.as_view(), name="token"),
     path("inspect/", InspectTaskView.as_view(), name="inspect"),
     path("inspect/<str:task_id>", InspectTaskView.as_view(), name="inspect"),
+    path("cell-viewer/", CellViewerView.as_view(), name="cell-viewer"),
+    path(
+        "cell-viewer/<str:viewer_type>/<str:datastack>/<str:query_ids>",
+        CellViewerView.as_view(),
+        name="cell-viewer-query",
+    ),
+    path(
+        "cell-viewer/<str:viewer_type>/<str:datastack>/<str:query_ids>/<str:pre_synapses>/<str:post_synapses>/<str:cleft_layer>/<str:timestamp>",
+        CellViewerView.as_view(),
+        name="cell-viewer-synapse",
+    ),
     path("lineage/", LineageView.as_view(), name="lineage"),
     path("lineage/<str:root_id>", LineageView.as_view(), name="lineage"),
     path(

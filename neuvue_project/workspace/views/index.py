@@ -1,4 +1,3 @@
-import json
 import markdown
 import logging
 
@@ -14,19 +13,7 @@ logger = logging.getLogger(__name__)
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-
-        recent_updates = True
-        try:
-            p = staticfiles_storage.path("updates.json")
-            with open(p) as update_json:
-                updates = json.load(update_json)
-                recent_updates = updates["recent_updates"]
-        except:
-            recent_updates = False
-
-        ## Get updates from local updates.json
-        context = {"recent_updates": recent_updates}
-        return render(request, "index.html", context)
+        return render(request, "index.html")
 
 
 class AuthView(View):

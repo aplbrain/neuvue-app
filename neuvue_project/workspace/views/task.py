@@ -1,18 +1,22 @@
 import logging
 import pandas as pd
+from urllib.parse import urlparse
 
 from django.http import HttpResponse
-from django.apps import apps
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render
 from django.views.generic.base import View
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from ..models import Namespace, UserProfile, TaskBucket
+from ..models import Namespace, UserProfile
 
 from neuvue.client import client
 
-from ..analytics import create_stats_table
-from ..utils import utc_to_eastern, is_member, is_authorized, get_or_create_public_taskbucket
+from ..utils import (
+    utc_to_eastern,
+    is_member,
+    is_authorized,
+    get_or_create_public_taskbucket,
+)
 
 
 # import the logging library
@@ -42,6 +46,8 @@ class TaskView(LoginRequiredMixin, View):
             context[namespace]["total_tasks"] = 0
             context[namespace]["start"] = ""
             context[namespace]["end"] = ""
+            context[namespace]["last_activity"] = "No activity"
+            context[namespace]["last_activity_sort"] = 0
             context[namespace]["can_self_assign_tasks"] = is_member(
                 request.user, self_assign_group
             )
@@ -123,6 +129,14 @@ class TaskView(LoginRequiredMixin, View):
             context[namespace]["total_tasks"] = (
                 context[namespace]["total_closed"] + context[namespace]["total_pending"]
             )
+            last_activity = self._get_last_activity(
+                namespace_pending_tasks, namespace_closed_tasks
+            )
+            if last_activity is not None:
+                context[namespace]["last_activity"] = utc_to_eastern(last_activity)
+                context[namespace]["last_activity_sort"] = int(
+                    pd.Timestamp(last_activity).timestamp()
+                )
 
         # Reorder context dict by total pending tasks (descending order)
         context = dict(
@@ -142,21 +156,26 @@ class TaskView(LoginRequiredMixin, View):
         request.session["session_task_count"] = 0
 
         # create settings and context dicts
+        queue_addr = settings.NEUVUE_QUEUE_ADDR
         settings_dict = {
             "SANDBOX_ID": settings.SANDBOX_ID,
-            "is_authorized": is_authorized(request.user)
+            "is_authorized": is_authorized(request.user),
+            "queue_addr": queue_addr,
+            "queue_display": self._format_queue_display(queue_addr),
         }
-        daily_changelog, full_changelog = create_stats_table(
-            pending_tasks, closed_tasks
-        )
         data_dict = {
             "settings": settings_dict,
             "namespaces": context,
-            "daily_changelog": daily_changelog,
-            "full_changelog": full_changelog,
         }
 
         return render(request, "tasks.html", {"data": data_dict})
+
+    def _format_queue_display(self, queue_addr):
+        parsed_queue_addr = urlparse(queue_addr)
+        if parsed_queue_addr.netloc:
+            return parsed_queue_addr.netloc
+
+        return queue_addr.rstrip("/")
 
     def _generate_tables(self, pending_tasks, closed_tasks):
 
@@ -201,6 +220,29 @@ class TaskView(LoginRequiredMixin, View):
         )
 
         return pending_tasks.to_dict("records"), closed_tasks.to_dict("records")
+
+    def _get_last_activity(self, pending_tasks, closed_tasks):
+        activity_columns = []
+
+        if "created" in pending_tasks:
+            activity_columns.append(pending_tasks["created"])
+
+        if "opened" in closed_tasks:
+            activity_columns.append(closed_tasks["opened"])
+
+        if "closed" in closed_tasks:
+            activity_columns.append(closed_tasks["closed"])
+
+        timestamps = []
+        for activity_column in activity_columns:
+            if not activity_column.empty:
+                timestamps.append(pd.to_datetime(activity_column, errors="coerce").max())
+
+        timestamps = [timestamp for timestamp in timestamps if not pd.isna(timestamp)]
+        if not timestamps:
+            return None
+
+        return max(timestamps)
 
     # This post endpoint does not redirect to another webpage, it returns a response that the view must handle.
     # Sorry for breaking form, but forcing django to be dynamic for this feature was the best solution
